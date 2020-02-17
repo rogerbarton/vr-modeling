@@ -1,0 +1,64 @@
+# ============= #
+# Local Files   #
+# ============= #
+Builds/
+
+# =============== #
+# Unity generated #
+# =============== #
+Temp/
+Obj/
+UnityGenerated/
+Library/*
+Library/UnityAssemblies/*
+!Library/UnityAssemblies/UnityEditor.UI.dll
+!Library/UnityAssemblies/UnityEngine.UI.dll
+Assets/AssetStoreTools*
+*.pidb.meta
+sysinfo.txt
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+.vs/
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+\.idea/
+
+Logs/
+
+Assets/Plugins/Sirenix/
+
+Assets/Plugins/Editor/JetBrains/
+
+Assets/Plugins/Editor/JetBrains.meta
+
+Assets/Logs.meta
+
+Assets/Oculus/
+
+Assets/Plugins/Sirenix.meta
+
+Assets/Oculus.meta
