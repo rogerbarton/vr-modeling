@@ -528,7 +528,7 @@ PlayerSettings:
     1: ODIN_INSPECTOR
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 0
+    Standalone: 1
   il2cppCompilerConfiguration:
     Standalone: 0
   managedStrippingLevel: {}
