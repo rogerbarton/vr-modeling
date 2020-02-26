@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace libigl.interop
+namespace libigl.rendering
 {
-    public class IglMeshFilter : MonoBehaviour
+    public class LibiglMeshFilter : MonoBehaviour
     {
         [Tooltip("Mesh to update with V, F, uv matrices")]
         public MeshFilter meshFilter;

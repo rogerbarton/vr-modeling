@@ -64,3 +64,7 @@ Assets/Plugins/Sirenix.meta
 Assets/Oculus.meta
 
 Interface/cmake-build-debug/
+
+Assets/Plugins/LibiglInterface/
+
+Assets/Plugins/LibiglInterface.meta
