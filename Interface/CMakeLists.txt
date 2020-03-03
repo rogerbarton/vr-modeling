@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(libigl-interface)
+project(__libigl-interface)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Note: As this project is aimed at the Oculus Rift platform on Windows,
