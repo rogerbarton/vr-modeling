@@ -68,3 +68,5 @@ Interface/cmake-build-debug/
 Assets/Plugins/LibiglInterface/
 
 Assets/Plugins/LibiglInterface.meta
+
+Assets/Plugins/__libigl-interface.*

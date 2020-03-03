@@ -11,3 +11,7 @@
   1. Run cmake inside the Interface C++ project, this will enable building the `.dll` and copy it into the Unity project
   2. Note that the output directory can be set in the CMake cache with the `UNITY_*` variables
   3. This output directory should be empty as it is cleared on each build!
+  
+ ## Misc
+ 
+ [*UnityNativeTool* from mcpiroman](https://github.com/mcpiroman/UnityNativeTool) is used to be able to rebuild a dll without restarting unity
