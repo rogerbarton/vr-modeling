@@ -8,19 +8,15 @@ public class Testing : MonoBehaviour
 {
     void Start()
     {
-        try
-        {
-            LibiglInterface.Initialize();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        LibiglInterface.CheckInitialized();
     }
 
+    private int value = 0;
     void Update()
     {
         if(Input.anyKeyDown)
-            Debug.Log(LibiglInterface.IncrementValue(0));
+            Debug.Log(value = Native.IncrementValue(value));
+        // if (Input.GetKeyDown(KeyCode.Space))
+        //     Native.LoadMesh();
     }
 }

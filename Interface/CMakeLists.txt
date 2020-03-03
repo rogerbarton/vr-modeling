@@ -25,7 +25,8 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT $
 set(UNITY_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../" CACHE STRING 
 	"Path to Unity project root where Assets and ProjectSettings resides")
 set(UNITY_DLL_OUTPUT_DIRECTORY "Assets/Plugins/LibiglInterface" CACHE STRING 
-	"Where the DLL will be after building, this should be inside the Assets/Plugins folder. Note: this should be and empty directory as everything is cleared on build")
+	"Where the DLL will be after building, this should be inside the Assets/Plugins folder. 
+	Note: this should be and empty directory as everything is cleared on build")
 set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}${UNITY_DLL_OUTPUT_DIRECTORY}")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES 
