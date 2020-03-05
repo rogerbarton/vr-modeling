@@ -12,7 +12,20 @@ VFCallback CreateMesh;
 
 
 extern "C"{
-    DllExport void InitializeNative(char const*const modelRootp, StringCallback debugCallback, VFCallback createMeshCallback);
+    //For passing an array of structs
+    /*struct VertexPos{
+        float pos[3];
+    };
+
+    struct Face {
+        int tri[3];
+    };*/
+
+    DllExport void InitializeNative(const char* modelRootp, StringCallback debugCallback, VFCallback createMeshCallback);
     DllExport int IncrementValue(int value);
-    void LoadMesh(std::string modelPath);
+    DllExport void LoadMesh(const std::string modelPath);
+
+    DllExport void FillMesh(float* V, int VSize, int* F, int FSize);
+    DllExport void MoveV(float VArr[][3], int VSize, float directionArr[3]);
+    DllExport void ComputeColors(float* outColors, float* Vptr, int nV);
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using libigl.rendering;
@@ -27,8 +28,8 @@ namespace libigl
             if (modelRoot == null)
                 modelRoot = Application.dataPath + "/Models/";
 
-            Native.InitializeNative(modelRoot, new NativeCallbacks.StringCallback(NativeCallbacks.DebugLog),
-                new NativeCallbacks.VFCallback(NativeCallbacks.CreateMesh));
+            //TODO: need use fixed or pin callbacks?
+            Native.InitializeNative(modelRoot, NativeCallbacks.DebugLog, NativeCallbacks.CreateMesh);
         }
 
         public static void CheckInitialized()
@@ -51,14 +52,32 @@ namespace libigl
     /// </summary>
     public static class Native
     {
-        public const string dllName = "libigl-interface";
+        const string dllName = "libigl-interface";
 
-        [DllImport(dllName)]
-        public static extern void InitializeNative(string modelRootp, NativeCallbacks.StringCallback debugCallback,
-            NativeCallbacks.VFCallback createMeshCallback);
+        [DllImport(dllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        public static extern void InitializeNative(
+            [In] string modelRootp, 
+            [In] NativeCallbacks.StringCallback debugCallback,
+            [In] NativeCallbacks.VFCallback createMeshCallback);
         
-        [DllImport(dllName)]
-        public static extern int IncrementValue(int value);
+        [DllImport(dllName, ExactSpelling = true)]
+        public static extern int IncrementValue([In, Out]int value);
+        
+        [DllImport(dllName, ExactSpelling = true)]
+        public static extern int LoadMesh(string value);
+
+        [DllImport(dllName, ExactSpelling = true)]
+        public static extern unsafe void FillMesh(void* VPtr, int VSize, void* FPtr, int FSize);
+
+        
+        [DllImport(dllName, ExactSpelling = true)]
+        public static extern void MoveV([In, Out] IntPtr VArr, int VSize, [In] float[] directionArr);
+
+        [DllImport(dllName, ExactSpelling = true)]
+        public static extern void ComputeColors(
+            [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] outColors, int outColorsSize,
+            [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] Vptr, int VSize,
+            int nV);
     }
     
 
@@ -75,10 +94,10 @@ namespace libigl
             Debug.Log("[c++] " + message);
         }
 
-        public delegate void VFCallback(Vector3[] V, int[] F);
-        public static void CreateMesh(Vector3[] V, int[] F)
+        public delegate void VFCallback([In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] V, int vLength, int[] F);
+        public static void CreateMesh(float[,] V, int vLength, int[] F)
         {
-            LibiglInterface.get.CreateMesh(V, F);
+            // LibiglInterface.get.CreateMesh(V, F);
         }
     }
 }
