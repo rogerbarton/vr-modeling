@@ -41,8 +41,8 @@ public class Testing : MonoBehaviour
         var FCount = 12;
         mesh.SetIndexBufferParams(FCount, IndexFormat.UInt32);
         
-        var V = new NativeArray<float3>(VCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory); //Or Allocator.Persistent with Dispose()
-        var F = new NativeArray<int3>(FCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+        var V = new NativeArray<float>(3 * VCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory); //Or Allocator.Persistent with Dispose()
+        var F = new NativeArray<int>(3 * FCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
         
         //--- Call C++ to fill V, F
         unsafe
@@ -51,18 +51,18 @@ public class Testing : MonoBehaviour
         }
 
         mesh.SetVertexBufferData(V, 0, 0, VCount, 0, MeshUpdateFlags.DontValidateIndices);
-        mesh.SetIndexBufferData(F, 0, 0, FCount, MeshUpdateFlags.DontValidateIndices);
+        mesh.SetIndexBufferData(F, 0, 0, FCount);
+        mesh.Optimize();
         
         // V.Dispose();
         // F.Dispose();
-        
-        
-        
+        // Debug.Log(mesh.GetSubMesh(0).topology);
+
+
         //--- To update an existing initialized mesh
         //Use this to get pointers to buffers, can pass IntPtr to a float* or int* in c++
-        IntPtr voidPtrToVArr = mesh.GetNativeVertexBufferPtr(0); //retrieve the first buffer
-        IntPtr voidPtrToFArr = mesh.GetNativeIndexBufferPtr();
-        
+        // IntPtr voidPtrToVArr = mesh.GetNativeVertexBufferPtr(0); //retrieve the first buffer
+        // IntPtr voidPtrToFArr = mesh.GetNativeIndexBufferPtr();
     }
 
     private int value = 0;

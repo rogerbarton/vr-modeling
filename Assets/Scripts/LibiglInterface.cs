@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -73,11 +73,11 @@ namespace libigl
         [DllImport(dllName, ExactSpelling = true)]
         public static extern void MoveV([In, Out] IntPtr VArr, int VSize, [In] float[] directionArr);
 
-        [DllImport(dllName, ExactSpelling = true)]
-        public static extern void ComputeColors(
-            [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] outColors, int outColorsSize,
-            [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] Vptr, int VSize,
-            int nV);
+        // [DllImport(dllName, ExactSpelling = true)]
+        // public static extern void ComputeColors(
+            // [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] outColors, int outColorsSize,
+            // [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] Vptr, int VSize,
+            // int nV);
     }
     
 
