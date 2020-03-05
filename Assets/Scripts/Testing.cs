@@ -29,6 +29,7 @@ public class Testing : MonoBehaviour
         LibiglInterface.CheckInitialized();
         
         var mesh = new Mesh();
+        mesh.name = "generated-mesh";
         GetComponent<MeshFilter>().mesh = mesh;
         
         var VLayout = new[]
@@ -39,10 +40,10 @@ public class Testing : MonoBehaviour
         mesh.SetVertexBufferParams(VCount, VLayout);
         
         var FCount = 12;
-        mesh.SetIndexBufferParams(FCount, IndexFormat.UInt32);
+        mesh.SetIndexBufferParams(3*FCount, IndexFormat.UInt32);
         
         var V = new NativeArray<float>(3 * VCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory); //Or Allocator.Persistent with Dispose()
-        var F = new NativeArray<int>(3 * FCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+        var F = new NativeArray<uint>(3 * FCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
         
         //--- Call C++ to fill V, F
         unsafe
@@ -50,10 +51,22 @@ public class Testing : MonoBehaviour
             Native.FillMesh(V.GetUnsafePtr(), VCount, F.GetUnsafePtr(), FCount);
         }
 
-        mesh.SetVertexBufferData(V, 0, 0, VCount, 0, MeshUpdateFlags.DontValidateIndices);
-        mesh.SetIndexBufferData(F, 0, 0, FCount);
-        mesh.Optimize();
+        mesh.SetVertexBufferData(V, 0, 0, 3*VCount, 0, MeshUpdateFlags.DontValidateIndices);
+        mesh.SetIndexBufferData(F, 0, 0, 3*FCount);
+        mesh.subMeshCount = 1;
+        mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3*FCount));
         
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+        mesh.RecalculateBounds();
+        mesh.UploadMeshData(false);
+        
+        //OR use 
+        // mesh.SetVertices(V);
+        // mesh.SetIndices(F, MeshTopology.Triangles, 0);
+        
+        mesh.Optimize();
+
         // V.Dispose();
         // F.Dispose();
         // Debug.Log(mesh.GetSubMesh(0).topology);

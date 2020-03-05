@@ -38,9 +38,9 @@ extern "C" {
 
     //Note: Data is in RowMajor
     using V_t = Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor>;
-    using F_t = Eigen::Matrix<int, Eigen::Dynamic, 3, Eigen::RowMajor>;
+    using F_t = Eigen::Matrix<unsigned int, Eigen::Dynamic, 3, Eigen::RowMajor>;
 
-    void FillMesh(float* VPtr, int VSize, int* FPtr, int FSize) {
+    void FillMesh(float* VPtr, int VSize, unsigned int* FPtr, int FSize) {
         auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
         auto F = Eigen::Map<F_t>(FPtr, FSize, 3);
         

@@ -25,7 +25,7 @@ extern "C"{
     DllExport int IncrementValue(int value);
     DllExport void LoadMesh(const std::string modelPath);
 
-    DllExport void FillMesh(float* V, int VSize, int* F, int FSize);
+    DllExport void FillMesh(float* V, int VSize, unsigned int* F, int FSize);
     DllExport void MoveV(float VArr[][3], int VSize, float directionArr[3]);
     DllExport void ComputeColors(float* outColors, float* Vptr, int nV);
 }
