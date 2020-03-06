@@ -7,15 +7,16 @@ std::string modelRoot = "";
 
 extern "C" {
     void InitializeNative(const char* modelRootp, const StringCallback debugCallback, const VFCallback createMeshCallback) {
-        modelRoot = modelRootp;
-
         DebugLog = debugCallback;
         CreateMesh = createMeshCallback;
 
-        //Testing
-        LoadMesh("bumpy-cube.obj");
+        modelRoot = modelRootp;
+        if (DebugLog) DebugLog((char*)(modelRoot + " modelRoot").data());
 
         if (DebugLog) DebugLog("Initialized Native.");
+        
+        //Testing
+        LoadMesh("bumpy-cube.obj");
     }
 
     int IncrementValue(int value) {
@@ -26,11 +27,13 @@ extern "C" {
     void LoadMesh(const std::string modelPath) {
         Eigen::MatrixXf V;
         Eigen::MatrixXi F;
-        std::string model = modelRoot.append(modelPath);
+        std::string model = modelRoot + modelPath;
+
         igl::readOBJ(model, V, F);
 
-        if (DebugLog) DebugLog(modelRoot.append(modelPath).append(" mesh loading").data());
+        if (DebugLog) DebugLog((model + " mesh loaded: VSize " + std::to_string(V.rows())).data());
         
+        //CreateMesh(V.data(), V.rows(), F.data(), F.rows());
         CreateMesh(V.data(), F.data());
     }
 

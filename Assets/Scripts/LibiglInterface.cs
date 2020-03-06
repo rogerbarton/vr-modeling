@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using libigl.rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,11 +22,12 @@ namespace libigl
             }
             DontDestroyOnLoad(gameObject);
 
-            if (modelRoot == null)
+            if (string.IsNullOrEmpty(modelRoot))
                 modelRoot = Application.dataPath + "/Models/";
-
+            
+            Debug.Log("Model Root: " + modelRoot);    
             //TODO: need use fixed or pin callbacks?
-            Native.InitializeNative(modelRoot, NativeCallbacks.DebugLog, NativeCallbacks.CreateMesh);
+            Native.InitializeNative(modelRoot, NativeCallbacks.DebugLog, NativeCallbacks.AllocateMesh);
         }
 
         public static void CheckInitialized()
@@ -38,10 +36,9 @@ namespace libigl
                 UnityEngine.SceneManagement.SceneManager.LoadScene("StaticScene", LoadSceneMode.Additive);
         }
 
-        public void CreateMesh(Vector3[] V, int[] F)
+        public MeshFilter CreateMeshFilter()
         {
-            LibiglMeshFilter meshFilter = Instantiate(baseModel).GetComponent<LibiglMeshFilter>();
-            meshFilter.UpdateMeshFilter(V, F);
+            return Instantiate(baseModel).GetComponent<MeshFilter>();
         }
     }
 
@@ -56,7 +53,7 @@ namespace libigl
 
         [DllImport(dllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern void InitializeNative(
-            [In] string modelRootp, 
+            [In] string modelRootp,
             [In] NativeCallbacks.StringCallback debugCallback,
             [In] NativeCallbacks.VFCallback createMeshCallback);
         
@@ -95,9 +92,38 @@ namespace libigl
         }
 
         public delegate void VFCallback([In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] V, int vLength, int[] F);
-        public static void CreateMesh(float[,] V, int vLength, int[] F)
+
+        // public static void AllocateMesh(int VSize, int FSize, [Out] IntPtr V, [Out] IntPtr F)
+        // {
+        //     var libiglMeshFilter = LibiglInterface.get.CreateMeshFilter();
+        //     
+        //     var mesh = new Mesh();
+        //     mesh.name = "generated-mesh";
+        //     libiglMeshFilter.mesh = mesh;
+        //
+        //     var VLayout = new[]
+        //     {
+        //         //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
+        //         new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3, 0),
+        //         new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float16, 2, 1),
+        //         new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.UNorm8, 4, 2)
+        //     };
+        //     
+        //     var VCount = 8;
+        //     mesh.SetVertexBufferParams(VCount, VLayout); //Note:sizeof one vertex is defined in the layout as 3*4B
+        //     //So buffer size is vertices * 3 * 4B
+        //
+        //     var FCount = 12;
+        //     mesh.SetIndexBufferParams(3 * FCount,
+        //         IndexFormat.UInt32); //Note: Size of buffer is count * uint32 = 3 * faces*4B
+        //
+        //     var V = new NativeArray<float>(3 * VCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+        //     var F = new NativeArray<uint>(3 * FCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+        // }
+        public static void AllocateMesh(float[,] v, int vlength, int[] f)
         {
-            // LibiglInterface.get.CreateMesh(V, F);
+            //temp
         }
     }
+    
 }
