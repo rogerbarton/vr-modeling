@@ -1,4 +1,4 @@
-﻿using libigl;
+using libigl;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
@@ -50,8 +50,10 @@ public class Testing : MonoBehaviour
         {
             //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
             new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3, 0),
-            new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float16, 2, 1),
-            new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.UNorm8, 4, 2)
+            new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3, 1),
+            new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 1),
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
         };
         var VCount = 8;
         mesh.SetVertexBufferParams(VCount, VLayout); //Note:sizeof one vertex is defined in the layout as 3*4B
@@ -82,6 +84,7 @@ public class Testing : MonoBehaviour
         //Not sure if this is needed
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
         mesh.UploadMeshData(true);//for optimization, cannot edit/view in debugger after issuing this
         
         mesh.MarkModified(); //As we DontNotifyMeshUsers
