@@ -41,7 +41,7 @@ public class Testing : MonoBehaviour
         // mesh.SetVertexBufferParams(mesh.vertexCount, VLayout);
         // mesh.RecalculateTangents();
         
-        CreateCube();
+        // CreateCube();
     }
 
     private int value = 0;
@@ -56,12 +56,28 @@ public class Testing : MonoBehaviour
 
     private void TranslateMesh(Vector3 direction)
     {
+        //TODO: causes crash in DirectX currently
         var mesh = meshFilter.mesh;
-        var V = mesh.GetNativeVertexBufferPtr(0);
-        // var V = mesh.
+        mesh.MarkDynamic();
+        var layout = mesh.GetVertexAttributes();
+        var VPtr = mesh.GetNativeVertexBufferPtr(0); //Returns ptr to D3D11 buffer which we cant use directly
+        //TODO: Cannot modify directly, need to BeginModifyVertexBuffer and end in C++
+        //Keep a copy as a NativeArray and SetVertexBuffer each time
+        //Can only use this ptr to make a copy to a NativeArray on the CPU
+        //OR use a map as in the link below in the BeginModifyVertexBuffer()
+        //https://bitbucket.org/Unity-Technologies/graphicsdemos/pull-requests/2/example-of-native-vertex-buffers-for/diff
+        
         var VSize = mesh.vertexCount;
 
-        Native.TranslateMesh(V, VSize, direction);
+        unsafe
+        {
+            var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr.ToPointer(), 3 * VSize, Allocator.Temp);
+
+        }
+        
+        Native.TranslateMesh(VPtr, VSize, direction);
+        
+        //Set vertexbufferdata?
         mesh.MarkModified();
         mesh.UploadMeshData(true);
     }

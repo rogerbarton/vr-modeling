@@ -133,7 +133,6 @@ GameObject:
   - component: {fileID: 36909723}
   - component: {fileID: 36909725}
   - component: {fileID: 36909726}
-  - component: {fileID: 36909724}
   m_Layer: 0
   m_Name: libiglMesh
   m_TagString: Untagged
@@ -155,18 +154,6 @@ Transform:
   m_Father: {fileID: 1170939871}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &36909724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 36909722}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41605749578216d4383669c8c9f2e8e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!33 &36909725
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -613,6 +600,24 @@ PrefabInstance:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -3535015912173895022, guid: 749eb9bb51e951b40bdf9c434714b1bf,
     type: 3}
+--- !u!1 &1474459122 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1454616303}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1474459123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474459122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41605749578216d4383669c8c9f2e8e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1508479704
 PrefabInstance:
   m_ObjectHideFlags: 0
