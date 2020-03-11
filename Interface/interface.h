@@ -1,4 +1,3 @@
-#define DllImport __declspec( dllimport )
 #define DllExport __declspec( dllexport )
 
 #include <string>

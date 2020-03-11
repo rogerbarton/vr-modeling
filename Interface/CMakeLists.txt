@@ -6,20 +6,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #       this cmake file is tailored to a Visual Studio solution.
 
 # Add project files, for now just include all 
-file(GLOB SRCFILES *.cpp)
-file(GLOB HFILES *.{h, hpp})
-
+file(GLOB SRCFILES "Interface.cpp" "source/*.cpp")
+file(GLOB HFILES "Interface.h" "source/*.h")
+source_group("Header Files" FILES ${HFILES})
 
 # libigl - turn off 2D UI
 option(LIBIGL_WITH_OPENGL            "Use OpenGL"         OFF)
 option(LIBIGL_WITH_OPENGL_GLFW       "Use GLFW"           OFF)
-
 find_package(LIBIGL REQUIRED QUIET)
 
 # Create out DLL output file and link libigl to it
 add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES})
 target_link_libraries(${PROJECT_NAME} igl::core)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PRIVATE "source" "external/PluginAPI")
 
 # Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
 set(UNITY_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../" CACHE STRING 

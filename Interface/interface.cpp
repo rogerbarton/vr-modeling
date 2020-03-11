@@ -1,4 +1,4 @@
-#include "interface.h"
+#include "Interface.h"
 #include <Eigen/core>
 #include <igl/readOBJ.h>
 #include <igl/jet.h>

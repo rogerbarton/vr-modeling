@@ -1,18 +1,11 @@
-# ============= #
-# Local Files   #
-# ============= #
-Builds/
-
 # =============== #
 # Unity generated #
 # =============== #
+Library/*
 Temp/
 Obj/
 UnityGenerated/
-Library/*
-Library/UnityAssemblies/*
-!Library/UnityAssemblies/UnityEditor.UI.dll
-!Library/UnityAssemblies/UnityEngine.UI.dll
+Logs/
 Assets/AssetStoreTools*
 *.pidb.meta
 sysinfo.txt
@@ -47,26 +40,20 @@ ehthumbs.db
 Thumbs.db
 \.idea/
 
-Logs/
+# ====== #
+# Custom #
+# ====== #
+cmake-build*
 
+Builds/
 Assets/Plugins/Sirenix/
-
 Assets/Plugins/Editor/JetBrains/
-
 Assets/Plugins/Editor/JetBrains.meta
-
 Assets/Logs.meta
-
 Assets/Oculus/
-
 Assets/Plugins/Sirenix.meta
-
 Assets/Oculus.meta
-
-Interface/cmake-build-debug/
-
 Assets/Plugins/LibiglInterface/
-
 Assets/Plugins/LibiglInterface.meta
-
 Assets/Plugins/__libigl-interface.*
+
