@@ -30,11 +30,17 @@ public class OffImporter : ScriptedImporter
             Native.LoadOFF(ctx.assetPath, out var VPtr, out VSize, out var NPtr, out NSize, out var FPtr,
                 out FSize);
             //Note: length may be in bytes?
-            V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Invalid);
+            V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
             if (NSize > 0)
+            {
                 N = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(NPtr, 3 * VSize,
-                    Allocator.Invalid);
-            F = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(FPtr, 3 * FSize, Allocator.Invalid);
+                    Allocator.Temp);
+                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref N, AtomicSafetyHandle.Create());
+            }
+
+            F = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(FPtr, 3 * FSize, Allocator.Temp);
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
 
             var VLayout = new[]
             {
@@ -67,10 +73,6 @@ public class OffImporter : ScriptedImporter
             // mesh.UploadMeshData(true);
 
             mesh.MarkModified();
-
-            V.Dispose();
-            N.Dispose();
-            F.Dispose();
         }
     }
 }
