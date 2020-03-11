@@ -6,5 +6,5 @@ StringCallback DebugLog;
 
 extern "C"{
     UNITY_INTERFACE_EXPORT void InitializeNative(StringCallback debugCallback);
-    UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
+    UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
 }

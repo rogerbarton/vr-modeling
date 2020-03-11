@@ -9,6 +9,8 @@ using UnityEngine.Rendering;
 [ScriptedImporter(1, "off")]
 public class OffImporter : ScriptedImporter
 {
+    public float scale = 1f;
+    
     /// <summary>
     /// Called whenever a .off file is imported by Unity
     /// Trigger this manually by right-click > Reimport in the project browser
@@ -48,7 +50,7 @@ public class OffImporter : ScriptedImporter
         unsafe
         {
             //Load OFF into Eigen Matrices and get the pointers here
-            Native.LoadOFF(ctx.assetPath, out var VPtr, out VSize, out var NPtr, out NSize,
+            Native.LoadOFF(ctx.assetPath, scale, out var VPtr, out VSize, out var NPtr, out NSize,
                 out var FPtr, out FSize);
 
             //Convert the pointers to NativeArrays which we can create a mesh with
