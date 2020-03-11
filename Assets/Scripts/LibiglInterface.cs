@@ -66,15 +66,16 @@ namespace libigl
         [DllImport(dllName, ExactSpelling = true)]
         public static extern unsafe void FillMesh(void* VPtr, int VSize, void* FPtr, int FSize);
 
-        
+
         [DllImport(dllName, ExactSpelling = true)]
-        public static extern void MoveV([In, Out] IntPtr VArr, int VSize, [In] float[] directionArr);
+        public static extern void TranslateMesh([In, Out] IntPtr VPtr, int VSize,
+            [In, MarshalAs(UnmanagedType.Struct)] Vector3 directionArr);
 
         // [DllImport(dllName, ExactSpelling = true)]
         // public static extern void ComputeColors(
-            // [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] outColors, int outColorsSize,
-            // [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] Vptr, int VSize,
-            // int nV);
+        // [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] outColors, int outColorsSize,
+        // [In][MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.R4)] float[,] Vptr, int VSize,
+        // int nV);
     }
     
 

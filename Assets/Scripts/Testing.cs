@@ -18,12 +18,30 @@ public class Testing : MonoBehaviour
     // {
     //     public int3 tri;
     // }
+
+    private MeshFilter meshFilter;
     
     void Start()
     {
         LibiglInterface.CheckInitialized();
+        meshFilter = GetComponent<MeshFilter>();
+        // Mesh mesh = meshFilter.mesh;
+        // mesh.MarkDynamic();
+        //
+        // var VLayout = new[]
+        // {
+        //     //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
+        //     new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3, 0),
+        //     new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3, 1),
+        //     new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
+        //     new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 1),
+        //     new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
+        // };
+        // var oldLayout = mesh.GetVertexAttributes();
+        // mesh.SetVertexBufferParams(mesh.vertexCount, VLayout);
+        // mesh.RecalculateTangents();
         
-        
+        CreateCube();
     }
 
     private int value = 0;
@@ -31,8 +49,21 @@ public class Testing : MonoBehaviour
     {
         if(Input.anyKeyDown)
             Debug.Log(value = Native.IncrementValue(value));
-             
-        // Native.LoadMesh("bumpy-cube.obj");
+        // if (Input.GetAxis("Horizontal") != 0f)
+        //     TranslateMesh(new Vector3(Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0));
+        // TranslateMesh(new Vector3(Time.deltaTime * 1f, 0, 0));
+    }
+
+    private void TranslateMesh(Vector3 direction)
+    {
+        var mesh = meshFilter.mesh;
+        var V = mesh.GetNativeVertexBufferPtr(0);
+        // var V = mesh.
+        var VSize = mesh.vertexCount;
+
+        Native.TranslateMesh(V, VSize, direction);
+        mesh.MarkModified();
+        mesh.UploadMeshData(true);
     }
 
 
@@ -43,7 +74,7 @@ public class Testing : MonoBehaviour
     {
         var mesh = new Mesh();
         mesh.name = "generated-mesh";
-        GetComponent<MeshFilter>().mesh = mesh;
+        meshFilter.mesh = mesh;
         //mesh.MarkDynamic(); //if we want to repeatedly modify the mesh
 
         var VLayout = new[]

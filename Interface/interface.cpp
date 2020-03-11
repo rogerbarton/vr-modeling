@@ -72,10 +72,9 @@ extern "C" {
             2, 8, 4).finished().array() - 1;
     }
 
-    //Pass as arrays
-    void MoveV(float VArr[][3], int VSize, float directionArr[3]) {
-        auto V = Eigen::Map<Eigen::MatrixXf>((float*)VArr, VSize, 3);
-        auto direction = Eigen::Map<Eigen::RowVector3f>(directionArr);
+    void TranslateMesh(float* VPtr, int VSize, Vector3 directionArr) {
+        auto V = Eigen::Map<Eigen::MatrixXf>((float*)VPtr, VSize, 3);
+        auto direction = Eigen::Map<Eigen::RowVector3f>(&directionArr.x);
 
         V.rowwise() += direction;
     }
