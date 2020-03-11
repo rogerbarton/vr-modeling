@@ -63,6 +63,11 @@ namespace libigl
         [DllImport(dllName, ExactSpelling = true)]
         public static extern int LoadMesh(string value);
 
+        [DllImport("libigl-editor", ExactSpelling = true, CharSet = CharSet.Ansi)]
+        public static extern unsafe void LoadOFF([In] string path, [Out] out void* VPtr, [Out] out int VSize,
+            [Out] out void* FPtr, [Out] out int FSize, [Out] out void* NPtr);
+        
+        
         [DllImport(dllName, ExactSpelling = true)]
         public static extern unsafe void FillMesh(void* VPtr, int VSize, void* FPtr, int FSize);
 
