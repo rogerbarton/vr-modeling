@@ -8,8 +8,6 @@ StringCallback DebugLog;
 typedef void(UNITY_INTERFACE_API* VFCallback) (float* V, int* F);
 VFCallback CreateMesh;
 
-
-
 extern "C" {
     //For passing an array of structs
     /*struct VertexPos{

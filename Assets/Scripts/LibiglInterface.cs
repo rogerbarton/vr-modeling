@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityNativeTool;
 
 namespace libigl
 {
@@ -63,9 +64,10 @@ namespace libigl
         [DllImport(dllName, ExactSpelling = true)]
         public static extern int LoadMesh(string value);
 
+        [DisableMocking] //Always load this function, never unload's dll as a result
         [DllImport("libigl-editor", ExactSpelling = true, CharSet = CharSet.Ansi)]
-        public static extern unsafe void LoadOFF([In] string path, [Out] out void* VPtr, [Out] out int VSize,
-            [Out] out void* FPtr, [Out] out int FSize, [Out] out void* NPtr);
+        public static extern unsafe void LoadOFF([In] string path, [Out] out float* VPtr, [Out] out int VSize,
+            [Out] out float* NPtr, [Out] out int NSize, [Out] out uint* FPtr, [Out] out int FSize);
         
         
         [DllImport(dllName, ExactSpelling = true)]

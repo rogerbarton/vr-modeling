@@ -8,11 +8,12 @@ std::string modelRoot = "";
 
 extern "C" {
     void InitializeNative(const StringCallback debugCallback) {
+        //Note: may be called several times if the debugCallback changes
         DebugLog = debugCallback;
         if (DebugLog) DebugLog("Initialized Native.");
     }
 
-    void LoadOFF(const char* path, void* VPtr, int VSize, void* FPtr, int FSize, void* NPtr) {
+    void LoadOFF(const char* path, void*& VPtr, int& VSize, void*& NPtr, int NSize, void*& FPtr, int& FSize) {
         auto* V = new Eigen::MatrixXf(); //Must use new as we delete in C#
         auto* F = new Eigen::MatrixXi();
         auto* N = new Eigen::MatrixXf();
@@ -21,6 +22,7 @@ extern "C" {
         
         VSize = V->rows();
         FSize = F->rows();
+        NSize = N->rows();
         VPtr = V->data();
         FPtr = F->data();
         NPtr = N->data();
