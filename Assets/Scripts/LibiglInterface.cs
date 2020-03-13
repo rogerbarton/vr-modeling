@@ -51,6 +51,7 @@ namespace libigl
     public static class Native
     {
         const string dllName = "libigl-interface";
+        private const string dllNameEditor = "libigl-editor";
 
         [DllImport(dllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern void InitializeNative(
@@ -65,7 +66,7 @@ namespace libigl
         public static extern int LoadMesh(string value);
 
         [DisableMocking] //Always load this function, never unload's dll as a result
-        [DllImport("libigl-editor", ExactSpelling = true, CharSet = CharSet.Ansi)]
+        [DllImport(dllNameEditor, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern unsafe void LoadOFF([In] string path, [In] float scale,
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,

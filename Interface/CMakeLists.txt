@@ -25,4 +25,4 @@ set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}${UNITY_DLL_OUTPUT_DIRE
 
 # Add two dll projects
 add_subdirectory("source")
-add_subdirectory("editor")
+add_subdirectory("source/editor")

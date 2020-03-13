@@ -1,45 +1,31 @@
 #include "Interface.h"
-#include <Eigen/core>
 #include <igl/readOBJ.h>
 #include <igl/jet.h>
+#include <IUnityGraphics.h>
+#include "InterfaceTypes.h"
+#include <Eigen/core>
 
 std::string modelRoot = "";
-
 extern "C" {
-    void InitializeNative(const char* modelRootp, const StringCallback debugCallback, const VFCallback createMeshCallback) {
+	// void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginLoad(IUnityInterfaces* unityInterfaces)
+	// {
+    //     //IUnityGraphics* graphics = unityInterfaces->Get<IUnityGraphics>();
+	// }
+    
+	void InitializeNative(const char* modelRootp, const StringCallback debugCallback) {
         DebugLog = debugCallback;
-        CreateMesh = createMeshCallback;
 
         modelRoot = modelRootp;
         if (DebugLog) DebugLog((char*)(modelRoot + " used as modelRoot").data());
 
         if (DebugLog) DebugLog("Initialized Native.");
-
-        //Testing
-        LoadMesh("bumpy-cube.obj");
     }
 
     int IncrementValue(int value) {
         if (DebugLog) DebugLog("Incrementing.");
         return ++value;
     }
-
-    void LoadMesh(const std::string modelPath) {
-        Eigen::MatrixXf V;
-        Eigen::MatrixXi F;
-        std::string model = modelRoot + modelPath;
-
-        igl::readOBJ(model, V, F);
-
-        if (DebugLog) DebugLog((model + " mesh loaded: VSize " + std::to_string(V.rows())).data());
-
-        //CreateMesh(V.data(), V.rows(), F.data(), F.rows());
-        CreateMesh(V.data(), F.data());
-    }
-
-    //Note: Data is in RowMajor
-    using V_t = Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor>;
-    using F_t = Eigen::Matrix<unsigned int, Eigen::Dynamic, 3, Eigen::RowMajor>;
+    
 
     void FillMesh(float* VPtr, int VSize, unsigned int* FPtr, int FSize) {
         auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
