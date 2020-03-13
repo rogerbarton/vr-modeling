@@ -15,9 +15,5 @@ extern "C" {
         int tri[3];
     };*/
 
-    UNITY_INTERFACE_EXPORT void InitializeNative(const char* modelRootp, StringCallback debugCallback);
-    UNITY_INTERFACE_EXPORT int IncrementValue(int value);
-
-    UNITY_INTERFACE_EXPORT void FillMesh(float* V, int VSize, unsigned int* F, int FSize);
-    UNITY_INTERFACE_EXPORT void ComputeColors(float* outColors, float* Vptr, int nV);
+    UNITY_INTERFACE_EXPORT void Initialize(const char* modelRootp, StringCallback debugCallback);
 }

@@ -2,10 +2,10 @@
 #include <Eigen/core>
 
 extern "C" {
-    void TranslateMesh(float* VPtr, int VSize, Vector3 directionArr) {
-        auto V = Eigen::Map<Eigen::MatrixXf>((float*)VPtr, VSize, 3);
-        auto direction = Eigen::Map<Eigen::RowVector3f>(&directionArr.x);
+    void TranslateMesh(float* VPtr, int VSize, Vector3 value) {
+        auto V = Eigen::Map<V_t>((float*)VPtr, VSize, 3);
+        const auto valueMap = Eigen::Map<Eigen::RowVector3f>(&value.x);
 
-        V.rowwise() += direction;
+        V.rowwise() += valueMap;
     }
 }

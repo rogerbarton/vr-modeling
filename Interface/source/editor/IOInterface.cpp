@@ -7,7 +7,7 @@
 std::string modelRoot = "";
 
 extern "C" {
-    void InitializeNative(const StringCallback debugCallback) {
+    void Initialize(const StringCallback debugCallback) {
         //Note: may be called several times if the debugCallback changes
         DebugLog = debugCallback;
         if (DebugLog) DebugLog("Initialized Native.");
