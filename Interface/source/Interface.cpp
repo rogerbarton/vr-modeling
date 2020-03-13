@@ -13,8 +13,9 @@ extern "C" {
 	// }
     
 	void Initialize(const char* modelRootp, const StringCallback debugCallback) {
+#ifndef NDEBUG
         DebugLog = debugCallback;
-
+#endif
         modelRoot = modelRootp;
         if (DebugLog) DebugLog((char*)(modelRoot + " used as modelRoot").data());
 

@@ -131,8 +131,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 47835826}
-  - component: {fileID: 47835827}
   - component: {fileID: 47835828}
+  - component: {fileID: 47835827}
   m_Layer: 0
   m_Name: Statics
   m_TagString: Untagged

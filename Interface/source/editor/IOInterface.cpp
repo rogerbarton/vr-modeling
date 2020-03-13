@@ -9,8 +9,10 @@ std::string modelRoot = "";
 extern "C" {
     void Initialize(const StringCallback debugCallback) {
         //Note: may be called several times if the debugCallback changes
+#ifndef NDEBUG
         DebugLog = debugCallback;
-        if (DebugLog) DebugLog("Initialized Native.");
+        if (DebugLog) DebugLog("Initialized NativeEditor.");
+#endif
     }
 
     void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize) {

@@ -23,7 +23,7 @@ public class Testing : MonoBehaviour
     
     void Start()
     {
-        LibiglInterface.CheckInitialized();
+        Native.Initialize();
         meshFilter = GetComponent<MeshFilter>();
         // Mesh mesh = meshFilter.mesh;
         // mesh.MarkDynamic();
@@ -44,13 +44,10 @@ public class Testing : MonoBehaviour
         // CreateCube();
     }
 
-    private int value = 0;
     void Update()
     {
-        if(Input.anyKeyDown)
-            Debug.Log(value = Native.IncrementValue(value));
-        // if (Input.GetAxis("Horizontal") != 0f)
-        //     TranslateMesh(new Vector3(Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0));
+        if (Input.GetAxis("Horizontal") != 0f)
+            TranslateMesh(new Vector3(Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0));
         // TranslateMesh(new Vector3(Time.deltaTime * 1f, 0, 0));
     }
 
@@ -72,10 +69,9 @@ public class Testing : MonoBehaviour
         unsafe
         {
             var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr.ToPointer(), 3 * VSize, Allocator.Temp);
-
+            Native.TranslateMesh((float*)VPtr.ToPointer(), VSize, direction);
         }
         
-        Native.TranslateMesh(VPtr, VSize, direction);
         
         //Set vertexbufferdata?
         mesh.MarkModified();
@@ -116,7 +112,7 @@ public class Testing : MonoBehaviour
         //--- Call C++ to fill V, F
         unsafe
         {
-            Native.FillMesh(V.GetUnsafePtr(), VCount, F.GetUnsafePtr(), FCount);
+            // Native.FillMesh(V.GetUnsafePtr(), VCount, F.GetUnsafePtr(), FCount);
         }
 
         //Be sure to multiply by 3 to copy whole array
