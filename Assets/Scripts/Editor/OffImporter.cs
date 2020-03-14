@@ -72,18 +72,10 @@ namespace libigl
             }
 
             //Setup the buffers, then fill the data later
-            var VertexBufferLayout = new[]
-            {
-                //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
-                new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3, 0),
-                new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3, 1)
-                // new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
-                // new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 1),
-                // new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
-            };
+            
             //Note:sizeof one vertex is defined in the layout as 3*4B
             //So buffer size is vertices * 3 * 4B
-            mesh.SetVertexBufferParams(VSize, VertexBufferLayout);
+            mesh.SetVertexBufferParams(VSize, Native.VertexBufferLayout);
             //Note: Size of buffer is count * uint32 = 3 * faces*4B
             mesh.SetIndexBufferParams(3 * FSize, IndexFormat.UInt32);
 

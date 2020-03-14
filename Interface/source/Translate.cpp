@@ -1,4 +1,4 @@
-#include "Translate.h"
+#include "InterfaceTypes.h"
 #include <Eigen/core>
 
 extern "C" {

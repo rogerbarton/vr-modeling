@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace libigl
 {
@@ -15,6 +16,16 @@ namespace libigl
         private const string dllName = "libigl-interface";
         private static bool initialized = false;
 
+        public static VertexAttributeDescriptor[] VertexBufferLayout = new[]
+        {
+            //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
+            new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3, 0),
+            new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3, 1)
+            // new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
+            // new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 1),
+            // new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
+        };
+        
         public static void Initialize()
         {
             if (!initialized)
