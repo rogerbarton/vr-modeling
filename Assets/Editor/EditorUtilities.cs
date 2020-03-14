@@ -2,8 +2,9 @@
 using System;
 using System.Reflection;
 using UnityEditor;
+#if UNITY_2019_1_OR_NEWER
 using UnityEditor.ShortcutManagement;
-
+#endif
 namespace EditorExtras
 {
     /// <summary>
@@ -41,14 +42,25 @@ namespace EditorExtras
         {
             // "EditorWindow.focusedWindow" can be used instead
             var inspectorToBeLocked = EditorWindow.mouseOverWindow;
-            if (inspectorToBeLocked == null || inspectorToBeLocked.GetType().Name != "InspectorWindow") 
+            if (inspectorToBeLocked == null)
                 return;
-            
-            Type type = Assembly.GetAssembly(typeof(UnityEditor.Editor)).GetType("UnityEditor.InspectorWindow");
-            PropertyInfo propertyInfo = type.GetProperty("isLocked");
+
+            Type projectBrowserType =
+                Assembly.GetAssembly(typeof(UnityEditor.Editor)).GetType("UnityEditor.ProjectBrowser");
+            Type inspectorWindowType =
+                Assembly.GetAssembly(typeof(UnityEditor.Editor)).GetType("UnityEditor.InspectorWindow");
+
+            PropertyInfo propertyInfo;
+            if (inspectorToBeLocked.GetType() == projectBrowserType)
+                propertyInfo = projectBrowserType.GetProperty("isLocked",
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            else if (inspectorToBeLocked.GetType() == inspectorWindowType)
+                propertyInfo = inspectorWindowType.GetProperty("isLocked");
+            else
+                return;
+
             bool value = (bool) propertyInfo.GetValue(inspectorToBeLocked, null);
             propertyInfo.SetValue(inspectorToBeLocked, !value, null);
-
             inspectorToBeLocked.Repaint();
         }
 
