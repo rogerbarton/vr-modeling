@@ -5,6 +5,10 @@ project(__libigl-interface)
 file(GLOB SRCFILES "Interface.cpp" "*.cpp")
 file(GLOB HFILES "Interface.h" "*.h")
 source_group("Header Files" FILES ${HFILES})
+if(CMAKE_VERBOSE)
+	message(STATUS "Source Files ${PROJECT_NAME}: ${SRCFILES}")
+	message(STATUS "Header Files ${PROJECT_NAME}: ${HFILES}")
+endif()
 
 # Create out DLL output file and link libigl to it
 add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES})

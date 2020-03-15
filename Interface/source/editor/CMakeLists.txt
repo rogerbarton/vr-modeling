@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.1)
-project(libigl-editor)
+project(__libigl-editor)
 
 # Add project files
 file(GLOB SRCFILES "IOInterface.cpp" "*.cpp")
 file(GLOB HFILES "IOInterface.h" "*.h" "../InterfaceTypes.h")
 source_group("Header Files" FILES ${HFILES})
+if(CMAKE_VERBOSE)
+	message(STATUS "Source Files ${PROJECT_NAME}: ${SRCFILES}")
+	message(STATUS "Header Files ${PROJECT_NAME}: ${HFILES}")
+endif()
 
 # Create out DLL output file and link libigl to it
 add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES})

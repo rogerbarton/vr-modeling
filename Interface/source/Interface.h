@@ -11,5 +11,5 @@ extern "C" {
     UNITY_INTERFACE_EXPORT void Initialize(const char* modelRootp, StringCallback debugCallback);
 
     // Translate.cpp
-    UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 directionArr);
+    UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
 }

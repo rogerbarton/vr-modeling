@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(Interface)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
+option(CMAKE_VERBOSE "Print extra information" OFF)
 # Note: As this project is aimed at the Oculus Rift platform on Windows,
 #       this cmake file is tailored to a Visual Studio solution.
 
