@@ -43,7 +43,7 @@ namespace UnityNativeTool.Internal
         /// Loads all DLLs and functions for mocked methods
         /// </summary>
         #if UNITY_2019_1_OR_NEWER
-        [Shortcut("Tools/Load All Dlls", KeyCode.D, ShortcutModifiers.Alt | ShortcutModifiers.Shift)]
+        [Shortcut("Tools/Load All Dlls", KeyCode.W, ShortcutModifiers.Alt | ShortcutModifiers.Shift)]
         #else
         [MenuItem("Tools/Unload All Dlls #&d")]
         #endif
@@ -73,7 +73,7 @@ namespace UnityNativeTool.Internal
         /// Unloads all DLLs and functions currently loaded
         /// </summary>
         #if UNITY_2019_1_OR_NEWER
-        [Shortcut("Tools/Unload All Dlls", KeyCode.D, ShortcutModifiers.Alt)]
+        [Shortcut("Tools/Unload All Dlls", KeyCode.W, ShortcutModifiers.Alt)]
         #else
         [MenuItem("Tools/Unload All Dlls &d")]
         #endif

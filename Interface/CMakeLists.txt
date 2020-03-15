@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(Interface)
+project(__libigl-interface)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 option(CMAKE_VERBOSE "Print extra information" OFF)
 # Note: As this project is aimed at the Oculus Rift platform on Windows,

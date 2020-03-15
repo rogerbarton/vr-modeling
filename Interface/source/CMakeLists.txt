@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.1)
-project(__libigl-interface)
 
 # Add project files
 file(GLOB SRCFILES "Interface.cpp" "*.cpp")
 file(GLOB HFILES "Interface.h" "*.h")
+file(GLOB DEBUGFILES "${PROJECT_SOURCE_DIR}/external/eigen-debug/msvc/*") # Only for visual studio
 source_group("Header Files" FILES ${HFILES})
 if(CMAKE_VERBOSE)
 	message(STATUS "Source Files ${PROJECT_NAME}: ${SRCFILES}")
 	message(STATUS "Header Files ${PROJECT_NAME}: ${HFILES}")
+	message(STATUS "Debug Files ${PROJECT_NAME} : ${DEBUGFILES}")
 endif()
 
 # Create out DLL output file and link libigl to it
-add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES})
+add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES} ${DEBUGFILES})
 target_link_libraries(${PROJECT_NAME} igl::core)
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
@@ -21,4 +22,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY_RELEASE "${UNITY_DLL_OUTPUT_DIRECTORY_ABS}")
 message(STATUS "Saving ${PROJECT_NAME}.dll to: ${UNITY_DLL_OUTPUT_DIRECTORY_ABS}")
 
-#set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})\
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
