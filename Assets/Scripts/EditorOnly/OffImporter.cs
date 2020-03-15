@@ -12,6 +12,8 @@ namespace libigl
     public class OffImporter : ScriptedImporter
     {
         public float scale = 1f;
+        [Tooltip("Reorders vertices and faces for better rendering performance.")]
+        public bool optimizeForRendering;
 
         /// <summary>
         /// Called whenever a .off file is imported by Unity
@@ -52,7 +54,6 @@ namespace libigl
             unsafe
             {
                 //Load OFF into Eigen Matrices and get the pointers here
-                NativeEditor.Initialize();
                 NativeEditor.LoadOFF(ctx.assetPath, scale, out var VPtr, out VSize, out var NPtr, out NSize,
                     out var FPtr, out FSize);
 
@@ -97,9 +98,13 @@ namespace libigl
             mesh.subMeshCount = 1;
             mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3 * FSize));
 
+            if(optimizeForRendering)
+                mesh.Optimize();
+            
             // mesh.RecalculateTangents();
+            mesh.MarkDynamic(); //keep a copy on the cpu side
             mesh.MarkModified();
-
+                
             #endregion
         }
     }

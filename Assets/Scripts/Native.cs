@@ -1,8 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityNativeTool;
 
 namespace libigl
 {
@@ -11,10 +12,10 @@ namespace libigl
     /// These functions can only be called in play mode, as the dll is unloaded otherwise for easier rebuilds.
     /// C# to C++ Communication with marshalling attributes
     /// </summary>
+    [MockNativeDeclarations]
     public static class Native
     {
-        private const string dllName = "libigl-interface";
-        private static bool initialized = false;
+        public const string dllName = "libigl-interface";
 
         public static VertexAttributeDescriptor[] VertexBufferLayout = new[]
         {
@@ -25,30 +26,28 @@ namespace libigl
             // new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 1),
             // new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
         };
-        
+
+        /// <summary>
+        /// Setup callbacks inside the static constructor
+        /// </summary>
         public static void Initialize()
         {
-            if (!initialized)
-                Initialize(Application.dataPath + "/Models/", NativeCallbacks.DebugLog);
-            initialized = true;
+            Initialize(Application.dataPath + "/Models/", NativeCallbacks.DebugLog);
         }
 
         /// <summary>
-        /// Reset plugin, allows initialization again.
-        /// Call this when plugin is unloaded, end of play mode when using DllManipulator
+        /// Clean up native part if required, called before unload dll
         /// </summary>
-        public static void Dispose()
-        {
-            initialized = false;
-        }
+        public static void Destroy() { }
 
         [DllImport(dllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize([In] string modelRootp,
             [In] NativeCallbacks.StringCallback debugCallback);
 
-        [DllImport(dllName, ExactSpelling = true)]
-        public static extern unsafe void TranslateMesh([In] float* VPtr, int VSize,
-            [In /*, MarshalAs(UnmanagedType.Struct)*/]
-            Vector3 directionArr);
+        [DllImport(dllName)]
+        public static extern unsafe void TranslateMesh([In] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
+        // public static extern unsafe void TranslateMesh(
+        //     [In,Out] float* VPtr, int VSize,
+        //     [In, MarshalAs(UnmanagedType.Struct)] Vector3 value);
     }
 }

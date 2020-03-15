@@ -1,3 +1,4 @@
+using System;
 using libigl;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -23,8 +24,9 @@ public class Testing : MonoBehaviour
     
     void Start()
     {
-        Native.Initialize();
         meshFilter = GetComponent<MeshFilter>();
+        // NativeEditor.Initialize();
+        // Native.Initialize();
         // Mesh mesh = meshFilter.mesh;
         // mesh.MarkDynamic();
         //
@@ -57,7 +59,6 @@ public class Testing : MonoBehaviour
         var mesh = meshFilter.mesh;
         mesh.MarkDynamic();
         var layout = mesh.GetVertexAttributes();
-        var VPtr = mesh.GetNativeVertexBufferPtr(0); //Returns ptr to D3D11 buffer which we cant use directly
         //TODO: Cannot modify directly, need to BeginModifyVertexBuffer and end in C++
         //Keep a copy as a NativeArray and SetVertexBuffer each time
         //Can only use this ptr to make a copy to a NativeArray on the CPU
@@ -66,16 +67,19 @@ public class Testing : MonoBehaviour
         
         var VSize = mesh.vertexCount;
 
-        unsafe
+        unsafe 
         {
-            var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr.ToPointer(), 3 * VSize, Allocator.Temp);
-            Native.TranslateMesh((float*)VPtr.ToPointer(), VSize, direction);
+            fixed (Vector3* VPtr = mesh.vertices)
+            {
+                // var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
+                Native.TranslateMesh((float*) VPtr, VSize, direction);
+            }
         }
         
         
         //Set vertexbufferdata?
         mesh.MarkModified();
-        mesh.UploadMeshData(true);
+        mesh.UploadMeshData(false);
     }
 
 

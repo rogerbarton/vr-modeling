@@ -27,11 +27,5 @@ namespace libigl
             if (!get)            //load static scene with the instance scene, blocking load
                 SceneManager.LoadScene("StaticScene", LoadSceneMode.Additive);
         }
-
-        private void OnDestroy()
-        {
-            if(get == this)
-                Native.Dispose();
-        }
     }
 }

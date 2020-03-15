@@ -166,9 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5712dc981e21cbc41919cd4de454fdc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelRoot: 
-  baseModel: {fileID: 3490077750096641723, guid: bdee2fcec35350447b14111c3a2dfd7f,
-    type: 3}
 --- !u!114 &47835828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,5 +187,5 @@ MonoBehaviour:
     enableCrashLogs: 0
     crashLogsDir: '{assets}/'
     crashLogsStackTrace: 0
-    mockAllNativeFunctions: 1
+    mockAllNativeFunctions: 0
     onlyInEditor: 1

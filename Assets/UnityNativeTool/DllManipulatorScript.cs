@@ -102,7 +102,8 @@ namespace UnityNativeTool
 
                 DllManipulator.UnloadAll();
                 DllManipulator.ForgetAllDlls();
-                DllManipulator.ClearCrashLogs();         
+                DllManipulator.ClearCrashLogs();
+                _singletonInstance = null;
             }
         }
     }

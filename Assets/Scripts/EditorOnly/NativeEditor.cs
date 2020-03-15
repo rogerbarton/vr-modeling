@@ -11,21 +11,24 @@ namespace libigl
     /// These functions can be called in edit or play mode.
     /// The editor has to be closed to rebuild the dll for these functions.
     /// </summary>
-    [DisableMocking] //Disable unloading, let Unity load these functions
+    // [DisableMocking] //Disable unloading, let Unity load these functions
+    [MockNativeDeclarations]
     public static class NativeEditor
     {
-        private const string dllName = "libigl-editor";
-        private static bool initialized = false;
+        public const string dllName = "libigl-editor";
 
         /// <summary>
-        /// Call this to ensure that the native plugin has been properly initialized, callbacks set up.
+        /// Setup callbacks inside the static constructor
         /// </summary>
         public static void Initialize()
         {
-            if (!initialized)
-                Initialize(NativeCallbacks.DebugLog);
-            initialized = true;
+            Initialize(NativeCallbacks.DebugLog);
         }
+        
+        /// <summary>
+        /// Clean up native part if required, called before unload dll
+        /// </summary>
+        public static void Destroy() { }
 
         [DllImport(dllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
