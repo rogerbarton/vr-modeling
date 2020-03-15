@@ -54,7 +54,7 @@ namespace libigl
             unsafe
             {
                 //Load OFF into Eigen Matrices and get the pointers here
-                NativeEditor.LoadOFF(ctx.assetPath, scale, out var VPtr, out VSize, out var NPtr, out NSize,
+                Native.LoadOFF(ctx.assetPath, scale, out var VPtr, out VSize, out var NPtr, out NSize,
                     out var FPtr, out FSize);
 
                 //Convert the pointers to NativeArrays which we can create a mesh with

@@ -15,10 +15,8 @@ namespace UnityNativeTool
         public static void OnDllLoaded(string dllName)
         {
             Debug.Log("[dll] " + dllName + " dll loaded.");
-            if (dllName == Native.dllName)
+            if (dllName == Native.DllName)
                 Native.Initialize();
-            else if (dllName == NativeEditor.dllName)
-                NativeEditor.Initialize();
         }
 
         
@@ -29,10 +27,8 @@ namespace UnityNativeTool
         public static void OnBeforeDllUnload(string dllName)
         {
             // Debug.Log("[dll] " + dllName + " dll unloading...");
-            if (dllName == Native.dllName)
+            if (dllName == Native.DllName)
                 Native.Destroy();
-            else if (dllName == NativeEditor.dllName)
-                NativeEditor.Destroy();
         }
         
         /// <summary>
