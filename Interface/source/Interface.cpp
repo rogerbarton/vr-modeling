@@ -5,7 +5,9 @@
 #include "InterfaceTypes.h"
 #include <Eigen/core>
 
+StringCallback DebugLog;
 std::string modelRoot = "";
+
 extern "C" {
 	// void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginLoad(IUnityInterfaces* unityInterfaces)
 	// {

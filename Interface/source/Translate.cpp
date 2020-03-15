@@ -1,4 +1,5 @@
 #include "InterfaceTypes.h"
+#include "Interface.h"
 #include <Eigen/core>
 
 extern "C" {
