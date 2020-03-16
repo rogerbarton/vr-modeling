@@ -66,15 +66,17 @@ public class Testing : MonoBehaviour
         //https://bitbucket.org/Unity-Technologies/graphicsdemos/pull-requests/2/example-of-native-vertex-buffers-for/diff
         
         var VSize = mesh.vertexCount;
-
+        var V = mesh.vertices;
         unsafe 
         {
-            fixed (Vector3* VPtr = mesh.vertices)
+            fixed (Vector3* VPtr = V)
             {
                 // var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
                 Native.TranslateMesh((float*) VPtr, VSize, direction);
             }
         }
+
+        mesh.vertices = V;
         
         
         //Set vertexbufferdata?

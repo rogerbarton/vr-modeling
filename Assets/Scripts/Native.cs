@@ -51,7 +51,7 @@ namespace libigl
             [Out] out uint* FPtr, [Out] out int FSize);
         
         [DllImport(DllName)]
-        public static extern unsafe void TranslateMesh([In] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
+        public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         // public static extern unsafe void TranslateMesh(
         //     [In,Out] float* VPtr, int VSize,
         //     [In, MarshalAs(UnmanagedType.Struct)] Vector3 value);
