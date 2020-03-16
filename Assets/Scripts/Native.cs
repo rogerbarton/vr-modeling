@@ -44,6 +44,9 @@ namespace libigl
         private static extern void Initialize([In] string modelRootp,
             [In] NativeCallbacks.StringCallback debugCallback);
 
+        [DllImport(DllName, ExactSpelling = true)]
+        public static extern unsafe void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize);
+        
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern unsafe void LoadOFF([In] string path, [In] float scale,
             [Out] out float* VPtr, [Out] out int VSize,

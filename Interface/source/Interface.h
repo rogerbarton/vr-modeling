@@ -1,5 +1,6 @@
 #pragma once
-#include <IUnityInterface.h>
+#include <Unity/IUnityInterface.h>
+#include <Unity/RenderAPI.h>
 #include <string>
 #include "InterfaceTypes.h"
 
@@ -9,13 +10,19 @@ typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 // It is then defined in the Interface.cpp once
 extern StringCallback DebugLog;
 extern std::string modelRoot;
+extern IUnityInterfaces* s_UnityInterfaces;
+extern IUnityGraphics* s_Graphics;
 
 extern "C" {
     UNITY_INTERFACE_EXPORT void Initialize(const char* modelRootp, StringCallback debugCallback);
+    UNITY_INTERFACE_EXPORT void UnityPluginLoad(IUnityInterfaces* unityInterfaces);
+    UNITY_INTERFACE_EXPORT void UnityPluginUnload();
+    UNITY_INTERFACE_EXPORT void OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType);
 
     //IO.cpp
     UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
 
     // Translate.cpp
+    UNITY_INTERFACE_EXPORT void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize);
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
 }

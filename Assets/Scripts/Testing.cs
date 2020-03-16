@@ -8,56 +8,44 @@ using UnityEngine.Rendering;
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class Testing : MonoBehaviour
 {
-    // [StructLayout(LayoutKind.Sequential)]
-    // struct VertexPos
-    // {
-    //     public float3 pos;
-    // }
-    //
-    // [StructLayout(LayoutKind.Sequential)]
-    // struct Face
-    // {
-    //     public int3 tri;
-    // }
-
     private MeshFilter meshFilter;
     Mesh mesh;
-    private Vector3[] V;
+    private NativeArray<float> V;
     int VSize;
 
     void Start()
     {
         meshFilter = GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
-        V = mesh.vertices;
         VSize = mesh.vertexCount;
         mesh.MarkDynamic();
-        
-        
-        // var VLayout = new[]
-        // {
-        //     //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
-        //     new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3, 0),
-        //     new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3, 1),
-        //     new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
-        //     new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 1),
-        //     new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
-        // };
-        // var oldLayout = mesh.GetVertexAttributes();
-        // mesh.SetVertexBufferParams(mesh.vertexCount, VLayout);
-        // mesh.RecalculateTangents();
-
-        // CreateCube();
+        unsafe
+        {
+            fixed(Vector3* VPtr = mesh.vertices)
+                V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*)VPtr, 3 * VSize, Allocator.Persistent);
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
+            // Native.SetupMesh(mesh.GetNativeVertexBufferPtr(0), V, VSize);
+        }
+        // mesh.UploadMeshData(true);//delete managed copy and make no longer readable via Unity
     }
 
     void Update()
     {
         if (Input.GetAxis("Horizontal") != 0f)
-            TranslateMesh(new Vector3(Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0));
+            TranslateMesh(new Vector3( Mathf.Sign(Input.GetAxis("Horizontal")), 0, 0));
         // TranslateMesh(new Vector3(Time.deltaTime * 1f, 0, 0));
     }
 
     private void TranslateMesh(Vector3 direction)
+    {
+        unsafe
+        {
+            Native.TranslateMesh((float*)V.GetUnsafePtr(), VSize, direction);
+            Native.UploadMesh((float*)mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(), VSize);
+        }
+    }
+    
+    private void TranslateMeshManaged(Vector3 direction)
     {
         //TODO: causes crash in DirectX currently
         // var layout = mesh.GetNativeVertexBufferPtr();
@@ -69,7 +57,7 @@ public class Testing : MonoBehaviour
         
         unsafe 
         {
-            fixed (Vector3* VPtr = V)
+            fixed (Vector3* VPtr = mesh.vertices)
             {
                 // var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
                 Native.TranslateMesh((float*) VPtr, VSize, direction);
@@ -83,6 +71,8 @@ public class Testing : MonoBehaviour
         // mesh.MarkModified();
         mesh.UploadMeshData(false);
     }
+
+    
 
 
     /// <summary>
@@ -147,5 +137,10 @@ public class Testing : MonoBehaviour
         
         V.Dispose();
         F.Dispose();
+    }
+    
+    private void OnDestroy()
+    {
+        V.Dispose();
     }
 }
