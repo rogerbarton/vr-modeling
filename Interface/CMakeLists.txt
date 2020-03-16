@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(__libigl-interface)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 option(CMAKE_VERBOSE "Print extra information" OFF)
+
 # Note: As this project is aimed at the Oculus Rift platform on Windows,
 #       this cmake file is tailored to a Visual Studio solution.
 
@@ -9,9 +10,13 @@ option(CMAKE_VERBOSE "Print extra information" OFF)
 option(LIBIGL_WITH_OPENGL            "Use OpenGL"         OFF)
 option(LIBIGL_WITH_OPENGL_GLFW       "Use GLFW"           OFF)
 find_package(LIBIGL REQUIRED QUIET)
+find_package(OpenGL REQUIRED)
 
-#Add Unity header files
-include_directories(${PROJECT_NAME} "external/PluginAPI")
+# Add Unity header files
+include_directories(${PROJECT_NAME} "external")
+file(GLOB UNITY_API_FILES "external/Unity/*.h*" "external/Unity/*.c*" "external/Unity/gl3w/*.h*" "external/Unity/gl3w/*.c*")
+file(GLOB EIGEN_DEBUG_FILES "external/eigen-debug/msvc/*")
+
 
 # Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
 set(UNITY_PROJECT_ROOT "${PROJECT_SOURCE_DIR}/../" CACHE STRING 
@@ -23,5 +28,8 @@ set(UNITY_DLL_OUTPUT_DIRECTORY "Assets/Plugins" CACHE STRING
 
 set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}${UNITY_DLL_OUTPUT_DIRECTORY}")
 
+
 # Add two dll projects
 add_subdirectory("source")
+
+# set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
