@@ -29,7 +29,17 @@ set(UNITY_DLL_OUTPUT_DIRECTORY "Assets/Plugins" CACHE STRING
 set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}${UNITY_DLL_OUTPUT_DIRECTORY}")
 
 
-# Add two dll projects
+# Add the dll projects
 add_subdirectory("source")
 
+# Uncomment to set our default build target in Visual Studio
 # set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+
+
+# Optionally build the UnityNativeTool stubLluiPlugin required, needs to only be built once usually
+option(UNITY_BUILD_STUB_PLUGIN "Create a target for building the stubLluiPlugin library. 
+	This has to be built once, in release mode, to allow for UnityPluginLoad and
+	UnityPluginUnload to be called when mocking with UnityNativeTool in the Editor" ON)
+if(${UNITY_BUILD_STUB_PLUGIN})
+	add_subdirectory("external/UnityNativeTool") # stub plugin for ensuring UniyLoadPlugin is called when mocking
+endif()
