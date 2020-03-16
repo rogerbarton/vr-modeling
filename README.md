@@ -96,6 +96,8 @@ So current solution is to use Jetbrains Rider to debug the C# side and VS for C+
 
 ### Further Reading
 
+A good [simple introduction to P/Invoke](https://manski.net/2012/06/pinvoke-tutorial-pinning-part-4/)
+
 Unrelated and not what you want:
 
 - C++/CLI (Microsoft) which is not the same as C++
