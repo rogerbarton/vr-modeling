@@ -21,15 +21,19 @@ public class Testing : MonoBehaviour
     // }
 
     private MeshFilter meshFilter;
-    
+    Mesh mesh;
+    private Vector3[] V;
+    int VSize;
+
     void Start()
     {
         meshFilter = GetComponent<MeshFilter>();
-        // NativeEditor.Initialize();
-        // Native.Initialize();
-        // Mesh mesh = meshFilter.mesh;
-        // mesh.MarkDynamic();
-        //
+        mesh = meshFilter.mesh;
+        V = mesh.vertices;
+        VSize = mesh.vertexCount;
+        mesh.MarkDynamic();
+        
+        
         // var VLayout = new[]
         // {
         //     //Note! Specify that the position is the only attribute in the first stream, else values will be interleaved
@@ -42,7 +46,7 @@ public class Testing : MonoBehaviour
         // var oldLayout = mesh.GetVertexAttributes();
         // mesh.SetVertexBufferParams(mesh.vertexCount, VLayout);
         // mesh.RecalculateTangents();
-        
+
         // CreateCube();
     }
 
@@ -56,17 +60,13 @@ public class Testing : MonoBehaviour
     private void TranslateMesh(Vector3 direction)
     {
         //TODO: causes crash in DirectX currently
-        var mesh = meshFilter.mesh;
-        mesh.MarkDynamic();
-        var layout = mesh.GetVertexAttributes();
+        // var layout = mesh.GetNativeVertexBufferPtr();
         //TODO: Cannot modify directly, need to BeginModifyVertexBuffer and end in C++
         //Keep a copy as a NativeArray and SetVertexBuffer each time
         //Can only use this ptr to make a copy to a NativeArray on the CPU
         //OR use a map as in the link below in the BeginModifyVertexBuffer()
         //https://bitbucket.org/Unity-Technologies/graphicsdemos/pull-requests/2/example-of-native-vertex-buffers-for/diff
         
-        var VSize = mesh.vertexCount;
-        var V = mesh.vertices;
         unsafe 
         {
             fixed (Vector3* VPtr = V)
@@ -76,11 +76,11 @@ public class Testing : MonoBehaviour
             }
         }
 
-        mesh.vertices = V;
+        mesh.SetVertices(V);
         
         
         //Set vertexbufferdata?
-        mesh.MarkModified();
+        // mesh.MarkModified();
         mesh.UploadMeshData(false);
     }
 
