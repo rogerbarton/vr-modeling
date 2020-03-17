@@ -38,7 +38,7 @@ namespace libigl
             meshFilter.mesh = mesh;
 
             var meshRenderer = gameObject.AddComponent<MeshRenderer>();
-            var material = new Material(Shader.Find("Diffuse"));
+            var material = new Material(Shader.Find("HDRP/Lit"));
             meshRenderer.material = material;
             ctx.AddObjectToAsset("Material", material);
 

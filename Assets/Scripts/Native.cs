@@ -32,6 +32,7 @@ namespace libigl
         /// </summary>
         public static void Initialize()
         {
+            //TODO: use statuc ctor when in a build, #if 
             Initialize(Application.dataPath + "/Models/", NativeCallbacks.DebugLog);
         }
 
