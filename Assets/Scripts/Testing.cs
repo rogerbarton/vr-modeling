@@ -12,21 +12,44 @@ public class Testing : MonoBehaviour
     Mesh mesh;
     private NativeArray<float> V;
     int VSize;
+    bool uploadToGpu;    
 
     void Start()
     {
         meshFilter = GetComponent<MeshFilter>();
         mesh = meshFilter.mesh;
         VSize = mesh.vertexCount;
-        mesh.MarkDynamic();
+        V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
+        var layout = mesh.GetVertexAttributes();
+        // mesh.MarkDynamic();
         unsafe
         {
-            fixed(Vector3* VPtr = mesh.vertices)
-                V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*)VPtr, 3 * VSize, Allocator.Persistent);
-            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
-            // Native.SetupMesh(mesh.GetNativeVertexBufferPtr(0), V, VSize);
+            NativeArray<float> tmp;
+            fixed(Vector3* managedVPtr = mesh.vertices)
+                tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*)managedVPtr, 3 * VSize, Allocator.Temp);
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref tmp, AtomicSafetyHandle.Create());
+            // NativeArray<float>.Copy(tmp, V); //Make our own copy
+            V.CopyFrom(tmp);
+            
+            tmp.Dispose();
         }
-        // mesh.UploadMeshData(true);//delete managed copy and make no longer readable via Unity
+        mesh.UploadMeshData(true); //delete managed copy and make no longer readable via Unity
+    }
+
+    private void OnPostRender()
+    {
+        unsafe
+        {
+            if (uploadToGpu)
+            {
+                uploadToGpu = false;
+                Native.UploadMesh((float*) mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(),
+                    VSize);
+            }
+        }
+
+        // Use CommandBuffer.IssuePluginEventAndData
     }
 
     void Update()
@@ -41,8 +64,9 @@ public class Testing : MonoBehaviour
         unsafe
         {
             Native.TranslateMesh((float*)V.GetUnsafePtr(), VSize, direction);
-            Native.UploadMesh((float*)mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(), VSize);
+            uploadToGpu = true;
         }
+        // mesh.MarkModified();
     }
     
     private void TranslateMeshManaged(Vector3 direction)
@@ -135,12 +159,13 @@ public class Testing : MonoBehaviour
         // IntPtr voidPtrToVArr = mesh.GetNativeVertexBufferPtr(0); //retrieve the first buffer
         // IntPtr voidPtrToFArr = mesh.GetNativeIndexBufferPtr();
         
-        V.Dispose();
-        F.Dispose();
+        // V.Dispose();
+        // F.Dispose();
     }
     
     private void OnDestroy()
     {
-        V.Dispose();
+        if(V.IsCreated)
+            V.Dispose();
     }
 }
