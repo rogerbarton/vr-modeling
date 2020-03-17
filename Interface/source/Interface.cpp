@@ -25,6 +25,9 @@ extern "C" {
         modelRoot = modelRootp;
         if (DebugLog) DebugLog((char*)(modelRoot + " used as modelRoot").data());
 
+		Eigen::initParallel();
+		Eigen::setNbThreads(Eigen::nbThreads() - 2); //remove main and render thread
+
         if (DebugLog) DebugLog("Initialized Native.");
     }
 
@@ -80,7 +83,7 @@ extern "C" {
 	}
 
     void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize) {
-		if (!s_CurrentAPI)
+		if (!s_CurrentAPI) //TODO: Check it's fully initialized, UnityPluginLoad has been called
 			return;
 		size_t bufferSize;
 		void* bufferMapPtr = s_CurrentAPI->BeginModifyVertexBuffer(gfxVertexBufferPtr, &bufferSize);
