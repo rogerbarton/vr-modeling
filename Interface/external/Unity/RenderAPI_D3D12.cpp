@@ -260,14 +260,22 @@ void RenderAPI_D3D12::EndModifyTexture(void* textureHandle, int textureWidth, in
 
 void* RenderAPI_D3D12::BeginModifyVertexBuffer(void* bufferHandle, size_t* outBufferSize)
 {
-	//@TODO
-	return NULL;
+	ID3D12Resource * d3dbuf = (ID3D12Resource*)bufferHandle;
+	assert(d3dbuf);
+
+	void* mappedCpuPtr;
+	D3D12_RANGE writeOnly{0, 0};        // We do not intend to read from this resource on the CPU.
+	d3dbuf->Map(0, &writeOnly, &mappedCpuPtr);
+	return mappedCpuPtr;
 }
 
 
 void RenderAPI_D3D12::EndModifyVertexBuffer(void* bufferHandle)
 {
-	//@TODO
+	ID3D12Resource* d3dbuf = (ID3D12Resource*)bufferHandle;
+	assert(d3dbuf);
+
+	d3dbuf->Unmap(0, NULL); // Null to specify whole buffer was written to
 }
 
 #endif // #if SUPPORT_D3D12
