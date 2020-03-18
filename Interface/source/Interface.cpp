@@ -26,7 +26,7 @@ extern "C" {
         if (DebugLog) DebugLog((char*)(modelRoot + " used as modelRoot").data());
 
 		Eigen::initParallel();
-		Eigen::setNbThreads(Eigen::nbThreads() - 2); //remove main and render thread
+		Eigen::setNbThreads(std::max(1,Eigen::nbThreads() - 2)); //remove main and render thread
 
         if (DebugLog) DebugLog("Initialized Native.");
     }
@@ -82,14 +82,21 @@ extern "C" {
 		}
 	}
 
-    void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize) {
+	UnityRenderingEventAndData GetUploadMeshPtr() {
+		return UploadMesh;
+	}
+
+	//Has to have a UnityRenderingEventAndData signaturem so we store the data as a struct
+    void UploadMesh(int eventId, void* dataPtr) {
 		if (!s_CurrentAPI) {
 			if (DebugLog) DebugLog("UploadMesh: CurrentAPI has not been initialized and is null cannot upload to GPU.");
 			return;
 		}
+		VertexUploadData* data = reinterpret_cast<VertexUploadData*>(dataPtr);
+
 		size_t bufferSize;
-		void* bufferMapPtr = s_CurrentAPI->BeginModifyVertexBuffer(gfxVertexBufferPtr, &bufferSize);
-		std::copy(VPtr, VPtr + VSize, (float*)bufferMapPtr);
-		s_CurrentAPI->EndModifyVertexBuffer(gfxVertexBufferPtr);
+		void* bufferMapPtr = s_CurrentAPI->BeginModifyVertexBuffer(data->gfxVertexBufferPtr, &bufferSize);
+		std::copy(data->VPtr, data->VPtr + data->VSize, (float*)bufferMapPtr);
+		s_CurrentAPI->EndModifyVertexBuffer(data->gfxVertexBufferPtr);
     }
 }

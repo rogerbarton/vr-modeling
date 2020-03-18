@@ -1,13 +1,30 @@
 using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Timers;
 using libigl;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Debug = UnityEngine.Debug;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class Testing : MonoBehaviour
 {
+    [StructLayout(LayoutKind.Sequential)]
+    private unsafe struct VertexUploadData
+    {
+        public float* gfxVertexBufferPtr;
+        public float* VPtr;
+        public int VSize;
+    }
+
+    private VertexUploadData vertexUploadData;
+    GCHandle vertexUploadHandle;
+    
     private MeshFilter meshFilter;
     Mesh mesh;
     private NativeArray<float> V;
@@ -35,38 +52,98 @@ public class Testing : MonoBehaviour
             tmp.Dispose();
         }
         mesh.UploadMeshData(true); //delete managed copy and make no longer readable via Unity
+        
+        
+        //Setup custom uploading mesh data
+        vertexUploadData = new VertexUploadData();
+        vertexUploadHandle = GCHandle.Alloc(vertexUploadData, GCHandleType.Pinned);
     }
 
-    private void OnPostRender()
-    {
-        unsafe
-        {
-            if (uploadToGpu)
-            {
-                uploadToGpu = false;
-                Native.UploadMesh((float*) mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(),
-                    VSize);
-            }
-        }
-
-        // Use CommandBuffer.IssuePluginEventAndData
-    }
+    // private void OnPostRender()
+    // {
+    //     unsafe
+    //     {
+    //         if (uploadToGpu)
+    //         {
+    //             uploadToGpu = false; //Should be run on Render Thread not main thread, Use Gl.IssuePluginEvent or CommandBuffer.
+    //             Native.UploadMesh((float*) mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(),
+    //                 VSize);
+    //         }
+    //     }
+    //
+    //     // Use CommandBuffer.IssuePluginEventAndData
+    // }
 
     void Update()
     {
         if (Input.GetAxis("Horizontal") != 0f)
             TranslateMesh(new Vector3( Mathf.Sign(Input.GetAxis("Horizontal")), 0, 0));
         // TranslateMesh(new Vector3(Time.deltaTime * 1f, 0, 0));
+
+        //If the translate job has finished, regain ownership of the data and upload it to the GPU
+        if (translateJobHandle.HasValue && translateJobHandle.Value.IsCompleted)
+        {
+            translateJobHandle.Value.Complete(); //Regain ownership
+            translateJobHandle = null;
+            timer.Reset();
+            timer.Start();
+            //TODO
+            //Upload to GPU is done on the render thread at the end of a frame render, this is done via CommandBuffer
+            
+            //Can we assume that if we added the command in the last frame that it has been performed -> yes?
+            //otherwise check that the last upload has been completed
+            unsafe
+            {
+                var command = new CommandBuffer(); // A list of stuff to do on the render thread at a specific point in time,
+                // command is called every frame until it's removed (can leave it if updating every frame)
+                command.name = "UploadMeshCmd"; //for profiling
+                
+                //Setup data, essentially the params we pass
+                //Alternatively call a function now passing the pointers, like SetTimeFromUnity in the sample
+                vertexUploadData.gfxVertexBufferPtr = (float*) mesh.GetNativeVertexBufferPtr(0).ToPointer();
+                vertexUploadData.VPtr = (float*) V.GetUnsafePtr();
+                vertexUploadData.VSize = VSize;
+                
+                command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, GCHandle.ToIntPtr(vertexUploadHandle));
+                Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Background);
+                
+                //TODO: remove when no longer updating mesh every frame, or store in the VertexUploadData if the data has changed or not.
+                // Call this based on user Input.OnKeyUp etc
+                // Camera.main.RemoveCommandBuffer(CameraEvent.AfterEverything, command);
+                
+                //Old function call
+                // Native.UploadMesh((float*) mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(), VSize);
+            }
+            timer.Stop();
+            Debug.Log("Upload+GetPtr schedule: " + timer.ElapsedMilliseconds);
+        }
     }
 
+    private struct VertexJob : IJob
+    {
+        public NativeArray<float> V;
+        public int VSize;
+        public Vector3 direction;
+
+        public void Execute()
+        {
+            unsafe
+            {
+                Native.TranslateMesh((float*)V.GetUnsafePtr(), VSize, direction);
+            }
+        }
+    }
+
+    Stopwatch timer = new Stopwatch();
+    JobHandle? translateJobHandle;
     private void TranslateMesh(Vector3 direction)
     {
-        unsafe
-        {
-            Native.TranslateMesh((float*)V.GetUnsafePtr(), VSize, direction);
-            uploadToGpu = true;
-        }
-        // mesh.MarkModified();
+        if (translateJobHandle.HasValue) //Dont schedule another job if the current one has not finished yet
+            return;
+
+        //Perform operation on a worker thread (job)
+        var job = new VertexJob {V = V, VSize = VSize, direction = direction};
+        translateJobHandle = job.Schedule();
     }
     
     private void TranslateMeshManaged(Vector3 direction)
@@ -167,5 +244,6 @@ public class Testing : MonoBehaviour
     {
         if(V.IsCreated)
             V.Dispose();
+        vertexUploadHandle.Free();
     }
 }

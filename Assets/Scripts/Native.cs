@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -53,6 +54,9 @@ namespace libigl
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,
             [Out] out uint* FPtr, [Out] out int FSize);
+
+        [DllImport(DllName)]
+        public static extern IntPtr GetUploadMeshPtr();
         
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
