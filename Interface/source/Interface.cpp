@@ -83,8 +83,10 @@ extern "C" {
 	}
 
     void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize) {
-		if (!s_CurrentAPI) //TODO: Check it's fully initialized, UnityPluginLoad has been called
+		if (!s_CurrentAPI) {
+			if (DebugLog) DebugLog("UploadMesh: CurrentAPI has not been initialized and is null cannot upload to GPU.");
 			return;
+		}
 		size_t bufferSize;
 		void* bufferMapPtr = s_CurrentAPI->BeginModifyVertexBuffer(gfxVertexBufferPtr, &bufferSize);
 		std::copy(VPtr, VPtr + VSize, (float*)bufferMapPtr);
