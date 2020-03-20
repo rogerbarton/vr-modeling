@@ -14,6 +14,7 @@ extern IUnityInterfaces* s_UnityInterfaces;
 extern IUnityGraphics* s_Graphics;
 
 struct VertexUploadData{
+    int changed;
     float* gfxVertexBufferPtr;
     float* VPtr;
     int VSize;

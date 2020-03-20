@@ -92,11 +92,27 @@ extern "C" {
 			if (DebugLog) DebugLog("UploadMesh: CurrentAPI has not been initialized and is null cannot upload to GPU.");
 			return;
 		}
+		// if (DebugLog) DebugLog("UploadMesh: uploading...");
 		VertexUploadData* data = reinterpret_cast<VertexUploadData*>(dataPtr);
 
-		size_t bufferSize;
-		void* bufferMapPtr = s_CurrentAPI->BeginModifyVertexBuffer(data->gfxVertexBufferPtr, &bufferSize);
-		std::copy(data->VPtr, data->VPtr + data->VSize, (float*)bufferMapPtr);
-		s_CurrentAPI->EndModifyVertexBuffer(data->gfxVertexBufferPtr);
+		if (data != nullptr && data->changed) {
+			size_t bufferSize;
+			float* bufferMapPtr = reinterpret_cast<float*>(s_CurrentAPI->BeginModifyVertexBuffer(data->gfxVertexBufferPtr, &bufferSize));
+			// assert(data->VSize * 3 * 4 == bufferSize); //VSize * 3 dimensional position * 4Bytes each
+			if (bufferMapPtr != nullptr)
+			{
+				std::copy(data->VPtr, data->VPtr + 3*data->VSize, bufferMapPtr);
+				//memcpy(bufferMapPtr, data->VPtr, 4 * 3 * data->VSize);
+
+				data->changed = 0;
+				s_CurrentAPI->EndModifyVertexBuffer(data->gfxVertexBufferPtr);
+			}
+
+			{ //debugging, map again to see if values are saved
+				float* bufferMapPtr = reinterpret_cast<float*>(s_CurrentAPI->BeginModifyVertexBuffer(data->gfxVertexBufferPtr, &bufferSize));
+				s_CurrentAPI->EndModifyVertexBuffer(data->gfxVertexBufferPtr);
+
+			}
+		}
     }
 }

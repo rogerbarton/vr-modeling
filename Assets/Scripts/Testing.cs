@@ -9,27 +9,31 @@ using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using Debug = UnityEngine.Debug;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class Testing : MonoBehaviour
 {
     [StructLayout(LayoutKind.Sequential)]
-    private unsafe struct VertexUploadData
+    public unsafe class VertexUploadData
     {
+        public int changed; // bool not blittable
         public float* gfxVertexBufferPtr;
         public float* VPtr;
         public int VSize;
     }
-
-    private VertexUploadData vertexUploadData;
-    GCHandle vertexUploadHandle;
     
     private MeshFilter meshFilter;
     Mesh mesh;
     private NativeArray<float> V;
     int VSize;
-    bool uploadToGpu;    
+
+    public static VertexUploadData vertexUploadData;
+    static GCHandle vertexUploadHandle;
+    CommandBuffer command; // A list of stuff to do on the render thread at a specific point in time,
+    private IntPtr gfxVertexBufferPtr;
+
 
     void Start()
     {
@@ -39,7 +43,7 @@ public class Testing : MonoBehaviour
         V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
         NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
         var layout = mesh.GetVertexAttributes();
-        // mesh.MarkDynamic();
+        mesh.MarkDynamic(); //GPU buffer should be dynamic so we can modify it easily with D3D11Buffer::Map()
         unsafe
         {
             NativeArray<float> tmp;
@@ -51,35 +55,49 @@ public class Testing : MonoBehaviour
             
             tmp.Dispose();
         }
-        mesh.UploadMeshData(true); //delete managed copy and make no longer readable via Unity
+        
+        // Do not use this as it makes the GPU buffer no longer dynamic for us
+        // mesh.UploadMeshData(true); //delete managed copy and make no longer readable via Unity
         
         
         //Setup custom uploading mesh data
         vertexUploadData = new VertexUploadData();
         vertexUploadHandle = GCHandle.Alloc(vertexUploadData, GCHandleType.Pinned);
+        gfxVertexBufferPtr = mesh.GetNativeVertexBufferPtr(0);
+        
+        // command is called every frame until it's removed (can leave it if updating every frame)
+        command = new CommandBuffer();
+        command.name = "UploadMeshCmd"; // for profiling
+        IntPtr dataPtr = vertexUploadHandle.AddrOfPinnedObject();
+        command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, dataPtr);
+        // Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Default);
+        // Graphics.ExecuteCommandBufferAsync(command, ComputeQueueType.Default);
     }
+    
 
-    // private void OnPostRender()
-    // {
-    //     unsafe
-    //     {
-    //         if (uploadToGpu)
-    //         {
-    //             uploadToGpu = false; //Should be run on Render Thread not main thread, Use Gl.IssuePluginEvent or CommandBuffer.
-    //             Native.UploadMesh((float*) mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(),
-    //                 VSize);
-    //         }
-    //     }
-    //
-    //     // Use CommandBuffer.IssuePluginEventAndData
-    // }
+    private HDAdditionalCameraData _hdAdditionalCameraData;
+    private void OnEnable()
+    {
+        _hdAdditionalCameraData = FindObjectOfType<HDAdditionalCameraData>();
+        if (_hdAdditionalCameraData != null) _hdAdditionalCameraData.customRender += CustomRender;
+    }
+    
+    private void OnDisable()
+    {
+        //_hdAdditionalCameraData = GetComponent<HDAdditionalCameraData>();
+        if (_hdAdditionalCameraData != null) _hdAdditionalCameraData.customRender -= CustomRender;
+    }
+    
+    void CustomRender(ScriptableRenderContext context, HDCamera camera)
+    {
+        context.ExecuteCommandBuffer(command);
+        //context.Submit();
+        //command.Release();
+    }
+    
 
     void Update()
     {
-        if (Input.GetAxis("Horizontal") != 0f)
-            TranslateMesh(new Vector3( Mathf.Sign(Input.GetAxis("Horizontal")), 0, 0));
-        // TranslateMesh(new Vector3(Time.deltaTime * 1f, 0, 0));
-
         //If the translate job has finished, regain ownership of the data and upload it to the GPU
         if (translateJobHandle.HasValue && translateJobHandle.Value.IsCompleted)
         {
@@ -87,36 +105,36 @@ public class Testing : MonoBehaviour
             translateJobHandle = null;
             timer.Reset();
             timer.Start();
-            //TODO
-            //Upload to GPU is done on the render thread at the end of a frame render, this is done via CommandBuffer
-            
-            //Can we assume that if we added the command in the last frame that it has been performed -> yes?
-            //otherwise check that the last upload has been completed
+            // TODO
+            // Upload to GPU is done on the render thread at the end of a frame render, this is done via CommandBuffer
+
+            // Can we assume that if we added the command in the last frame that it has been performed -> yes?
+            // otherwise check that the last upload has been completed
+
+            // Setup data, essentially the params we pass
+            // Alternatively call a function now passing the pointers, like SetTimeFromUnity in the sample
             unsafe
             {
-                var command = new CommandBuffer(); // A list of stuff to do on the render thread at a specific point in time,
-                // command is called every frame until it's removed (can leave it if updating every frame)
-                command.name = "UploadMeshCmd"; //for profiling
-                
-                //Setup data, essentially the params we pass
-                //Alternatively call a function now passing the pointers, like SetTimeFromUnity in the sample
-                vertexUploadData.gfxVertexBufferPtr = (float*) mesh.GetNativeVertexBufferPtr(0).ToPointer();
+                vertexUploadData.changed = 1;
+                vertexUploadData.gfxVertexBufferPtr = (float*) gfxVertexBufferPtr.ToPointer();
+                if(gfxVertexBufferPtr != mesh.GetNativeVertexBufferPtr(0))
+                    Debug.LogError("gfx vert buffer ptr changed!");
                 vertexUploadData.VPtr = (float*) V.GetUnsafePtr();
                 vertexUploadData.VSize = VSize;
-                
-                command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, GCHandle.ToIntPtr(vertexUploadHandle));
-                Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Background);
-                
-                //TODO: remove when no longer updating mesh every frame, or store in the VertexUploadData if the data has changed or not.
-                // Call this based on user Input.OnKeyUp etc
-                // Camera.main.RemoveCommandBuffer(CameraEvent.AfterEverything, command);
-                
-                //Old function call
-                // Native.UploadMesh((float*) mesh.GetNativeVertexBufferPtr(0).ToPointer(), (float*) V.GetUnsafePtr(), VSize);
+                // Camera.main.AddCommandBuffer(CameraEvent.AfterEverything, command);
+                // mesh.MarkModified();
             }
+
+            // TODO: remove when no longer updating mesh every frame, or store in the VertexUploadData if the data has changed or not.
+            // Call this based on user Input.OnKeyUp etc
+            // Camera.main.RemoveCommandBuffer(CameraEvent.AfterEverything, command);
+
             timer.Stop();
             Debug.Log("Upload+GetPtr schedule: " + timer.ElapsedMilliseconds);
         }
+        
+        if (Input.GetAxis("Horizontal") != 0f)
+            TranslateMesh(new Vector3(Mathf.Sign(Input.GetAxis("Horizontal")), 0, 0));
     }
 
     private struct VertexJob : IJob
@@ -138,7 +156,8 @@ public class Testing : MonoBehaviour
     JobHandle? translateJobHandle;
     private void TranslateMesh(Vector3 direction)
     {
-        if (translateJobHandle.HasValue) //Dont schedule another job if the current one has not finished yet
+        //Dont schedule another job if the current one has not finished yet, or the last change still has to be uploaded
+        if (translateJobHandle.HasValue || vertexUploadData.changed > 0) 
             return;
 
         //Perform operation on a worker thread (job)
