@@ -1,0 +1,16 @@
+{
+    "name": "com.testpackage.unity-native-tool",
+    "displayName": "Unity Native Tool",
+    "version": "0.0.1",
+    "unity": "2018.1",
+    "dependencies": {},
+    "description": "Tool for unloading DLLs in the editor",
+    "keywords": [
+        "native", "c++", "dll"
+    ],
+    "category": "Unity",
+    "author": { "name" : "John Doe",
+        "email" : "john.doe@example.com",
+        "url" : "http://john.doe.example.com/"
+     }
+}
