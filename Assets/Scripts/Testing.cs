@@ -13,6 +13,7 @@ using Debug = UnityEngine.Debug;
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class Testing : MonoBehaviour
 {
+    public bool useCustomUploadToGPU;
     [StructLayout(LayoutKind.Sequential)]
     public unsafe class VertexUploadData
     {
@@ -92,7 +93,8 @@ public class Testing : MonoBehaviour
     
     void CustomRender(ScriptableRenderContext context, HDCamera camera)
     {
-        context.ExecuteCommandBuffer(command);
+        if(useCustomUploadToGPU)
+            context.ExecuteCommandBuffer(command);
         //context.Submit();
         //command.Release();
     }
@@ -107,30 +109,47 @@ public class Testing : MonoBehaviour
             translateJobHandle = null;
             timer.Reset();
             timer.Start();
-            // TODO
-            // Upload to GPU is done on the render thread at the end of a frame render, this is done via CommandBuffer
-
-            // Can we assume that if we added the command in the last frame that it has been performed -> yes?
-            // otherwise check that the last upload has been completed
-
-            // Setup data, essentially the params we pass
-            // Alternatively call a function now passing the pointers, like SetTimeFromUnity in the sample
-            unsafe
+            if (useCustomUploadToGPU)
             {
-                vertexUploadData.changed = 1;
-                vertexUploadData.gfxVertexBufferPtr = (float*) gfxVertexBufferPtr.ToPointer();
-                if(gfxVertexBufferPtr != mesh.GetNativeVertexBufferPtr(0))
-                    Debug.LogError("gfx vert buffer ptr changed!");
-                vertexUploadData.VPtr = (float*) V.GetUnsafePtr();
-                vertexUploadData.VSize = VSize;
-                // Camera.main.AddCommandBuffer(CameraEvent.AfterEverything, command);
-                // mesh.MarkModified();
+                // TODO
+                // Upload to GPU is done on the render thread at the end of a frame render, this is done via CommandBuffer
+
+                // Can we assume that if we added the command in the last frame that it has been performed -> yes?
+                // otherwise check that the last upload has been completed
+
+                // Setup data, essentially the params we pass
+                // Alternatively call a function now passing the pointers, like SetTimeFromUnity in the sample
+                unsafe
+                {
+                    vertexUploadData.changed = 1;
+                    vertexUploadData.gfxVertexBufferPtr = (float*) gfxVertexBufferPtr.ToPointer();
+                    if (gfxVertexBufferPtr != mesh.GetNativeVertexBufferPtr(0))
+                        Debug.LogError("gfx vert buffer ptr changed!");
+                    vertexUploadData.VPtr = (float*) V.GetUnsafePtr();
+                    vertexUploadData.VSize = VSize;
+                    // Camera.main.AddCommandBuffer(CameraEvent.AfterEverything, command);
+                    // mesh.MarkModified();
+                    // TODO: remove when no longer updating mesh every frame, or store in the VertexUploadData if the data has changed or not.
+                    // Call this based on user Input.OnKeyUp etc
+                    // Camera.main.RemoveCommandBuffer(CameraEvent.AfterEverything, command);
+                }
             }
-
-            // TODO: remove when no longer updating mesh every frame, or store in the VertexUploadData if the data has changed or not.
-            // Call this based on user Input.OnKeyUp etc
-            // Camera.main.RemoveCommandBuffer(CameraEvent.AfterEverything, command);
-
+            else
+            {
+                unsafe
+                {
+                    var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(V.GetUnsafePtr(), VSize,
+                        Allocator.None);
+                    #if ENABLE_UNITY_COLLECTIONS_CHECKS
+                    NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());
+                    #endif
+                    mesh.SetVertices(V3);
+                }
+                //Set vertexbufferdata?
+                mesh.MarkModified(); //recalculate bounding boxes etc
+                mesh.UploadMeshData(false);
+            }
+            
             timer.Stop();
             Debug.Log("Upload+GetPtr schedule: " + timer.ElapsedMilliseconds);
         }
@@ -159,43 +178,13 @@ public class Testing : MonoBehaviour
     private void TranslateMesh(Vector3 direction)
     {
         //Dont schedule another job if the current one has not finished yet, or the last change still has to be uploaded
-        if (translateJobHandle.HasValue || vertexUploadData.changed > 0) 
+        if (translateJobHandle.HasValue/* || vertexUploadData.changed > 0*/) 
             return;
 
         //Perform operation on a worker thread (job)
         var job = new VertexJob {V = V, VSize = VSize, direction = direction};
         translateJobHandle = job.Schedule();
     }
-    
-    private void TranslateMeshManaged(Vector3 direction)
-    {
-        //TODO: causes crash in DirectX currently
-        // var layout = mesh.GetNativeVertexBufferPtr();
-        //TODO: Cannot modify directly, need to BeginModifyVertexBuffer and end in C++
-        //Keep a copy as a NativeArray and SetVertexBuffer each time
-        //Can only use this ptr to make a copy to a NativeArray on the CPU
-        //OR use a map as in the link below in the BeginModifyVertexBuffer()
-        //https://bitbucket.org/Unity-Technologies/graphicsdemos/pull-requests/2/example-of-native-vertex-buffers-for/diff
-        
-        unsafe 
-        {
-            fixed (Vector3* VPtr = mesh.vertices)
-            {
-                // var V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
-                Native.TranslateMesh((float*) VPtr, VSize, direction);
-            }
-        }
-
-        mesh.SetVertices(V);
-        
-        
-        //Set vertexbufferdata?
-        // mesh.MarkModified();
-        mesh.UploadMeshData(false);
-    }
-
-    
-
 
     /// <summary>
     /// Test function that creates a new mesh with a cube

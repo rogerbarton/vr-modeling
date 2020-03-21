@@ -53,7 +53,13 @@ extern "C" {
 	void UnityPluginUnload()
 	{
 		s_Graphics->UnregisterDeviceEventCallback(OnGraphicsDeviceEvent);
+		modelRoot = "";
+		s_UnityInterfaces = nullptr;
+		s_Graphics = nullptr;
+		s_DeviceType = kUnityGfxRendererNull;
+		s_CurrentAPI = nullptr;
 		if (DebugLog) DebugLog("UnityPluginUnload()");
+		DebugLog = nullptr;
 	}
 
 
