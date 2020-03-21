@@ -28,12 +28,20 @@ namespace libigl
             // new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
         };
 
+        #if !UNITY_EDITOR
+        // In a build Initialize in the static ctor.
+        // This is called once just before the first function is called in this class.
+        static Native() { Initialize(); }
+        #endif
+        
         /// <summary>
-        /// Setup callbacks inside the static constructor
+        /// Initializes the native library and sets up callbacks/delegates for C++ -> C# calls.
         /// </summary>
+        #if UNITY_EDITOR
+        [NativeDllLoadedTrigger] //Trigger this each time the dll is loaded, so we reinitialize if we reload it
+        #endif
         public static void Initialize()
         {
-            //TODO: use statuc ctor when in a build, #if 
             Initialize(Application.dataPath + "/Models/", NativeCallbacks.DebugLog);
         }
 

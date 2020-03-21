@@ -1,12 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Timers;
 using libigl;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
-using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
@@ -41,7 +39,9 @@ public class Testing : MonoBehaviour
         mesh = meshFilter.mesh;
         VSize = mesh.vertexCount;
         V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        #if ENABLE_UNITY_COLLECTIONS_CHECKS
         NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
+        #endif
         var layout = mesh.GetVertexAttributes();
         mesh.MarkDynamic(); //GPU buffer should be dynamic so we can modify it easily with D3D11Buffer::Map()
         unsafe
@@ -49,7 +49,9 @@ public class Testing : MonoBehaviour
             NativeArray<float> tmp;
             fixed(Vector3* managedVPtr = mesh.vertices)
                 tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*)managedVPtr, 3 * VSize, Allocator.Temp);
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref tmp, AtomicSafetyHandle.Create());
+            #endif
             // NativeArray<float>.Copy(tmp, V); //Make our own copy
             V.CopyFrom(tmp);
             

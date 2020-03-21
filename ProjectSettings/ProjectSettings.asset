@@ -120,7 +120,9 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 8945858709664505639, guid: 5ad15ed95f131e144bd1d1e3b5733617, type: 2}
+  - {fileID: 11400000, guid: 0f28e80d34f506d4582f69b7745b82b4, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -536,7 +538,7 @@ PlayerSettings:
     1: ODIN_INSPECTOR
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 1
+    Standalone: 0
   il2cppCompilerConfiguration:
     Standalone: 0
   managedStrippingLevel: {}

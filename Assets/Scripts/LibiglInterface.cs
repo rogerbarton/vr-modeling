@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityNativeTool;
+// using UnityNativeTool;
 
 namespace libigl
 {

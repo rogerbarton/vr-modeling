@@ -59,17 +59,21 @@ namespace libigl
 
                 //Convert the pointers to NativeArrays which we can create a mesh with
                 V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
-                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
 
                 if (NSize > 0)
                 {
                     N = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(NPtr, 3 * VSize,
                         Allocator.Temp);
+                    #if ENABLE_UNITY_COLLECTIONS_CHECKS
                     NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref N, AtomicSafetyHandle.Create());
+                    #endif
                 }
 
                 F = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(FPtr, 3 * FSize, Allocator.Temp);
+                #if ENABLE_UNITY_COLLECTIONS_CHECKS
+                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
+                #endif
             }
 
             //Setup the buffers, then fill the data later
