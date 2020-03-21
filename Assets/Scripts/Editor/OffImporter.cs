@@ -107,9 +107,8 @@ namespace libigl
             
             // mesh.RecalculateTangents();
             mesh.MarkDynamic(); //keep a copy on the cpu side and make gpu buffers cpu writable
-            mesh.RecalculateBounds();
             mesh.MarkModified();
-                
+            mesh.RecalculateBounds();
             #endregion
         }
     }
