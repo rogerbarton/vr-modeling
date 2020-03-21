@@ -14,6 +14,7 @@ using Debug = UnityEngine.Debug;
 public class Testing : MonoBehaviour
 {
     public bool useCustomUploadToGPU;
+
     [StructLayout(LayoutKind.Sequential)]
     public unsafe class VertexUploadData
     {
@@ -22,7 +23,7 @@ public class Testing : MonoBehaviour
         public float* VPtr;
         public int VSize;
     }
-    
+
     private MeshFilter meshFilter;
     Mesh mesh;
     private NativeArray<float> V;
@@ -40,65 +41,71 @@ public class Testing : MonoBehaviour
         mesh = meshFilter.mesh;
         VSize = mesh.vertexCount;
         V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-        #if ENABLE_UNITY_COLLECTIONS_CHECKS
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
         NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
-        #endif
+#endif
         var layout = mesh.GetVertexAttributes();
         mesh.MarkDynamic(); //GPU buffer should be dynamic so we can modify it easily with D3D11Buffer::Map()
         unsafe
         {
             NativeArray<float> tmp;
-            fixed(Vector3* managedVPtr = mesh.vertices)
-                tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*)managedVPtr, 3 * VSize, Allocator.Temp);
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            fixed (Vector3* managedVPtr = mesh.vertices)
+                tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*) managedVPtr, 3 * VSize,
+                    Allocator.Temp);
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref tmp, AtomicSafetyHandle.Create());
-            #endif
+#endif
             // NativeArray<float>.Copy(tmp, V); //Make our own copy
             V.CopyFrom(tmp);
-            
+
             tmp.Dispose();
         }
-        
+
         // Do not use this as it makes the GPU buffer no longer dynamic for us
         // mesh.UploadMeshData(true); //delete managed copy and make no longer readable via Unity
-        
-        
-        //Setup custom uploading mesh data
-        vertexUploadData = new VertexUploadData();
-        vertexUploadHandle = GCHandle.Alloc(vertexUploadData, GCHandleType.Pinned);
-        gfxVertexBufferPtr = mesh.GetNativeVertexBufferPtr(0);
-        
-        // command is called every frame until it's removed (can leave it if updating every frame)
-        command = new CommandBuffer();
-        command.name = "UploadMeshCmd"; // for profiling
-        IntPtr dataPtr = vertexUploadHandle.AddrOfPinnedObject();
-        command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, dataPtr);
-        // Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Default);
-        // Graphics.ExecuteCommandBufferAsync(command, ComputeQueueType.Default);
+
+        if (useCustomUploadToGPU)
+        {
+            //Setup custom uploading mesh data
+            vertexUploadData = new VertexUploadData();
+            vertexUploadHandle = GCHandle.Alloc(vertexUploadData, GCHandleType.Pinned);
+            gfxVertexBufferPtr = mesh.GetNativeVertexBufferPtr(0);
+
+            // command is called every frame until it's removed (can leave it if updating every frame)
+            command = new CommandBuffer();
+            command.name = "UploadMeshCmd"; // for profiling
+            IntPtr dataPtr = vertexUploadHandle.AddrOfPinnedObject();
+            command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, dataPtr);
+            // Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Default);
+            // Graphics.ExecuteCommandBufferAsync(command, ComputeQueueType.Default);
+        }
     }
-    
+
 
     private HDAdditionalCameraData _hdAdditionalCameraData;
+
     private void OnEnable()
     {
-        _hdAdditionalCameraData = FindObjectOfType<HDAdditionalCameraData>();
-        if (_hdAdditionalCameraData != null) _hdAdditionalCameraData.customRender += CustomRender;
+        if (useCustomUploadToGPU)
+        {
+            _hdAdditionalCameraData = FindObjectOfType<HDAdditionalCameraData>();
+            if (_hdAdditionalCameraData != null) _hdAdditionalCameraData.customRender += CustomRender;
+        }
     }
-    
+
     private void OnDisable()
     {
-        //_hdAdditionalCameraData = GetComponent<HDAdditionalCameraData>();
-        if (_hdAdditionalCameraData != null) _hdAdditionalCameraData.customRender -= CustomRender;
+        if (useCustomUploadToGPU && _hdAdditionalCameraData != null)
+            _hdAdditionalCameraData.customRender -= CustomRender;
     }
-    
+
     void CustomRender(ScriptableRenderContext context, HDCamera camera)
     {
-        if(useCustomUploadToGPU)
-            context.ExecuteCommandBuffer(command);
+        context.ExecuteCommandBuffer(command);
         //context.Submit();
         //command.Release();
     }
-    
+
 
     void Update()
     {
@@ -140,20 +147,21 @@ public class Testing : MonoBehaviour
                 {
                     var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(V.GetUnsafePtr(), VSize,
                         Allocator.None);
-                    #if ENABLE_UNITY_COLLECTIONS_CHECKS
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
                     NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());
-                    #endif
+#endif
                     mesh.SetVertices(V3);
                 }
+
                 //Set vertexbufferdata?
                 mesh.MarkModified(); //recalculate bounding boxes etc
                 mesh.UploadMeshData(false);
             }
-            
+
             timer.Stop();
             Debug.Log("Upload+GetPtr schedule: " + timer.ElapsedMilliseconds);
         }
-        
+
         if (Input.GetAxis("Horizontal") != 0f)
             TranslateMesh(new Vector3(Mathf.Sign(Input.GetAxis("Horizontal")), 0, 0));
     }
@@ -168,17 +176,18 @@ public class Testing : MonoBehaviour
         {
             unsafe
             {
-                Native.TranslateMesh((float*)V.GetUnsafePtr(), VSize, direction);
+                Native.TranslateMesh((float*) V.GetUnsafePtr(), VSize, direction);
             }
         }
     }
 
     Stopwatch timer = new Stopwatch();
     JobHandle? translateJobHandle;
+
     private void TranslateMesh(Vector3 direction)
     {
         //Dont schedule another job if the current one has not finished yet, or the last change still has to be uploaded
-        if (translateJobHandle.HasValue/* || vertexUploadData.changed > 0*/) 
+        if (translateJobHandle.HasValue /* || vertexUploadData.changed > 0*/)
             return;
 
         //Perform operation on a worker thread (job)
@@ -208,14 +217,15 @@ public class Testing : MonoBehaviour
         var VCount = 8;
         mesh.SetVertexBufferParams(VCount, VLayout); //Note:sizeof one vertex is defined in the layout as 3*4B
         //So buffer size is vertices * 3 * 4B
-        
+
         var FCount = 12;
-        mesh.SetIndexBufferParams(3 * FCount, IndexFormat.UInt32); //Note: Size of buffer is count * uint32 = 3 * faces*4B
-        
+        mesh.SetIndexBufferParams(3 * FCount,
+            IndexFormat.UInt32); //Note: Size of buffer is count * uint32 = 3 * faces*4B
+
         var V = new NativeArray<float>(3 * VCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
         var F = new NativeArray<uint>(3 * FCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
         //Or Allocator.Persistent with Dispose()
-        
+
         //--- Call C++ to fill V, F
         unsafe
         {
@@ -223,37 +233,38 @@ public class Testing : MonoBehaviour
         }
 
         //Be sure to multiply by 3 to copy whole array
-        mesh.SetVertexBufferData(V, 0, 0, 3*VCount, 0);
-        mesh.SetIndexBufferData(F, 0, 0, 3*FCount);
+        mesh.SetVertexBufferData(V, 0, 0, 3 * VCount, 0);
+        mesh.SetIndexBufferData(F, 0, 0, 3 * FCount);
         //Note! Set*BufferData incurs a memcpy
-        
+
         //Create one submesh which will be rendered (required)
         mesh.subMeshCount = 1;
-        mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3*FCount));
-        
+        mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3 * FCount));
+
         //Not sure if this is needed
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
-        mesh.UploadMeshData(true);//for optimization, cannot edit/view in debugger after issuing this
-        
+        mesh.UploadMeshData(true); //for optimization, cannot edit/view in debugger after issuing this
+
         mesh.MarkModified(); //As we DontNotifyMeshUsers
 
-        
-        
+
+
         //--- To update an existing initialized mesh
         //Use this to get pointers to buffers, can pass IntPtr to a float* or int* in c++
         // IntPtr voidPtrToVArr = mesh.GetNativeVertexBufferPtr(0); //retrieve the first buffer
         // IntPtr voidPtrToFArr = mesh.GetNativeIndexBufferPtr();
-        
+
         // V.Dispose();
         // F.Dispose();
     }
-    
+
     private void OnDestroy()
     {
-        if(V.IsCreated)
+        if (V.IsCreated)
             V.Dispose();
-        vertexUploadHandle.Free();
+        if (vertexUploadHandle.IsAllocated)
+            vertexUploadHandle.Free();
     }
 }
