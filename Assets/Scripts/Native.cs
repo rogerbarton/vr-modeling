@@ -36,6 +36,7 @@ namespace libigl
         
         /// <summary>
         /// Initializes the native library and sets up callbacks/delegates for C++ -> C# calls.
+        /// Note: this may not be called on the main thread. So Unity functions may not be available
         /// </summary>
         #if UNITY_EDITOR
         [NativeDllLoadedTrigger] //Trigger this each time the dll is loaded, so we reinitialize if we reload it

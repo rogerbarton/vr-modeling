@@ -163,7 +163,7 @@ public class Testing : MonoBehaviour
         }
 
         if (Input.GetAxis("Horizontal") != 0f)
-            TranslateMesh(new Vector3(Mathf.Sign(Input.GetAxis("Horizontal")), 0, 0));
+            TranslateMesh(new Vector3(Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0));
     }
 
     private struct VertexJob : IJob
