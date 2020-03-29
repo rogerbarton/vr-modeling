@@ -7,7 +7,6 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
 using Debug = UnityEngine.Debug;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
@@ -80,32 +79,6 @@ public class Testing : MonoBehaviour
             // Graphics.ExecuteCommandBufferAsync(command, ComputeQueueType.Default);
         }
     }
-
-
-    private HDAdditionalCameraData _hdAdditionalCameraData;
-
-    private void OnEnable()
-    {
-        if (useCustomUploadToGPU)
-        {
-            _hdAdditionalCameraData = FindObjectOfType<HDAdditionalCameraData>();
-            if (_hdAdditionalCameraData != null) _hdAdditionalCameraData.customRender += CustomRender;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (useCustomUploadToGPU && _hdAdditionalCameraData != null)
-            _hdAdditionalCameraData.customRender -= CustomRender;
-    }
-
-    void CustomRender(ScriptableRenderContext context, HDCamera camera)
-    {
-        context.ExecuteCommandBuffer(command);
-        //context.Submit();
-        //command.Release();
-    }
-
 
     void Update()
     {
