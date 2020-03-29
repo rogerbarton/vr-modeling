@@ -12,7 +12,7 @@ public class MeshManager : MonoBehaviour
     public List<GameObject> meshInstances;
 
     public int activeMesh = -1;
-    public List<int> selectedMeshes = new List<int>();
+    public LayerMask raycastLayers;
     
     void Start()
     {
@@ -37,7 +37,13 @@ public class MeshManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            raycast
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var raycastHit, 10f,
+                raycastLayers))
+            {
+                var T = raycastHit.collider.transform;
+                if (T.parent.GetComponent<MeshManager>())
+                    activeMesh = T.GetSiblingIndex();
+            }
         }
     }
 
@@ -58,54 +64,19 @@ public class MeshManager : MonoBehaviour
         }
         
         var go = Instantiate(meshPrefabs[prefabIndex], pos, rot);
+        transform.parent = transform;
         meshInstances.Add(go);
 
         var instanceIndex = meshInstances.IndexOf(go);
         if (setAsActiveMesh)
-            SetSelection(new []{instanceIndex});
+            activeMesh = instanceIndex;
         
         return instanceIndex;
     }
-    #endregion
 
-
-    #region Mesh Selection
-    /// <summary>
-    /// Set which mesh is the active mesh
-    /// </summary>
-    /// <param name="value">Mesh index in meshInstances</param>
-    /// <param name="resetSelection"></param>
-    public void SetActiveMesh(int value, bool resetSelection = true)
+    public void InstantiateFromUI(int prefabIndex)
     {
-        if(resetSelection)
-            SetSelection(new []{value});
-        else
-        {
-            activeMesh = value;
-            if(!selectedMeshes.Contains(value))
-                Debug.LogWarning($"MeshManager: selectedMeshes does not contain the activeMesh {activeMesh}.");
-        }
-    }
-
-    /// <summary>
-    /// Overwrites the current selection.
-    /// </summary>
-    /// <param name="newSelection">Indices of the newly selected meshes in meshInstances</param>
-    /// <param name="setActiveAsFirst">If true the active mesh with be the first in <paramref name="newSelection"/></param>
-    public void SetSelection(int[] newSelection, bool setActiveAsFirst = true)
-    {
-        if(setActiveAsFirst) activeMesh = newSelection[0];
-        selectedMeshes.Clear();
-        selectedMeshes.AddRange(newSelection);
-    }
-    
-    /// <summary>
-    /// Resets the selection and activeMesh
-    /// </summary>
-    public void ResetSelection()
-    {
-        activeMesh = -1;
-        selectedMeshes.Clear();
+        Instantiate(prefabIndex);
     }
     #endregion
 }
