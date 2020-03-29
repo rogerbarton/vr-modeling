@@ -43,7 +43,7 @@ namespace libigl
         #endif
         public static void Initialize()
         {
-            Initialize(Application.dataPath + "/Models/", NativeCallbacks.DebugLog);
+            Initialize("",NativeCallbacks.DebugLog);
         }
 
         /// <summary>
