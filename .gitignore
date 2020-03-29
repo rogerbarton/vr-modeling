@@ -50,7 +50,9 @@ Assets/Plugins/Sirenix/
 Assets/Plugins/Editor/JetBrains/
 Assets/Plugins/Editor/JetBrains.meta
 Assets/Logs.meta
-Assets/Oculus/
+Assets/Oculus/*
+!Assets/Oculus/VR
+!Assets/Oculus/VR.meta
 Assets/Plugins/Sirenix.meta
 Assets/Oculus.meta
 
