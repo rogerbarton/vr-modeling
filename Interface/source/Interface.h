@@ -33,4 +33,5 @@ extern "C" {
     UNITY_INTERFACE_EXPORT UnityRenderingEventAndData GetUploadMeshPtr();
     UNITY_INTERFACE_EXPORT void UploadMesh(int eventId, void* data);
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
+    UNITY_INTERFACE_EXPORT void Harmonic(float* VPtr, int VSize, unsigned int* FPtr, int FSize);
 }
