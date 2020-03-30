@@ -2178,6 +2178,7 @@ MonoBehaviour:
     crashLogsStackTrace: 0
     mockAllNativeFunctions: 0
     onlyInEditor: 1
+    enableInEditMode: 1
 --- !u!4 &441513030
 Transform:
   m_ObjectHideFlags: 0

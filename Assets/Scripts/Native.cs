@@ -16,7 +16,12 @@ namespace libigl
     [MockNativeDeclarations] // Use UnityNativeTool to un/load dll functions in this class
     public static class Native
     {
-        public const string DllName = "libigl-interface";
+        public const string DllName =
+#if UNITY_EDITOR
+            "libigl-interface";
+#else
+            "__libigl-interface";
+#endif
 
         public static VertexAttributeDescriptor[] VertexBufferLayout = new[]
         {
@@ -69,8 +74,8 @@ namespace libigl
         
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
-        // public static extern unsafe void TranslateMesh(
-        //     [In,Out] float* VPtr, int VSize,
-        //     [In, MarshalAs(UnmanagedType.Struct)] Vector3 value);
+        
+        [DllImport(DllName)]
+        public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In,Out] uint* FPtr, [In] int FSize);
     }
 }

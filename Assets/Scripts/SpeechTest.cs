@@ -29,11 +29,6 @@ public class SpeechTest : MonoBehaviour
         _keywordRecognizer.Start();
     }
 
-    private void Update()
-    {
-        Debug.Log("KeywordRecog.running: " + _keywordRecognizer.IsRunning);
-    }
-
     private void OnDestroy()
     {
         _keywordRecognizer.Stop();

@@ -9,7 +9,7 @@ namespace libigl
 {
     /// <summary>
     /// An interface for modifying a mesh with libigl
-    /// The deformation executed is defined in the VertexJob.Execute()
+    /// The deformation executed is defined in the LibiglJob.Execute()
     /// </summary>
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class LibiglMesh : MonoBehaviour
@@ -17,10 +17,12 @@ namespace libigl
         private MeshFilter meshFilter;
         private Mesh mesh;
         private NativeArray<float> V;
+        private NativeArray<uint> F;
         private int VSize;
+        private int FSize;
 
         Stopwatch timer = new Stopwatch();
-        JobHandle? translateJobHandle;
+        JobHandle? libiglJobHandle;
 
         void Start()
         {
@@ -31,96 +33,117 @@ namespace libigl
 
             // Create a vertex data copy as a NativeArray<float> which we will pass to libigl
             VSize = mesh.vertexCount;
+            FSize = mesh.triangles.Length / 3;
+
             V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            F = new NativeArray<uint>(3 * FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
             // Before we can use this we need to add a safety handle (only in the editor)
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
 #endif
 
+            //Copy the V, F matrices from the mesh
             unsafe
             {
-                NativeArray<float> tmp;
+                NativeArray<float> VTmp;
                 fixed (Vector3* managedVPtr = mesh.vertices)
-                    tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(
+                    VTmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(
                         (float*) managedVPtr, 3 * VSize, Allocator.Temp);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
-                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref tmp, AtomicSafetyHandle.Create());
+                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref VTmp, AtomicSafetyHandle.Create());
 #endif
 
-                V.CopyFrom(tmp);
-                tmp.Dispose();
+                V.CopyFrom(VTmp);
+                VTmp.Dispose();
+
+                NativeArray<uint> FTmp;
+                fixed (int* managedVPtr = mesh.triangles)
+                    FTmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(
+                        (uint*) managedVPtr, 3 * FSize, Allocator.Temp);
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
+                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref FTmp, AtomicSafetyHandle.Create());
+#endif
+
+                F.CopyFrom(FTmp);
+                FTmp.Dispose();
             }
         }
 
         void Update()
         {
-            //If the translate job has finished, regain ownership of the data and upload it to the GPU
-            if (translateJobHandle.HasValue && translateJobHandle.Value.IsCompleted)
+            if (!libiglJobHandle.HasValue)
             {
-                translateJobHandle.Value.Complete(); //Regain ownership
-                translateJobHandle = null;
-                timer.Reset();
-                timer.Start();
-                unsafe
-                {
-                    var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(
-                        V.GetUnsafePtr(), VSize, Allocator.None);
-#if ENABLE_UNITY_COLLECTIONS_CHECKS
-                    NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());
-#endif
-
-                    mesh.SetVertices(V3);
-                }
-
-                mesh.MarkModified(); //recalculate bounding boxes etc
-                mesh.UploadMeshData(false);
-
-                timer.Stop();
-                Debug.Log("Update Mesh.vertices: " + timer.ElapsedMilliseconds);
+                // Perform operation on a worker thread (job)
+                if (Input.GetKeyDown(KeyCode.Space))
+                    libiglJobHandle = new LibiglJob {V = V, VSize = VSize, F = F, FSize = FSize}.Schedule();
             }
-
-            if (Input.GetAxis("Horizontal") != 0f)
-                TranslateMesh(new Vector3(Time.deltaTime * Input.GetAxis("Horizontal"), 0, 0));
+            else if (libiglJobHandle.Value.IsCompleted)
+                ApplyModified();
         }
 
         /// <summary>
-        /// A class for a C# job to translate the mesh required for running on a separate thread
-        /// This includes all data that the thread needs and the Execute() function which is called once the job in scheduled
+        /// Applies the modified mesh by the job
+        /// Should only be called when the libiglJob has finished
         /// </summary>
-        private struct VertexJob : IJob
+        private void ApplyModified()
+        {
+            timer.Reset();
+            timer.Start();
+
+            // Regain ownership of the data and upload it to the GPU
+            libiglJobHandle.Value.Complete(); //Regain ownership on the main thread
+            libiglJobHandle = null;
+            
+//             unsafe
+//             {
+//                 var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(
+//                     V.GetUnsafePtr(), VSize, Allocator.None);
+// #if ENABLE_UNITY_COLLECTIONS_CHECKS
+//                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());
+// #endif
+//                 mesh.SetVertices(V3);
+//             }
+            mesh.SetVertexBufferData(V, 0, 0, VSize * 3);
+
+            // mesh.MarkModified();
+
+            timer.Stop();
+            Debug.Log("Update Mesh.vertices: " + timer.ElapsedMilliseconds);
+        }
+
+
+        /// <summary>
+        /// A class for a C# job to modify the mesh with libigl
+        /// This includes all data that a worker thread needs
+        /// The Execute() function is called once the job in run
+        /// </summary>
+        private struct LibiglJob : IJob
         {
             public NativeArray<float> V;
-            public int VSize;
-            public Vector3 direction;
+            public NativeArray<uint> F;
+            public int VSize, FSize;
 
             public void Execute()
             {
-                Stopwatch timer = new Stopwatch();
-                timer.Start();
+                var jobTimer = new Stopwatch();
+                jobTimer.Start();
 
                 // Call our C++ libigl mesh deformation function
                 unsafe
                 {
-                    Native.TranslateMesh((float*) V.GetUnsafePtr(), VSize, direction);
+                    Native.Harmonic((float*) V.GetUnsafePtr(), VSize, (uint*) F.GetUnsafePtr(), FSize);
                 }
 
-                timer.Stop();
-                Debug.Log("Modify Mesh Data (libigl): " + timer.ElapsedMilliseconds);
+                jobTimer.Stop();
+                Debug.Log($"Harmonic (libigl): {jobTimer.ElapsedMilliseconds}ms");
             }
-        }
-
-        private void TranslateMesh(Vector3 direction)
-        {
-            //Dont schedule another job if the current one has not finished yet, or the last change still has to be uploaded
-            if (translateJobHandle.HasValue) return;
-
-            //Perform operation on a worker thread (job)
-            translateJobHandle = new VertexJob {V = V, VSize = VSize, direction = direction}.Schedule();
         }
 
         private void OnDestroy()
         {
             if (V.IsCreated) V.Dispose();
+            if (F.IsCreated) F.Dispose();
         }
     }
 }
