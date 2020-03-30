@@ -1224,7 +1224,7 @@ MonoBehaviour:
   grabEnd: 0.35
   m_parentHeldObject: 0
   m_moveHandPosition: 0
-  m_gripTransform: {fileID: 0}
+  m_gripTransform: {fileID: 1704284222}
   m_grabVolumes:
   - {fileID: 1271495403}
   - {fileID: 2048001713}
@@ -2088,8 +2088,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3472222286931163546}
-  - {fileID: 1168833999}
   - {fileID: 4065790107574412}
+  - {fileID: 1168833999}
   - {fileID: 2122667966}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -2135,6 +2135,7 @@ GameObject:
   - component: {fileID: 441513030}
   - component: {fileID: 441513029}
   - component: {fileID: 441513028}
+  - component: {fileID: 441513031}
   m_Layer: 0
   m_Name: Statics
   m_TagString: Untagged
@@ -2191,6 +2192,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &441513031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441513027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88189a7973cc7340b2a59e748cf98f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &442547927
 GameObject:
   m_ObjectHideFlags: 0
@@ -7625,7 +7638,7 @@ MonoBehaviour:
   grabEnd: 0.35
   m_parentHeldObject: 0
   m_moveHandPosition: 0
-  m_gripTransform: {fileID: 1679036647}
+  m_gripTransform: {fileID: 747099281}
   m_grabVolumes:
   - {fileID: 746049876}
   - {fileID: 426881271}
@@ -9502,6 +9515,18 @@ PrefabInstance:
       propertyPath: oculusUserID
       value: 2907103116012513
       objectReference: {fileID: 0}
+    - target: {fileID: 11437430, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 3}
+      propertyPath: StartWithControllers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11437430, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 3}
+      propertyPath: RecordPackets
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11437430, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 3}
+      propertyPath: CanOwnMicrophone
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c8b8609f9bb434eaf5248f17ff1293, type: 3}
 --- !u!4 &2122667966 stripped
@@ -9775,7 +9800,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 436363674}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4484590508322498
 Transform:
