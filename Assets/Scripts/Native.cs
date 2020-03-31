@@ -48,7 +48,7 @@ namespace libigl
         #endif
         public static void Initialize()
         {
-            Initialize("",NativeCallbacks.DebugLog);
+            Initialize(NativeCallbacks.DebugLog);
         }
 
         /// <summary>
@@ -57,8 +57,7 @@ namespace libigl
         public static void Destroy() { }
 
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        private static extern void Initialize([In] string modelRootp,
-            [In] NativeCallbacks.StringCallback debugCallback);
+        private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
 
         [DllImport(DllName, ExactSpelling = true)]
         public static extern unsafe void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize);
@@ -68,6 +67,10 @@ namespace libigl
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,
             [Out] out uint* FPtr, [Out] out int FSize);
+        
+        
+        [DllImport(DllName)]
+        public static extern unsafe void ToColMajor(void* MatrixPtr, int cols);
 
         [DllImport(DllName)]
         public static extern IntPtr GetUploadMeshPtr();
@@ -76,6 +79,6 @@ namespace libigl
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         
         [DllImport(DllName)]
-        public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In,Out] uint* FPtr, [In] int FSize);
+        public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In] int* FPtr, [In] int FSize);
     }
 }

@@ -17,7 +17,7 @@ namespace libigl
         private MeshFilter meshFilter;
         private Mesh mesh;
         private NativeArray<float> V;
-        private NativeArray<uint> F;
+        private NativeArray<int> F;
         private int VSize;
         private int FSize;
 
@@ -36,7 +36,7 @@ namespace libigl
             FSize = mesh.triangles.Length / 3;
 
             V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            F = new NativeArray<uint>(3 * FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            F = new NativeArray<int>(3 * FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
             // Before we can use this we need to add a safety handle (only in the editor)
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
@@ -56,11 +56,12 @@ namespace libigl
 
                 V.CopyFrom(VTmp);
                 VTmp.Dispose();
+                Native.ToColMajor(V.GetUnsafePtr(), VSize);
 
-                NativeArray<uint> FTmp;
+                NativeArray<int> FTmp;
                 fixed (int* managedVPtr = mesh.triangles)
-                    FTmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(
-                        (uint*) managedVPtr, 3 * FSize, Allocator.Temp);
+                    FTmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<int>(
+                        (int*) managedVPtr, 3 * FSize, Allocator.Temp);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref FTmp, AtomicSafetyHandle.Create());
 #endif
@@ -121,7 +122,7 @@ namespace libigl
         private struct LibiglJob : IJob
         {
             public NativeArray<float> V;
-            public NativeArray<uint> F;
+            public NativeArray<int> F;
             public int VSize, FSize;
 
             public void Execute()
@@ -132,7 +133,7 @@ namespace libigl
                 // Call our C++ libigl mesh deformation function
                 unsafe
                 {
-                    Native.Harmonic((float*) V.GetUnsafePtr(), VSize, (uint*) F.GetUnsafePtr(), FSize);
+                    Native.Harmonic((float*) V.GetUnsafePtr(), VSize, (int*) F.GetUnsafePtr(), FSize);
                 }
 
                 jobTimer.Stop();
