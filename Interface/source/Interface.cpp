@@ -9,7 +9,6 @@
 #include <Unity/RenderAPI.h>
 
 StringCallback DebugLog;
-std::string modelRoot = "";
 
 IUnityInterfaces* s_UnityInterfaces = nullptr;
 IUnityGraphics* s_Graphics = nullptr;
@@ -18,12 +17,10 @@ RenderAPI* s_CurrentAPI = nullptr;
 UnityGfxRenderer s_DeviceType = kUnityGfxRendererNull;
 
 extern "C" {
-	void Initialize(const char* modelRootp, const StringCallback debugCallback) {
+	void Initialize(const StringCallback debugCallback) {
 #ifndef NDEBUG
         DebugLog = debugCallback;
 #endif
-        modelRoot = modelRootp;
-        if (DebugLog) DebugLog((char*)(modelRoot + " used as modelRoot").data());
 
 		Eigen::initParallel();
 		Eigen::setNbThreads(std::max(1,Eigen::nbThreads() - 2)); //remove main and render thread
@@ -53,7 +50,6 @@ extern "C" {
 	void UnityPluginUnload()
 	{
 		s_Graphics->UnregisterDeviceEventCallback(OnGraphicsDeviceEvent);
-		modelRoot = "";
 		s_UnityInterfaces = nullptr;
 		s_Graphics = nullptr;
 		s_DeviceType = kUnityGfxRendererNull;

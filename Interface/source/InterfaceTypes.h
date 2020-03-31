@@ -1,9 +1,15 @@
 #pragma once
-#include <Eigen/core>
+#include <Unity/IUnityInterface.h>
 
-//Note: Data is in RowMajor
-using V_t = Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor>;
-using F_t = Eigen::Matrix<unsigned int, Eigen::Dynamic, 3, Eigen::RowMajor>;
+// Function pointer to a C# void MyFct(string message)
+typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
+
+struct VertexUploadData {
+    int changed;
+    float* gfxVertexBufferPtr;
+    float* VPtr;
+    int VSize;
+};
 
 struct Vector3
 {

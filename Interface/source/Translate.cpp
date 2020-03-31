@@ -1,6 +1,6 @@
-#include "InterfaceTypes.h"
 #include "Interface.h"
-#include <Eigen/core>
+#include "InterfaceTypes.h"
+#include "NumericTypes.h"
 #include <igl/harmonic.h>
 
 extern "C" {
@@ -11,12 +11,12 @@ extern "C" {
         V.rowwise() += valueMap;
     }
 
-    void Harmonic(float* VPtr, int VSize, unsigned int* FPtr, int FSize) {
+    void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize) {
         V_t V = Eigen::Map<V_t>(VPtr, VSize, 3);
-        F_t F = Eigen::Map<F_t>(FPtr, FSize, 3);
-        Eigen::SparseMatrix<float> Q;
+        const F_t F = Eigen::Map<F_t>(FPtr, FSize, 3);
+        SparseV_t Q(VSize, 3);
 
         igl::harmonic(V, F, 2, Q);
-        V += Q;
+        //V += Q;
     }
 }
