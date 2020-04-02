@@ -1,14 +1,14 @@
 #pragma once
-#include <Unity/IUnityInterface.h>
-#include <Unity/RenderAPI.h>
+#include <PluginAPI/IUnityInterface.h>
+#include <RenderAPI/RenderAPI.h>
 #include <string>
 #include "InterfaceTypes.h"
 
 // A global variable should be extern, so it can be seen in several cpp's. 
 // It is then defined in the Interface.cpp once
 extern StringCallback DebugLog;
+
 extern IUnityInterfaces* s_UnityInterfaces;
-extern IUnityGraphics* s_Graphics;
 
 extern "C" {
     //Interface.cpp
@@ -17,7 +17,6 @@ extern "C" {
     //Unity Callbacks
     UNITY_INTERFACE_EXPORT void UnityPluginLoad(IUnityInterfaces* unityInterfaces);
     UNITY_INTERFACE_EXPORT void UnityPluginUnload();
-    UNITY_INTERFACE_EXPORT void OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType);
 
     //Custom Upload to GPU
     UNITY_INTERFACE_EXPORT UnityRenderingEventAndData GetUploadMeshPtr();
