@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Unity/IUnityGraphics.h"
+#include "Unity/PluginAPI/IUnityGraphics.h"
 
 #include <stddef.h>
 

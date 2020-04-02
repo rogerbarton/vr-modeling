@@ -6,17 +6,21 @@ file(GLOB HFILES "Interface.h" "*.h")
 
 source_group("Header Files" FILES ${HFILES})
 source_group("Debug Misc" FILES ${EIGEN_DEBUG_FILES})
-source_group("Unity API" FILES ${UNITY_API_FILES})
+source_group("Unity\\Plugin API" FILES ${UNITY_PLUGIN_API_FILES})
+if(UNITY_INCLUDE_RENDER_API)
+	source_group("Unity\\Render API" FILES ${UNITY_RENDER_API_FILES})
+endif()
 
 if(CMAKE_VERBOSE)
 	message(STATUS "Source Files ${PROJECT_NAME}: ${SRCFILES}")
 	message(STATUS "Header Files ${PROJECT_NAME}: ${HFILES}")
 	message(STATUS "Eigen Debug Files ${PROJECT_NAME}: ${EIGEN_DEBUG_FILES}")
-	message(STATUS "Unity API Files ${PROJECT_NAME}: ${UNITY_API_FILES}")
+	message(STATUS "Unity/Plugin API Files ${PROJECT_NAME}: ${UNITY_PLUGIN_API_FILES}")
+	message(STATUS "Unity/Render API Files ${PROJECT_NAME}: ${UNITY_RENDER_API_FILES}")
 endif()
 
 # Create out DLL output file and link libigl to it
-add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES} ${UNITY_API_FILES} ${EIGEN_DEBUG_FILES})
+add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES} ${UNITY_PLUGIN_API_FILES} ${UNITY_RENDER_API_FILES} ${EIGEN_DEBUG_FILES})
 target_link_libraries(${PROJECT_NAME} igl::core OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 

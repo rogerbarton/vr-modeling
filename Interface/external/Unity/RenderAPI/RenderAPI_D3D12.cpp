@@ -11,7 +11,7 @@
 
 #include <assert.h>
 #include <d3d12.h>
-#include "Unity/IUnityGraphicsD3D12.h"
+#include "PluginAPI/IUnityGraphicsD3D12.h"
 
 
 class RenderAPI_D3D12 : public RenderAPI

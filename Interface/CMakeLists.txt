@@ -13,9 +13,15 @@ find_package(LIBIGL REQUIRED QUIET)
 find_package(OpenGL REQUIRED)
 
 # Add Unity header files
-include_directories(${PROJECT_NAME} "external")
-file(GLOB UNITY_API_FILES "external/Unity/*.h*" "external/Unity/*.c*" "external/Unity/gl3w/*.h*" "external/Unity/gl3w/*.c*")
+include_directories(${PROJECT_NAME} "external" "external/Unity")
+file(GLOB UNITY_PLUGIN_API_FILES "external/Unity/PluginAPI/*.c*" "external/Unity/PluginAPI/*.h*")
 file(GLOB EIGEN_DEBUG_FILES "external/eigen-debug/msvc/*")
+option(UNITY_USE_RENDER_API "Include the Unity Render API Files in the project")
+if(UNITY_USE_RENDER_API)
+	file(GLOB UNITY_RENDER_API_FILES "external/Unity/RenderAPI/*.c*" "external/Unity/RenderAPI/*.h*" "external/Unity/RenderAPI/gl3w/*.c*" "external/Unity/RenderAPI/gl3w/*.h*")
+else()
+	set(UNITY_RENDER_API_FILES "")
+endif()
 
 
 # Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
