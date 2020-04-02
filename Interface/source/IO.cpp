@@ -20,8 +20,8 @@ extern "C" {
         
         V->array() *= scale; //Scaling factor to make it match the Unity scale
 
-        if (N->rows() == 0) //Calculate normals if they are not present
-            igl::per_vertex_normals(*V, *F, *N);
+        //if (N->rows() == 0) //Calculate normals if they are not present
+            //igl::per_vertex_normals(*V, *F, *N);
 
         VSize = V->rows();
         FSize = F->rows();
@@ -30,6 +30,6 @@ extern "C" {
         FPtr = F->data();
         NPtr = N->data();
         
-        if (DebugLog) DebugLog((std::string("OFF Import ") + std::string((success ? "Successful" : "Unsuccessful"))).data());
+        if (DebugLog) DebugLog((std::string("OFF Import ") + std::string((success ? "Successful: " : "Unsuccessful: ")) + std::string(path)).data());
     }
 }

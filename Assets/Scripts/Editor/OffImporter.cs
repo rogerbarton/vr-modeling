@@ -38,7 +38,7 @@ namespace libigl
             meshFilter.mesh = mesh;
 
             var meshRenderer = gameObject.AddComponent<MeshRenderer>();
-            var material = new Material(Shader.Find("HDRP/Lit"));
+            var material = new Material(Shader.Find("Diffuse"));
             meshRenderer.material = material;
             ctx.AddObjectToAsset("Material", material);
 
@@ -86,22 +86,20 @@ namespace libigl
 
             //Fill the buffers with out data from libigl::readOFF
             mesh.SetVertexBufferData(V, 0, 0, 3 * VSize, 0);
-            if (NSize > 0)
-                mesh.SetVertexBufferData(N, 0, 0, 3 * VSize, 1);
-            else
-            {
-                Debug.LogWarning("No normals provided, " +
-                                 "RecalculateNormals is currently not working with multiple vertex buffer streams. " +
-                                 "Use igl::per_vertex_normals() instead");
-                mesh.RecalculateNormals();
-            }
-
             mesh.SetIndexBufferData(F, 0, 0, 3 * FSize);
 
             //Create a submesh that will be rendered
             mesh.subMeshCount = 1;
             mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3 * FSize));
 
+            if (NSize > 0)
+                mesh.SetVertexBufferData(N, 0, 0, 3 * VSize, 1);
+            else
+            {
+                // Alternatively use igl::per_vertex_normals() instead
+                mesh.RecalculateNormals();
+            }
+            
             if(optimizeForRendering)
                 mesh.Optimize();
             
