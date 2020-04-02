@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Runtime.CompilerServices;
+using libigl;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
 
 public static class Util
 {
@@ -20,5 +24,18 @@ public static class Util
             result[i].b = arr[i,2];
         }
         return result;
+    }
+
+    /// <summary>
+    /// Converts a matrix between column and row major by transposing in place
+    /// </summary>
+    /// <param name="nativeArray">The native array to modify</param>
+    /// <param name="cols">The number of columns of the matrix</param>
+    /// <typeparam name="T">Type of an element</typeparam>
+    /// <returns></returns>
+    public static unsafe NativeArray<T> TransposeInPlace3<T>(this NativeArray<T> nativeArray, int cols = 3) where T : struct
+    {
+        Native.TransposeInPlace(nativeArray.GetUnsafePtr(), nativeArray.Length / cols);
+        return nativeArray;
     }
 }

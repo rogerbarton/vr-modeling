@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
@@ -56,7 +56,7 @@ namespace libigl
 
                 V.CopyFrom(VTmp);
                 VTmp.Dispose();
-                Native.ToColMajor(V.GetUnsafePtr(), VSize);
+                // Native.TransposeInPlace(V.GetUnsafePtr(), VSize);
 
                 NativeArray<int> FTmp;
                 fixed (int* managedVPtr = mesh.triangles)

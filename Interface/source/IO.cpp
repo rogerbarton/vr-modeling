@@ -6,15 +6,15 @@
 #include <igl/per_vertex_normals.h>
 
 extern "C" {
-    void ToColMajor(void* MatrixPtr, int cols) {
-        Eigen::MatrixXf V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, cols, 3);
+    void TransposeInPlace(void* MatrixPtr, int rows) {
+        Eigen::MatrixXf V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, rows, 3);
         V.transposeInPlace();
     }
 
     void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize) {
-        auto* V = new V_t(); //Must use new as we delete in C#
-        auto* N = new V_t();
-        auto* F = new F_t();
+        auto* V = new V_RowMajor_t(); //Must use new as we delete in C#
+        auto* N = new V_RowMajor_t();
+        auto* F = new F_RowMajor_t();
         
         bool success = igl::readOFF(path, *V, *F, *N);
         

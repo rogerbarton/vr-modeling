@@ -24,7 +24,7 @@ extern "C" {
 
     //IO.cpp
     UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
-    UNITY_INTERFACE_EXPORT void ToColMajor(void* MatrixPtr, int cols);
+    UNITY_INTERFACE_EXPORT void TransposeInPlace(void* MatrixPtr, int cols);
 
     //Translate.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);

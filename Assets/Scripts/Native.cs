@@ -71,7 +71,7 @@ namespace libigl
         
         
         [DllImport(DllName)]
-        public static extern unsafe void ToColMajor(void* MatrixPtr, int cols);
+        public static extern unsafe void TransposeInPlace(void* MatrixPtr, int rows);
 
         [DllImport(DllName)]
         public static extern IntPtr GetUploadMeshPtr();
