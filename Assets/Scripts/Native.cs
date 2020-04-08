@@ -60,9 +60,6 @@ namespace libigl
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
 
-        [DllImport(DllName, ExactSpelling = true)]
-        public static extern unsafe void UploadMesh(float* gfxVertexBufferPtr, float* VPtr, int VSize);
-        
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern unsafe void LoadOFF([In] string path, [In] float scale,
             [Out] out float* VPtr, [Out] out int VSize,
@@ -73,9 +70,6 @@ namespace libigl
         [DllImport(DllName)]
         public static extern unsafe void TransposeInPlace(void* MatrixPtr, int rows);
 
-        [DllImport(DllName)]
-        public static extern IntPtr GetUploadMeshPtr();
-        
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         

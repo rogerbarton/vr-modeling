@@ -74,7 +74,7 @@ public class Testing : MonoBehaviour
             command = new CommandBuffer();
             command.name = "UploadMeshCmd"; // for profiling
             IntPtr dataPtr = vertexUploadHandle.AddrOfPinnedObject();
-            command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, dataPtr);
+            // command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, dataPtr);
             // Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Default);
             // Graphics.ExecuteCommandBufferAsync(command, ComputeQueueType.Default);
         }
