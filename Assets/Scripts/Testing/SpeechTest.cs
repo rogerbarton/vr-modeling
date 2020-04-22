@@ -21,7 +21,7 @@ public class SpeechTest : MonoBehaviour
         _actions[args.text].Invoke();
     }
 
-    void Start()
+    void OnEnable()
     {
         _actions.Add("hello", Hello);
         _keywordRecognizer = new KeywordRecognizer(_actions.Keys.ToArray());
@@ -29,7 +29,7 @@ public class SpeechTest : MonoBehaviour
         _keywordRecognizer.Start();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         _keywordRecognizer.Stop();
         _keywordRecognizer.Dispose();
