@@ -5,7 +5,7 @@
 
 extern "C" {
     void TranslateMesh(float* VPtr, int VSize, Vector3 value) {
-        auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
+        auto V = Eigen::Map<V_RowMajor_t>(VPtr, VSize, 3);
         const auto valueMap = Eigen::Map<Eigen::RowVector3f>(&value.x);
 
         V.rowwise() += valueMap;

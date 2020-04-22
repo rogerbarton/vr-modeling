@@ -1,8 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Debug = UnityEngine.Debug;
 
 namespace libigl
@@ -14,105 +19,69 @@ namespace libigl
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class LibiglMesh : MonoBehaviour
     {
-        private MeshFilter meshFilter;
-        private Mesh mesh;
-        private NativeArray<float> V;
-        private NativeArray<int> F;
-        private int VSize;
-        private int FSize;
+        private MeshFilter _meshFilter;
+        private Mesh _mesh;
 
-        Stopwatch timer = new Stopwatch();
-        JobHandle? libiglJobHandle;
+        private MeshData _data;
+        private GCHandle _dataHandle;
+        private MeshAction _executingAction;
+        private GCHandle _executingActionHandle;
 
-        void Start()
+
+        private readonly Queue<MeshAction> _actionsQueue = new Queue<MeshAction>();
+        
+        private readonly Stopwatch _timer = new Stopwatch();
+        private JobHandle? _jobHandle;
+
+        private void Start()
         {
             // Get a reference to the mesh 
-            meshFilter = GetComponent<MeshFilter>();
-            mesh = meshFilter.mesh;
-            mesh.MarkDynamic(); //Allow us to modify it at runtime
+            _meshFilter = GetComponent<MeshFilter>();
+            _mesh = _meshFilter.mesh;
+            _mesh.MarkDynamic();
 
-            // Create a vertex data copy as a NativeArray<float> which we will pass to libigl
-            VSize = mesh.vertexCount;
-            FSize = mesh.triangles.Length / 3;
-
-            V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            F = new NativeArray<int>(3 * FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-#if ENABLE_UNITY_COLLECTIONS_CHECKS
-            // Before we can use this we need to add a safety handle (only in the editor)
-            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
-            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
-#endif
-
-            //Copy the V, F matrices from the mesh
-            unsafe
-            {
-                NativeArray<float> VTmp;
-                fixed (Vector3* managedVPtr = mesh.vertices)
-                    VTmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(
-                        (float*) managedVPtr, 3 * VSize, Allocator.Temp);
-#if ENABLE_UNITY_COLLECTIONS_CHECKS
-                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref VTmp, AtomicSafetyHandle.Create());
-#endif
-
-                V.CopyFrom(VTmp);
-                VTmp.Dispose();
-                // Native.TransposeInPlace(V.GetUnsafePtr(), VSize);
-
-                NativeArray<int> FTmp;
-                fixed (int* managedVPtr = mesh.triangles)
-                    FTmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<int>(
-                        (int*) managedVPtr, 3 * FSize, Allocator.Temp);
-#if ENABLE_UNITY_COLLECTIONS_CHECKS
-                NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref FTmp, AtomicSafetyHandle.Create());
-#endif
-
-                F.CopyFrom(FTmp);
-                FTmp.Dispose();
-            }
+            _data = new MeshData(_mesh);
+            
+            _dataHandle = GCHandle.Alloc(_data);
         }
 
-        void Update()
+        public void ScheduleAction(MeshAction action)
         {
-            if (!libiglJobHandle.HasValue)
-            {
-                // Perform operation on a worker thread (job)
-                if (Input.GetKeyDown(KeyCode.Space))
-                    libiglJobHandle = new LibiglJob {V = V, VSize = VSize, F = F, FSize = FSize}.Schedule();
-            }
-            else if (libiglJobHandle.Value.IsCompleted)
-                ApplyModified();
+            if (!_jobHandle.HasValue && _actionsQueue.Count == 0)
+                ExecuteAction(action);
+            else
+                _actionsQueue.Enqueue(action);
         }
 
         /// <summary>
-        /// Applies the modified mesh by the job
-        /// Should only be called when the libiglJob has finished
+        /// Execute operation on a worker thread (job)
         /// </summary>
-        private void ApplyModified()
+        private void ExecuteAction(MeshAction action)
         {
-            timer.Reset();
-            timer.Start();
-
-            // Regain ownership of the data and upload it to the GPU
-            libiglJobHandle.Value.Complete(); //Regain ownership on the main thread
-            libiglJobHandle = null;
-            
-//             unsafe
-//             {
-//                 var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(
-//                     V.GetUnsafePtr(), VSize, Allocator.None);
-// #if ENABLE_UNITY_COLLECTIONS_CHECKS
-//                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());
-// #endif
-//                 mesh.SetVertices(V3);
-//             }
-            mesh.SetVertexBufferData(V, 0, 0, VSize * 3);
-
-            // mesh.MarkModified();
-
-            timer.Stop();
-            Debug.Log("Update Mesh.vertices: " + timer.ElapsedMilliseconds);
+            Assert.IsFalse(_jobHandle.HasValue);
+            _executingAction = action;
+            _executingActionHandle = GCHandle.Alloc(_executingAction);
+            _jobHandle = new LibiglJob {Data = _dataHandle, Action = _executingActionHandle}.Schedule();
         }
+        
+        private void Update()
+        {
+            if (!_jobHandle.HasValue)
+            {
+                if (_actionsQueue.Count > 0)
+                    ExecuteAction(_actionsQueue.Dequeue());
+            }
+            else if (_jobHandle.Value.IsCompleted)
+            {
+                // Regain ownership of the data and upload it to the GPU
+                _jobHandle.Value.Complete(); //Regain ownership on the main thread
+                _jobHandle = null;
 
+                _executingAction.Apply(_mesh, _data);
+                _executingAction = null;
+                _executingActionHandle.Free();
+            }
+        }
 
         /// <summary>
         /// A class for a C# job to modify the mesh with libigl
@@ -121,30 +90,29 @@ namespace libigl
         /// </summary>
         private struct LibiglJob : IJob
         {
-            public NativeArray<float> V;
-            public NativeArray<int> F;
-            public int VSize, FSize;
+            // public MeshData Data;
+            // public MeshAction Action;
+            public GCHandle Data;
+            public GCHandle Action;
 
             public void Execute()
             {
                 var jobTimer = new Stopwatch();
                 jobTimer.Start();
 
-                // Call our C++ libigl mesh deformation function
-                unsafe
-                {
-                    Native.Harmonic((float*) V.GetUnsafePtr(), VSize, (int*) F.GetUnsafePtr(), FSize);
-                }
-
+                ((MeshAction) Action.Target).Execute((MeshData) Data.Target);
+                
                 jobTimer.Stop();
-                Debug.Log($"Harmonic (libigl): {jobTimer.ElapsedMilliseconds}ms");
+                Debug.Log($"LibiglJob: {jobTimer.ElapsedMilliseconds}ms");
             }
         }
 
         private void OnDestroy()
         {
-            if (V.IsCreated) V.Dispose();
-            if (F.IsCreated) F.Dispose();
+            _jobHandle?.Complete();
+            _data?.Dispose();
+            if(_dataHandle.IsAllocated) _dataHandle.Free();
+            if(_executingActionHandle.IsAllocated) _executingActionHandle.Free();
         }
     }
 }

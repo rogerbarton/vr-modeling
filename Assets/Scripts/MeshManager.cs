@@ -1,24 +1,47 @@
 ﻿using System.Collections.Generic;
 using libigl;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MeshManager : MonoBehaviour
 {
     public GameObject[] meshPrefabs;
-    public static LibiglMesh activeMesh;
+    public GameObject uiListItemPrefab;
+    public Transform uiListItemParent;
     
-    void Start()
+    public static LibiglMesh activeMesh;
+
+    private void Start()
     {
         activeMesh = Instantiate(0);
+        
+        // Setup UI
+        if (!uiListItemParent)
+            uiListItemParent = transform;
+        
+        // Create listitem foreach 
+        for (int i = 0; i < meshPrefabs.Length; i++)
+        {
+            // Parenting, layout, ui
+            var go = Instantiate(uiListItemPrefab, uiListItemParent);
+            var textField = go.GetComponentInChildren<TMP_Text>();
+            textField.text = meshPrefabs[i].name;
+            
+            // setup callbacks/events
+            var button = go.GetComponent<Button>();
+            var i1 = i;
+            button.onClick.AddListener(() => Instantiate(i1));
+        }
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
             Instantiate(0);
-        else if (Input.GetKeyDown(KeyCode.Alpha1))
-            Instantiate(1);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
+            Instantiate(1);
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
             Instantiate(2);
     }
 
@@ -39,7 +62,7 @@ public class MeshManager : MonoBehaviour
         }
         
         var go = Instantiate(meshPrefabs[prefabIndex], pos, rot);
-        transform.parent = transform;
+        go.transform.parent = transform;
 
         var mesh = go.GetComponent<LibiglMesh>();
         if (!mesh)
