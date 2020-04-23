@@ -3,7 +3,7 @@ project(stubLluiPlugin)
 
 set(CMAKE_BUILD_TYPE "Release")
 add_library(${PROJECT_NAME} SHARED "stubLluiPlugin")
-target_include_directories(${PROJECT_NAME} PRIVATE "../Unity")
+target_include_directories(${PROJECT_NAME} PRIVATE "../Unity/PluginAPI")
 set_target_properties(${PROJECT_NAME} PROPERTIES EXCLUDE_FROM_ALL TRUE) # Don't always build this library
 
 set_target_properties(${PROJECT_NAME} PROPERTIES 
