@@ -44,7 +44,7 @@ namespace libigl
         /// Note: this may not be called on the main thread. So Unity functions may not be available
         /// </summary>
         #if UNITY_EDITOR
-        // [NativeDllLoadedTrigger] //Trigger this each time the dll is loaded, so we reinitialize if we reload it
+        [NativeDllLoadedTrigger] //Trigger this each time the dll is loaded, so we reinitialize if we reload it
         #endif
         public static void Initialize()
         {
