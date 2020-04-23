@@ -47,9 +47,9 @@ namespace libigl
             #region Load Mesh with libigl
 
             //readOFF and get result as a NativeArray
-            NativeArray<float> V;
-            NativeArray<float> N = default; //may be empty
-            NativeArray<uint> F;
+            NativeArray<Vector3> V;
+            NativeArray<Vector3> N = default; //may be empty
+            NativeArray<int> F;
             int VSize, NSize, FSize;
             unsafe
             {
@@ -58,18 +58,18 @@ namespace libigl
                     out var FPtr, out FSize);
 
                 //Convert the pointers to NativeArrays which we can create a mesh with
-                V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(VPtr, 3 * VSize, Allocator.Temp);
+                V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(VPtr, VSize, Allocator.Temp);
 
                 if (NSize > 0)
                 {
-                    N = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>(NPtr, 3 * VSize,
+                    N = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(NPtr, VSize,
                         Allocator.Temp);
                     #if ENABLE_UNITY_COLLECTIONS_CHECKS
                     NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref N, AtomicSafetyHandle.Create());
                     #endif
                 }
 
-                F = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(FPtr, 3 * FSize, Allocator.Temp);
+                F = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<int>(FPtr, 3 * FSize, Allocator.Temp);
                 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
@@ -85,15 +85,15 @@ namespace libigl
             mesh.SetIndexBufferParams(3 * FSize, IndexFormat.UInt32);
 
             //Fill the buffers with out data from libigl::readOFF
-            mesh.SetVertexBufferData(V, 0, 0, 3 * VSize, 0);
-            mesh.SetIndexBufferData(F, 0, 0, 3 * FSize);
+            mesh.SetVertices(V);
+            mesh.SetIndices(F, MeshTopology.Triangles, 0);
 
             //Create a submesh that will be rendered
-            mesh.subMeshCount = 1;
-            mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3 * FSize));
+            // mesh.subMeshCount = 1;
+            // mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3 * FSize));
 
             if (NSize > 0)
-                mesh.SetVertexBufferData(N, 0, 0, 3 * VSize, 1);
+                mesh.SetNormals(N);
             else
             {
                 // Alternatively use igl::per_vertex_normals() instead
