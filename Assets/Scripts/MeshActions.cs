@@ -19,9 +19,19 @@ public class MeshActions : MonoBehaviour
     public Transform uiListItemParent;
     
     private KeywordRecognizer _keywordRecognizer;
+    private List<string> _allKeywords = new List<string>();
 
+    private static MeshActions get;
     private void Start()
     {
+        if (get == null)
+            get = this;
+        else
+        {
+            Debug.LogWarning("Instance already exists.");
+            return;
+        }
+        
         // Add all actions
         actions.Add(
             new MeshAction(
@@ -36,7 +46,6 @@ public class MeshActions : MonoBehaviour
                 "Translate",
                 new []{"move", "translate"},
                 1,
-                () => Input.GetKeyDown(KeyCode.W),
                 new TranslateAction()));
         
         actions.Add(
@@ -45,51 +54,68 @@ public class MeshActions : MonoBehaviour
                 new []{"smooth", "harmonic", "laplacian"},
                 2,
                 () => Input.GetKeyDown(KeyCode.E),
+                default,
+                (mesh, data) =>
+                {
+                    mesh.SetVertices(data.V);
+                    mesh.RecalculateNormals();
+                },
                 data =>
                 {
                     unsafe
                     {
                         Native.Harmonic(data.V.GetUnsafePtr(), data.VSize, data.F.GetUnsafePtr(), data.FSize);
                     }
-                },
-                (mesh, data) =>
-                {
-                    mesh.SetVertices(data.V);
-                    mesh.RecalculateNormals();
                 }));
+        
+        actions.Add(
+            new MeshAction(
+                "Select",
+                null,
+                -1,
+                new SelectAction(),
+                false));
 
         InitializeUI();
     }
 
     private void InitializeUI()
     {
-        // Setup UI
-        if (!uiListItemParent)
-            uiListItemParent = transform;
-        
         // Create listitem foreach action
-        IEnumerable<string> allKeywords = new List<string>();
-        for (int i = 0; i < actions.Count; i++)
-        {
-            // Parenting, layout, ui
-            var go = Instantiate(uiListItemPrefab, uiListItemParent);
-            var textField = go.GetComponentInChildren<TMP_Text>();
-            textField.text = actions[i].Name;
-            
-            // setup callbacks/events
-            var button = go.GetComponent<Button>();
-            button.onClick.AddListener(actions[i].Schedule);
-            
-            // Setup speech keywords
-            allKeywords = allKeywords.Concat(actions[i].SpeechKeywords);
-            
-            // TODO: Setup gesture recognition
-        }
-        
+        foreach (var a in actions)
+            SetupAction(a);
+
         // Create one speech keywords recognizer for all actions
-        _keywordRecognizer = new KeywordRecognizer(allKeywords.ToArray());
+        _keywordRecognizer = new KeywordRecognizer(_allKeywords.ToArray());
         _keywordRecognizer.OnPhraseRecognized += OnPhraseRecognized;
         _keywordRecognizer.Start();
+    }
+
+    /// <summary>
+    /// Will register an action to enable its entry points, i.e. UI generation, gesture recognition
+    /// </summary>
+    public static void RegisterAction(MeshAction action)
+    {
+        get.SetupAction(action);
+        get.actions.Add(action);
+    }
+
+    private void SetupAction(MeshAction action)
+    {
+        // Parenting, layout, ui
+        var go = Instantiate(uiListItemPrefab, uiListItemParent);
+        var textField = go.GetComponentInChildren<TMP_Text>();
+        textField.text = action.Name;
+            
+        // setup callbacks/events
+        var button = go.GetComponent<Button>();
+        button.onClick.AddListener(() => action.Schedule());
+            
+        // Setup speech keywords
+        if(action.SpeechKeywords != null)
+            _allKeywords.AddRange(action.SpeechKeywords);
+        
+        // TODO: Setup gesture recognition
     }
 
     /// <summary>
@@ -112,7 +138,7 @@ public class MeshActions : MonoBehaviour
     {
         foreach (var action in actions)
         {
-            if(action.ExecuteTest())
+            if(action.ExecuteCondition())
                 action.Schedule();
         }
     }
