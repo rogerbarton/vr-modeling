@@ -64,7 +64,7 @@ public class MeshActions : MonoBehaviour
                 {
                     unsafe
                     {
-                        Native.Harmonic(data.V.GetUnsafePtr(), data.VSize, data.F.GetUnsafePtr(), data.FSize);
+                        Native.Harmonic((float*) data.V.GetUnsafePtr(), data.VSize, (int*) data.F.GetUnsafePtr(), data.FSize);
                     }
                 }));
         

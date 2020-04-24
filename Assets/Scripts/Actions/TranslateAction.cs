@@ -29,7 +29,7 @@ namespace libigl
             Debug.Log($"Execute dt: {_deltaTime}");
             unsafe
             {
-                Native.TranslateMesh(data.V.GetUnsafePtr(), data.VSize, Vector3.forward * 0.1f);
+                Native.TranslateMesh((float*) data.V.GetUnsafePtr(), data.VSize, Vector3.forward * 0.1f);
             }
         }
 
