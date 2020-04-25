@@ -14,30 +14,32 @@ namespace libigl
     public class LibiglMesh : MonoBehaviour
     {
         private MeshFilter _meshFilter;
-        private Mesh _mesh;
+        public Mesh Mesh { get; private set; }
 
-        private MeshData _data;
+        public MeshData Data;
+        public MeshData DataRowMajor;
         private MeshAction _executingAction;
-        
+
         private Thread _workerThread;
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
         public bool JobRunning() { return _workerThread != null; }
 
         private readonly Queue<MeshAction> _actionsQueue = new Queue<MeshAction>();
-        
+
         /// <summary>
         /// Called like Update but only when <see cref="JobRunning"/> is false.
         /// </summary>
-        public static event Action OnAvailableUpdate = delegate {};
+        public event Action OnAvailableUpdate = delegate { };
 
         private void Start()
         {
             // Get a reference to the mesh 
             _meshFilter = GetComponent<MeshFilter>();
-            _mesh = _meshFilter.mesh;
-            _mesh.MarkDynamic();
+            Mesh = _meshFilter.mesh;
+            Mesh.MarkDynamic();
 
-            _data = new MeshData(_mesh);
+            Data = new MeshData(Mesh);
+            DataRowMajor = new MeshData(Mesh, true);
         }
 
         public void ScheduleAction(MeshAction action)
@@ -55,11 +57,17 @@ namespace libigl
         {
             Assert.IsTrue(_workerThread == null || !_workerThread.IsAlive);
             _executingAction = action;
-            _executingAction.PreExecute?.Invoke(_data);
-            _workerThread = new Thread(() => _executingAction.Execute(_data));
+            _executingAction.PreExecute?.Invoke(Data);
+            _workerThread = new Thread(() =>
+            {
+                DataRowMajor.ApplyDirtyToTranspose(Data);
+                // Execute the action with ColMajor data and then apply the changes to the DataRowMajor
+                _executingAction.Execute(Data);
+                Data.ApplyDirtyToTranspose(DataRowMajor);
+            });
             _workerThread.Start();
         }
-        
+
         private void Update()
         {
             if (_workerThread == null)
@@ -74,8 +82,9 @@ namespace libigl
                 // Regain ownership of the data and upload it to the GPU
                 _workerThread.Join();
                 _workerThread = null;
-                
-                _executingAction.PostExecute(_mesh, _data);
+
+                // Allow the user to apply changes to the mesh, give the RowMajor version that has been updated
+                _executingAction.PostExecute(Mesh, DataRowMajor);
                 _executingAction = null;
             }
         }
@@ -83,7 +92,8 @@ namespace libigl
         private void OnDestroy()
         {
             _workerThread?.Abort();
-            _data.Dispose();
+            Data.Dispose();
+            DataRowMajor.Dispose();
         }
     }
 }

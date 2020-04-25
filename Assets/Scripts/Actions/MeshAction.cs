@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace libigl
@@ -48,19 +48,25 @@ namespace libigl
         /// <summary>
         /// Called on the main thread before <see cref="Execute"/> to gather required data for it.
         /// This may include reading the current input state.
-        /// May be null.
+        /// May be null.<br/>
+        /// MeshData is given in ColumnMajor format and can be modified, although expensive operations should be done in
+        /// Execute() in a separate thread.
         /// </summary>
         public readonly Action<MeshData> PreExecute;
         
         /// <summary>
         /// Code to execute when the action is triggered. Will be on a worker thread.
         /// Expensive operations should be done here.
+        /// MeshData is given in ColumnMajor.<br/>
+        /// You need to set the <see cref="MeshData.DirtyState"/> in order for changes to be applied.<br/>
+        /// Behind the scenes this will transfer the changes to the RowMajor <see cref="MeshData"/> copy which is required by Unity. 
         /// </summary>
-        public readonly Action<MeshData> Execute;
+        public readonly Action<MeshData> Execute; // TODO: add optional 'overload' where we give both col and RowMajor datasets, to allow the user to use both and manually sync changes
     
         /// <summary>
-        /// Called on the main thread after <see cref="Execute"/> to apply changes.
-        /// Applies the modified mesh by the job.
+        /// Called on the main thread after <see cref="Execute"/> to apply changes to the Unity Mesh
+        /// Note: The data is given in RowMajor and is a copy of the data in Execute().
+        /// This is because the Unity Mesh functions such as mesh.SetVertices require a RowMajor format.
         /// </summary>
         public readonly Action<Mesh, MeshData> PostExecute;
     

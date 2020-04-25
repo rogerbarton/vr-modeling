@@ -2,6 +2,7 @@
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace libigl
 {
@@ -10,20 +11,40 @@ namespace libigl
     /// </summary>
     public class MeshData : IDisposable
     {
+        public readonly bool IsRowMajor;
+
+        [Flags]
+        public enum DirtyFlag
+        {
+            None = 0,
+            VDirty = 1,
+            NDirty = 2,
+            CDirty = 4,
+            UVDirty = 8,
+            FDirty = 16
+        }    
+
+        public DirtyFlag DirtyState = DirtyFlag.None;
+        
         public NativeArray<Vector3> V;
         public NativeArray<Vector3> N;
         public NativeArray<Color> C;
         public NativeArray<Vector2> UV;
         public NativeArray<int> F;
-        public int VSize;
-        public int FSize;
+        public readonly int VSize;
+        public readonly int FSize;
 
         /// <summary>
         /// Create a copy of the mesh arrays
         /// </summary>
         /// <param name="mesh">Unity Mesh to copy from</param>
-        public MeshData(Mesh mesh)
+        /// <param name="isRowMajor">Are the underlying arrays in RowMajor</param>
+        /// <param name="onlyAllocateMemory">Should the arrays be uninitialized.
+        /// If true memory is only allocated but no data is copied from the mesh.</param>
+        public MeshData(Mesh mesh, bool isRowMajor = false, bool onlyAllocateMemory = false)
         {
+            IsRowMajor = isRowMajor;
+            
             // Create a vertex data copy as a NativeArray<float> which we will pass to libigl
             VSize = mesh.vertexCount;
             FSize = mesh.triangles.Length;
@@ -43,12 +64,56 @@ namespace libigl
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
 #endif
 
-            //Copy the V, F matrices from the mesh
-            V.CopyFrom(mesh.vertices);
-            N.CopyFrom(mesh.normals);
-            C.CopyFrom(mesh.colors);
-            UV.CopyFrom(mesh.uv);
-            F.CopyFrom(mesh.triangles);
+            if (!onlyAllocateMemory)
+            {
+                //Copy the V, F matrices from the mesh
+                V.CopyFrom(mesh.vertices);
+                N.CopyFrom(mesh.normals);
+                C.CopyFrom(mesh.colors);
+                UV.CopyFrom(mesh.uv);
+                F.CopyFrom(mesh.triangles);
+
+                if (!isRowMajor)
+                    TransposeInPlace();
+            }
+        }
+        
+        public void TransposeInPlace()
+        {
+            V.TransposeInPlace();
+            N.TransposeInPlace();
+            C.TransposeInPlace(0, 4);
+            UV.TransposeInPlace(0, 2);
+            F.TransposeInPlace(F.Length / 3);
+        }
+        
+        
+        /// <summary>
+        /// Applies changes to another copy of the data with a different IsRowMajor
+        /// Use this to copy changes from Col to RowMajor, vice versa
+        /// </summary>
+        public void ApplyDirtyToTranspose(MeshData to)
+        {
+            if(DirtyState == DirtyFlag.None) return;
+            
+            Assert.IsTrue((DirtyState & to.DirtyState) == DirtyFlag.None, 
+                "Warning! 'to' MeshData has dirty changes that will be overwritten. " +
+                "You need to call MeshData.ApplyDirtyToTranspose before making changes to the copy of MeshData.");
+            
+            Assert.IsTrue(IsRowMajor != to.IsRowMajor, "Both MeshData instances are of the same type Col/RowMajor.");
+            
+            if((DirtyState & DirtyFlag.VDirty) > 0)
+                V.TransposeTo(to.V);
+            if((DirtyState & DirtyFlag.NDirty) > 0)
+                N.TransposeTo(to.N);
+            if((DirtyState & DirtyFlag.CDirty) > 0)
+                C.TransposeTo(to.C, 0, 4);
+            if((DirtyState & DirtyFlag.UVDirty) > 0)
+                UV.TransposeTo(to.UV, 0, 2);
+            if((DirtyState & DirtyFlag.FDirty) > 0)
+                F.TransposeTo(to.F, F.Length / 3);
+
+            DirtyState = DirtyFlag.None;
         }
 
         public void Dispose()

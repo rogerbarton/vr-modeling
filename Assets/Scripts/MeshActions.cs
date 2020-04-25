@@ -54,18 +54,18 @@ public class MeshActions : MonoBehaviour
                 new []{"smooth", "harmonic", "laplacian"},
                 2,
                 () => Input.GetKeyDown(KeyCode.E),
-                default,
-                (mesh, data) =>
-                {
-                    mesh.SetVertices(data.V);
-                    mesh.RecalculateNormals();
-                },
                 data =>
                 {
                     unsafe
                     {
                         Native.Harmonic((float*) data.V.GetUnsafePtr(), data.VSize, (int*) data.F.GetUnsafePtr(), data.FSize);
                     }
+                    data.DirtyState |= MeshData.DirtyFlag.VDirty;
+                },
+                (mesh, data) =>
+                {
+                    mesh.SetVertices(data.V);
+                    mesh.RecalculateNormals();
                 }));
         
         actions.Add(

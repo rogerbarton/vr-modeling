@@ -31,6 +31,8 @@ namespace libigl
             {
                 Native.TranslateMesh((float*) data.V.GetUnsafePtr(), data.VSize, Vector3.forward * 0.1f);
             }
+
+            data.DirtyState |= MeshData.DirtyFlag.VDirty;
         }
 
         public void PostExecute(Mesh mesh, MeshData data)
