@@ -18,7 +18,7 @@ namespace libigl
     {
         public const string DllName =
 #if UNITY_EDITOR
-            "libigl-interface";
+            "libigl-interface"; //TODO: invert this so Unity searches for __lib, but we actually have lib in folders
 #else
             "__libigl-interface";
 #endif

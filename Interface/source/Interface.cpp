@@ -5,7 +5,7 @@
 #include <Eigen/core>
 
 // Declare variables made extern in Interface.h
-StringCallback DebugLog;
+StringCallback DebugLog = nullptr;
 
 IUnityInterfaces* s_UnityInterfaces = nullptr;
 
