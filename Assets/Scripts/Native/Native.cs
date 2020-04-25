@@ -57,19 +57,29 @@ namespace libigl
         /// </summary>
         public static void Destroy() { }
 
+        // Interface.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
 
+        // IO.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern unsafe void LoadOFF([In] string path, [In] float scale,
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,
             [Out] out uint* FPtr, [Out] out int FSize);
         
-        
+        [DllImport(DllName)]
+        public static extern unsafe void TransposeInPlace(void* MatrixPtr, int rows, int cols = 3);
         [DllImport(DllName)]
         public static extern unsafe void TransposeInPlace(void* MatrixPtr, int rows);
+        
+        [DllImport(DllName)]
+        public static extern unsafe void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols = 3);
+        [DllImport(DllName)]
+        public static extern unsafe void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows);
 
+        
+        // Translate.cpp
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         

@@ -6,9 +6,15 @@
 #include <igl/per_vertex_normals.h>
 
 extern "C" {
-    void TransposeInPlace(void* MatrixPtr, int rows) {
-        Eigen::MatrixXf V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, rows, 3);
+    void TransposeInPlace(void* MatrixPtr, int rows, int cols) {
+        Eigen::MatrixXf V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, rows, cols);
         V.transposeInPlace();
+    }
+
+    void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols) {
+        Eigen::MatrixXf In = Eigen::Map<Eigen::MatrixXf>((float*)InMatrixPtr, rows, cols);
+        Eigen::MatrixXf Out = Eigen::Map<Eigen::MatrixXf>((float*)OutMatrixPtr, cols, rows);
+        Out = In.transpose();
     }
 
     void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize) {
