@@ -6,7 +6,7 @@ using UnityEditor.Experimental.AssetImporters;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace libigl
+namespace libigl.Editor
 {
     [ScriptedImporter(1, "off")]
     public class OffImporter : ScriptedImporter

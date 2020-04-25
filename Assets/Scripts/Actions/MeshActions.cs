@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using libigl;
+using libigl.Samples;
 using TMPro;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
@@ -17,11 +17,12 @@ public class MeshActions : MonoBehaviour
     public List<MeshAction> actions = new List<MeshAction>();
     public GameObject uiListItemPrefab;
     public Transform uiListItemParent;
-    
+
     private KeywordRecognizer _keywordRecognizer;
     private List<string> _allKeywords = new List<string>();
 
     private static MeshActions get;
+
     private void Start()
     {
         if (get == null)
@@ -31,7 +32,7 @@ public class MeshActions : MonoBehaviour
             Debug.LogWarning("Instance already exists.");
             return;
         }
-        
+
         // Add all actions
         actions.Add(
             new MeshAction(
@@ -39,27 +40,29 @@ public class MeshActions : MonoBehaviour
                 new[] {"Test"},
                 0,
                 () => Input.GetKeyDown(KeyCode.Q),
-                _ => { Debug.Log("Execute Test"); }, (_,__) => { Debug.Log("Apply Test"); }));
-        
+                _ => { Debug.Log("Execute Test"); }, (_, __) => { Debug.Log("Apply Test"); }));
+
         actions.Add(
             new MeshAction(
                 "Translate",
-                new []{"move", "translate"},
+                new[] {"move", "translate"},
                 1,
                 new TranslateAction()));
-        
+
         actions.Add(
             new MeshAction(
                 "Smooth",
-                new []{"smooth", "harmonic", "laplacian"},
+                new[] {"smooth", "harmonic", "laplacian"},
                 2,
                 () => Input.GetKeyDown(KeyCode.E),
                 data =>
                 {
                     unsafe
                     {
-                        Native.Harmonic((float*) data.V.GetUnsafePtr(), data.VSize, (int*) data.F.GetUnsafePtr(), data.FSize);
+                        Native.Harmonic((float*) data.V.GetUnsafePtr(), data.VSize, (int*) data.F.GetUnsafePtr(),
+                            data.FSize);
                     }
+
                     data.DirtyState |= MeshData.DirtyFlag.VDirty;
                 },
                 (mesh, data) =>
@@ -67,7 +70,7 @@ public class MeshActions : MonoBehaviour
                     mesh.SetVertices(data.V);
                     mesh.RecalculateNormals();
                 }));
-        
+
         actions.Add(
             new MeshAction(
                 "Select",
@@ -75,7 +78,7 @@ public class MeshActions : MonoBehaviour
                 -1,
                 new SelectAction(),
                 false));
-        
+
         actions.Add(
             new MeshAction(
                 "AdvancedSample",
@@ -113,15 +116,15 @@ public class MeshActions : MonoBehaviour
         var go = Instantiate(uiListItemPrefab, uiListItemParent);
         var textField = go.GetComponentInChildren<TMP_Text>();
         textField.text = action.Name;
-            
+
         // setup callbacks/events
         var button = go.GetComponent<Button>();
         button.onClick.AddListener(() => action.Schedule());
-            
+
         // Setup speech keywords
-        if(action.SpeechKeywords != null)
+        if (action.SpeechKeywords != null)
             _allKeywords.AddRange(action.SpeechKeywords);
-        
+
         // TODO: Setup gesture recognition
     }
 
@@ -145,7 +148,7 @@ public class MeshActions : MonoBehaviour
     {
         foreach (var action in actions)
         {
-            if(action.ExecuteCondition())
+            if (action.ExecuteCondition())
                 action.Schedule();
         }
     }

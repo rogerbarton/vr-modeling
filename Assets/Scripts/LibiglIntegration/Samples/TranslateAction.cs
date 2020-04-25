@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
+﻿using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
-namespace libigl
+namespace libigl.Samples
 {
     /// <summary>
     /// Example Mesh Action which stores data for the worker thread <see cref="_deltaTime"/>.
@@ -12,7 +9,7 @@ namespace libigl
     public class TranslateAction : IMeshAction
     {
         private float _deltaTime;
-        
+
         public bool ExecuteCondition()
         {
             return Input.GetKeyDown(KeyCode.W);
@@ -23,7 +20,7 @@ namespace libigl
             _deltaTime = Time.deltaTime;
             Debug.Log($"PreExecute dt: {_deltaTime}");
         }
-        
+
         public void Execute(MeshData data)
         {
             Debug.Log($"Execute dt: {_deltaTime}");
