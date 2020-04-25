@@ -75,6 +75,13 @@ public class MeshActions : MonoBehaviour
                 -1,
                 new SelectAction(),
                 false));
+        
+        actions.Add(
+            new MeshAction(
+                "AdvancedSample",
+                null,
+                -1,
+                new AdvancedAction()));
 
         InitializeUI();
     }

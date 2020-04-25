@@ -25,6 +25,29 @@ namespace libigl
         /// </summary>
         void PostExecute(Mesh mesh, MeshData data);
     }
+    
+    /// <summary>
+    /// Implements functions required for a MeshAction with <see cref="ExecuteAdvanced"/>.
+    /// </summary>
+    public interface IMeshActionAdvanced
+    {
+        /// <summary>
+        /// See <see cref="MeshAction.ExecuteCondition"/>
+        /// </summary>
+        bool ExecuteCondition();
+        /// <summary>
+        /// See <see cref="MeshAction.PreExecute"/>
+        /// </summary>
+        void PreExecute(MeshData libiglMesh);
+        /// <summary>
+        /// See <see cref="MeshAction.ExecuteAdvanced"/>
+        /// </summary>
+        void ExecuteAdvanced(MeshData data, MeshData dataRowMajor);
+        /// <summary>
+        /// See <see cref="MeshAction.PostExecute"/>
+        /// </summary>
+        void PostExecute(Mesh mesh, MeshData data);
+    }
 
     /// <summary>
     /// Stores information on one action that can be performed on a mesh.
@@ -49,8 +72,8 @@ namespace libigl
         /// Called on the main thread before <see cref="Execute"/> to gather required data for it.
         /// This may include reading the current input state.
         /// May be null.<br/>
-        /// MeshData is given in ColumnMajor format and can be modified, although expensive operations should be done in
-        /// Execute() in a separate thread.
+        /// MeshData is given in RowMajor format and can be modified, although expensive operations should be done in
+        /// Execute() in a separate thread. In most cases MeshData will not be used.
         /// </summary>
         public readonly Action<MeshData> PreExecute;
         
@@ -61,7 +84,13 @@ namespace libigl
         /// You need to set the <see cref="MeshData.DirtyState"/> in order for changes to be applied.<br/>
         /// Behind the scenes this will transfer the changes to the RowMajor <see cref="MeshData"/> copy which is required by Unity. 
         /// </summary>
-        public readonly Action<MeshData> Execute; // TODO: add optional 'overload' where we give both col and RowMajor datasets, to allow the user to use both and manually sync changes
+        public readonly Action<MeshData> Execute;
+
+        /// <summary>
+        /// The same as <see cref="Execute"/> but with both the ColMajor and RowMajor data respectively.
+        /// Use either this or <see cref="Execute"/>, one of them must be null.
+        /// </summary>
+        public readonly Action<MeshData, MeshData> ExecuteAdvanced;
     
         /// <summary>
         /// Called on the main thread after <see cref="Execute"/> to apply changes to the Unity Mesh
@@ -86,6 +115,22 @@ namespace libigl
             PostExecute = postExecute;
         }
         
+        public MeshAction(string name,  string[] speechKeywords, int gestureId, Func<bool> executeCondition, 
+            Action<MeshData, MeshData> executeAdvanced, Action<Mesh, MeshData> postExecute, 
+            Action<MeshData> preExecute = default, 
+            bool allowQueueing = true)
+        {
+            Name = name;
+            SpeechKeywords = speechKeywords;
+            GestureId = gestureId;
+            AllowQueueing = allowQueueing;
+            
+            ExecuteCondition = executeCondition;
+            PreExecute = preExecute;
+            ExecuteAdvanced = executeAdvanced;
+            PostExecute = postExecute;
+        }
+        
         public MeshAction(string name, string[] speechKeywords, int gestureId, 
             IMeshAction meshAction,  
             bool allowQueueing = true)
@@ -99,6 +144,21 @@ namespace libigl
             PreExecute = meshAction.PreExecute;
             Execute = meshAction.Execute;
             PostExecute = meshAction.PostExecute;
+        }
+        
+        public MeshAction(string name, string[] speechKeywords, int gestureId, 
+            IMeshActionAdvanced meshActionAdvanced,  
+            bool allowQueueing = true)
+        {
+            Name = name;
+            SpeechKeywords = speechKeywords;
+            GestureId = gestureId;
+            AllowQueueing = allowQueueing;
+            
+            ExecuteCondition = meshActionAdvanced.ExecuteCondition;
+            PreExecute = meshActionAdvanced.PreExecute;
+            ExecuteAdvanced = meshActionAdvanced.ExecuteAdvanced;
+            PostExecute = meshActionAdvanced.PostExecute;
         }
         
         /// <summary>
@@ -116,6 +176,25 @@ namespace libigl
             ExecuteCondition = default;
             PreExecute = preExecute;
             Execute = execute;
+            PostExecute = postExecute;
+        }
+        
+        /// <summary>
+        /// For creating a MeshAction dynamically without any UI generation.
+        /// With AdvancedExecute for getting both Col and RowMajor data.
+        /// </summary>
+        public MeshAction(string name, 
+            Action<MeshData, MeshData> executeAdvanced, Action<Mesh, MeshData> postExecute, Action<MeshData> preExecute = default, 
+            bool allowQueueing = true)
+        {
+            Name = name;
+            SpeechKeywords = new string[0];
+            GestureId = InvalidGesture;
+            AllowQueueing = allowQueueing;
+            
+            ExecuteCondition = default;
+            PreExecute = preExecute;
+            ExecuteAdvanced = executeAdvanced;
             PostExecute = postExecute;
         }
 

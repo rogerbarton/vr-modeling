@@ -35,7 +35,7 @@ namespace libigl
                     m.SetVertices(d.V);
                 });
                     
-                var action = new MeshAction("Temp", execute, apply).Schedule();
+                var action = new MeshAction("DynamicSample", execute, apply).Schedule();
             }
         }
     }

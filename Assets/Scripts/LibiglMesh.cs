@@ -57,14 +57,33 @@ namespace libigl
         {
             Assert.IsTrue(_workerThread == null || !_workerThread.IsAlive);
             _executingAction = action;
-            _executingAction.PreExecute?.Invoke(Data);
-            _workerThread = new Thread(() =>
+            _executingAction.PreExecute?.Invoke(DataRowMajor);
+            Assert.IsTrue(_executingAction.Execute != null || _executingAction.ExecuteAdvanced != null);
+            
+            ThreadStart threadStart;
+            if (_executingAction.Execute != null)
             {
-                DataRowMajor.ApplyDirtyToTranspose(Data);
                 // Execute the action with ColMajor data and then apply the changes to the DataRowMajor
-                _executingAction.Execute(Data);
-                Data.ApplyDirtyToTranspose(DataRowMajor);
-            });
+                threadStart = () =>
+                {
+                    DataRowMajor.ApplyDirtyToTranspose(Data);
+                    _executingAction.Execute(Data);
+                    Data.ApplyDirtyToTranspose(DataRowMajor);
+                };
+            }
+            else
+            {
+                // Execute the action with ColMajor and RowMajor data, apply changes in both
+                threadStart = () =>
+                {
+                    DataRowMajor.ApplyDirtyToTranspose(Data);
+                    _executingAction.ExecuteAdvanced(Data, DataRowMajor);
+                    DataRowMajor.ApplyDirtyToTranspose(Data);
+                    Data.ApplyDirtyToTranspose(DataRowMajor);
+                };
+            }
+            
+            _workerThread = new Thread(threadStart);
             _workerThread.Start();
         }
 
