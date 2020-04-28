@@ -37,7 +37,6 @@ namespace libigl
         public readonly string[] SpeechKeywords;
         public readonly int GestureId;
         public const int InvalidGesture = -1;
-        public readonly bool AllowQueueing;
         
         /// <summary>
         /// Add any additional condition, such as a shortcut, to trigger execution.
@@ -76,13 +75,11 @@ namespace libigl
         public readonly Action<Mesh, MeshData> PostExecute;
     
         public MeshAction(string name,  string[] speechKeywords, int gestureId, Func<bool> executeCondition, 
-            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null, 
-            bool allowQueueing = true)
+            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
         {
             Name = name;
             SpeechKeywords = speechKeywords;
             GestureId = gestureId;
-            AllowQueueing = allowQueueing;
             
             ExecuteCondition = executeCondition;
             PreExecute = preExecute;
@@ -91,13 +88,11 @@ namespace libigl
         }
         
         public MeshAction(string name, string[] speechKeywords, int gestureId, 
-            IMeshAction meshAction,  
-            bool allowQueueing = true)
+            IMeshAction meshAction)
         {
             Name = name;
             SpeechKeywords = speechKeywords;
             GestureId = gestureId;
-            AllowQueueing = allowQueueing;
             
             ExecuteCondition = meshAction.ExecuteCondition;
             PreExecute = meshAction.PreExecute;
@@ -109,13 +104,11 @@ namespace libigl
         /// For creating a MeshAction dynamically without any UI generation
         /// </summary>
         public MeshAction(string name, 
-            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null, 
-            bool allowQueueing = true)
+            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
         {
             Name = name;
             SpeechKeywords = new string[0];
             GestureId = InvalidGesture;
-            AllowQueueing = allowQueueing;
             
             ExecuteCondition = default;
             PreExecute = preExecute;

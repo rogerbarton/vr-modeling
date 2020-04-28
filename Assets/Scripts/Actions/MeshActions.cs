@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using libigl;
 using libigl.Samples;
@@ -72,8 +72,7 @@ public class MeshActions : MonoBehaviour
                 "Select",
                 null,
                 -1,
-                new SelectAction(),
-                false));
+                new SelectAction()));
 
         InitializeUI();
     }

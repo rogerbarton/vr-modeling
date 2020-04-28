@@ -16,20 +16,15 @@ namespace libigl
         private MeshFilter _meshFilter;
         public Mesh Mesh { get; private set; }
 
-        public MeshData Data;
-        public MeshData DataRowMajor;
-        private MeshAction _executingAction;
+        [NonSerialized] public MeshData Data;
+        [NonSerialized] public MeshData DataRowMajor;
+        private MeshAction[] _executingActions;
+        private readonly Queue<MeshAction> _actionsQueue = new Queue<MeshAction>();
 
         private Thread _workerThread;
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
         public bool JobRunning() { return _workerThread != null; }
 
-        private readonly Queue<MeshAction> _actionsQueue = new Queue<MeshAction>();
-
-        /// <summary>
-        /// Called like Update but only when <see cref="JobRunning"/> is false.
-        /// </summary>
-        public event Action OnAvailableUpdate = delegate { };
 
         private void Start()
         {
@@ -42,28 +37,33 @@ namespace libigl
             DataRowMajor = new MeshData(Mesh, true);
         }
 
+        /// <summary>
+        /// Schedules the action once, adds it to a queue of actions to be executed 
+        /// </summary>
         public void ScheduleAction(MeshAction action)
         {
-            if ((_workerThread == null || !_workerThread.IsAlive) && _actionsQueue.Count == 0)
-                ExecuteAction(action);
-            else if (action.AllowQueueing)
+            if(!_actionsQueue.Contains(action))
                 _actionsQueue.Enqueue(action);
         }
 
         /// <summary>
         /// Execute operation on a worker thread (job)
         /// </summary>
-        private void ExecuteAction(MeshAction action)
+        private void ExecuteActions()
         {
             Assert.IsTrue(_workerThread == null || !_workerThread.IsAlive);
-            _executingAction = action;
-            _executingAction.PreExecute?.Invoke(DataRowMajor);
+            _executingActions = _actionsQueue.ToArray();
+            _actionsQueue.Clear();
             
-            // Execute the action with ColMajor data and then apply the changes to the DataRowMajor
+            foreach (var action in _executingActions)
+                action.PreExecute?.Invoke(DataRowMajor);
+            
+            // Execute the actions with ColMajor data and then apply the changes to the DataRowMajor
             _workerThread = new Thread(() =>
             {
                 DataRowMajor.ApplyDirtyToTranspose(Data);
-                _executingAction.Execute(Data);
+                foreach (var action in _executingActions)
+                    action.Execute(Data);
                 Data.ApplyDirtyToTranspose(DataRowMajor);
             });
             _workerThread.Start();
@@ -74,9 +74,7 @@ namespace libigl
             if (_workerThread == null)
             {
                 if (_actionsQueue.Count > 0)
-                    ExecuteAction(_actionsQueue.Dequeue());
-                else
-                    OnAvailableUpdate();
+                    ExecuteActions();
             }
             else if (!_workerThread.IsAlive)
             {
@@ -85,9 +83,10 @@ namespace libigl
                 _workerThread = null;
 
                 // Allow the user to apply custom changes to the mesh, give the RowMajor version that has been updated
-                _executingAction.PostExecute?.Invoke(Mesh, DataRowMajor);
+                foreach (var action in _executingActions) 
+                    action.PostExecute?.Invoke(Mesh, DataRowMajor);
                 DataRowMajor.ApplyChangesToMesh(Mesh);
-                _executingAction = null;
+                _executingActions = null;
             }
         }
 
