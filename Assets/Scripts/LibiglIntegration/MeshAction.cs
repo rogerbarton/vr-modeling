@@ -25,29 +25,6 @@ namespace libigl
         /// </summary>
         void PostExecute(Mesh mesh, MeshData data);
     }
-    
-    /// <summary>
-    /// Implements functions required for a MeshAction with <see cref="ExecuteAdvanced"/>.
-    /// </summary>
-    public interface IMeshActionAdvanced
-    {
-        /// <summary>
-        /// See <see cref="MeshAction.ExecuteCondition"/>
-        /// </summary>
-        bool ExecuteCondition();
-        /// <summary>
-        /// See <see cref="MeshAction.PreExecute"/>
-        /// </summary>
-        void PreExecute(MeshData libiglMesh);
-        /// <summary>
-        /// See <see cref="MeshAction.ExecuteAdvanced"/>
-        /// </summary>
-        void ExecuteAdvanced(MeshData data, MeshData dataRowMajor);
-        /// <summary>
-        /// See <see cref="MeshAction.PostExecute"/>
-        /// </summary>
-        void PostExecute(Mesh mesh, MeshData data);
-    }
 
     /// <summary>
     /// Stores information on one action that can be performed on a mesh.
@@ -87,12 +64,6 @@ namespace libigl
         public readonly Action<MeshData> Execute;
 
         /// <summary>
-        /// The same as <see cref="Execute"/> but with both the ColMajor and RowMajor data respectively.
-        /// Use either this or <see cref="Execute"/>, one of them must be null.
-        /// </summary>
-        public readonly Action<MeshData, MeshData> ExecuteAdvanced;
-    
-        /// <summary>
         /// Called on the main thread after <see cref="Execute"/> to apply changes to the Unity Mesh
         /// Note: The data is given in RowMajor and is a copy of the data in Execute().
         /// This is because the Unity Mesh functions such as mesh.SetVertices require a RowMajor format.
@@ -115,22 +86,6 @@ namespace libigl
             PostExecute = postExecute;
         }
         
-        public MeshAction(string name,  string[] speechKeywords, int gestureId, Func<bool> executeCondition, 
-            Action<MeshData, MeshData> executeAdvanced, Action<Mesh, MeshData> postExecute, 
-            Action<MeshData> preExecute = default, 
-            bool allowQueueing = true)
-        {
-            Name = name;
-            SpeechKeywords = speechKeywords;
-            GestureId = gestureId;
-            AllowQueueing = allowQueueing;
-            
-            ExecuteCondition = executeCondition;
-            PreExecute = preExecute;
-            ExecuteAdvanced = executeAdvanced;
-            PostExecute = postExecute;
-        }
-        
         public MeshAction(string name, string[] speechKeywords, int gestureId, 
             IMeshAction meshAction,  
             bool allowQueueing = true)
@@ -144,21 +99,6 @@ namespace libigl
             PreExecute = meshAction.PreExecute;
             Execute = meshAction.Execute;
             PostExecute = meshAction.PostExecute;
-        }
-        
-        public MeshAction(string name, string[] speechKeywords, int gestureId, 
-            IMeshActionAdvanced meshActionAdvanced,  
-            bool allowQueueing = true)
-        {
-            Name = name;
-            SpeechKeywords = speechKeywords;
-            GestureId = gestureId;
-            AllowQueueing = allowQueueing;
-            
-            ExecuteCondition = meshActionAdvanced.ExecuteCondition;
-            PreExecute = meshActionAdvanced.PreExecute;
-            ExecuteAdvanced = meshActionAdvanced.ExecuteAdvanced;
-            PostExecute = meshActionAdvanced.PostExecute;
         }
         
         /// <summary>
@@ -176,25 +116,6 @@ namespace libigl
             ExecuteCondition = default;
             PreExecute = preExecute;
             Execute = execute;
-            PostExecute = postExecute;
-        }
-        
-        /// <summary>
-        /// For creating a MeshAction dynamically without any UI generation.
-        /// With AdvancedExecute for getting both Col and RowMajor data.
-        /// </summary>
-        public MeshAction(string name, 
-            Action<MeshData, MeshData> executeAdvanced, Action<Mesh, MeshData> postExecute, Action<MeshData> preExecute = default, 
-            bool allowQueueing = true)
-        {
-            Name = name;
-            SpeechKeywords = new string[0];
-            GestureId = InvalidGesture;
-            AllowQueueing = allowQueueing;
-            
-            ExecuteCondition = default;
-            PreExecute = preExecute;
-            ExecuteAdvanced = executeAdvanced;
             PostExecute = postExecute;
         }
 
