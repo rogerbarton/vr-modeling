@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace libigl.Samples
 {
     /// <summary>
-    /// Example of creating a MeshAction dynamically with manual entry points (i.e. no UI generation)
+    /// Example of creating a temporary MeshAction
     /// </summary>
-    public class DynamicAction : MonoBehaviour
+    public class TempAction : MonoBehaviour
     {
         private void Update()
         {
@@ -31,10 +31,9 @@ namespace libigl.Samples
                 var apply = new Action<Mesh, MeshData>((m, d) =>
                 {
                     Debug.Log("DynamicAction Apply");
-                    m.SetVertices(d.V);
                 });
 
-                var action = new MeshAction("DynamicSample", execute, apply).Schedule();
+                var action = new MeshAction("DynamicSample", execute, null, apply).Schedule();
             }
         }
     }

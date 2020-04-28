@@ -21,7 +21,11 @@ namespace libigl
             NDirty = 2,
             CDirty = 4,
             UVDirty = 8,
-            FDirty = 16
+            FDirty = 16,
+            /// <summary>
+            /// Recalculate normals, <see cref="NDirty"/> overrides this.
+            /// </summary>
+            ComputeNormals = 32
         }    
 
         public DirtyFlag DirtyState = DirtyFlag.None;
@@ -91,8 +95,10 @@ namespace libigl
         /// <summary>
         /// Applies changes to another copy of the data with a different IsRowMajor
         /// Use this to copy changes from Col to RowMajor, vice versa
+        /// <param name="to">Where to apply changes to. </param>
+        /// <param name="propagateDirtyState">Should <see cref="to"/> have the same dirtyState, or set it to <see cref="DirtyFlag.None"/> if false</param>
         /// </summary>
-        public void ApplyDirtyToTranspose(MeshData to)
+        public void ApplyDirtyToTranspose(MeshData to, bool propagateDirtyState = true)
         {
             if(DirtyState == DirtyFlag.None) return;
             
@@ -112,6 +118,33 @@ namespace libigl
                 UV.TransposeTo(to.UV, 0, 2);
             if((DirtyState & DirtyFlag.FDirty) > 0)
                 F.TransposeTo(to.F, F.Length / 3);
+
+            if(propagateDirtyState)
+                to.DirtyState |= DirtyState;
+            DirtyState = DirtyFlag.None;
+        }
+
+        /// <summary>
+        /// Apply MeshData changes to the Unity Mesh to see changes when rendered.
+        /// Must be called on the main thread with RowMajor data.
+        /// </summary>
+        public void ApplyChangesToMesh(Mesh mesh)
+        {
+            if(DirtyState == DirtyFlag.None) return;
+            Assert.IsTrue(IsRowMajor, "Data must be in RowMajor format to apply changes to the Unity mesh.");
+            
+            if ((DirtyState & DirtyFlag.VDirty) > 0)
+                mesh.SetVertices(V);
+            if ((DirtyState & DirtyFlag.NDirty) > 0)
+                mesh.SetNormals(N);
+            else if ((DirtyState & DirtyFlag.None) > 0)
+                mesh.RecalculateNormals();
+            if ((DirtyState & DirtyFlag.CDirty) > 0)
+                mesh.SetColors(C);
+            if ((DirtyState & DirtyFlag.UVDirty) > 0)
+                mesh.SetUVs(0, UV);
+            if ((DirtyState & DirtyFlag.FDirty) > 0)
+                mesh.SetIndices(F, MeshTopology.Triangles, 0);
 
             DirtyState = DirtyFlag.None;
         }

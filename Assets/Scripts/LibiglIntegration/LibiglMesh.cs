@@ -84,8 +84,9 @@ namespace libigl
                 _workerThread.Join();
                 _workerThread = null;
 
-                // Allow the user to apply changes to the mesh, give the RowMajor version that has been updated
-                _executingAction.PostExecute(Mesh, DataRowMajor);
+                // Allow the user to apply custom changes to the mesh, give the RowMajor version that has been updated
+                _executingAction.PostExecute?.Invoke(Mesh, DataRowMajor);
+                DataRowMajor.ApplyChangesToMesh(Mesh);
                 _executingAction = null;
             }
         }

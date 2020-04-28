@@ -40,7 +40,7 @@ public class MeshActions : MonoBehaviour
                 new[] {"Test"},
                 0,
                 () => Input.GetKeyDown(KeyCode.Q),
-                _ => { Debug.Log("Execute Test"); }, (_, __) => { Debug.Log("Apply Test"); }));
+                _ => { Debug.Log("Execute Test"); }));
 
         actions.Add(
             new MeshAction(
@@ -64,11 +64,7 @@ public class MeshActions : MonoBehaviour
                     }
 
                     data.DirtyState |= MeshData.DirtyFlag.VDirty;
-                },
-                (mesh, data) =>
-                {
-                    mesh.SetVertices(data.V);
-                    mesh.RecalculateNormals();
+                    data.DirtyState |= MeshData.DirtyFlag.ComputeNormals;
                 }));
 
         actions.Add(

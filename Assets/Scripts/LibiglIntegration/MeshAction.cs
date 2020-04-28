@@ -41,7 +41,8 @@ namespace libigl
         
         /// <summary>
         /// Add any additional condition, such as a shortcut, to trigger execution.
-        /// This is in addition to the <see cref="SpeechKeywords"/> and <see cref="GestureId"/>.
+        /// This is in addition to the UI, <see cref="SpeechKeywords"/> and <see cref="GestureId"/>.
+        /// <returns>True if the action should be executed</returns>
         /// </summary>
         public readonly Func<bool> ExecuteCondition;
 
@@ -51,6 +52,7 @@ namespace libigl
         /// May be null.<br/>
         /// MeshData is given in RowMajor format and can be modified, although expensive operations should be done in
         /// Execute() in a separate thread. In most cases MeshData will not be used.
+        /// <typeparam name="MeshData">RowMajor mesh data</typeparam>
         /// </summary>
         public readonly Action<MeshData> PreExecute;
         
@@ -59,20 +61,22 @@ namespace libigl
         /// Expensive operations should be done here.
         /// MeshData is given in ColumnMajor.<br/>
         /// You need to set the <see cref="MeshData.DirtyState"/> in order for changes to be applied.<br/>
-        /// Behind the scenes this will transfer the changes to the RowMajor <see cref="MeshData"/> copy which is required by Unity. 
+        /// Behind the scenes this will transfer the changes to the RowMajor <see cref="MeshData"/> copy which is required by Unity.
+        /// <typeparam name="MeshData">ColumnMajor mesh data to be modified</typeparam> 
         /// </summary>
         public readonly Action<MeshData> Execute;
 
         /// <summary>
-        /// Called on the main thread after <see cref="Execute"/> to apply changes to the Unity Mesh
+        /// Called on the main thread after <see cref="Execute"/> just before dirty changes are applied to the Unity mesh.<br/>
         /// Note: The data is given in RowMajor and is a copy of the data in Execute().
         /// This is because the Unity Mesh functions such as mesh.SetVertices require a RowMajor format.
+        /// <typeparam name="Mesh">The Unity mesh</typeparam>
+        /// <typeparam name="MeshData">RowMajor mesh data</typeparam>
         /// </summary>
         public readonly Action<Mesh, MeshData> PostExecute;
     
         public MeshAction(string name,  string[] speechKeywords, int gestureId, Func<bool> executeCondition, 
-            Action<MeshData> execute, Action<Mesh, MeshData> postExecute, 
-            Action<MeshData> preExecute = default, 
+            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null, 
             bool allowQueueing = true)
         {
             Name = name;
@@ -105,7 +109,7 @@ namespace libigl
         /// For creating a MeshAction dynamically without any UI generation
         /// </summary>
         public MeshAction(string name, 
-            Action<MeshData> execute, Action<Mesh, MeshData> postExecute, Action<MeshData> preExecute = default, 
+            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null, 
             bool allowQueueing = true)
         {
             Name = name;
