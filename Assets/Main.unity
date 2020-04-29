@@ -5253,6 +5253,7 @@ MonoBehaviour:
   - {fileID: -927199367670048503, guid: 412ea41b9f801a04fb3242cd0d70c1e8, type: 3}
   - {fileID: -6639996736880469515, guid: d46b50af8be5587489b94d964055c7aa, type: 3}
   - {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf, type: 3}
+  - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
   uiListItemPrefab: {fileID: 2621696837101218300, guid: 947a63f86d0ba824f972b224d98e8c88,
     type: 3}
   uiListItemParent: {fileID: 2145879752}
