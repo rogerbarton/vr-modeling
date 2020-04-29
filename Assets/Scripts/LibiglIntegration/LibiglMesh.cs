@@ -33,8 +33,8 @@ namespace libigl
             Mesh = _meshFilter.mesh;
             Mesh.MarkDynamic();
 
-            Data = new MeshData(Mesh);
             DataRowMajor = new MeshData(Mesh, true);
+            Data = new MeshData(DataRowMajor, false);
         }
 
         /// <summary>

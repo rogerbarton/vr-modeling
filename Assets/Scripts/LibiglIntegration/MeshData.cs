@@ -14,7 +14,7 @@ namespace libigl
         public readonly bool IsRowMajor;
 
         [Flags]
-        public enum DirtyFlag
+        public enum DirtyFlag : uint
         {
             None = 0,
             VDirty = 1,
@@ -25,7 +25,8 @@ namespace libigl
             /// <summary>
             /// Recalculate normals, <see cref="NDirty"/> overrides this.
             /// </summary>
-            ComputeNormals = 32
+            ComputeNormals = 32,
+            All = uint.MaxValue
         }    
 
         public DirtyFlag DirtyState = DirtyFlag.None;
@@ -45,14 +46,62 @@ namespace libigl
         /// <param name="isRowMajor">Are the underlying arrays in RowMajor</param>
         /// <param name="onlyAllocateMemory">Should the arrays be uninitialized.
         /// If true memory is only allocated but no data is copied from the mesh.</param>
-        public MeshData(Mesh mesh, bool isRowMajor = false, bool onlyAllocateMemory = false)
+        public MeshData(Mesh mesh, bool isRowMajor = true, bool onlyAllocateMemory = false)
         {
             IsRowMajor = isRowMajor;
             
-            // Create a vertex data copy as a NativeArray<float> which we will pass to libigl
             VSize = mesh.vertexCount;
             FSize = mesh.triangles.Length;
+            
+            Allocate();
+            
+            if (!onlyAllocateMemory)
+            {
+                //Copy the V, F matrices from the mesh
+                V.CopyFrom(mesh.vertices);
+                N.CopyFrom(mesh.normals);
+                C.CopyFrom(mesh.colors);
+                UV.CopyFrom(mesh.uv);
+                F.CopyFrom(mesh.triangles);
 
+                if (!isRowMajor) // Will crash currently
+                    TransposeInPlace(); 
+            }
+        }
+
+        /// <summary>
+        /// Construct a MeshData instance from another which has the opposite isRowMajor.
+        /// Use case: constructing ColMajor meshData from existing RowMajor data, avoiding a TransposeInPlace.
+        /// <code>Assert: IsRowMajor != other.IsRowMajor</code>
+        /// </summary>
+        /// <param name="other">Existing initialized MeshData with opposite isRowMajor.</param>
+        /// <param name="isRowMajor">Are the underlying arrays in RowMajor</param>
+        public MeshData(MeshData other, bool isRowMajor = false)
+        {
+            Assert.IsTrue(IsRowMajor != other.IsRowMajor, "Both MeshData instances are of the same type Col/RowMajor.");
+            
+            IsRowMajor = isRowMajor;
+            VSize = other.VSize;
+            FSize = other.FSize;
+            
+            Allocate();
+
+            // Copy over data without a TransposeInPlace
+            other.V.TransposeTo(V, other.IsRowMajor);
+            other.N.TransposeTo(N, other.IsRowMajor);
+            other.C.TransposeTo(C, other.IsRowMajor, 0, 4);
+            other.UV.TransposeTo(UV, other.IsRowMajor, 0, 2);
+            other.F.TransposeTo(F, other.IsRowMajor, F.Length / 3);
+        }
+
+        /// <summary>
+        /// Allocated the NativeArrays once VSize and FSize have been set.
+        /// </summary>
+        private void Allocate()
+        {
+            Assert.IsTrue(VSize > 0 && FSize > 0);
+            Assert.IsTrue(!V.IsCreated);
+            
             V = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             N = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             C = new NativeArray<Color>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
@@ -67,23 +116,15 @@ namespace libigl
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref UV, AtomicSafetyHandle.Create());
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
 #endif
-
-            if (!onlyAllocateMemory)
-            {
-                //Copy the V, F matrices from the mesh
-                V.CopyFrom(mesh.vertices);
-                N.CopyFrom(mesh.normals);
-                C.CopyFrom(mesh.colors);
-                UV.CopyFrom(mesh.uv);
-                F.CopyFrom(mesh.triangles);
-
-                if (!isRowMajor)
-                    TransposeInPlace();
-            }
         }
-        
+
+        /// <summary>
+        /// Transpose all arrays in place to convert between ColMajor and RowMajor.<br/>
+        /// [Experimental] Due to Eigen::Map not allowing transposeInPlace 
+        /// </summary>
         public void TransposeInPlace()
         {
+            throw new NotImplementedException();
             V.TransposeInPlace();
             N.TransposeInPlace();
             C.TransposeInPlace(0, 4);
@@ -106,18 +147,20 @@ namespace libigl
                 "Warning! 'to' MeshData has dirty changes that will be overwritten. " +
                 "You need to call MeshData.ApplyDirtyToTranspose before making changes to the copy of MeshData.");
             
+            Assert.IsTrue(VSize == to.VSize && FSize == to.FSize);
             Assert.IsTrue(IsRowMajor != to.IsRowMajor, "Both MeshData instances are of the same type Col/RowMajor.");
+            Assert.IsTrue(to != this);
             
             if((DirtyState & DirtyFlag.VDirty) > 0)
-                V.TransposeTo(to.V);
+                V.TransposeTo(to.V, IsRowMajor);
             if((DirtyState & DirtyFlag.NDirty) > 0)
-                N.TransposeTo(to.N);
+                N.TransposeTo(to.N, IsRowMajor);
             if((DirtyState & DirtyFlag.CDirty) > 0)
-                C.TransposeTo(to.C, 0, 4);
+                C.TransposeTo(to.C, IsRowMajor, 0, 4);
             if((DirtyState & DirtyFlag.UVDirty) > 0)
-                UV.TransposeTo(to.UV, 0, 2);
+                UV.TransposeTo(to.UV, IsRowMajor, 0, 2);
             if((DirtyState & DirtyFlag.FDirty) > 0)
-                F.TransposeTo(to.F, F.Length / 3);
+                F.TransposeTo(to.F, IsRowMajor, F.Length / 3);
 
             if(propagateDirtyState)
                 to.DirtyState |= DirtyState;

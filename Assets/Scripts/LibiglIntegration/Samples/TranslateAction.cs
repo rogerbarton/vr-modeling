@@ -26,7 +26,7 @@ namespace libigl.Samples
             Debug.Log($"Execute dt: {_deltaTime}");
             unsafe
             {
-                Native.TranslateMesh((float*) data.V.GetUnsafePtr(), data.VSize, Vector3.forward * 0.1f);
+                Native.TranslateMesh((float*) data.V.GetUnsafePtr(), data.VSize, new Vector3(0.1f, 0.2f, 0.3f));
             }
 
             data.DirtyState |= MeshData.DirtyFlag.VDirty;
@@ -35,9 +35,6 @@ namespace libigl.Samples
         public void PostExecute(Mesh mesh, MeshData data)
         {
             Debug.Log($"PostExecute dt: {_deltaTime}");
-
-            mesh.SetVertices(data.V);
-            mesh.RecalculateNormals();
         }
     }
 }
