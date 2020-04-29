@@ -7,13 +7,15 @@
 
 extern "C" {
     void TransposeInPlace(void* MatrixPtr, int rows, int cols) {
-        Eigen::MatrixXf V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, rows, cols);
+        auto V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, rows, cols);
+        //TODO: This will not work on a Eigen::Map as the dimensions are fixed, only for square matrices.
+        //Reason Eigen::Map does not own the memory. See https://gitlab.com/libeigen/eigen/-/issues/749
         V.transposeInPlace();
     }
 
     void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols) {
-        Eigen::MatrixXf In = Eigen::Map<Eigen::MatrixXf>((float*)InMatrixPtr, rows, cols);
-        Eigen::MatrixXf Out = Eigen::Map<Eigen::MatrixXf>((float*)OutMatrixPtr, cols, rows);
+        auto In = Eigen::Map<Eigen::MatrixXf>((float*)InMatrixPtr, rows, cols);
+        auto Out = Eigen::Map<Eigen::MatrixXf>((float*)OutMatrixPtr, cols, rows);
         Out = In.transpose();
     }
 
