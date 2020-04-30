@@ -11,23 +11,27 @@ extern StringCallback DebugLog;
 extern IUnityInterfaces* s_UnityInterfaces;
 
 extern "C" {
-    //Interface.cpp
+    // Interface.cpp
     UNITY_INTERFACE_EXPORT void Initialize(StringCallback debugCallback);
+    UNITY_INTERFACE_EXPORT void InitializeMesh(const char* name, const MeshDataNative data);
 
-    //Unity Callbacks
-    UNITY_INTERFACE_EXPORT void UnityPluginLoad(IUnityInterfaces* unityInterfaces);
-    UNITY_INTERFACE_EXPORT void UnityPluginUnload();
+    // Unity Callbacks from IUnityInterface.h
+    // UNITY_INTERFACE_EXPORT void UnityPluginLoad(IUnityInterfaces* unityInterfaces);
+    // UNITY_INTERFACE_EXPORT void UnityPluginUnload();
 
-    //Custom Upload to GPU
-    UNITY_INTERFACE_EXPORT UnityRenderingEventAndData GetUploadMeshPtr();
-    UNITY_INTERFACE_EXPORT void UploadMesh(int eventId, void* data);
+    // Custom Upload to GPU
+    // UNITY_INTERFACE_EXPORT UnityRenderingEventAndData GetUploadMeshPtr();
+    // UNITY_INTERFACE_EXPORT void UploadMesh(int eventId, void* data);
 
-    //IO.cpp
+    // IO.cpp
     UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
     UNITY_INTERFACE_EXPORT void TransposeInPlace(void* MatrixPtr, int rows, int cols = 3);
     UNITY_INTERFACE_EXPORT void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols = 3);
 
-    //Translate.cpp
+    // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
     UNITY_INTERFACE_EXPORT void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize);
+
+    // Sample.cpp
+    UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative& data, unsigned int& dirtyState);
 }

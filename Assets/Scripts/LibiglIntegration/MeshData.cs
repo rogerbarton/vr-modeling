@@ -17,6 +17,7 @@ namespace libigl
         public enum DirtyFlag : uint
         {
             None = 0,
+            All = uint.MaxValue,
             VDirty = 1,
             NDirty = 2,
             CDirty = 4,
@@ -25,8 +26,7 @@ namespace libigl
             /// <summary>
             /// Recalculate normals, <see cref="NDirty"/> overrides this.
             /// </summary>
-            ComputeNormals = 32,
-            All = uint.MaxValue
+            ComputeNormals = 32
         }    
 
         public DirtyFlag DirtyState = DirtyFlag.None;
@@ -190,6 +190,13 @@ namespace libigl
                 mesh.SetIndices(F, MeshTopology.Triangles, 0);
 
             DirtyState = DirtyFlag.None;
+        }
+
+        /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns>
+        public unsafe MeshDataNative GetNative()
+        {
+            return new MeshDataNative(IsRowMajor, (float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
+                (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
         }
 
         public void Dispose()
