@@ -17,8 +17,6 @@ struct Vector3
  */
 struct MeshDataNative
 {
-    bool IsRowMajor;
-
     float* V;
     float* N;
     float* C;

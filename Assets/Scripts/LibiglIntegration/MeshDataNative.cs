@@ -8,8 +8,6 @@ namespace libigl
     [StructLayout(LayoutKind.Sequential)]
     public readonly unsafe struct MeshDataNative
     {
-        public readonly bool IsRowMajor;
-
         public readonly float* V;
         public readonly float* N;
         public readonly float* C;
@@ -18,9 +16,8 @@ namespace libigl
         public readonly int VSize;
         public readonly int FSize;
 
-        public MeshDataNative(bool isRowMajor, float* v, float* n, float* c, float* uv, int* f, int vSize, int fSize)
+        public MeshDataNative(float* v, float* n, float* c, float* uv, int* f, int vSize, int fSize)
         {
-            IsRowMajor = isRowMajor;
             V = v;
             N = n;
             C = c;

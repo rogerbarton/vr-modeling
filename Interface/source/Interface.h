@@ -33,5 +33,5 @@ extern "C" {
     UNITY_INTERFACE_EXPORT void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize);
 
     // Sample.cpp
-    UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative& data, unsigned int& dirtyState);
+    UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState);
 }

@@ -195,7 +195,7 @@ namespace libigl
         /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns>
         public unsafe MeshDataNative GetNative()
         {
-            return new MeshDataNative(IsRowMajor, (float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
+            return new MeshDataNative((float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
                 (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
         }
 
