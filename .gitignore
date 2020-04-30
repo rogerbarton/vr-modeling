@@ -27,6 +27,13 @@ ExportedObj/
 *.booproj
 *.svd
 *.pdb
+.idea/
+!Interface/.idea/
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/dictionaries
+**/.idea/vcs.xml
+*.iws
 
 # ============ #
 # OS generated #
@@ -38,7 +45,6 @@ ExportedObj/
 .Trashes
 ehthumbs.db
 Thumbs.db
-\.idea/
 
 # ====== #
 # Custom #
