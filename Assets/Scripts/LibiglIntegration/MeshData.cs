@@ -53,15 +53,17 @@ namespace libigl
             VSize = mesh.vertexCount;
             FSize = mesh.triangles.Length;
             
-            Allocate();
+            Allocate(mesh.colors.Length == 0, mesh.uv.Length == 0);
             
             if (!onlyAllocateMemory)
             {
                 //Copy the V, F matrices from the mesh
                 V.CopyFrom(mesh.vertices);
                 N.CopyFrom(mesh.normals);
-                C.CopyFrom(mesh.colors);
-                UV.CopyFrom(mesh.uv);
+                if(mesh.colors.Length > 0) // TODO: What if the mesh has no colors, ie mesh.colors.Length == 0
+                    C.CopyFrom(mesh.colors);
+                if(mesh.uv.Length > 0)
+                    UV.CopyFrom(mesh.uv);
                 F.CopyFrom(mesh.triangles);
 
                 if (!isRowMajor) // Will crash currently
@@ -89,7 +91,7 @@ namespace libigl
             // Copy over data without a TransposeInPlace
             other.V.TransposeTo(V, other.IsRowMajor);
             other.N.TransposeTo(N, other.IsRowMajor);
-            other.C.TransposeTo(C, other.IsRowMajor, 0, 4);
+            other.C.TransposeTo(C, other.IsRowMajor, 0, 4); 
             other.UV.TransposeTo(UV, other.IsRowMajor, 0, 2);
             other.F.TransposeTo(F, other.IsRowMajor, F.Length / 3);
         }
@@ -97,15 +99,15 @@ namespace libigl
         /// <summary>
         /// Allocated the NativeArrays once VSize and FSize have been set.
         /// </summary>
-        private void Allocate()
+        private void Allocate(bool hasColor = true, bool hasUv = true) //TODO: find a better way of allocating color/uv
         {
             Assert.IsTrue(VSize > 0 && FSize > 0);
             Assert.IsTrue(!V.IsCreated);
             
             V = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             N = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            C = new NativeArray<Color>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            UV = new NativeArray<Vector2>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            C = new NativeArray<Color>(VSize, Allocator.Persistent, hasColor ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
+            UV = new NativeArray<Vector2>(VSize, Allocator.Persistent, hasUv ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
             F = new NativeArray<int>(FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
