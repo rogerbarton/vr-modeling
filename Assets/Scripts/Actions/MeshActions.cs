@@ -83,7 +83,7 @@ public class MeshActions : MonoBehaviour
             Native.CustomUpdateSample(data.GetNative(), ref tmp);
             data.DirtyState = (MeshData.DirtyFlag) tmp;
         }, 
-        () => true));
+        () => false)); // Change this to true to test sample
 
         InitializeUI();
     }
