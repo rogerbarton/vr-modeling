@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace libigl
@@ -74,8 +75,8 @@ namespace libigl
         /// </summary>
         public readonly Action<Mesh, MeshData> PostExecute;
     
-        public MeshAction(string name,  string[] speechKeywords, int gestureId, Func<bool> executeCondition, 
-            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
+        public MeshAction(string name,  string[] speechKeywords, int gestureId, [NotNull] Func<bool> executeCondition, 
+            [NotNull] Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
         {
             Name = name;
             SpeechKeywords = speechKeywords;
@@ -88,7 +89,7 @@ namespace libigl
         }
         
         public MeshAction(string name, string[] speechKeywords, int gestureId, 
-            IMeshAction meshAction)
+            [NotNull] IMeshAction meshAction)
         {
             Name = name;
             SpeechKeywords = speechKeywords;
@@ -103,14 +104,14 @@ namespace libigl
         /// <summary>
         /// For creating a MeshAction dynamically without any UI generation
         /// </summary>
-        public MeshAction(string name, 
-            Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
+        public MeshAction(string name, Action<MeshData> execute, 
+            [NotNull] Func<bool> executeCondition = default, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
         {
             Name = name;
             SpeechKeywords = new string[0];
             GestureId = InvalidGesture;
             
-            ExecuteCondition = default;
+            ExecuteCondition = executeCondition;
             PreExecute = preExecute;
             Execute = execute;
             PostExecute = postExecute;

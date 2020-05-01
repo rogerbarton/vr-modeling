@@ -79,11 +79,14 @@ namespace libigl
         public static extern unsafe void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows);
 
         
-        // Translate.cpp
+        // ModifyMesh.cpp
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         
         [DllImport(DllName)]
         public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In] int* FPtr, [In] int FSize);
+        
+        [DllImport(DllName)]
+        public static extern void CustomUpdateSample([In] MeshDataNative data, [In,Out] ref uint dirtyState);
     }
 }

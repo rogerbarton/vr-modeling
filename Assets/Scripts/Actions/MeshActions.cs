@@ -74,6 +74,17 @@ public class MeshActions : MonoBehaviour
                 -1,
                 new SelectAction()));
 
+        actions.Add(new MeshAction("CustomUpdate",
+        data =>
+        {
+            // Example where everything is done in C++, we can also pass additional arguments about the input state if we wanted
+            // This will be called "every frame" unless there is already some computation running
+            var tmp = (uint) data.DirtyState;
+            Native.CustomUpdateSample(data.GetNative(), ref tmp);
+            data.DirtyState = (MeshData.DirtyFlag) tmp;
+        }, 
+        () => true));
+
         InitializeUI();
     }
 

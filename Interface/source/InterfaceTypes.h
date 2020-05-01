@@ -30,7 +30,7 @@ struct MeshDataNative
 /**
  * Marks which data has changed in <code>MeshDataNative</code> as a bitmask
  */
-enum DirtyFlag {
+enum DirtyFlag : unsigned int {
     None = 0,
     All = 0xFFFFFFFF,
     VDirty = 1,
