@@ -3,7 +3,12 @@ guid: a80f072576863f64d88a418ce0403b4d
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: oculusriftscontleft
+    second: {fileID: 2100000, guid: 5f6723ed58a4ff6428a1f95bc85e7786, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

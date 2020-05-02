@@ -9,7 +9,7 @@ public class HandPresence : MonoBehaviour
     public InputDeviceCharacteristics characteristics;
     private InputDevice _rightHand;
     private GameObject _controllerModel;
-    
+
     private void Start()
     {
         var devices = new List<InputDevice>();
@@ -17,7 +17,7 @@ public class HandPresence : MonoBehaviour
 
         foreach (var item in devices)
         {
-            Debug.Log(item.name + item.characteristics);
+            Debug.Log(item.name + ": " + item.characteristics);
         }
 
         if (devices.Count > 0)
@@ -29,6 +29,7 @@ public class HandPresence : MonoBehaviour
                 _controllerModel = Instantiate(prefab, transform);
             else
             {
+                //TODO: find correct names for Rift CV1 and Quest
                 Debug.LogWarning("Could not find controller model, using default controller.");
                 _controllerModel = Instantiate(controllerPrefabs[0], transform);
             }
@@ -39,10 +40,12 @@ public class HandPresence : MonoBehaviour
 
     private void Update()
     {
-        if(_rightHand.TryGetFeatureValue(CommonUsages.primaryButton, out var primaryBtnValue) && primaryBtnValue)
-            Debug.Log("Primary Button Pressed.");
-        
-        if(_rightHand.TryGetFeatureValue(CommonUsages.trigger, out var triggerValue) && triggerValue > 0)
-            Debug.Log($"Trigger value {triggerValue}");
+        if (_rightHand.TryGetFeatureValue(CommonUsages.primaryButton, out var primaryBtnValue) && primaryBtnValue)
+        {
+        }
+
+        if (_rightHand.TryGetFeatureValue(CommonUsages.trigger, out var triggerValue) && triggerValue > 0)
+        {
+        }
     }
 }

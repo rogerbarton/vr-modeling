@@ -3,7 +3,12 @@ guid: 115d751b184b79946acb67c5c52446a6
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: r_0oculus_rifts_touch_allMat
+    second: {fileID: 2100000, guid: 9165fb6cd91234d4c9f3608f4f52def3, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
