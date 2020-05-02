@@ -11,6 +11,9 @@ namespace libigl.Editor
     [ScriptedImporter(1, "off")]
     public class OffImporter : ScriptedImporter
     {
+        [Tooltip("Normalize the scale so that the y-height will be <scale>")]
+        public bool normalizeScale = true;
+        [Tooltip("Desired scale, if normalize is true this will be the y-height, else this will be a scaling factor on the mesh input.")]
         public float scale = 1f;
         [Tooltip("Reorders vertices and faces for better rendering performance.")]
         public bool optimizeForRendering;
@@ -74,6 +77,8 @@ namespace libigl.Editor
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
                 #endif
+                
+                Native.ApplyScale((float*) V.GetUnsafePtr(), V.Length, normalizeScale, scale); // make this part of LoadOFF directly
             }
 
             //Setup the buffers, then fill the data later

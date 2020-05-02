@@ -84,6 +84,9 @@ namespace libigl
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         
         [DllImport(DllName)]
+        public static extern unsafe void ApplyScale(float* VPtr, int VSize, bool normalize = false, float targetScale = 1f);
+        
+        [DllImport(DllName)]
         public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In] int* FPtr, [In] int FSize);
         
         [DllImport(DllName)]

@@ -1,12 +1,16 @@
 #pragma once
 #include <PluginAPI/IUnityInterface.h>
+#include <Eigen/Core>
 
 // Function pointer to a C# void MyFct(string message)
 typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 
 struct Vector3
 {
-    float x;
+	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+	Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
+
+	float x;
     float y;
     float z;
 };
