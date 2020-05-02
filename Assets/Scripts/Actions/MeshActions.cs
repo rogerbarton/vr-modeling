@@ -15,8 +15,8 @@ using UnityEngine.Windows.Speech;
 public class MeshActions : MonoBehaviour
 {
     public List<MeshAction> actions = new List<MeshAction>();
-    public GameObject uiListItemPrefab;
     public Transform uiListItemParent;
+    private GameObject _uiListItemPrefab;
 
     private KeywordRecognizer _keywordRecognizer;
     private List<string> _allKeywords = new List<string>();
@@ -90,6 +90,10 @@ public class MeshActions : MonoBehaviour
 
     private void InitializeUI()
     {
+        // Convention: Use the first child as the prefab
+        if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
+            _uiListItemPrefab = uiListItemParent.GetChild(0).gameObject;
+        
         // Create listitem foreach action
         foreach (var a in actions)
             SetupAction(a);
@@ -112,7 +116,8 @@ public class MeshActions : MonoBehaviour
     private void SetupAction(MeshAction action)
     {
         // Parenting, layout, ui
-        var go = Instantiate(uiListItemPrefab, uiListItemParent);
+        var go = Instantiate(_uiListItemPrefab, uiListItemParent);
+        go.SetActive(true);
         var textField = go.GetComponentInChildren<TMP_Text>();
         textField.text = action.Name;
 

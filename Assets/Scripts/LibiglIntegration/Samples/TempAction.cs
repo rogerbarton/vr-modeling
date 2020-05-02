@@ -11,7 +11,7 @@ namespace libigl.Samples
         private void Update()
         {
             // return if there is already a job running
-            if (MeshManager.activeMesh.JobRunning()) return;
+            if (MeshManager.ActiveMesh.JobRunning()) return;
 
             // ExecuteCondition
             if (Input.GetKeyDown(KeyCode.P))

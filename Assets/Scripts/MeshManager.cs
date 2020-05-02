@@ -7,73 +7,81 @@ using UnityEngine.UI;
 public class MeshManager : MonoBehaviour
 {
     public GameObject[] meshPrefabs;
-    public GameObject uiListItemPrefab;
     public Transform uiListItemParent;
+    private GameObject _uiListItemPrefab;
     
-    public static LibiglMesh activeMesh;
+    public static LibiglMesh ActiveMesh;
 
     private void Start()
     {
-        activeMesh = Instantiate(0);
-        
-        // Setup UI
-        if (!uiListItemParent)
-            uiListItemParent = transform;
+        if(meshPrefabs.Length > 0)
+            ActiveMesh = LoadMesh(meshPrefabs[0]);
+
+        // Convention: Use the first child as the prefab
+        if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
+            _uiListItemPrefab = uiListItemParent.GetChild(0).gameObject;
         
         // Create listitem foreach 
-        for (int i = 0; i < meshPrefabs.Length; i++)
-        {
-            // Parenting, layout, ui
-            var go = Instantiate(uiListItemPrefab, uiListItemParent);
-            var textField = go.GetComponentInChildren<TMP_Text>();
-            textField.text = meshPrefabs[i].name;
+        foreach (var mesh in meshPrefabs)
+            SetupUI(mesh);
+    }
+
+    /// <summary>
+    /// Generates UI for loading the <paramref name="meshPrefab"/>
+    /// </summary>
+    /// <param name="meshPrefab"></param>
+    private void SetupUI(GameObject meshPrefab)
+    {
+        // Parenting, layout, ui
+        var go = Instantiate(_uiListItemPrefab, uiListItemParent);
+        go.SetActive(true);
+        var textField = go.GetComponentInChildren<TMP_Text>();
+        textField.text = meshPrefab.name;
             
-            // setup callbacks/events
-            var button = go.GetComponent<Button>();
-            var i1 = i;
-            button.onClick.AddListener(() => Instantiate(i1));
-        }
+        // setup callbacks/events
+        var button = go.GetComponent<Button>();
+        button.onClick.AddListener(() => LoadMesh(meshPrefab));
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Instantiate(0);
+            LoadMeshById(0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            Instantiate(1);
+            LoadMeshById(1);
         else if (Input.GetKeyDown(KeyCode.Alpha3))
-            Instantiate(2);
+            LoadMeshById(2);
     }
 
     #region Mesh Creation
     /// <summary>
-    /// Instantiate a meshPrefab of a given index
+    /// Instantiate a mesh that can be used with libigl
     /// </summary>
-    /// <param name="prefabIndex">Index in meshPrefabs to be created</param>
+    /// <param name="prefab">Prefab to be created</param>
     /// <param name="setAsActiveMesh">Set this mesh as the active one</param>
-    /// <returns>Index in the meshInstances. Set to -1 if the index is invalid.</returns>
-    public LibiglMesh Instantiate(int prefabIndex, Vector3 pos = default, Quaternion rot = default, bool setAsActiveMesh = true)
+    /// <returns>LibiglMesh component on the new instance</returns>
+    public LibiglMesh LoadMesh(GameObject prefab, bool setAsActiveMesh = true)
     {
-        if (prefabIndex >= meshPrefabs.Length)
-        {
-            Debug.LogWarning("Invalid index for MeshManager.Instantiate(). " +
-                             $"Given index {prefabIndex} and length {meshPrefabs.Length}");
-            return null;
-        }
-        
-        var go = Instantiate(meshPrefabs[prefabIndex], pos, rot);
+        var go = Instantiate(prefab, transform);
         go.transform.parent = transform;
 
-        var mesh = go.GetComponent<LibiglMesh>();
-        if (!mesh)
-            mesh = go.AddComponent<LibiglMesh>();
+        var lmesh = go.GetComponent<LibiglMesh>();
+        if (!lmesh)
+        {
+            Debug.LogWarning($"Prefab does not have a {nameof(LibiglMesh)} component, it will be added.");
+            lmesh = go.AddComponent<LibiglMesh>();
+        }
 
-        return mesh;
+        if (setAsActiveMesh)
+            ActiveMesh = lmesh;
+
+        return lmesh;
     }
 
-    public void InstantiateFromUI(int prefabIndex)
+    /// <param name="prefabIndex">Index in <see cref="meshPrefabs"/></param>
+    public void LoadMeshById(int prefabIndex)
     {
-        Instantiate(prefabIndex);
+        LoadMesh(meshPrefabs[prefabIndex]);
     }
     #endregion
 }

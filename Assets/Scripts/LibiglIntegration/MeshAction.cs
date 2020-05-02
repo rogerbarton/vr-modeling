@@ -122,7 +122,7 @@ namespace libigl
         /// </summary>
         public MeshAction Schedule()
         {
-            MeshManager.activeMesh.ScheduleAction(this);
+            MeshManager.ActiveMesh.ScheduleAction(this);
             return this;
         }
     }
