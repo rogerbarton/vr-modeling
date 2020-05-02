@@ -935,14 +935,14 @@ MonoBehaviour:
   m_PlayAudioClipOnHoverExit: 0
   m_AudioClipForOnHoverExit: {fileID: 0}
   m_PlayHapticsOnSelectEnter: 1
-  m_HapticSelectEnterIntensity: 0.2
+  m_HapticSelectEnterIntensity: 0.5
   m_HapticSelectEnterDuration: 0.2
   m_PlayHapticsOnSelectExit: 0
   m_HapticSelectExitIntensity: 0
   m_HapticSelectExitDuration: 0
-  m_PlayHapticsOnHoverEnter: 0
-  m_HapticHoverEnterIntensity: 0
-  m_HapticHoverEnterDuration: 0
+  m_PlayHapticsOnHoverEnter: 1
+  m_HapticHoverEnterIntensity: 0.2
+  m_HapticHoverEnterDuration: 0.1
   m_PlayHapticsOnHoverExit: 0
   m_HapticHoverExitIntensity: 0
   m_HapticHoverExitDuration: 0
@@ -2925,7 +2925,7 @@ MonoBehaviour:
   moveDeadzone: 0.6
   repeatDelay: 0.5
   repeatRate: 0.1
-  trackedDeviceDragThresholdMultiplier: 2
+  trackedDeviceDragThresholdMultiplier: 25
   m_MaxTrackedDeviceRaycastDistance: 1000
   m_EnableXRInput: 1
   m_EnableMouseInput: 1
