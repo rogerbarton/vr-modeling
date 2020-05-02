@@ -92,7 +92,7 @@ public class MeshActions : MonoBehaviour
     {
         // Convention: Use the first child as the prefab
         if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
-            _uiListItemPrefab = uiListItemParent.GetChild(0).gameObject;
+            _uiListItemPrefab = uiListItemParent.GetChild(uiListItemParent.childCount -1).gameObject;
         
         // Create listitem foreach action
         foreach (var a in actions)

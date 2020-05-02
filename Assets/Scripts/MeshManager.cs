@@ -9,6 +9,7 @@ public class MeshManager : MonoBehaviour
     public GameObject[] meshPrefabs;
     public Transform uiListItemParent;
     private GameObject _uiListItemPrefab;
+    public Transform meshSpawnPoint;
     
     public static LibiglMesh ActiveMesh;
 
@@ -19,7 +20,7 @@ public class MeshManager : MonoBehaviour
 
         // Convention: Use the first child as the prefab
         if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
-            _uiListItemPrefab = uiListItemParent.GetChild(0).gameObject;
+            _uiListItemPrefab = uiListItemParent.GetChild(uiListItemParent.childCount -1).gameObject;
         
         // Create listitem foreach 
         foreach (var mesh in meshPrefabs)
@@ -62,7 +63,7 @@ public class MeshManager : MonoBehaviour
     /// <returns>LibiglMesh component on the new instance</returns>
     public LibiglMesh LoadMesh(GameObject prefab, bool setAsActiveMesh = true)
     {
-        var go = Instantiate(prefab, transform);
+        var go = Instantiate(prefab, meshSpawnPoint.position, meshSpawnPoint.transform.rotation, transform);
         go.transform.parent = transform;
 
         var lmesh = go.GetComponent<LibiglMesh>();
