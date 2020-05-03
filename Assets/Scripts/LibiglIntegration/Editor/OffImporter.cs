@@ -1,7 +1,7 @@
 ﻿using System;
-using libigl;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -17,8 +17,17 @@ namespace libigl.Editor
         public bool normalizeScale = true;
         [Tooltip("Desired scale, if normalize is true this will be the y-height, else this will be a scaling factor on the mesh input.")]
         public float scale = 1f;
+        
         [Tooltip("Reorders vertices and faces for better rendering performance.")]
         public bool optimizeForRendering = true;
+        
+        [Tooltip("Optional, default material is set by DefaultMaterialName in the script.")]
+        public Material material;
+        private static Material _defaultMaterial;
+        // Use this material if a model specific material is not set (must be located in Models or Materials folder)
+        private const string DefaultMaterialName = "OffDefault";
+        // Use this shader if we cant find the default material by name
+        private const string _DefaultMaterialNameFallbackShader = "Diffuse";
 
         /// <summary>
         /// Called whenever a .off file is imported by Unity
@@ -43,9 +52,30 @@ namespace libigl.Editor
             meshFilter.mesh = mesh;
 
             var meshRenderer = gameObject.AddComponent<MeshRenderer>();
-            var material = new Material(Shader.Find("Diffuse"));
-            meshRenderer.material = material;
-            ctx.AddObjectToAsset("Material", material);
+            var newMaterial = material;
+            if(!newMaterial) // Set material as default if it is null
+            {
+                if(!_defaultMaterial)
+                {
+                    var guids = AssetDatabase.FindAssets($"{DefaultMaterialName} t:{nameof(material)}", 
+                        new[] {"Assets/Models", "Assets/Materials"});
+                    if(guids.Length > 0)
+                    {
+                        _defaultMaterial = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    }
+                    else
+                    {
+                        _defaultMaterial = new Material(Shader.Find(_DefaultMaterialNameFallbackShader));
+                        Debug.LogWarning($"Could not find material asset with DefaultMaterialName:{DefaultMaterialName}, using fallback shader.");
+                    }
+                }
+
+                newMaterial = _defaultMaterial;
+            }
+            meshRenderer.material = newMaterial;
+            // Copy the material into the imported mesh if it is not the default by name
+            if(newMaterial.name != DefaultMaterialName)
+                ctx.AddObjectToAsset("Material", newMaterial);
 
             #endregion
 

@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 6507119248310564417, guid: d46b50af8be5587489b94d964055c7aa,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6507119248310564417, guid: d46b50af8be5587489b94d964055c7aa,
         type: 3}
@@ -385,6 +385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 285171626}
+  - component: {fileID: 285171627}
   m_Layer: 0
   m_Name: MeshSpawn
   m_TagString: Untagged
@@ -400,12 +401,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285171625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: -2.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.01, y: 1, z: -2.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1244380012}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &285171627
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285171625}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &324874804
 GameObject:
   m_ObjectHideFlags: 0
@@ -2258,7 +2272,7 @@ PrefabInstance:
     - target: {fileID: 6507119248310564417, guid: af7084999efae654082ef77ea963b381,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.65
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6507119248310564417, guid: af7084999efae654082ef77ea963b381,
         type: 3}
@@ -2748,9 +2762,10 @@ MonoBehaviour:
   - {fileID: -927199367670048503, guid: 412ea41b9f801a04fb3242cd0d70c1e8, type: 3}
   - {fileID: -6639996736880469515, guid: d46b50af8be5587489b94d964055c7aa, type: 3}
   - {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf, type: 3}
+  - {fileID: -927199367670048503, guid: ed96836b958c8394ca62cce76eba9ec0, type: 3}
   - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
-  uiListItemParent: {fileID: 481839857}
   meshSpawnPoint: {fileID: 285171626}
+  uiListItemParent: {fileID: 481839857}
 --- !u!4 &1244380012
 Transform:
   m_ObjectHideFlags: 0
@@ -2964,7 +2979,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 412ea41b9f801a04fb3242cd0d70c1e8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.69000006
+      value: 0.573
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 412ea41b9f801a04fb3242cd0d70c1e8,
         type: 3}
