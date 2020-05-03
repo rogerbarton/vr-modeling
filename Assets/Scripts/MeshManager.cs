@@ -83,7 +83,6 @@ public class MeshManager : MonoBehaviour
 
         // Details of spawnPoint
         var spawnPos = meshSpawnPoint.position;
-        var spawnBounds = meshSpawnPoint.gameObject.GetComponent<MeshFilter>().mesh.bounds;
         var scale = meshSpawnPoint.localScale;
         
         var go = Instantiate(prefab, spawnPos, meshSpawnPoint.transform.rotation, transform);

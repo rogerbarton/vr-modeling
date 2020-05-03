@@ -42,4 +42,12 @@ enum DirtyFlag : unsigned int {
     CDirty = 4,
     UVDirty = 8,
     FDirty = 16,
+	/**
+	 * Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
+	 */
+	DontComputeNormals = 32,
+	/**
+	 * Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
+	 */
+	DontComputeBounds = 64,
 };

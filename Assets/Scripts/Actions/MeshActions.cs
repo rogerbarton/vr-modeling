@@ -64,7 +64,6 @@ public class MeshActions : MonoBehaviour
                     }
 
                     data.DirtyState |= MeshData.DirtyFlag.VDirty;
-                    data.DirtyState |= MeshData.DirtyFlag.ComputeNormals;
                 }));
 
         actions.Add(

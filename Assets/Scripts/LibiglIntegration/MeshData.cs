@@ -13,21 +13,30 @@ namespace libigl
     {
         public readonly bool IsRowMajor;
 
+        /// <summary>
+        /// Marks which data has changed in <c>MeshDataNative</c> as a bitmask
+        /// </summary>
         [Flags]
         public enum DirtyFlag : uint
         {
             None = 0,
-            All = uint.MaxValue,
+            All = uint.MaxValue - 32 - 64,
             VDirty = 1,
             NDirty = 2,
             CDirty = 4,
             UVDirty = 8,
             FDirty = 16,
+
             /// <summary>
-            /// Recalculate normals, <see cref="NDirty"/> overrides this.
+            /// Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
             /// </summary>
-            ComputeNormals = 32
-        }    
+            DontComputeNormals = 32,
+
+            /// <summary>
+            /// Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
+            /// </summary>
+            DontComputeBounds = 64,
+        }
 
         public DirtyFlag DirtyState = DirtyFlag.None;
         
@@ -177,13 +186,18 @@ namespace libigl
         {
             if(DirtyState == DirtyFlag.None) return;
             Assert.IsTrue(IsRowMajor, "Data must be in RowMajor format to apply changes to the Unity mesh.");
-            
+
             if ((DirtyState & DirtyFlag.VDirty) > 0)
+            {
                 mesh.SetVertices(V);
+                if ((DirtyState & DirtyFlag.DontComputeBounds) == 0)
+                    mesh.RecalculateBounds();
+                if ((DirtyState & DirtyFlag.DontComputeNormals & DirtyState & DirtyFlag.NDirty) == 0)
+                    mesh.RecalculateNormals();
+            }
+
             if ((DirtyState & DirtyFlag.NDirty) > 0)
                 mesh.SetNormals(N);
-            else if ((DirtyState & DirtyFlag.None) > 0)
-                mesh.RecalculateNormals();
             if ((DirtyState & DirtyFlag.CDirty) > 0)
                 mesh.SetColors(C);
             if ((DirtyState & DirtyFlag.UVDirty) > 0)
