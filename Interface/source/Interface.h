@@ -32,7 +32,6 @@ extern "C" {
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
     UNITY_INTERFACE_EXPORT void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize);
-	UNITY_INTERFACE_EXPORT void ApplyScale(float* VPtr, int VSize, bool setCenter, bool normalize, float targetScale = 1.f);
 
     // Sample.cpp
     UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState);

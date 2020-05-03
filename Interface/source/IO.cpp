@@ -1,6 +1,7 @@
 #include "Interface.h"
 #include "InterfaceTypes.h"
 #include "NumericTypes.h"
+#include "Util.h"
 #include <Eigen/core>
 #include <igl/readOFF.h>
 #include <igl/per_vertex_normals.h>
@@ -37,7 +38,7 @@ extern "C" {
         FPtr = F->data();
         NPtr = N->data();
 
-	    ApplyScale((float*)VPtr, VSize, setCenter, normalizeScale, scale);
+	    ApplyScale<V_RowMajor_t>((float*)VPtr, VSize, setCenter, normalizeScale, scale);
 
 	    if (DebugLog) DebugLog((std::string("OFF Import ") + std::string((success ? "Successful: " : "Unsuccessful: ")) + std::string(path)).data());
     }
