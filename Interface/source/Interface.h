@@ -24,14 +24,15 @@ extern "C" {
     // UNITY_INTERFACE_EXPORT void UploadMesh(int eventId, void* data);
 
     // IO.cpp
-    UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const float scale, void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
+    UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,
+    		void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
     UNITY_INTERFACE_EXPORT void TransposeInPlace(void* MatrixPtr, int rows, int cols = 3);
     UNITY_INTERFACE_EXPORT void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols = 3);
 
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
     UNITY_INTERFACE_EXPORT void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize);
-	UNITY_INTERFACE_EXPORT void ApplyScale(float* VPtr, int VSize, bool normalize, float targetScale = 1.f);
+	UNITY_INTERFACE_EXPORT void ApplyScale(float* VPtr, int VSize, bool setCenter, bool normalize, float targetScale = 1.f);
 
     // Sample.cpp
     UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState);

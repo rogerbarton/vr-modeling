@@ -63,7 +63,7 @@ namespace libigl
 
         // IO.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        public static extern unsafe void LoadOFF([In] string path, [In] float scale,
+        public static extern unsafe void LoadOFF([In] string path, [In] bool setCenter, [In] bool normalizeScale, [In] float scale,
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,
             [Out] out uint* FPtr, [Out] out int FSize);

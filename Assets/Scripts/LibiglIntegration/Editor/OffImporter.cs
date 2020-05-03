@@ -11,12 +11,14 @@ namespace libigl.Editor
     [ScriptedImporter(1, "off")]
     public class OffImporter : ScriptedImporter
     {
+        [Tooltip("Make the center/origin of the mesh the mean vertex. y center will be center of bounding box.")]
+        public bool centerToMean = true;
         [Tooltip("Normalize the scale so that the y-height will be <scale>")]
         public bool normalizeScale = true;
         [Tooltip("Desired scale, if normalize is true this will be the y-height, else this will be a scaling factor on the mesh input.")]
         public float scale = 1f;
         [Tooltip("Reorders vertices and faces for better rendering performance.")]
-        public bool optimizeForRendering;
+        public bool optimizeForRendering = true;
 
         /// <summary>
         /// Called whenever a .off file is imported by Unity
@@ -57,7 +59,7 @@ namespace libigl.Editor
             unsafe
             {
                 //Load OFF into Eigen Matrices and get the pointers here
-                Native.LoadOFF(ctx.assetPath, scale, out var VPtr, out VSize, out var NPtr, out NSize,
+                Native.LoadOFF(ctx.assetPath, centerToMean, normalizeScale, scale, out var VPtr, out VSize, out var NPtr, out NSize,
                     out var FPtr, out FSize);
 
                 //Convert the pointers to NativeArrays which we can create a mesh with
@@ -77,8 +79,6 @@ namespace libigl.Editor
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
                 #endif
-                
-                Native.ApplyScale((float*) V.GetUnsafePtr(), V.Length, normalizeScale, scale); // make this part of LoadOFF directly
             }
 
             //Setup the buffers, then fill the data later

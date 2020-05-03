@@ -13,11 +13,13 @@ extern "C" {
 
     /**
      * Set the center/origin of the mesh to be the mean vertex
+     * @param VPtr RowMajor Data
      */
     void CenterToMean(float* VPtr, int VSize){
-    	//TODO: Fix this
+    	assert(VPtr != nullptr);
+
 	    auto V = Eigen::Map<V_RowMajor_t>(VPtr, VSize, 3);
-	    Eigen::Vector3f mean = V.colwise().mean();
+	    Eigen::RowVector3f mean = V.colwise().mean();
 		V.rowwise() -= mean;
     }
 

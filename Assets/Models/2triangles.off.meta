@@ -8,5 +8,7 @@ ScriptedImporter:
   assetBundleName: 
   assetBundleVariant: 
   script: {fileID: 11500000, guid: 7fee73ffaeb32e34d8330ef47bed46d8, type: 3}
+  centerToMean: 1
+  normalizeScale: 1
   scale: 1
-  optimizeForRendering: 0
+  optimizeForRendering: 1
