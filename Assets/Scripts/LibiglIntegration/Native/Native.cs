@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -60,6 +57,10 @@ namespace libigl
         // Interface.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
+        
+        [DllImport(DllName)]
+        public static extern void InitializeMesh(MeshDataNative data, [In,Out] ref uint dirtyState);
+        
 
         // IO.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
@@ -84,11 +85,12 @@ namespace libigl
         public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
         
         [DllImport(DllName)]
-        public static extern unsafe void ApplyScale(float* VPtr, int VSize, bool normalize = false, float targetScale = 1f);
-        
-        [DllImport(DllName)]
         public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In] int* FPtr, [In] int FSize);
         
+        [DllImport(DllName)]
+        public static extern unsafe void SphereSelect(float* VPtr, int VSize, Vector3 position, float radius, int* maskPtr);
+        
+        // Sample.cpp
         [DllImport(DllName)]
         public static extern void CustomUpdateSample([In] MeshDataNative data, [In,Out] ref uint dirtyState);
     }

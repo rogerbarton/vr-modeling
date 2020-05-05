@@ -12,11 +12,26 @@ extern "C" {
     }
 
     void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize) {
-        auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
-        const auto F = Eigen::Map<F_t>(FPtr, FSize, 3);
-        SparseV_t Q(VSize, 3);
+	    auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
+	    const auto F = Eigen::Map<F_t>(FPtr, FSize, 3);
 
-        igl::harmonic(V, F, 2, Q);
-        //V += Q;
+	    Eigen::VectorXi b(1);
+	    Eigen::MatrixXf D, D_bc(1, 3);
+	    b << 0;
+	    D_bc.setZero();
+
+	    // TODO
+//	    igl::harmonic(V, F, b, D_bc, 2.f, D);
+//	    V = D;
+
+	    if (DebugLog) DebugLog("Harmonic");
+    }
+
+    void SphereSelect(float* VPtr, int VSize, Vector3 position, float radius, int* maskPtr) {
+        auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
+        auto mask = Eigen::Map<Eigen::VectorXi>(maskPtr, VSize);
+        const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
+
+        mask = ((V.rowwise() - posMap).array().square().matrix().colwise().sum().array() < radius).cast<int>();
     }
 }

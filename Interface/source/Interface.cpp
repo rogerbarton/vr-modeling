@@ -36,9 +36,10 @@ extern "C" {
      * @param name Name of the mesh
      * @param data Pointers to the MeshData
      */
-	void InitializeMesh(const char* name, const MeshDataNative data)
+	void InitializeMesh(const MeshDataNative data, unsigned int& dirtyState)
 	{
-		// TODO:
+		// TODO: Pre-compute here
+		if (DebugLog) DebugLog("InitializeMesh()");
 	}
 
 	/**
