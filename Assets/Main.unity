@@ -1252,22 +1252,22 @@ PrefabInstance:
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 88
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
@@ -2179,22 +2179,22 @@ PrefabInstance:
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 108
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
@@ -2739,6 +2739,7 @@ GameObject:
   - component: {fileID: 1244380012}
   - component: {fileID: 1244380011}
   - component: {fileID: 1244380013}
+  - component: {fileID: 1244380014}
   m_Layer: 0
   m_Name: Meshes
   m_TagString: Untagged
@@ -2805,6 +2806,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiListItemParent: {fileID: 788621609}
+--- !u!114 &1244380014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244380010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0bce73bdca4f6481f4b5e80aead631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1266339783
 GameObject:
   m_ObjectHideFlags: 0

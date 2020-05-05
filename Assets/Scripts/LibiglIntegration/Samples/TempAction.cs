@@ -33,7 +33,7 @@ namespace libigl.Samples
                     Debug.Log("DynamicAction Apply");
                 });
 
-                var action = new MeshAction("DynamicSample", execute, default, null, apply).Schedule();
+                var action = new MeshAction(MeshActionType.OnUpdate, "DynamicSample", execute, default, null, apply).Schedule();
             }
         }
     }

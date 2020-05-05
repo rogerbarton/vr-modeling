@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Windows.Speech;
 
 namespace libigl
 {
@@ -26,19 +27,40 @@ namespace libigl
         /// </summary>
         void PostExecute(Mesh mesh, MeshData data);
     }
-
+    
+    /// <summary>
+    /// When an action should be executed.
+    /// </summary>
+    public enum MeshActionType
+    {
+        /// <summary>
+        /// Executed when a new mesh is loaded, use this to initialize a mesh, do pre-calculations.
+        /// These actions have no UI.
+        /// </summary>
+        OnInitialize,
+        /// <summary>
+        /// Executed every frame, when there is nothing running currently.
+        /// Executed after all <see cref="OnInitialize"/>.
+        /// </summary>
+        OnUpdate
+    };
+    
     /// <summary>
     /// Stores information on one action that can be performed on a mesh.
     /// This will handle execution on a separate thread.<br/>
-    /// Create an instance with lambdas, a IMeshAction class or derive from this class and set the values in the constructor.
+    /// Create an instance with lambdas, a <see cref="IMeshAction"/> class or derive from this class and set the values in the constructor.<br/>
+    /// Actions always operate on a <see cref="LibiglMesh"/> instance.
     /// </summary>
-    public class MeshAction
+    public class MeshAction : IDisposable
     {
+        public readonly MeshActionType Type;
+        
         public readonly string Name;
-        public readonly string[] SpeechKeywords;
+        public string[] SpeechKeywords;
         public readonly int GestureId;
         public const int InvalidGesture = -1;
-        
+        private KeywordRecognizer _keywordRecognizer;
+
         /// <summary>
         /// Add any additional condition, such as a shortcut, to trigger execution.
         /// This is in addition to the UI, <see cref="SpeechKeywords"/> and <see cref="GestureId"/>.
@@ -75,9 +97,10 @@ namespace libigl
         /// </summary>
         public readonly Action<Mesh, MeshData> PostExecute;
     
-        public MeshAction(string name,  string[] speechKeywords, int gestureId, [NotNull] Func<bool> executeCondition, 
+        public MeshAction(MeshActionType type, string name,  string[] speechKeywords, int gestureId, [NotNull] Func<bool> executeCondition, 
             [NotNull] Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
         {
+            Type = type;
             Name = name;
             SpeechKeywords = speechKeywords;
             GestureId = gestureId;
@@ -88,29 +111,32 @@ namespace libigl
             PostExecute = postExecute;
         }
         
-        public MeshAction(string name, string[] speechKeywords, int gestureId, 
+        public MeshAction(MeshActionType type, string name, string[] speechKeywords, int gestureId, 
             [NotNull] IMeshAction meshAction)
         {
+            Type = type;
             Name = name;
             SpeechKeywords = speechKeywords;
             GestureId = gestureId;
-            
+
             ExecuteCondition = meshAction.ExecuteCondition;
             PreExecute = meshAction.PreExecute;
             Execute = meshAction.Execute;
             PostExecute = meshAction.PostExecute;
         }
-        
+
         /// <summary>
         /// For creating a MeshAction dynamically without any UI generation
         /// </summary>
-        public MeshAction(string name, Action<MeshData> execute, 
-            [NotNull] Func<bool> executeCondition = default, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
+        public MeshAction(MeshActionType type, string name, Action<MeshData> execute,
+            [NotNull] Func<bool> executeCondition = default, Action<MeshData> preExecute = null,
+            Action<Mesh, MeshData> postExecute = null)
         {
+            Type = type;
             Name = name;
             SpeechKeywords = new string[0];
             GestureId = InvalidGesture;
-            
+
             ExecuteCondition = executeCondition;
             PreExecute = preExecute;
             Execute = execute;
@@ -124,6 +150,35 @@ namespace libigl
         {
             MeshManager.ActiveMesh.ScheduleAction(this);
             return this;
+        }
+
+        public void InitializeSpeech()
+        {
+            if (SpeechKeywords != null)
+            {
+                // Create one speech keywords recognizer for all actions 
+                Speech.CheckSpeechKeywords(ref SpeechKeywords);
+                if(SpeechKeywords.Length > 0)
+                {
+                    _keywordRecognizer = new KeywordRecognizer(SpeechKeywords);
+                    _keywordRecognizer.OnPhraseRecognized += OnPhraseRecognized;
+                    _keywordRecognizer.Start();
+                }
+            } 
+        }
+        
+        /// <summary>
+        /// Invoked by the KeywordRecognizer, this will schedule the according action.
+        /// </summary>
+        /// <param name="args"></param>
+        private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
+        {
+            Schedule();
+        }
+
+        public void Dispose()
+        {
+            _keywordRecognizer?.Dispose();
         }
     }
 }
