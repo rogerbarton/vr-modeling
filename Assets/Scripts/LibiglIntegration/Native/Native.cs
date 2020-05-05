@@ -59,7 +59,7 @@ namespace libigl
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
         
         [DllImport(DllName)]
-        public static extern void InitializeMesh(MeshDataNative data, [In,Out] ref uint dirtyState);
+        public static extern void InitializeMesh(string path, MeshDataNative data, [In,Out] ref uint dirtyState);
         
 
         // IO.cpp

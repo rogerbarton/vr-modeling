@@ -15,7 +15,7 @@ namespace libigl.Samples
             return Input.GetKeyDown(KeyCode.W);
         }
 
-        public void PreExecute(MeshData libiglMesh)
+        public void PreExecute(LibiglMesh libiglMesh)
         {
             _deltaTime = Time.deltaTime;
             Debug.Log($"PreExecute dt: {_deltaTime}");
@@ -32,7 +32,7 @@ namespace libigl.Samples
             data.DirtyState |= MeshData.DirtyFlag.VDirty;
         }
 
-        public void PostExecute(Mesh mesh, MeshData data)
+        public void PostExecute(LibiglMesh libiglMesh)
         {
             Debug.Log($"PostExecute dt: {_deltaTime}");
         }

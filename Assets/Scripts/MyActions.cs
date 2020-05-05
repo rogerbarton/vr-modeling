@@ -11,24 +11,19 @@ public class MyActions : MonoBehaviour
     private void Awake()
     {
         // Add all actions
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate,
-            "Test",
-            new[] {"Test"},
-            0,
+        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Test",
+            _ => { Debug.Log("Execute Test"); },
             () => Input.GetKeyDown(KeyCode.Q),
-            _ => { Debug.Log("Execute Test"); }));
+            default, default,
+            new[] {"Test"},
+            0));
 
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate,
-            "Translate",
+        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Translate",
+            new TranslateAction(),  
             new[] {"move", "translate"},
-            1,
-            new TranslateAction()));
+            1));
 
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate,
-            "Smooth",
-            new[] {"smooth", "harmonic", "laplacian"},
-            2,
-            () => Input.GetKeyDown(KeyCode.E),
+        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Smooth",
             data =>
             {
                 unsafe
@@ -38,7 +33,12 @@ public class MyActions : MonoBehaviour
                 }
 
                 data.DirtyState |= MeshData.DirtyFlag.VDirty;
-            }));
+            }, 
+            () => Input.GetKeyDown(KeyCode.E),
+            default, default,
+            new[] {"smooth", "harmonic", "laplacian"},
+            2
+            ));
 
         MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "CustomUpdate",
             data =>

@@ -17,7 +17,7 @@ namespace libigl
         /// <summary>
         /// See <see cref="MeshAction.PreExecute"/>
         /// </summary>
-        void PreExecute(MeshData libiglMesh);
+        void PreExecute(LibiglMesh libiglMesh);
         /// <summary>
         /// See <see cref="MeshAction.Execute"/>
         /// </summary>
@@ -25,7 +25,7 @@ namespace libigl
         /// <summary>
         /// See <see cref="MeshAction.PostExecute"/>
         /// </summary>
-        void PostExecute(Mesh mesh, MeshData data);
+        void PostExecute(LibiglMesh libiglMesh);
     }
     
     /// <summary>
@@ -72,11 +72,11 @@ namespace libigl
         /// Called on the main thread before <see cref="Execute"/> to gather required data for it.
         /// This may include reading the current input state.
         /// May be null.<br/>
-        /// MeshData is given in RowMajor format and can be modified, although expensive operations should be done in
-        /// Execute() in a separate thread. In most cases MeshData will not be used.
-        /// <typeparam name="MeshData">RowMajor mesh data</typeparam>
+        /// Use <see cref="LibiglMesh.Data"/> or <see cref="LibiglMesh.DataRowMajor"/> to get the mesh data.
+        /// In most cases MeshData will not be used. Expensive operations should be done in Execute.
+        /// <typeparam name="LibiglMesh">The LibiglMesh Monobehaviour. </typeparam>
         /// </summary>
-        public readonly Action<MeshData> PreExecute;
+        public readonly Action<LibiglMesh> PreExecute;
         
         /// <summary>
         /// Code to execute when the action is triggered. Will be on a worker thread.
@@ -90,29 +90,30 @@ namespace libigl
 
         /// <summary>
         /// Called on the main thread after <see cref="Execute"/> just before dirty changes are applied to the Unity mesh.<br/>
-        /// Note: The data is given in RowMajor and is a copy of the data in Execute().
-        /// This is because the Unity Mesh functions such as mesh.SetVertices require a RowMajor format.
-        /// <typeparam name="Mesh">The Unity mesh</typeparam>
-        /// <typeparam name="MeshData">RowMajor mesh data</typeparam>
+        /// Note: Unity Mesh functions, such as mesh.SetVertices(), require a RowMajor format.<br/>
+        /// Expensive operations should be done in Execute.
+        /// <typeparam name="LibiglMesh.Mesh">The Unity mesh to apply changes to.</typeparam>
+        /// <typeparam name="LibiglMesh.DataRowMajor">RowMajor mesh data that should be used to apply custom changes.</typeparam>
         /// </summary>
-        public readonly Action<Mesh, MeshData> PostExecute;
-    
-        public MeshAction(MeshActionType type, string name,  string[] speechKeywords, int gestureId, [NotNull] Func<bool> executeCondition, 
-            [NotNull] Action<MeshData> execute, Action<MeshData> preExecute = null, Action<Mesh, MeshData> postExecute = null)
+        public readonly Action<LibiglMesh> PostExecute;
+
+        public MeshAction(MeshActionType type, string name,
+            [NotNull] Action<MeshData> execute, [NotNull] Func<bool> executeCondition, Action<LibiglMesh> preExecute = null,
+            Action<LibiglMesh> postExecute = null, string[] speechKeywords = null, int gestureId = InvalidGesture)
         {
             Type = type;
             Name = name;
             SpeechKeywords = speechKeywords;
             GestureId = gestureId;
-            
+
             ExecuteCondition = executeCondition;
             PreExecute = preExecute;
             Execute = execute;
             PostExecute = postExecute;
         }
-        
-        public MeshAction(MeshActionType type, string name, string[] speechKeywords, int gestureId, 
-            [NotNull] IMeshAction meshAction)
+
+        public MeshAction(MeshActionType type, string name, [NotNull] IMeshAction meshAction,
+            string[] speechKeywords = null, int gestureId = InvalidGesture)
         {
             Type = type;
             Name = name;
@@ -123,24 +124,6 @@ namespace libigl
             PreExecute = meshAction.PreExecute;
             Execute = meshAction.Execute;
             PostExecute = meshAction.PostExecute;
-        }
-
-        /// <summary>
-        /// For creating a MeshAction dynamically without any UI generation
-        /// </summary>
-        public MeshAction(MeshActionType type, string name, Action<MeshData> execute,
-            [NotNull] Func<bool> executeCondition = default, Action<MeshData> preExecute = null,
-            Action<Mesh, MeshData> postExecute = null)
-        {
-            Type = type;
-            Name = name;
-            SpeechKeywords = new string[0];
-            GestureId = InvalidGesture;
-
-            ExecuteCondition = executeCondition;
-            PreExecute = preExecute;
-            Execute = execute;
-            PostExecute = postExecute;
         }
 
         /// <summary>

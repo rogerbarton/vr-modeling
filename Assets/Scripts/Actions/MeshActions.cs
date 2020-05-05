@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Actions;
 using libigl;
 using TMPro;
 using UnityEngine;
@@ -36,20 +37,9 @@ public class MeshActions : MonoBehaviour
         if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
             _uiListItemPrefab = uiListItemParent.GetChild(uiListItemParent.childCount -1).gameObject;
         
-        RegisterAction(new MeshAction(MeshActionType.OnInitialize, "OnInitialize",
-            data =>
-            {
-                var tmp = (uint) data.DirtyState;
-                Native.InitializeMesh(data.GetNative(), ref tmp);
-                data.DirtyState = (MeshData.DirtyFlag) tmp;
-            }, 
-            () => true));
+        RegisterAction(new MeshAction(MeshActionType.OnInitialize, "OnInitialize", new InitializeAction()));
         
-        RegisterAction(new MeshAction(MeshActionType.OnUpdate,
-            "Select",
-            null,
-            -1,
-            new SelectAction()));
+        RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Select", new SelectAction()));
     }
 
     /// <summary>

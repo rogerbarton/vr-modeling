@@ -10,7 +10,7 @@ public class SelectAction : IMeshAction
         return Input.GetKey(KeyCode.S);
     }
 
-    public void PreExecute(MeshData libiglMesh)
+    public void PreExecute(LibiglMesh libiglMesh)
     {
         _mousePos = Input.mousePosition;
     }
@@ -24,8 +24,8 @@ public class SelectAction : IMeshAction
         Debug.Log("Selecting");
     }
 
-    public void PostExecute(Mesh mesh, MeshData data)
+    public void PostExecute(LibiglMesh libiglMesh)
     {
-        mesh.SetColors(data.C);
+        libiglMesh.Mesh.SetColors(libiglMesh.DataRowMajor.C);
     }
 }

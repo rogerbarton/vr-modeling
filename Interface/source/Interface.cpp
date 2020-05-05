@@ -35,11 +35,12 @@ extern "C" {
      * Called when a new mesh is loaded. Initialize global variables, do pre-calculations for a mesh
      * @param name Name of the mesh
      * @param data Pointers to the MeshData
+     * @param dirtyState Used to state which parts of the MeshData have been modified
      */
-	void InitializeMesh(const MeshDataNative data, unsigned int& dirtyState)
+	void InitializeMesh(const char* name, const MeshDataNative data, unsigned int& dirtyState)
 	{
 		// TODO: Pre-compute here
-		if (DebugLog) DebugLog("InitializeMesh()");
+		if (DebugLog) DebugLog((std::string("InitializeMesh(): ") + std::string(name)).data());
 	}
 
 	/**

@@ -13,14 +13,14 @@ namespace libigl
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class LibiglMesh : MonoBehaviour
     {
-        private MeshFilter _meshFilter;
+        public MeshFilter meshFilter;
         public Mesh Mesh { get; private set; }
 
         [NonSerialized] public MeshData Data;
         [NonSerialized] public MeshData DataRowMajor;
+        
         private MeshAction[] _executingActions;
         private readonly Queue<MeshAction> _actionsQueue = new Queue<MeshAction>();
-
         private Thread _workerThread;
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
         public bool JobRunning() { return _workerThread != null; }
@@ -29,8 +29,8 @@ namespace libigl
         private void Start()
         {
             // Get a reference to the mesh 
-            _meshFilter = GetComponent<MeshFilter>();
-            Mesh = _meshFilter.mesh;
+            meshFilter = GetComponent<MeshFilter>();
+            Mesh = meshFilter.mesh;
             Mesh.MarkDynamic();
 
             DataRowMajor = new MeshData(Mesh, true);
@@ -76,7 +76,7 @@ namespace libigl
             SetExecutingActions(actionType);
                 
             foreach (var action in _executingActions)
-                action.PreExecute?.Invoke(DataRowMajor);
+                action.PreExecute?.Invoke(this);
             
             // Execute the actions with ColMajor data and then apply the changes to the DataRowMajor
             _workerThread = new Thread(() =>
@@ -114,7 +114,7 @@ namespace libigl
 
             // Allow the user to apply custom changes to the mesh, give the RowMajor version that has been updated
             foreach (var action in _executingActions) 
-                action.PostExecute?.Invoke(Mesh, DataRowMajor);
+                action.PostExecute?.Invoke(this);
             DataRowMajor.ApplyChangesToMesh(Mesh);
             _executingActions = null;
         }

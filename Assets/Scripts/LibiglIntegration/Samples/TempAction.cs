@@ -28,7 +28,7 @@ namespace libigl.Samples
                 });
 
                 // PostExecute
-                var apply = new Action<Mesh, MeshData>((m, d) =>
+                var apply = new Action<LibiglMesh>(_ =>
                 {
                     Debug.Log("DynamicAction Apply");
                 });
