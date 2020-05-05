@@ -28,6 +28,8 @@ namespace libigl
 
         private void Start()
         {
+            name = name.Replace("(Clone)","").Trim();
+            
             // Get a reference to the mesh 
             meshFilter = GetComponent<MeshFilter>();
             Mesh = meshFilter.mesh;
