@@ -1,6 +1,5 @@
-# include "InterfaceTypes.h"
+#include "InterfaceTypes.h"
 
-State::State(MeshDataNative& udata) {
-	auto S = new Eigen::VectorXi(udata.VSize);
-	SPtr = S->data();
+State::State(const MeshDataNative udata) {
+	SPtr = new Eigen::VectorXi(udata.VSize);
 }

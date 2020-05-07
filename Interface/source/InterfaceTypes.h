@@ -21,16 +21,14 @@ struct Vector3
  */
 struct MeshDataNative
 {
-    unsigned int DirtyState;
-
     float* VPtr;
-    float* NPtr;
-    float* CPtr;
-    float* UVPtr;
-    int* FPtr;
+	float* NPtr;
+	float* CPtr;
+	float* UVPtr;
+	int* FPtr;
 
-    int VSize;
-    int FSize;
+	int VSize;
+	int FSize;
 };
 
 /**
@@ -55,7 +53,7 @@ struct DirtyFlag {
 };
 
 struct State {
-	int *SPtr;
+	Eigen::VectorXi* SPtr;
 
-	explicit State(MeshDataNative &udata);
+	explicit State(const MeshDataNative udata);
 };

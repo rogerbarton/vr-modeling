@@ -79,9 +79,9 @@ namespace libigl.Behaviour
         public void Dispose()
         {
             // Be sure to dispose of any NativeArrays that are not garbage collected
-            _data?.Dispose();
             Native.DisposeMesh(_state);
             _state = null;
+            _data?.Dispose();
         }
     }
 }

@@ -27,11 +27,11 @@ extern "C" {
 	    if (DebugLog) DebugLog("Harmonic");
     }
 
-    void SphereSelect(State* state, MeshDataNative& udata, Vector3 position, float radius) {
+    void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radius) {
         auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
-        auto mask = Eigen::Map<Eigen::VectorXi>(state->SPtr, udata.VSize);
+        auto mask = *state->SPtr;
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 
-        mask = ((V.rowwise() - posMap).array().square().matrix().colwise().sum().array() < radius).cast<int>();
+	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radius).cast<int>();
     }
 }

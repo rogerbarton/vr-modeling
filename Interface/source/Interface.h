@@ -13,7 +13,7 @@ extern IUnityInterfaces* s_UnityInterfaces;
 extern "C" {
     // Interface.cpp
     UNITY_INTERFACE_EXPORT void Initialize(StringCallback debugCallback);
-    UNITY_INTERFACE_EXPORT State* InitializeMesh(MeshDataNative& data, const char* name);
+    UNITY_INTERFACE_EXPORT State* InitializeMesh(const MeshDataNative data, const char* name);
     UNITY_INTERFACE_EXPORT void DisposeMesh(State* state);
 
     // Unity Callbacks from IUnityInterface.h
@@ -33,7 +33,7 @@ extern "C" {
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
     UNITY_INTERFACE_EXPORT void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize);
-    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, MeshDataNative& udata, Vector3 position, float radius);
+    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radius);
 
     // Sample.cpp
     UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState);
