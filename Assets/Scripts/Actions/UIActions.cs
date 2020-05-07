@@ -1,3 +1,5 @@
+using System;
+using libigl.Behaviour;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,6 +29,8 @@ public class UIActions : MonoBehaviour
         // Convention: Use the first child as the prefab
         if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
             _uiListItemPrefab = uiListItemParent.GetChild(uiListItemParent.childCount -1).gameObject;
+
+        LibiglBehaviour.InitializeActionUi();
     }
 
     /// <summary>
@@ -52,5 +56,10 @@ public class UIActions : MonoBehaviour
         if (gestureId >= 0)
         {
         }
+    }
+
+    private void OnDestroy()
+    {
+        Speech.Dispose();
     }
 }

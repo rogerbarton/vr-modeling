@@ -53,7 +53,7 @@ struct DirtyFlag {
 };
 
 struct State {
-	Eigen::VectorXi* SPtr;
+	Eigen::VectorXi* S;
 
 	explicit State(const MeshDataNative udata);
 };

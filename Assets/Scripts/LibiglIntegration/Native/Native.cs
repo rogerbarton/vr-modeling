@@ -91,7 +91,7 @@ namespace libigl
         public static extern unsafe void Harmonic(State* state, MeshDataNative udata);
         
         [DllImport(DllName)]
-        public static extern unsafe void SphereSelect(State* state, MeshDataNative udata, Vector3 position, float radius);
+        public static extern unsafe void SphereSelect(State* state, MeshDataNative udata, Vector3 position, float radiusSqr);
         
         // Sample.cpp
         [DllImport(DllName)]

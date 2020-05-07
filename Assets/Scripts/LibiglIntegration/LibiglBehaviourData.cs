@@ -5,6 +5,6 @@ namespace libigl.Behaviour
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct State
     {
-        private void* SPtr;
+        private void* S;
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
@@ -25,8 +25,6 @@ namespace libigl.Behaviour
             
             // Initialize C++
             _state = Native.InitializeMesh(_data.GetNative(), libiglMesh.name);
-
-            GenerateActionUI();
         }
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace libigl.Behaviour
             if (_actionSelect)
             {
                 _actionSelectPos = Input.mousePosition;
-                _actionSelectRadius = 1f;
+                _actionSelectRadiusSqr = 1f;
             }
         }
 

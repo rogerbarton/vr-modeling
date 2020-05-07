@@ -12,7 +12,7 @@ namespace libigl.Behaviour
         // Select
         private bool _actionSelect;
         private Vector3 _actionSelectPos;
-        private float _actionSelectRadius;
+        private float _actionSelectRadiusSqr;
         
         // Harmonic
         private bool _actionHarmonic;
@@ -32,7 +32,7 @@ namespace libigl.Behaviour
             if (!_actionSelect) return;
             _actionSelect = false;
             
-            Native.SphereSelect(_state, _data.GetNative(), _actionSelectPos, _actionSelectRadius);
+            Native.SphereSelect(_state, _data.GetNative(), _actionSelectPos, _actionSelectRadiusSqr);
         }
 
         private unsafe void ActionHarmonic()
@@ -44,13 +44,16 @@ namespace libigl.Behaviour
             _data.DirtyState |= MeshData.DirtyFlag.VDirty;
         }
 
-        private void GenerateActionUI()
+        
+        /// <summary>
+        /// Static method that generates the UI to <i>manipulate the active mesh</i>
+        /// </summary>
+        public static void InitializeActionUi()
         {
             UIActions.get.CreateActionUi("Test", () => Debug.Log("Test"), new []{"test"}, 0);
-            UIActions.get.CreateActionUi("Translate", () => { _actionTranslate = true; }, new []{"translate", "move"}, 1);
-            UIActions.get.CreateActionUi("Select", () => { _actionSelect = true; }, new [] {"select"});
-            UIActions.get.CreateActionUi("Harmonic", () => { _actionHarmonic = true; }, new [] {"smooth", "harmonic", "laplacian"}, 2);
-            
+            UIActions.get.CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour._actionTranslate = true; }, new []{"translate", "move"}, 1);
+            UIActions.get.CreateActionUi("Select", () => { MeshManager.ActiveMesh.Behaviour._actionSelect = true; }, new [] {"select"});
+            UIActions.get.CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour._actionHarmonic = true; }, new [] {"smooth", "harmonic", "laplacian"}, 2);
         }
     }
 }

@@ -27,12 +27,13 @@ extern "C" {
 	    // V = D;
     }
 
-    void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radius) {
+    void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radiusSqr) {
         auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
-        auto mask = *state->SPtr;
+        auto mask = *state->S;
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 
-	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radius).cast<int>();
+	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr).cast<int>();
+
 
 	    LOG("Selected: " << mask.sum() << " vertices");
     }

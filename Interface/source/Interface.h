@@ -37,7 +37,7 @@ extern "C" {
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
     UNITY_INTERFACE_EXPORT void Harmonic(State* state, const MeshDataNative udata);
-    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radius);
+    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radiusSqr);
 
     // Sample.cpp
     UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState);
