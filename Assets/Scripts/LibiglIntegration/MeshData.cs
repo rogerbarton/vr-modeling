@@ -119,6 +119,14 @@ namespace libigl
             Assert.IsTrue(VSize > 0 && FSize > 0);
             Assert.IsTrue(!V.IsCreated);
             
+            // TODO: Allocate these in C++ as Eigen Matrices so we can avoid using maps,
+            //       then use ConvertExistingDataToNativeArray to get a C# representation for the Unity Mesh
+            //       CopyFrom: pass normal Vector3[] to C++, will be a 1D LPArray, should work
+            //       Use 'new' in C++ as with the state
+            //       Can be disposed by C# or C++ in DisposeMesh
+            //       
+            //       Will be fixed by default and we can store the pointers in the State
+            //       Can have only one state in C++, only need to return/set DirtyFlags for C#
             V = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             N = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             C = new NativeArray<Color>(VSize, Allocator.Persistent, hasColor ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
