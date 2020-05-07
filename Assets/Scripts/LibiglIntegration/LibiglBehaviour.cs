@@ -17,42 +17,51 @@ namespace libigl.Behaviour
         /// </summary>
         private readonly MeshData _data;
         private State* _state;
+        private readonly LibiglMesh _libiglMesh;
 
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
+            _libiglMesh = libiglMesh;
             // Create a ColMajor copy of the data
-            _data = new MeshData(libiglMesh.DataRowMajor);
+            _data = new MeshData(_libiglMesh.DataRowMajor);
             
             // Initialize C++
-            _state = Native.InitializeMesh(_data.GetNative(), libiglMesh.name);
+            _state = Native.InitializeMesh(_data.GetNative(), _libiglMesh.name);
         }
 
         /// <summary>
-        /// Called every frame, the normal Unity Update
-        /// Use this to update UI, input responsively
-        /// Do not call any expensive libigl methods here, use Execute instead
+        /// Called every frame, the normal Unity Update. Use this to update UI, input responsively.
+        /// Do not call any expensive libigl methods here, use Execute instead<br/>
+        /// Be careful not to modify the shared state if there is a job running <see cref="LibiglMesh.IsJobRunning"/>.
+        /// Consider making a copy of certain data, using <see cref="PreExecute"/> or using atomics/Interlocked.
+        /// Update is called just before <see cref="PreExecute"/>.
         /// </summary>
         public void Update()
         {
             
         }
         
-        public void PreExecute(LibiglMesh libiglMesh)
+        public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
             _actionTranslate = Input.GetKeyDown(KeyCode.W);
-            _actionSelect = Input.GetMouseButton(0);
+            _actionSelect = Input.GetMouseButtonDown(0);
             if (_actionSelect)
             {
                 _actionSelectPos = Input.mousePosition;
-                _actionSelectRadiusSqr = 1f;
+            }
+            
+            if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
+            {
+                _actionSelectRadiusSqr += 0.1f * Input.mouseScrollDelta.y;
+                Mathf.Clamp(_actionSelectRadiusSqr, 0.025f, 1f);
             }
         }
 
-        public void Execute(LibiglMesh libiglMesh)
+        public void Execute()
         {
             // Apply changes to ColMajor, only if the RowMajor is modified outside Execute()
-            libiglMesh.DataRowMajor.ApplyDirtyToTranspose(_data);
+            _libiglMesh.DataRowMajor.ApplyDirtyToTranspose(_data);
 
             // Add your logic here
             ActionTranslate();
@@ -60,13 +69,13 @@ namespace libigl.Behaviour
             ActionHarmonic();
             
             // Apply changes back to the RowMajor so they can be applied to the mesh
-            _data.ApplyDirtyToTranspose(libiglMesh.DataRowMajor);
+            _data.ApplyDirtyToTranspose(_libiglMesh.DataRowMajor);
         }
 
-        public void PostExecute(LibiglMesh libiglMesh)
+        public void PostExecute()
         {
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
-            libiglMesh.DataRowMajor.ApplyDirtyToMesh(libiglMesh.Mesh);
+            _libiglMesh.DataRowMajor.ApplyDirtyToMesh(_libiglMesh.Mesh);
         }
 
         public void Dispose()

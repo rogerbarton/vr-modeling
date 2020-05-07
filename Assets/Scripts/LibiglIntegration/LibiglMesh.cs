@@ -22,7 +22,7 @@ namespace libigl
         
         private Thread _workerThread;
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
-        public bool JobRunning() { return _workerThread != null; }
+        public bool IsJobRunning() { return _workerThread != null; }
 
         private void Start()
         {
@@ -42,10 +42,10 @@ namespace libigl
             Behaviour.Update();
             if (_workerThread == null)
             {
-                Behaviour.PreExecute(this);
+                Behaviour.PreExecute();
                 _workerThread = new Thread(() =>
                 {
-                    Behaviour.Execute(this);
+                    Behaviour.Execute();
                 });
                 _workerThread.Name = "LibiglWorker";
                 _workerThread.Start();
@@ -72,7 +72,7 @@ namespace libigl
             _workerThread = null;
 
             // Allow the user to apply custom changes to the meshZ
-            Behaviour.PostExecute(this);
+            Behaviour.PostExecute();
         }
 
         private void OnDestroy()
