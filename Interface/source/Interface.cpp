@@ -28,7 +28,7 @@ extern "C" {
 		Eigen::initParallel();
 		Eigen::setNbThreads(std::max(1,Eigen::nbThreads() - 2)); //remove main and render thread
 
-        if (DebugLog) DebugLog("Initialized Native.");
+        LOG("Initialized Native.")
     }
 
     /**
@@ -40,7 +40,7 @@ extern "C" {
     State* InitializeMesh(const MeshDataNative data, const char* name)
 	{
 		// TODO: Pre-compute here
-		if (DebugLog) DebugLog((std::string("InitializeMesh(): ") + std::string(name)).data());
+		LOG("InitializeMesh(): " << name)
 
 		return new State(data);
 	}
@@ -60,7 +60,7 @@ extern "C" {
 	void UNITY_INTERFACE_API UnityPluginLoad(IUnityInterfaces* unityInterfaces)
 	{
 		s_UnityInterfaces = unityInterfaces;
-		if (DebugLog) DebugLog("UnityPluginLoad()");
+		LOG("UnityPluginLoad()")
 	}
 
 
@@ -72,7 +72,7 @@ extern "C" {
 	{
 		s_UnityInterfaces = nullptr;
 
-		if (DebugLog) DebugLog("UnityPluginUnload()");
+		LOG("UnityPluginUnload()")
 		DebugLog = nullptr;
 	}
 }

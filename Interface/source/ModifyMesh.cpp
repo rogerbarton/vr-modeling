@@ -24,7 +24,7 @@ extern "C" {
 //	    igl::harmonic(V, F, b, D_bc, 2.f, D);
 //	    V = D;
 
-	    if (DebugLog) DebugLog("Harmonic");
+	    LOG("Harmonic");
     }
 
     void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radius) {

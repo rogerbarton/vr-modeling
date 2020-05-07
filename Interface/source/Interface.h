@@ -7,6 +7,10 @@
 // A global variable should be extern, so it can be seen in several cpp's. 
 // It is then defined in the Interface.cpp once
 extern StringCallback DebugLog;
+// Macro to easily concat strings using stringstream, use the operator<<
+#define STR(message) static_cast<std::ostringstream &&>((std::ostringstream() << message)).str().data()
+// Macro to easily print to the Unity Debug.Log
+#define LOG(message) if(DebugLog) { DebugLog(STR(message)); }
 
 extern IUnityInterfaces* s_UnityInterfaces;
 

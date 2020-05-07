@@ -40,6 +40,6 @@ extern "C" {
 
 	    ApplyScale<V_RowMajor_t>((float*)VPtr, VSize, setCenter, normalizeScale, scale);
 
-	    if (DebugLog) DebugLog((std::string("OFF Import ") + std::string((success ? "Successful: " : "Unsuccessful: ")) + std::string(path)).data());
+	    LOG("OFF Import " << (success ? "Successful: " : "Unsuccessful: ") << path)
     }
 }
