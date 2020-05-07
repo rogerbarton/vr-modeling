@@ -33,14 +33,23 @@ extern "C" {
 
     /**
      * Called when a new mesh is loaded. Initialize global variables, do pre-calculations for a mesh
+     * @param data The unity MeshData
      * @param name Name of the mesh
-     * @param data Pointers to the MeshData
-     * @param dirtyState Used to state which parts of the MeshData have been modified
+     * @return A pointer to the C++ state for this mesh
      */
-	void InitializeMesh(const char* name, const MeshDataNative data, unsigned int& dirtyState)
+    State* InitializeMesh(MeshDataNative& data, const char* name)
 	{
 		// TODO: Pre-compute here
 		if (DebugLog) DebugLog((std::string("InitializeMesh(): ") + std::string(name)).data());
+
+		return new State(data);
+	}
+
+	/**
+	 * Dispose all C++ state tied to a mesh properly
+	 */
+	void DisposeMesh(State* state){
+		delete state;
 	}
 
 	/**

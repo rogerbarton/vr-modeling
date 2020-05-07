@@ -27,9 +27,9 @@ extern "C" {
 	    if (DebugLog) DebugLog("Harmonic");
     }
 
-    void SphereSelect(float* VPtr, int VSize, Vector3 position, float radius, int* maskPtr) {
-        auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
-        auto mask = Eigen::Map<Eigen::VectorXi>(maskPtr, VSize);
+    void SphereSelect(State* state, MeshDataNative& udata, Vector3 position, float radius) {
+        auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
+        auto mask = Eigen::Map<Eigen::VectorXi>(state->SPtr, udata.VSize);
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 
         mask = ((V.rowwise() - posMap).array().square().matrix().colwise().sum().array() < radius).cast<int>();

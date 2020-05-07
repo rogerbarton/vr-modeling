@@ -21,11 +21,13 @@ struct Vector3
  */
 struct MeshDataNative
 {
-    float* V;
-    float* N;
-    float* C;
-    float* UV;
-    int* F;
+    unsigned int DirtyState;
+
+    float* VPtr;
+    float* NPtr;
+    float* CPtr;
+    float* UVPtr;
+    int* FPtr;
 
     int VSize;
     int FSize;
@@ -50,4 +52,10 @@ enum DirtyFlag : unsigned int {
 	 * Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
 	 */
 	DontComputeBounds = 64,
+};
+
+struct State {
+	int *SPtr;
+
+	explicit State(MeshDataNative &udata);
 };

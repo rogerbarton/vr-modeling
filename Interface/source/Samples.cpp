@@ -9,7 +9,7 @@ extern "C" {
 	 */
 	void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState)
 	{
-		auto V = Eigen::Map<V_t>(data.V, data.VSize, 3);
+		auto V = Eigen::Map<V_t>(data.VPtr, data.VSize, 3);
 		// Modify V ...
 		dirtyState |= DirtyFlag::VDirty;
 	}
