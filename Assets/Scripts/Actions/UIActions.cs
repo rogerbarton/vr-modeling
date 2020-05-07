@@ -33,13 +33,13 @@ public class UIActions : MonoBehaviour
     /// Generates UI, gesture and speed entry points based on an action
     /// </summary>
     /// <param name="onClick">Code to execute when an entry point is triggered</param>
-    private void SetupActionUi(string uiText, UnityAction onClick, string[] speechKeywords = null, int gestureId = -1)
+    public void CreateActionUi(string uiText, UnityAction onClick, string[] speechKeywords = null, int gestureId = -1)
     {
         // Parenting, layout, ui
         var go = Instantiate(_uiListItemPrefab, uiListItemParent);
         go.SetActive(true);
         var textField = go.GetComponentInChildren<TMP_Text>();
-        textField.text = name;
+        textField.text = uiText;
 
         // setup callbacks/events
         var button = go.GetComponent<Button>();

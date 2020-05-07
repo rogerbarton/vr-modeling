@@ -18,13 +18,6 @@ namespace libigl.Behaviour
         private readonly MeshData _data;
         private State* _state;
 
-        // Action Related
-        private bool _actionTranslate;
-        
-        private bool _actionSelect;
-        private Vector3 _actionSelectPos;
-        private float _actionSelectRadius;
-
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             // Create a ColMajor copy of the data
@@ -32,6 +25,8 @@ namespace libigl.Behaviour
             
             // Initialize C++
             _state = Native.InitializeMesh(_data.GetNative(), libiglMesh.name);
+
+            GenerateActionUI();
         }
 
         /// <summary>
