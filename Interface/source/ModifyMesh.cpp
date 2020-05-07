@@ -11,20 +11,20 @@ extern "C" {
         V.rowwise() += valueMap;
     }
 
-    void Harmonic(float* VPtr, int VSize, int* FPtr, int FSize) {
-	    auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
-	    const auto F = Eigen::Map<F_t>(FPtr, FSize, 3);
+    void Harmonic(State* state, const MeshDataNative udata) {
+	    auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
+	    const auto F = Eigen::Map<F_t>(udata.FPtr, udata.FSize, 3);
 
 	    Eigen::VectorXi b(1);
 	    Eigen::MatrixXf D, D_bc(1, 3);
 	    b << 0;
 	    D_bc.setZero();
 
-	    // TODO
-//	    igl::harmonic(V, F, b, D_bc, 2.f, D);
-//	    V = D;
-
 	    LOG("Harmonic");
+
+	    // TODO
+	    // igl::harmonic(V, F, b, D_bc, 2.f, D);
+	    // V = D;
     }
 
     void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radius) {
@@ -33,5 +33,7 @@ extern "C" {
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 
 	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radius).cast<int>();
+
+	    LOG("Selected: " << mask.sum() << " vertices");
     }
 }

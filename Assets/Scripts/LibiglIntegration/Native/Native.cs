@@ -85,16 +85,16 @@ namespace libigl
         
         // ModifyMesh.cpp
         [DllImport(DllName)]
-        public static extern unsafe void TranslateMesh([In,Out] float* VPtr, [In] int VSize, [In, MarshalAs(UnmanagedType.Struct)]Vector3 value);
+        public static extern unsafe void TranslateMesh(float* VPtr, int VSize, Vector3 value);
         
         [DllImport(DllName)]
-        public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In] int* FPtr, [In] int FSize);
+        public static extern unsafe void Harmonic(State* state, MeshDataNative udata);
         
         [DllImport(DllName)]
-        public static extern unsafe void SphereSelect(State* state, [In,Out] MeshDataNative udata, Vector3 position, float radius);
+        public static extern unsafe void SphereSelect(State* state, MeshDataNative udata, Vector3 position, float radius);
         
         // Sample.cpp
         [DllImport(DllName)]
-        public static extern void CustomUpdateSample([In] MeshDataNative data, [In,Out] ref uint dirtyState);
+        public static extern void CustomUpdateSample(MeshDataNative data, [In,Out] ref uint dirtyState);
     }
 }
