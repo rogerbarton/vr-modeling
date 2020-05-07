@@ -15,11 +15,16 @@ namespace libigl.Behaviour
             _data.DirtyState |= MeshData.DirtyFlag.VDirty;
         }
 
-        private unsafe void ActionSelect(ref MeshDataNative dataNative)
+        private unsafe void ActionSelect()
         {
             if (!_actionSelect) return;
             
-            Native.SphereSelect(_state, dataNative, _actionSelectPos, _actionSelectRadius);
+            Native.SphereSelect(_state, _data.GetNative(), _actionSelectPos, _actionSelectRadius);
+        }
+
+        private void ActionHarmonic()
+        {
+            
         }
     }
 }

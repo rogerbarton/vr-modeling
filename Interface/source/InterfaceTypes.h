@@ -36,22 +36,22 @@ struct MeshDataNative
 /**
  * Marks which data has changed in <code>MeshDataNative</code> as a bitmask
  */
-enum DirtyFlag : unsigned int {
-    None = 0,
-    All = 0xFFFFFFFF,
-    VDirty = 1,
-    NDirty = 2,
-    CDirty = 4,
-    UVDirty = 8,
-    FDirty = 16,
+struct DirtyFlag {
+	static const unsigned int None = 0;
+	static const unsigned int All = 0xFFFFFFFF;
+	static const unsigned int VDirty = 1;
+	static const unsigned int NDirty = 2;
+	static const unsigned int CDirty = 4;
+	static const unsigned int UVDirty = 8;
+	static const unsigned int FDirty = 16;
 	/**
 	 * Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
 	 */
-	DontComputeNormals = 32,
+	static const unsigned int DontComputeNormals = 32;
 	/**
 	 * Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
 	 */
-	DontComputeBounds = 64,
+	static const unsigned int DontComputeBounds = 64;
 };
 
 struct State {

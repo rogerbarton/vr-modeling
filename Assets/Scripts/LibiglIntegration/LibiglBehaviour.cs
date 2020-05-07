@@ -31,9 +31,7 @@ namespace libigl.Behaviour
             _data = new MeshData(libiglMesh.DataRowMajor);
             
             // Initialize C++
-            var dataNative = _data.GetNative();
-            _state = Native.InitializeMesh(dataNative, libiglMesh.name);
-            _data.DirtyState = dataNative.DirtyState;
+            _state = Native.InitializeMesh(_data.GetNative(), libiglMesh.name);
         }
 
         /// <summary>
@@ -62,13 +60,12 @@ namespace libigl.Behaviour
         {
             // Apply changes to ColMajor, only if the RowMajor is modified outside Execute()
             libiglMesh.DataRowMajor.ApplyDirtyToTranspose(_data);
-            var dataNative = _data.GetNative();
 
             // Add your logic here
             ActionTranslate();
-            ActionSelect(ref dataNative);
+            ActionSelect();
+            ActionHarmonic();
             
-            _data.DirtyState = dataNative.DirtyState;
             // Apply changes back to the RowMajor so they can be applied to the mesh
             _data.ApplyDirtyToTranspose(libiglMesh.DataRowMajor);
         }

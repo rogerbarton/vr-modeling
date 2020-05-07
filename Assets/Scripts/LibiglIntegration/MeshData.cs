@@ -16,29 +16,26 @@ namespace libigl
         /// <summary>
         /// Marks which data has changed in <c>MeshDataNative</c> as a bitmask
         /// </summary>
-        [Flags]
-        public enum DirtyFlag : uint
+        public class DirtyFlag
         {
-            None = 0,
-            All = uint.MaxValue - 32 - 64,
-            VDirty = 1,
-            NDirty = 2,
-            CDirty = 4,
-            UVDirty = 8,
-            FDirty = 16,
-
+            public const uint None = 0;
+            public const uint All = uint.MaxValue - 32 - 64;
+            public const uint VDirty = 1;
+            public const uint NDirty = 2;
+            public const uint CDirty = 4;
+            public const uint UVDirty = 8;
+            public const uint FDirty = 16;
             /// <summary>
             /// Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
             /// </summary>
-            DontComputeNormals = 32,
-
+            public const uint DontComputeNormals = 32;
             /// <summary>
             /// Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
             /// </summary>
-            DontComputeBounds = 64,
+            public const uint DontComputeBounds = 64;
         }
 
-        public DirtyFlag DirtyState = DirtyFlag.None;
+        public uint DirtyState = DirtyFlag.None;
         
         public NativeArray<Vector3> V;
         public NativeArray<Vector3> N;
@@ -224,7 +221,7 @@ namespace libigl
         /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns>
         public unsafe MeshDataNative GetNative()
         {
-            return new MeshDataNative(DirtyState, (float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
+            return new MeshDataNative((float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
                 (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
         }
 
