@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using libigl.Behaviour;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityNativeTool;
@@ -59,7 +60,9 @@ namespace libigl
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
         
         [DllImport(DllName)]
-        public static extern void InitializeMesh(string path, MeshDataNative data, [In,Out] ref uint dirtyState);
+        public static extern unsafe State* InitializeMesh([In,Out] MeshDataNative data, string name);
+        [DllImport(DllName)]
+        public static extern unsafe void DisposeMesh(State* data);
         
 
         // IO.cpp
@@ -88,7 +91,7 @@ namespace libigl
         public static extern unsafe void Harmonic([In,Out] float* VPtr, [In] int VSize, [In] int* FPtr, [In] int FSize);
         
         [DllImport(DllName)]
-        public static extern unsafe void SphereSelect(float* VPtr, int VSize, Vector3 position, float radius, int* maskPtr);
+        public static extern unsafe void SphereSelect(State* state, [In,Out] MeshDataNative udata, Vector3 position, float radius);
         
         // Sample.cpp
         [DllImport(DllName)]

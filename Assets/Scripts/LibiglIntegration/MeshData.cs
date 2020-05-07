@@ -63,21 +63,30 @@ namespace libigl
             FSize = mesh.triangles.Length;
             
             Allocate(mesh.colors.Length == 0, mesh.uv.Length == 0);
-            
-            if (!onlyAllocateMemory)
-            {
-                //Copy the V, F matrices from the mesh
-                V.CopyFrom(mesh.vertices);
-                N.CopyFrom(mesh.normals);
-                if(mesh.colors.Length > 0) // TODO: What if the mesh has no colors, ie mesh.colors.Length == 0
-                    C.CopyFrom(mesh.colors);
-                if(mesh.uv.Length > 0)
-                    UV.CopyFrom(mesh.uv);
-                F.CopyFrom(mesh.triangles);
 
-                if (!isRowMajor) // Will crash currently
-                    TransposeInPlace(); 
-            }
+            if (onlyAllocateMemory) return;
+            
+            //Copy the V, F matrices from the mesh
+            CopyFrom(mesh);
+
+            if (!isRowMajor) // Will crash currently
+                TransposeInPlace();
+        }
+
+        /// <summary>
+        /// Copies all data (e.g. V, F) from Unity mesh into the NativeArrays
+        /// </summary>
+        private void CopyFrom(Mesh mesh)
+        {
+            Assert.IsTrue(IsRowMajor);
+            
+            V.CopyFrom(mesh.vertices);
+            N.CopyFrom(mesh.normals);
+            if(mesh.colors.Length > 0) // TODO: What if the mesh has no colors, ie mesh.colors.Length == 0
+                C.CopyFrom(mesh.colors);
+            if(mesh.uv.Length > 0)
+                UV.CopyFrom(mesh.uv);
+            F.CopyFrom(mesh.triangles);
         }
 
         /// <summary>
@@ -182,7 +191,7 @@ namespace libigl
         /// Apply MeshData changes to the Unity Mesh to see changes when rendered.
         /// Must be called on the main thread with RowMajor data.
         /// </summary>
-        public void ApplyChangesToMesh(Mesh mesh)
+        public void ApplyDirtyToMesh(Mesh mesh)
         {
             if(DirtyState == DirtyFlag.None) return;
             Assert.IsTrue(IsRowMajor, "Data must be in RowMajor format to apply changes to the Unity mesh.");
@@ -208,10 +217,14 @@ namespace libigl
             DirtyState = DirtyFlag.None;
         }
 
+        /// <summary>
+        /// Note: Changes to the dirtyState are not applied to the MeshData instance immediately (not a reference) and
+        /// needs to be set manually one the native function has been called.
+        /// </summary>
         /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns>
         public unsafe MeshDataNative GetNative()
         {
-            return new MeshDataNative((float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
+            return new MeshDataNative(DirtyState, (float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
                 (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
         }
 

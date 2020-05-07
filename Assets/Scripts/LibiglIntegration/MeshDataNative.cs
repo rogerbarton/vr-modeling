@@ -6,23 +6,27 @@ namespace libigl
     /// Value type that stores all pointers for MeshData
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public readonly unsafe struct MeshDataNative
+    public unsafe struct MeshDataNative
     {
-        public readonly float* V;
-        public readonly float* N;
-        public readonly float* C;
-        public readonly float* UV;
-        public readonly int* F;
+        public MeshData.DirtyFlag DirtyState;
+        
+        public readonly float* VPtr;
+        public readonly float* NPtr;
+        public readonly float* CPtr;
+        public readonly float* UVPtr;
+        public readonly int* FPtr;
+        
         public readonly int VSize;
         public readonly int FSize;
 
-        public MeshDataNative(float* v, float* n, float* c, float* uv, int* f, int vSize, int fSize)
+        public MeshDataNative(MeshData.DirtyFlag dirtyState, float* vPtr, float* nPtr, float* cPtr, float* uvPtr, int* fPtr, int vSize, int fSize)
         {
-            V = v;
-            N = n;
-            C = c;
-            UV = uv;
-            F = f;
+            DirtyState = dirtyState;
+            VPtr = vPtr;
+            NPtr = nPtr;
+            CPtr = cPtr;
+            UVPtr = uvPtr;
+            FPtr = fPtr;
             VSize = vSize;
             FSize = fSize;
         }

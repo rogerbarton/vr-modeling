@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using libigl.Behaviour;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -16,15 +17,12 @@ namespace libigl
         public MeshFilter meshFilter;
         public Mesh Mesh { get; private set; }
 
-        [NonSerialized] public MeshData Data;
-        [NonSerialized] public MeshData DataRowMajor;
+        public MeshData DataRowMajor { get; private set; }
+        public LibiglBehaviour Behaviour;
         
-        private MeshAction[] _executingActions;
-        private readonly Queue<MeshAction> _actionsQueue = new Queue<MeshAction>();
         private Thread _workerThread;
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
         public bool JobRunning() { return _workerThread != null; }
-
 
         private void Start()
         {
@@ -35,71 +33,30 @@ namespace libigl
             Mesh = meshFilter.mesh;
             Mesh.MarkDynamic();
 
-            DataRowMajor = new MeshData(Mesh, true);
-            Data = new MeshData(DataRowMajor, false);
-            ExecuteActions(MeshActionType.OnInitialize);
-        }
-
-        /// <summary>
-        /// Schedules the action once, adds it to a queue of actions to be executed 
-        /// </summary>
-        public void ScheduleAction(MeshAction action)
-        {
-            if(!_actionsQueue.Contains(action))
-                _actionsQueue.Enqueue(action);
-        }
-
-        /// <summary>
-        /// Sets which actions should be executed based on the action type.
-        /// <remarks>Assert: <see cref="_executingActions"/> is null.</remarks>
-        /// </summary>
-        /// <param name="actionType">The type/group of actions to execute.</param>
-        private void SetExecutingActions(MeshActionType actionType)
-        {
-            Assert.IsTrue(_executingActions == null);
-            if (actionType == MeshActionType.OnInitialize)
-            {
-                _executingActions = MeshActions.get.InitializeActions.ToArray();
-            }
-            else if (actionType == MeshActionType.OnUpdate)
-            {
-                _executingActions = _actionsQueue.ToArray();
-                _actionsQueue.Clear();
-            }
-        }
-        
-        /// <summary>
-        /// Execute operation on a worker thread (job)
-        /// <remarks>Assert: <see cref="_workerThread"/> is null or not alive.</remarks>
-        /// </summary>
-        private void ExecuteActions(MeshActionType actionType)
-        {
-            Assert.IsTrue(_workerThread == null || !_workerThread.IsAlive);
-            SetExecutingActions(actionType);
-                
-            foreach (var action in _executingActions)
-                action.PreExecute?.Invoke(this);
-            
-            // Execute the actions with ColMajor data and then apply the changes to the DataRowMajor
-            _workerThread = new Thread(() =>
-            {
-                DataRowMajor.ApplyDirtyToTranspose(Data);
-                foreach (var action in _executingActions)
-                    action.Execute(Data);
-                Data.ApplyDirtyToTranspose(DataRowMajor);
-            });
-            _workerThread.Name = "LibiglWorker";
-            _workerThread.Start();
+            DataRowMajor = new MeshData(Mesh);
+            Behaviour = new LibiglBehaviour(this);
         }
 
         private void Update()
         {
+            Behaviour.Update();
             if (_workerThread == null)
             {
-                if (_actionsQueue.Count > 0)
-                    ExecuteActions(MeshActionType.OnUpdate);
+                Behaviour.PreExecute(this);
+                _workerThread = new Thread(() =>
+                {
+                    Behaviour.Execute(this);
+                });
+                _workerThread.Name = "LibiglWorker";
+                _workerThread.Start();
             }
             else if (!_workerThread.IsAlive)
+                PostExecute();
+        }
+
+        private void LateUpdate()
+        {
+            if (_workerThread != null && !_workerThread.IsAlive)
                 PostExecute();
         }
 
@@ -114,17 +71,14 @@ namespace libigl
             _workerThread.Join();
             _workerThread = null;
 
-            // Allow the user to apply custom changes to the mesh, give the RowMajor version that has been updated
-            foreach (var action in _executingActions) 
-                action.PostExecute?.Invoke(this);
-            DataRowMajor.ApplyChangesToMesh(Mesh);
-            _executingActions = null;
+            // Allow the user to apply custom changes to the meshZ
+            Behaviour.PostExecute(this);
         }
 
         private void OnDestroy()
         {
             _workerThread?.Abort();
-            Data.Dispose();
+            Behaviour.Dispose();
             DataRowMajor.Dispose();
         }
     }

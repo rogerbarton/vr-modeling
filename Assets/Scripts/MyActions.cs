@@ -11,19 +11,19 @@ public class MyActions : MonoBehaviour
     private void Awake()
     {
         // Add all actions
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Test",
+        UIActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Test",
             _ => { Debug.Log("Execute Test"); },
             () => Input.GetKeyDown(KeyCode.Q),
             default, default,
             new[] {"Test"},
             0));
 
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Translate",
+        UIActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Translate",
             new TranslateAction(),  
             new[] {"move", "translate"},
             1));
 
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Smooth",
+        UIActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "Smooth",
             data =>
             {
                 unsafe
@@ -40,7 +40,7 @@ public class MyActions : MonoBehaviour
             2
             ));
 
-        MeshActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "CustomUpdate",
+        UIActions.get.RegisterAction(new MeshAction(MeshActionType.OnUpdate, "CustomUpdate",
             data =>
             {
                 // Example where everything is done in C++, we can also pass additional arguments about the input state if we wanted
