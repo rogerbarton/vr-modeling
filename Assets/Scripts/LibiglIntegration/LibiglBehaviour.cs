@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace libigl.Behaviour
 {
@@ -15,6 +16,12 @@ namespace libigl.Behaviour
         /// This is allocated and deleted in C++ within <see cref="Native.InitializeMesh"/> and <see cref="Native.DisposeMesh"/>.
         /// </summary>
         private State* _state;
+
+        /// <summary>
+        /// The input state on the main thread. This is copied to the thread input state <c>State.Input</c> at the end of PreExecute
+        /// and is then immediately consumed by <see cref="ConsumeInput"/>.
+        /// </summary>
+        private InputState _input;
         
         /// <summary>
         /// Reference to the <see cref="LibiglMesh"/> used to apply changes to the <see cref="LibiglMesh.DataRowMajor"/> and the Unity <see cref="LibiglMesh.Mesh"/>
@@ -38,7 +45,7 @@ namespace libigl.Behaviour
         /// </summary>
         public void Update()
         {
-            
+            UpdateInput();
         }
         
         /// <summary>
@@ -49,18 +56,23 @@ namespace libigl.Behaviour
         public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
-            _actionTranslate |= Input.GetKeyDown(KeyCode.W);
-            _actionSelect |= Input.GetMouseButtonDown(0);
-            if (_actionSelect)
+            _input.Translate |= Input.GetKeyDown(KeyCode.W);
+            _input.Select |= Input.GetMouseButtonDown(0);
+            if (_input.Select)
             {
-                _actionSelectPos = Input.mousePosition;
+                _input.SelectPos = Input.mousePosition;
             }
             
             if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
             {
-                _actionSelectRadiusSqr += 0.1f * Input.mouseScrollDelta.y;
-                Mathf.Clamp(_actionSelectRadiusSqr, 0.025f, 1f);
+                _input.SelectRadiusSqr += 0.1f * Input.mouseScrollDelta.y;
+                Mathf.Clamp(_input.SelectRadiusSqr, 0.025f, 1f);
             }
+
+            // Copy the InputState to the State by copying
+            _state->Input = _input;
+            // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
+            ConsumeInput();
         }
 
         /// <summary>

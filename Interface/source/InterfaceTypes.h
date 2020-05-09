@@ -16,28 +16,13 @@ typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 
 struct Vector3
 {
-	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
-	Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
-
 	float x;
     float y;
     float z;
-};
 
-/**
- * Stores all pointers to the MeshData arrays.<p>
- * Usually this should be as a <code>const</code> parameter
- */
-struct UMeshDataNative
-{
-    float* VPtr;
-	float* NPtr;
-	float* CPtr;
-	float* UVPtr;
-	int* FPtr;
-
-	int VSize;
-	int FSize;
+	Vector3() = default;
+	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
+	Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
 };
 
 /**
@@ -61,6 +46,38 @@ struct DirtyFlag {
 	static const unsigned int DontComputeBounds = 64;
 };
 
+/**
+ * Stores all pointers to the MeshData arrays.<p>
+ * Usually this should be as a <code>const</code> parameter
+ */
+struct UMeshDataNative
+{
+	float* VPtr;
+	float* NPtr;
+	float* CPtr;
+	float* UVPtr;
+	int* FPtr;
+
+	int VSize;
+	int FSize;
+};
+
+struct InputState
+{
+	// Translate
+	bool Translate;
+
+	// Select
+	bool Select;
+	Vector3 SelectPos;
+	float SelectRadiusSqr;
+
+	// Harmonic
+	bool Harmonic;
+
+	InputState() = default;
+};
+
 struct State {
 	unsigned int DirtyState = DirtyFlag::None;
 
@@ -72,6 +89,9 @@ struct State {
 	
 	int VSize = 0;
 	int FSize = 0;
+
+	// Latest InputState from PreExecute
+	InputState Input;
 
 	Eigen::VectorXi* S;
 

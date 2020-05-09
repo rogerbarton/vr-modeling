@@ -18,13 +18,13 @@ public class UIActions : MonoBehaviour
 
     private void Awake()
     {
-        if (get == null)
-            get = this;
-        else
+        if (get)
         {
-            Debug.LogWarning("Instance already exists.");
+            Debug.LogWarning("UIActions instance already exists.");
+            enabled = false;
             return;
         }
+        get = this;
         
         // Convention: Use the first child as the prefab
         if (!_uiListItemPrefab && uiListItemParent.childCount > 0)

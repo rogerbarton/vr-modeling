@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace libigl.Behaviour
 {
@@ -12,9 +13,9 @@ namespace libigl.Behaviour
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct State
     {
+        // ColMajor Mesh data Shared with UnityMeshData
         public uint DirtyState;
 
-        // Shared with UnityMeshData
         public readonly void* VPtr;
         public readonly void* NPtr;
         public readonly void* CPtr;
@@ -23,8 +24,30 @@ namespace libigl.Behaviour
         
         public readonly int VSize;
         public readonly int FSize;
+
+        // Latest InputState from PreExecute 
+        public InputState Input;
         
         // Private C++ state
         public readonly void* S;
+    }
+
+    /// <summary>
+    /// Struct for storing the current input. (This is a value type so assigning will copy).
+    /// Anything that may change as we are executing should be in the InputState as it is copied in PreExecute.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct InputState
+    {
+        // Translate
+        public bool Translate;
+        
+        // Select
+        public bool Select;
+        public Vector3 SelectPos;
+        public float SelectRadiusSqr;
+        
+        // Harmonic
+        public bool Harmonic;
     }
 }
