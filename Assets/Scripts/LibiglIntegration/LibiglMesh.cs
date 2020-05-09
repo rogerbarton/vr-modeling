@@ -18,11 +18,13 @@ namespace libigl
         public Mesh Mesh { get; private set; }
 
         public MeshData DataRowMajor { get; private set; }
-        public LibiglBehaviour Behaviour;
+        public LibiglBehaviour Behaviour { get; private set; }
         
         private Thread _workerThread;
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
         public bool IsJobRunning() { return _workerThread != null; }
+
+        public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
 
         private void Start()
         {
@@ -39,7 +41,11 @@ namespace libigl
 
         private void Update()
         {
+            if(_workerThread != null && !_workerThread.IsAlive)
+                PostExecute();
+            
             Behaviour.Update();
+            
             if (_workerThread == null)
             {
                 Behaviour.PreExecute();
@@ -50,8 +56,6 @@ namespace libigl
                 _workerThread.Name = "LibiglWorker";
                 _workerThread.Start();
             }
-            else if (!_workerThread.IsAlive)
-                PostExecute();
         }
 
         private void LateUpdate()
