@@ -10,6 +10,7 @@ namespace libigl
     /// Contains all runtime C++ function declarations.
     /// These functions can only be called in play mode, as the dll is unloaded otherwise for easier rebuilds.
     /// C# to C++ Communication with marshalling attributes
+    /// <remarks>Convention: Pass the <see cref="State"/> as the first argument if the function modifies a mesh.</remarks>
     /// </summary>
     [MockNativeDeclarations] // Use UnityNativeTool to un/load dll functions in this class
     public static class Native

@@ -3,7 +3,10 @@
 namespace libigl
 {
     /// <summary>
-    /// Value type that stores all pointers for MeshData
+    /// Stores pointers to the native arrays in <see cref="UMeshData"/> so we can pass this to C++.
+    /// Pointers are to the first element in the respective NativeArray.<br/>
+    /// Important: As Native arrays are not managed memory, the underlying array is fixed and will not move due to
+    /// Garbage Collection. So a instance's pointers will remain valid.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public readonly unsafe struct UMeshDataNative

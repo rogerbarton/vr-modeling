@@ -24,7 +24,7 @@ namespace libigl.Behaviour
 
             Native.TranslateMesh(_state, new Vector3(0.1f, 0.2f, 0.3f));
 
-            _state->DirtyState |= UMeshData.DirtyFlag.VDirty;
+            _state->DirtyState |= DirtyFlag.VDirty;
         }
 
         private unsafe void ActionSelect()
@@ -41,12 +41,12 @@ namespace libigl.Behaviour
             _actionHarmonic = false;
             
             Native.Harmonic(_state);
-            _state->DirtyState |= UMeshData.DirtyFlag.VDirty;
+            _state->DirtyState |= DirtyFlag.VDirty;
         }
 
         
         /// <summary>
-        /// Static method that generates the UI to <i>manipulate the active mesh</i>
+        /// Static method that generates the UI to manipulate the <i>active mesh</i> <see cref="MeshManager.ActiveMesh"/>
         /// </summary>
         public static void InitializeActionUi()
         {
