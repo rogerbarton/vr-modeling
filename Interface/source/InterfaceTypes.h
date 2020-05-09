@@ -19,7 +19,7 @@ struct Vector3
  * Stores all pointers to the MeshData arrays.<p>
  * Usually this should be as a <code>const</code> parameter
  */
-struct MeshDataNative
+struct UMeshDataNative
 {
     float* VPtr;
 	float* NPtr;
@@ -32,7 +32,7 @@ struct MeshDataNative
 };
 
 /**
- * Marks which data has changed in <code>MeshDataNative</code> as a bitmask
+ * Marks which data has changed in <code>UMeshDataNative</code> as a bitmask
  */
 struct DirtyFlag {
 	static const unsigned int None = 0;
@@ -66,5 +66,5 @@ struct State {
 
 	Eigen::VectorXi* S;
 
-	explicit State(const MeshDataNative udata);
+	explicit State(const UMeshDataNative udata);
 };

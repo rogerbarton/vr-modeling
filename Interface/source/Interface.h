@@ -17,7 +17,7 @@ extern IUnityInterfaces* s_UnityInterfaces;
 extern "C" {
     // Interface.cpp
     UNITY_INTERFACE_EXPORT void Initialize(StringCallback debugCallback);
-    UNITY_INTERFACE_EXPORT State* InitializeMesh(const MeshDataNative data, const char* name);
+    UNITY_INTERFACE_EXPORT State* InitializeMesh(const UMeshDataNative data, const char* name);
     UNITY_INTERFACE_EXPORT void DisposeMesh(State* state);
 
     // Unity Callbacks from IUnityInterface.h
@@ -31,13 +31,13 @@ extern "C" {
     // IO.cpp
     UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,
     		void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
-    UNITY_INTERFACE_EXPORT void ApplyDirty(State* state, const MeshDataNative data);
+    UNITY_INTERFACE_EXPORT void ApplyDirty(State* state, const UMeshDataNative data);
 
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);
-    UNITY_INTERFACE_EXPORT void Harmonic(State* state, const MeshDataNative udata);
-    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radiusSqr);
+    UNITY_INTERFACE_EXPORT void Harmonic(State* state, const UMeshDataNative udata);
+    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, const UMeshDataNative udata, Vector3 position, float radiusSqr);
 
     // Sample.cpp
-    UNITY_INTERFACE_EXPORT void CustomUpdateSample(const MeshDataNative data, unsigned int& dirtyState);
+    UNITY_INTERFACE_EXPORT void CustomUpdateSample(const UMeshDataNative data, unsigned int& dirtyState);
 }

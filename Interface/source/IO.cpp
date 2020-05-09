@@ -6,7 +6,7 @@
 #include <igl/per_vertex_normals.h>
 
 extern "C" {
-    void ApplyDirty(State* state, const MeshDataNative data){
+    void ApplyDirty(State* state, const UMeshDataNative data){
     	auto& dirty = state->DirtyState;
 
 	    if((dirty & DirtyFlag::VDirty) > 0)

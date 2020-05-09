@@ -37,7 +37,7 @@ extern "C" {
      * @param name Name of the mesh
      * @return A pointer to the C++ state for this mesh
      */
-    State* InitializeMesh(const MeshDataNative data, const char* name)
+    State* InitializeMesh(const UMeshDataNative data, const char* name)
 	{
 		// TODO: Pre-compute here
 		LOG("InitializeMesh(): " << name)

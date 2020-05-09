@@ -11,7 +11,7 @@ extern "C" {
         V.rowwise() += valueMap;
     }
 
-    void Harmonic(State* state, const MeshDataNative udata) {
+    void Harmonic(State* state, const UMeshDataNative udata) {
 	    auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
 	    const auto F = Eigen::Map<F_t>(udata.FPtr, udata.FSize, 3);
 
@@ -27,7 +27,7 @@ extern "C" {
 	    // V = D;
     }
 
-    void SphereSelect(State* state, const MeshDataNative udata, Vector3 position, float radiusSqr) {
+    void SphereSelect(State* state, const UMeshDataNative udata, Vector3 position, float radiusSqr) {
         auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
         auto mask = *state->S;
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
