@@ -433,7 +433,6 @@ GameObject:
   - component: {fileID: 324874808}
   - component: {fileID: 324874807}
   - component: {fileID: 324874806}
-  - component: {fileID: 324874810}
   m_Layer: 0
   m_Name: LeftHand Controller
   m_TagString: Untagged
@@ -753,35 +752,11 @@ MonoBehaviour:
   m_ActivateUsage: 2
   m_UIPressUsage: 2
   m_AxisToPressThreshold: 0.1
-  m_ModelPrefab: {fileID: 6283770415800819241, guid: 9bb33e18c9b4acb4b9b055aa9f5979ae,
-    type: 3}
+  m_ModelPrefab: {fileID: 0}
   m_ModelTransform: {fileID: 0}
   m_AnimateModel: 0
   m_ModelSelectTransition: 
   m_ModelDeSelectTransition: 
---- !u!114 &324874810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324874804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d775a3a16cd0a04993cba79a24ed0f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controllerPrefabs:
-  - {fileID: 7634514334346526944, guid: 0540e32b498ef284f8e1dcf80dfccd58, type: 3}
-  - {fileID: 4245457492171364763, guid: c836783e3928a624e9ff9c70d4f21606, type: 3}
-  - {fileID: 4024951872544157354, guid: cfa8dc06d611ba340b06bbefba58ee46, type: 3}
-  - {fileID: 7523567926693483842, guid: b2ec64201e9ec6c4ba155691307536cb, type: 3}
-  - {fileID: 5191550869875014123, guid: 0efe8147fc0009d4ea3039b2374d927c, type: 3}
-  - {fileID: 4818293155451206850, guid: 542a6345c56bbcd41b92f421fac57d92, type: 3}
-  - {fileID: 357722411443781339, guid: aafefdd564a300c4d93806fdc271c41f, type: 3}
-  - {fileID: 5928091942230486030, guid: c4b9c875ed967534eb12cd57aeeb1183, type: 3}
-  - {fileID: 6654152787936889342, guid: 61e60013ce1d7d942b8975c98fdf8154, type: 3}
-  characteristics: 320
 --- !u!1 &441513027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1882,8 +1857,7 @@ MonoBehaviour:
   m_ActivateUsage: 2
   m_UIPressUsage: 2
   m_AxisToPressThreshold: 0.1
-  m_ModelPrefab: {fileID: 6283770415800819241, guid: 76846da6d845f0a438f24f401e31f52a,
-    type: 3}
+  m_ModelPrefab: {fileID: 0}
   m_ModelTransform: {fileID: 0}
   m_AnimateModel: 0
   m_ModelSelectTransition: 
@@ -2012,6 +1986,8 @@ MonoBehaviour:
   - {fileID: 357722411443781339, guid: aafefdd564a300c4d93806fdc271c41f, type: 3}
   - {fileID: 5928091942230486030, guid: c4b9c875ed967534eb12cd57aeeb1183, type: 3}
   - {fileID: 6654152787936889342, guid: 61e60013ce1d7d942b8975c98fdf8154, type: 3}
+  leftHandChar: 320
+  leftHandRig: {fileID: 324874805}
   rightHandChar: 576
   rightHandRig: {fileID: 506401548}
 --- !u!1 &708273530
