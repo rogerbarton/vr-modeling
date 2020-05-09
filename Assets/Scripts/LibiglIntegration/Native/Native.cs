@@ -60,7 +60,7 @@ namespace libigl
         private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
         
         [DllImport(DllName)]
-        public static extern unsafe State* InitializeMesh([In,Out] MeshDataNative data, string name);
+        public static extern unsafe State* InitializeMesh([In,Out] UMeshDataNative data, string name);
         [DllImport(DllName)]
         public static extern unsafe void DisposeMesh(State* data);
         
@@ -73,28 +73,17 @@ namespace libigl
             [Out] out uint* FPtr, [Out] out int FSize);
         
         [DllImport(DllName)]
-        public static extern unsafe void TransposeInPlace(void* MatrixPtr, int rows, int cols = 3);
-        [DllImport(DllName)]
-        public static extern unsafe void TransposeInPlace(void* MatrixPtr, int rows);
-        
-        [DllImport(DllName)]
-        public static extern unsafe void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols = 3);
-        [DllImport(DllName)]
-        public static extern unsafe void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows);
+        public static extern unsafe void ApplyDirty(State* state, UMeshDataNative data);
 
         
         // ModifyMesh.cpp
         [DllImport(DllName)]
-        public static extern unsafe void TranslateMesh(float* VPtr, int VSize, Vector3 value);
+        public static extern unsafe void TranslateMesh(State* state, Vector3 value);
         
         [DllImport(DllName)]
-        public static extern unsafe void Harmonic(State* state, MeshDataNative udata);
+        public static extern unsafe void Harmonic(State* state);
         
         [DllImport(DllName)]
-        public static extern unsafe void SphereSelect(State* state, MeshDataNative udata, Vector3 position, float radiusSqr);
-        
-        // Sample.cpp
-        [DllImport(DllName)]
-        public static extern void CustomUpdateSample(MeshDataNative data, [In,Out] ref uint dirtyState);
+        public static extern unsafe void SphereSelect(State* state, Vector3 position, float radiusSqr);
     }
 }

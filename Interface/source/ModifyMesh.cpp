@@ -4,17 +4,14 @@
 #include <igl/harmonic.h>
 
 extern "C" {
-    void TranslateMesh(float* VPtr, int VSize, Vector3 value) {
-        auto V = Eigen::Map<V_t>(VPtr, VSize, 3);
+    void TranslateMesh(State* state, Vector3 value) {
+        auto& V = *state->VPtr;
         const auto valueMap = Eigen::Map<Eigen::RowVector3f>(&value.x);
 
         V.rowwise() += valueMap;
     }
 
-    void Harmonic(State* state, const UMeshDataNative udata) {
-	    auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
-	    const auto F = Eigen::Map<F_t>(udata.FPtr, udata.FSize, 3);
-
+    void Harmonic(State* state) {
 	    Eigen::VectorXi b(1);
 	    Eigen::MatrixXf D, D_bc(1, 3);
 	    b << 0;
@@ -23,13 +20,13 @@ extern "C" {
 	    LOG("Harmonic");
 
 	    // TODO
-	    // igl::harmonic(V, F, b, D_bc, 2.f, D);
+	    // igl::harmonic(*state->VPtr, *state->FPtr, b, D_bc, 2.f, D);
 	    // V = D;
     }
 
-    void SphereSelect(State* state, const UMeshDataNative udata, Vector3 position, float radiusSqr) {
-        auto V = Eigen::Map<V_t>(udata.VPtr, udata.VSize, 3);
-        auto mask = *state->S;
+    void SphereSelect(State* state, Vector3 position, float radiusSqr) {
+        auto& V = *state->VPtr;
+        auto& mask = *state->S;
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 
 	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr).cast<int>();

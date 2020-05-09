@@ -55,11 +55,11 @@ struct DirtyFlag {
 struct State {
 	unsigned int DirtyState = DirtyFlag::None;
 
-	Eigen::MatrixXf* VPtr = nullptr;
-	Eigen::MatrixXf* NPtr = nullptr;
-	Eigen::MatrixXf* CPtr = nullptr;
-	Eigen::MatrixXf* UVPtr = nullptr;
-	Eigen::MatrixXi* FPtr = nullptr;
+	Eigen::MatrixXf* VPtr;
+	Eigen::MatrixXf* NPtr;
+	Eigen::MatrixXf* CPtr;
+	Eigen::MatrixXf* UVPtr;
+	Eigen::MatrixXi* FPtr;
 	
 	int VSize = 0;
 	int FSize = 0;
