@@ -53,6 +53,17 @@ struct DirtyFlag {
 };
 
 struct State {
+	unsigned int DirtyState = DirtyFlag::None;
+
+	Eigen::MatrixXf* VPtr = nullptr;
+	Eigen::MatrixXf* NPtr = nullptr;
+	Eigen::MatrixXf* CPtr = nullptr;
+	Eigen::MatrixXf* UVPtr = nullptr;
+	Eigen::MatrixXi* FPtr = nullptr;
+	
+	int VSize = 0;
+	int FSize = 0;
+
 	Eigen::VectorXi* S;
 
 	explicit State(const MeshDataNative udata);

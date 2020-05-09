@@ -31,8 +31,7 @@ extern "C" {
     // IO.cpp
     UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,
     		void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
-    UNITY_INTERFACE_EXPORT void TransposeInPlace(void* MatrixPtr, int rows, int cols = 3);
-    UNITY_INTERFACE_EXPORT void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols = 3);
+    UNITY_INTERFACE_EXPORT void ApplyDirty(State* state, const MeshDataNative data);
 
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(float* VPtr, int VSize, Vector3 value);

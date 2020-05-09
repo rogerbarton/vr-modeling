@@ -1,23 +1,24 @@
+#include "IO.h"
 #include "Interface.h"
-#include "InterfaceTypes.h"
 #include "NumericTypes.h"
 #include "Util.h"
-#include <Eigen/core>
 #include <igl/readOFF.h>
 #include <igl/per_vertex_normals.h>
 
 extern "C" {
-    void TransposeInPlace(void* MatrixPtr, int rows, int cols) {
-        auto V = Eigen::Map<Eigen::MatrixXf>((float*)MatrixPtr, rows, cols);
-        //TODO: This will not work on a Eigen::Map as the dimensions are fixed, only for square matrices.
-        //Reason Eigen::Map does not own the memory. See https://gitlab.com/libeigen/eigen/-/issues/749
-        V.transposeInPlace();
-    }
+    void ApplyDirty(State* state, const MeshDataNative data){
+    	auto& dirty = state->DirtyState;
 
-    void TransposeTo(void* InMatrixPtr, void* OutMatrixPtr, int rows, int cols) {
-        auto In = Eigen::Map<Eigen::MatrixXf>((float*)InMatrixPtr, rows, cols);
-        auto Out = Eigen::Map<Eigen::MatrixXf>((float*)OutMatrixPtr, cols, rows);
-        Out = In.transpose();
+	    if((dirty & DirtyFlag::VDirty) > 0)
+		    TransposeTo(state->VPtr, data.VPtr);
+	    if((dirty & DirtyFlag::NDirty) > 0)
+		    TransposeTo(state->NPtr, data.NPtr);
+	    if((dirty & DirtyFlag::CDirty) > 0)
+		    TransposeTo(state->CPtr, data.CPtr);
+	    if((dirty & DirtyFlag::UVDirty) > 0)
+		    TransposeTo(state->UVPtr, data.UVPtr);
+	    if((dirty & DirtyFlag::FDirty) > 0)
+		    TransposeTo(state->FPtr, data.FPtr);
     }
 
     void LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,
