@@ -5,6 +5,15 @@
 // Function pointer to a C# void MyFct(string message)
 typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 
+// Macro to easily concat strings using stringstream, use the operator<<
+#define STR(message) static_cast<std::ostringstream &&>((std::ostringstream() << message)).str().data()
+// Macro to easily print to the Unity Debug.Log
+#ifndef NDEBUG
+#define LOG(message) if(DebugLog) { DebugLog(STR(message)); }
+#else
+#define LOG(m)
+#endif
+
 struct Vector3
 {
 	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}

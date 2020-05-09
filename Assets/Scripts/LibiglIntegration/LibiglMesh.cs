@@ -101,10 +101,10 @@ namespace libigl
             // Dispose all Native data (NativeArrays and anything created with 'new' in C++)
             _workerThread?.Abort();
             _workerThread = null;
-            Behaviour?.Dispose();
-            Behaviour = null;
             DataRowMajor?.Dispose();
             DataRowMajor = null;
+            Behaviour?.Dispose();
+            Behaviour = null;
         }
     }
 }
