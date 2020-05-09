@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.XR;
 
 namespace libigl.Behaviour
@@ -20,6 +20,14 @@ namespace libigl.Behaviour
                     triggerValue > 0.1f)
                 {
                     _input.Select = true;
+                    if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.devicePosition, 
+                        out var rightHandPos))
+                    {
+                        _input.SelectPos = _libiglMesh.transform.InverseTransformPoint(
+                                InputManager.get.XRRig.TransformPoint(rightHandPos));
+                    }
+                    else 
+                        Debug.LogWarning("Could not get Right Hand Position");
                 }
             }
         }

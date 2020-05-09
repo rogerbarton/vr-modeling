@@ -7,6 +7,10 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class InputManager : MonoBehaviour
 {
     public static InputManager get;
+    /// <summary>
+    /// Get the XR Rig Transform, to determine world positions
+    /// </summary>
+    public Transform XRRig;
 
     [SerializeField] private List<GameObject> controllerPrefabs;
 
@@ -36,6 +40,8 @@ public class InputManager : MonoBehaviour
         }
 
         get = this;
+        if(!XRRig)
+            XRRig = transform;
     }
 
     private void Start()

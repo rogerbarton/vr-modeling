@@ -49,5 +49,10 @@ namespace libigl.Behaviour
         
         // Harmonic
         public bool Harmonic;
+
+        public void InitializeDefaults()
+        {
+            SelectRadiusSqr = 0.1f;
+        }
     }
 }

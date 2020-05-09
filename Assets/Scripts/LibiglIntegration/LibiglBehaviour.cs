@@ -31,6 +31,7 @@ namespace libigl.Behaviour
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             _libiglMesh = libiglMesh;
+            _input.InitializeDefaults();
             
             // Initialize C++ and create the State from the DataRowMajor
             _state = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), _libiglMesh.name);
@@ -58,16 +59,12 @@ namespace libigl.Behaviour
             // Add logic here that uses the Unity API (e.g. Input)
             _input.Translate |= Input.GetKeyDown(KeyCode.W);
             _input.Select |= Input.GetMouseButtonDown(0);
-            if (_input.Select)
-            {
-                _input.SelectPos = Input.mousePosition;
-            }
             
-            if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
-            {
-                _input.SelectRadiusSqr += 0.1f * Input.mouseScrollDelta.y;
-                Mathf.Clamp(_input.SelectRadiusSqr, 0.025f, 1f);
-            }
+            // if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
+            // {
+            //     _input.SelectRadiusSqr += 0.1f * Input.mouseScrollDelta.y;
+            //     Mathf.Clamp(_input.SelectRadiusSqr, 0.025f, 1f);
+            // }
 
             // Copy the InputState to the State by copying
             _state->Input = _input;
