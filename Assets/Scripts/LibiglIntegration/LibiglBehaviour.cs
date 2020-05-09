@@ -49,8 +49,8 @@ namespace libigl.Behaviour
         public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
-            _actionTranslate = Input.GetKeyDown(KeyCode.W);
-            _actionSelect = Input.GetMouseButtonDown(0);
+            _actionTranslate |= Input.GetKeyDown(KeyCode.W);
+            _actionSelect |= Input.GetMouseButtonDown(0);
             if (_actionSelect)
             {
                 _actionSelectPos = Input.mousePosition;
