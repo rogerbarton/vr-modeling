@@ -22,9 +22,9 @@ namespace libigl.Behaviour
             if (!_actionTranslate) return;
             _actionTranslate = false; // consume
 
-            Native.TranslateMesh((float*) _data.V.GetUnsafePtr(), _data.VSize, new Vector3(0.1f, 0.2f, 0.3f));
+            Native.TranslateMesh(_state, new Vector3(0.1f, 0.2f, 0.3f));
 
-            _data.DirtyState |= MeshData.DirtyFlag.VDirty;
+            _state->DirtyState |= UMeshData.DirtyFlag.VDirty;
         }
 
         private unsafe void ActionSelect()
@@ -32,7 +32,7 @@ namespace libigl.Behaviour
             if (!_actionSelect) return;
             _actionSelect = false;
             
-            Native.SphereSelect(_state, _data.GetNative(), _actionSelectPos, _actionSelectRadiusSqr);
+            Native.SphereSelect(_state, _actionSelectPos, _actionSelectRadiusSqr);
         }
 
         private unsafe void ActionHarmonic()
@@ -40,8 +40,8 @@ namespace libigl.Behaviour
             if (!_actionHarmonic) return;
             _actionHarmonic = false;
             
-            Native.Harmonic(_state, _data.GetNative());
-            _data.DirtyState |= MeshData.DirtyFlag.VDirty;
+            Native.Harmonic(_state);
+            _state->DirtyState |= UMeshData.DirtyFlag.VDirty;
         }
 
         

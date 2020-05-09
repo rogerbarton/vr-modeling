@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityNativeTool;
 
 namespace libigl.Behaviour
 {
@@ -11,18 +12,15 @@ namespace libigl.Behaviour
         /// <summary>
         /// Column major mesh data storing the arrays that will be applied to the Unity mesh
         /// </summary>
-        private readonly MeshData _data;
         private State* _state;
         private readonly LibiglMesh _libiglMesh;
 
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             _libiglMesh = libiglMesh;
-            // Create a ColMajor copy of the data
-            _data = new MeshData(_libiglMesh.DataRowMajor);
             
             // Initialize C++
-            _state = Native.InitializeMesh(_data.GetNative(), _libiglMesh.name);
+            _state = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), _libiglMesh.name);
         }
 
         /// <summary>
@@ -56,16 +54,13 @@ namespace libigl.Behaviour
 
         public void Execute()
         {
-            // Apply changes to ColMajor, only if the RowMajor is modified outside Execute()
-            _libiglMesh.DataRowMajor.ApplyDirtyToTranspose(_data);
-
             // Add your logic here
             ActionTranslate();
             ActionSelect();
             ActionHarmonic();
             
             // Apply changes back to the RowMajor so they can be applied to the mesh
-            _data.ApplyDirtyToTranspose(_libiglMesh.DataRowMajor);
+            _libiglMesh.DataRowMajor.ApplyDirty(_state);
         }
 
         public void PostExecute()
@@ -79,7 +74,6 @@ namespace libigl.Behaviour
             // Be sure to dispose of any NativeArrays that are not garbage collected
             Native.DisposeMesh(_state);
             _state = null;
-            _data?.Dispose();
         }
     }
 }

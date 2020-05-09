@@ -4,6 +4,7 @@ using System.Threading;
 using libigl.Behaviour;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityNativeTool;
 
 namespace libigl
 {
@@ -14,10 +15,10 @@ namespace libigl
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class LibiglMesh : MonoBehaviour
     {
-        public MeshFilter meshFilter;
+        private MeshFilter _meshFilter;
         public Mesh Mesh { get; private set; }
 
-        public MeshData DataRowMajor { get; private set; }
+        public UMeshData DataRowMajor { get; private set; }
         public LibiglBehaviour Behaviour { get; private set; }
         
         private Thread _workerThread;
@@ -31,11 +32,11 @@ namespace libigl
             name = name.Replace("(Clone)","").Trim();
             
             // Get a reference to the mesh 
-            meshFilter = GetComponent<MeshFilter>();
-            Mesh = meshFilter.mesh;
+            _meshFilter = GetComponent<MeshFilter>();
+            Mesh = _meshFilter.mesh;
             Mesh.MarkDynamic();
 
-            DataRowMajor = new MeshData(Mesh);
+            DataRowMajor = new UMeshData(Mesh);
             Behaviour = new LibiglBehaviour(this);
         }
 
@@ -82,8 +83,11 @@ namespace libigl
         private void OnDestroy()
         {
             _workerThread?.Abort();
-            Behaviour.Dispose();
-            DataRowMajor.Dispose();
+            _workerThread = null;
+            Behaviour?.Dispose();
+            Behaviour = null;
+            DataRowMajor?.Dispose();
+            DataRowMajor = null;
         }
     }
 }

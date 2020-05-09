@@ -33,49 +33,5 @@ namespace libigl
 
             return result;
         }
-
-        /// <summary>
-        /// Converts a matrix between column and row major by transposing in place
-        /// <br/>Note: one element of T may not correspond to one element in the matrix
-        /// </summary>
-        /// <param name="rows">Set to 0 (default) to use <paramref name="nativeArray"/>.Length</param>
-        /// <typeparam name="T">Type of an element in the array, not necessarily the matrix.</typeparam>
-        /// <returns></returns>
-        public static unsafe NativeArray<T> TransposeInPlace<T>(this NativeArray<T> nativeArray, int rows = 0,
-            int cols = 3)
-            where T : struct
-        {
-            if (rows == 0)
-                rows = nativeArray.Length;
-            Native.TransposeInPlace(nativeArray.GetUnsafePtr(), rows, cols);
-            return nativeArray;
-        }
-
-        /// <summary>
-        /// Converts a matrix <paramref name="inNativeArray"/> between column and row major by transposing and
-        /// stores the result in <paramref name="outNativeArray"/>.
-        /// Lengths of arrays must match.
-        /// <br/>Note: one element of T may not correspond to one element in the matrix
-        /// </summary>
-        /// <param name="rows">Set to 0 (default) to use <paramref name="inNativeArray"/>.Length, in case of T=Vector3</param>
-        /// <param name="isRowMajor">Rows and cols will be swapped if rowMajor</param>
-        /// <typeparam name="T">Type of an element in the array, not necessarily the matrix.</typeparam>
-        /// <returns>Transposed array <paramref name="outNativeArray"/></returns>
-        public static unsafe NativeArray<T> TransposeTo<T>(this NativeArray<T> inNativeArray,
-            NativeArray<T> outNativeArray,
-            bool isRowMajor = false, int rows = 0, int cols = 3) where T : struct
-        {
-            Assert.IsTrue(inNativeArray.Length == outNativeArray.Length);
-            if (rows == 0)
-                rows = inNativeArray.Length;
-            if (isRowMajor)
-            {
-                var tmp = rows;
-                rows = cols;
-                cols = tmp;
-            }
-            Native.TransposeTo(inNativeArray.GetUnsafePtr(), outNativeArray.GetUnsafePtr(), rows, cols);
-            return outNativeArray;
-        }
     }
 }

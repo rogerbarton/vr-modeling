@@ -149,7 +149,7 @@ public class Testing : MonoBehaviour
         {
             unsafe
             {
-                Native.TranslateMesh((float*) V.GetUnsafePtr(), VSize, direction);
+                // Native.TranslateMesh((float*) V.GetUnsafePtr(), VSize, direction);
             }
         }
     }

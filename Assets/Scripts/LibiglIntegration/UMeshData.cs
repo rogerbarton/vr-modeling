@@ -1,4 +1,5 @@
 ﻿using System;
+using libigl.Behaviour;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
@@ -7,11 +8,13 @@ using UnityEngine.Assertions;
 namespace libigl
 {
     /// <summary>
-    /// Stores all native arrays for a mesh
+    /// Stores a copy of the Unity Mesh's arrays. This is purely for the interface between the Libigl Mesh State and
+    /// the Unity Mesh / what will be rendered.
+    /// Uses RowMajor.
     /// </summary>
-    public class MeshData : IDisposable
+    public class UMeshData : IDisposable
     {
-        public readonly bool IsRowMajor;
+        public const bool IsRowMajor = true;
 
         /// <summary>
         /// Marks which data has changed in <c>MeshDataNative</c> as a bitmask
@@ -45,6 +48,8 @@ namespace libigl
         public readonly int VSize;
         public readonly int FSize;
 
+        private UMeshDataNative _native;
+
         /// <summary>
         /// Create a copy of the mesh arrays
         /// </summary>
@@ -52,69 +57,20 @@ namespace libigl
         /// <param name="isRowMajor">Are the underlying arrays in RowMajor</param>
         /// <param name="onlyAllocateMemory">Should the arrays be uninitialized.
         /// If true memory is only allocated but no data is copied from the mesh.</param>
-        public MeshData(Mesh mesh, bool isRowMajor = true, bool onlyAllocateMemory = false)
+        public UMeshData(Mesh mesh)
         {
-            IsRowMajor = isRowMajor;
-            
             VSize = mesh.vertexCount;
-            FSize = mesh.triangles.Length;
-            
-            Allocate(mesh.colors.Length == 0, mesh.uv.Length == 0);
+            FSize = mesh.triangles.Length / 3;
 
-            if (onlyAllocateMemory) return;
-            
-            //Copy the V, F matrices from the mesh
+            // Allocate & Copy the V, F matrices from the mesh
+            Allocate(mesh);
             CopyFrom(mesh);
-
-            if (!isRowMajor) // Will crash currently
-                TransposeInPlace();
-        }
-
-        /// <summary>
-        /// Copies all data (e.g. V, F) from Unity mesh into the NativeArrays
-        /// </summary>
-        private void CopyFrom(Mesh mesh)
-        {
-            Assert.IsTrue(IsRowMajor);
-            
-            V.CopyFrom(mesh.vertices);
-            N.CopyFrom(mesh.normals);
-            if(mesh.colors.Length > 0) // TODO: What if the mesh has no colors, ie mesh.colors.Length == 0
-                C.CopyFrom(mesh.colors);
-            if(mesh.uv.Length > 0)
-                UV.CopyFrom(mesh.uv);
-            F.CopyFrom(mesh.triangles);
-        }
-
-        /// <summary>
-        /// Construct a MeshData instance from another which has the opposite isRowMajor.
-        /// Use case: constructing ColMajor meshData from existing RowMajor data, avoiding a TransposeInPlace.
-        /// <code>Assert: IsRowMajor != other.IsRowMajor</code>
-        /// </summary>
-        /// <param name="other">Existing initialized MeshData with opposite isRowMajor.</param>
-        /// <param name="isRowMajor">Are the underlying arrays in RowMajor</param>
-        public MeshData(MeshData other, bool isRowMajor = false)
-        {
-            Assert.IsTrue(IsRowMajor != other.IsRowMajor, "Both MeshData instances are of the same type Col/RowMajor.");
-            
-            IsRowMajor = isRowMajor;
-            VSize = other.VSize;
-            FSize = other.FSize;
-            
-            Allocate();
-
-            // Copy over data without a TransposeInPlace
-            other.V.TransposeTo(V, other.IsRowMajor);
-            other.N.TransposeTo(N, other.IsRowMajor);
-            other.C.TransposeTo(C, other.IsRowMajor, 0, 4); 
-            other.UV.TransposeTo(UV, other.IsRowMajor, 0, 2);
-            other.F.TransposeTo(F, other.IsRowMajor, F.Length / 3);
         }
 
         /// <summary>
         /// Allocated the NativeArrays once VSize and FSize have been set.
         /// </summary>
-        private void Allocate(bool hasColor = true, bool hasUv = true) //TODO: find a better way of allocating color/uv
+        private void Allocate(Mesh mesh)
         {
             Assert.IsTrue(VSize > 0 && FSize > 0);
             Assert.IsTrue(!V.IsCreated);
@@ -129,9 +85,9 @@ namespace libigl
             //       Can have only one state in C++, only need to return/set DirtyFlags for C#
             V = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             N = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            C = new NativeArray<Color>(VSize, Allocator.Persistent, hasColor ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
-            UV = new NativeArray<Vector2>(VSize, Allocator.Persistent, hasUv ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
-            F = new NativeArray<int>(FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            C = new NativeArray<Color>(VSize, Allocator.Persistent, mesh.colors.Length == 0 ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
+            UV = new NativeArray<Vector2>(VSize, Allocator.Persistent, mesh.uv.Length == 0 ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
+            F = new NativeArray<int>(3 * FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
             // Before we can use this we need to add a safety handle (only in the editor)
@@ -141,55 +97,49 @@ namespace libigl
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref UV, AtomicSafetyHandle.Create());
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
 #endif
+            
+            // Store the native pointers int _native
+            unsafe
+            {
+                _native = new UMeshDataNative((float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(),
+                    (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
+            }
+        }
+        
+        /// <summary>
+        /// Copies all data (e.g. V, F) from Unity mesh into the <b>allocated</b> NativeArrays
+        /// </summary>
+        private void CopyFrom(Mesh mesh)
+        {
+            Assert.IsTrue(V.IsCreated);
+            
+            V.CopyFrom(mesh.vertices);
+            N.CopyFrom(mesh.normals);
+            if(mesh.colors.Length > 0)
+                C.CopyFrom(mesh.colors);
+            if(mesh.uv.Length > 0)
+                UV.CopyFrom(mesh.uv);
+            F.CopyFrom(mesh.triangles);
         }
 
-        /// <summary>
-        /// Transpose all arrays in place to convert between ColMajor and RowMajor.<br/>
-        /// [Experimental] Due to Eigen::Map not allowing transposeInPlace 
-        /// </summary>
-        public void TransposeInPlace()
-        {
-            throw new NotImplementedException();
-            V.TransposeInPlace();
-            N.TransposeInPlace();
-            C.TransposeInPlace(0, 4);
-            UV.TransposeInPlace(0, 2);
-            F.TransposeInPlace(F.Length / 3);
-        }
-        
-        
         /// <summary>
         /// Applies changes to another copy of the data with a different IsRowMajor
         /// Use this to copy changes from Col to RowMajor, vice versa
-        /// <param name="to">Where to apply changes to. </param>
+        /// Can be called from a worker thread
+        /// <param name="from">Where to apply changes to. </param>
         /// <param name="propagateDirtyState">Should <see cref="to"/> have the same dirtyState, or set it to <see cref="DirtyFlag.None"/> if false</param>
         /// </summary>
-        public void ApplyDirtyToTranspose(MeshData to, bool propagateDirtyState = true)
+        public unsafe void ApplyDirty(State* state)
         {
-            if(DirtyState == DirtyFlag.None) return;
+            Assert.IsTrue(VSize == state->VSize && FSize == state->FSize);
             
-            Assert.IsTrue((DirtyState & to.DirtyState) == DirtyFlag.None, 
-                "Warning! 'to' MeshData has dirty changes that will be overwritten. " +
-                "You need to call MeshData.ApplyDirtyToTranspose before making changes to the copy of MeshData.");
-            
-            Assert.IsTrue(VSize == to.VSize && FSize == to.FSize);
-            Assert.IsTrue(IsRowMajor != to.IsRowMajor, "Both MeshData instances are of the same type Col/RowMajor.");
-            Assert.IsTrue(to != this);
-            
-            if((DirtyState & DirtyFlag.VDirty) > 0)
-                V.TransposeTo(to.V, IsRowMajor);
-            if((DirtyState & DirtyFlag.NDirty) > 0)
-                N.TransposeTo(to.N, IsRowMajor);
-            if((DirtyState & DirtyFlag.CDirty) > 0)
-                C.TransposeTo(to.C, IsRowMajor, 0, 4);
-            if((DirtyState & DirtyFlag.UVDirty) > 0)
-                UV.TransposeTo(to.UV, IsRowMajor, 0, 2);
-            if((DirtyState & DirtyFlag.FDirty) > 0)
-                F.TransposeTo(to.F, IsRowMajor, F.Length / 3);
+            if(state->DirtyState == DirtyFlag.None) return;
 
-            if(propagateDirtyState)
-                to.DirtyState |= DirtyState;
-            DirtyState = DirtyFlag.None;
+            // Copy over and transpose data that has changed
+            Native.ApplyDirty(state, _native);
+            
+            DirtyState |= state->DirtyState;
+            state->DirtyState = DirtyFlag.None;
         }
 
         /// <summary>
@@ -221,16 +171,15 @@ namespace libigl
 
             DirtyState = DirtyFlag.None;
         }
-
-        /// <summary>
-        /// Note: Changes to the dirtyState are not applied to the MeshData instance immediately (not a reference) and
-        /// needs to be set manually one the native function has been called.
-        /// </summary>
-        /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns>
-        public unsafe MeshDataNative GetNative()
+        
+        /// <summary> 
+        /// Note: Changes to the dirtyState are not applied to the MeshData instance immediately (not a reference) and 
+        /// needs to be set manually one the native function has been called. 
+        /// </summary> 
+        /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns> 
+        public UMeshDataNative GetNative()
         {
-            return new MeshDataNative((float*) V.GetUnsafePtr(), (float*) N.GetUnsafePtr(), 
-                (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
+            return _native;
         }
 
         public void Dispose()
