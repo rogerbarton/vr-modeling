@@ -93,7 +93,9 @@ struct State {
 	// Latest InputState from PreExecute
 	InputState Input;
 
+	// Private C++ state
 	Eigen::VectorXi* S;
+	int SSize = 0;
 
 	explicit State(const UMeshDataNative udata);
 };

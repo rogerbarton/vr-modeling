@@ -31,7 +31,7 @@ extern "C" {
 
 	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr).cast<int>();
 
-
-	    LOG("Selected: " << mask.sum() << " vertices");
+	    state->SSize = mask.sum();
+	    LOG("Selected: " << state->SSize << " vertices");
     }
 }
