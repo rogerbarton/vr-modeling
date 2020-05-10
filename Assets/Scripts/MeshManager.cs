@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using libigl;
 using TMPro;
@@ -19,6 +20,8 @@ public class MeshManager : MonoBehaviour
     /// The mesh currently loaded and being modified
     /// </summary>
     public static LibiglMesh ActiveMesh;
+
+    public static event Action ActiveMeshChanged = delegate {};
 
     private void Start()
     {
@@ -163,4 +166,10 @@ public class MeshManager : MonoBehaviour
         ActiveMesh = null;
     }
     #endregion
+
+    public static void SetActiveMesh(LibiglMesh libiglMesh)
+    {
+        ActiveMesh = libiglMesh;
+        ActiveMeshChanged();
+    }
 }

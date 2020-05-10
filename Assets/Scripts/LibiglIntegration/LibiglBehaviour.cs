@@ -28,6 +28,8 @@ namespace libigl.Behaviour
         /// </summary>
         private readonly LibiglMesh _libiglMesh;
 
+        private readonly UiDetails _uiDetails = new UiDetails();
+
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             _libiglMesh = libiglMesh;
@@ -35,6 +37,8 @@ namespace libigl.Behaviour
             
             // Initialize C++ and create the State from the DataRowMajor
             _state = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), _libiglMesh.name);
+            
+            _uiDetails.Initialize(this);
         }
 
         /// <summary>
@@ -66,6 +70,7 @@ namespace libigl.Behaviour
             //     Mathf.Clamp(_input.SelectRadiusSqr, 0.025f, 1f);
             // }
 
+            _uiDetails.UpdatePreExecute();
             // Copy the InputState to the State by copying
             _state->Input = _input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
@@ -97,6 +102,8 @@ namespace libigl.Behaviour
         /// </summary>
         public void PostExecute()
         {
+            _uiDetails.UpdatePostExecute();
+            
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
             _libiglMesh.DataRowMajor.ApplyDirtyToMesh(_libiglMesh.Mesh);
         }
@@ -104,6 +111,8 @@ namespace libigl.Behaviour
         public void Dispose()
         {
             // Be sure to dispose of any NativeArrays that are not garbage collected
+            
+            _uiDetails.Deconstruct();
             
             // Delete the C++ state
             Native.DisposeMesh(_state);

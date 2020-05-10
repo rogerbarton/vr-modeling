@@ -12,10 +12,20 @@ namespace UI
     /// </summary>
     public class UiManager : MonoBehaviour
     {
-        public Transform uiListItemParent;
-        private GameObject _uiListItemPrefab;
-    
         public static UiManager get;
+
+        // Prefabs for generating UI, e.g. Details panel
+        public GameObject listCanvasPrefab;
+        public GameObject headerPrefab;
+        public GameObject textPrefab;
+        public GameObject buttonPrefab;
+
+        public Transform panelSpawnPoint;
+        
+        [Tooltip("The Content of the Actions Canvas scroll list. Convention: the last child serves as the prefab for a new item.")]
+        public Transform actionsListParent;
+        private GameObject _actionsListPrefab;
+    
 
         private void Awake()
         {
@@ -27,9 +37,9 @@ namespace UI
             }
             get = this;
         
-            // Convention: Use the first child as the prefab
-            if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
-                _uiListItemPrefab = uiListItemParent.GetChild(uiListItemParent.childCount -1).gameObject;
+            // Convention: Use the last child as the prefab
+            if (!_actionsListPrefab && actionsListParent.childCount > 0)
+                _actionsListPrefab = actionsListParent.GetChild(actionsListParent.childCount -1).gameObject;
 
             LibiglBehaviour.InitializeActionUi();
         }
@@ -41,7 +51,7 @@ namespace UI
         public void CreateActionUi(string uiText, UnityAction onClick, string[] speechKeywords = null, int gestureId = -1)
         {
             // Parenting, layout, ui
-            var go = Instantiate(_uiListItemPrefab, uiListItemParent);
+            var go = Instantiate(_actionsListPrefab, actionsListParent);
             go.SetActive(true);
             var textField = go.GetComponentInChildren<TMP_Text>();
             textField.text = uiText;
@@ -59,9 +69,22 @@ namespace UI
             }
         }
 
+        /// <summary>
+        /// Creates a new Details panel and initializes it
+        /// </summary>
+        /// <returns>The Vertical Scroll List parent to which items can be added as a child</returns>
+        public Transform CreateDetailsPanel()
+        {
+            var go = Instantiate(listCanvasPrefab, panelSpawnPoint.position, panelSpawnPoint.rotation, transform);
+            go.GetComponent<Canvas>().worldCamera = Camera.main;
+            
+            return go.GetComponentInChildren<VerticalLayoutGroup>().transform;
+        }
+        
         private void OnDestroy()
         {
             Speech.Dispose();
         }
+
     }
 }
