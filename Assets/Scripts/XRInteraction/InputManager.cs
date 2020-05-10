@@ -42,10 +42,12 @@ public class InputManager : MonoBehaviour
     private static readonly int GripAnimId = Animator.StringToHash("Grip");
 
     // Teleporting
-    private XRInteractorLineVisual _leftHandLineRenderer;
-    private XRInteractorLineVisual _rightHandLineRenderer;
+    private LineRenderer _leftHandLineRenderer;
+    private LineRenderer _rightHandLineRenderer;
     private GameObject _leftHandTeleportReticle;
     private GameObject _rightHandTeleportReticle;
+    public Material filledLineMat;
+    public Material dottedLineMat;
 
     private void Awake()
     {
@@ -60,9 +62,9 @@ public class InputManager : MonoBehaviour
         if (!XRRig)
             XRRig = transform;
 
-        _leftHandLineRenderer = leftHandRig.GetComponent<XRInteractorLineVisual>();
+        _leftHandLineRenderer = leftHandRig.GetComponent<LineRenderer>();
         _leftHandTeleportReticle = leftHandRig.GetComponent<XRInteractorLineVisual>().reticle;
-        _rightHandLineRenderer = rightHandRig.GetComponent<XRInteractorLineVisual>();
+        _rightHandLineRenderer = rightHandRig.GetComponent<LineRenderer>();
         _rightHandTeleportReticle = rightHandRig.GetComponent<XRInteractorLineVisual>().reticle;
     }
 
@@ -118,7 +120,7 @@ public class InputManager : MonoBehaviour
         {
             InputHelpers.IsPressed(leftHandRig.inputDevice, InputHelpers.Button.Grip, out var gripLPressed, 0.2f);
             _leftHandTeleportReticle.SetActive(gripLPressed);
-            _leftHandLineRenderer.enabled = gripLPressed;
+            _leftHandLineRenderer.material = gripLPressed ? filledLineMat : dottedLineMat;
         }
 
         if (!RightHand.isValid)
@@ -127,7 +129,7 @@ public class InputManager : MonoBehaviour
         {
             InputHelpers.IsPressed(rightHandRig.inputDevice, InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
             _rightHandTeleportReticle.SetActive(gripRPressed);
-            _rightHandLineRenderer.enabled = gripRPressed;
+            _rightHandLineRenderer.material = gripRPressed ? filledLineMat : dottedLineMat;
         }
 
         if (useHands)
