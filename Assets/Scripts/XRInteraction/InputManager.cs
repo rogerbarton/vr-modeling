@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
 
     [SerializeField] private XRController rightHandRig = default;
     [NonSerialized] public InputDevice RightHand;
+    
 
     // Hand animation
     private Animator _leftHandAnimator;
@@ -40,6 +41,11 @@ public class InputManager : MonoBehaviour
     private static readonly int TriggerAnimId = Animator.StringToHash("Trigger");
     private static readonly int GripAnimId = Animator.StringToHash("Grip");
 
+    // Teleporting
+    private XRInteractorLineVisual _leftHandLineRenderer;
+    private XRInteractorLineVisual _rightHandLineRenderer;
+    private GameObject _leftHandTeleportReticle;
+    private GameObject _rightHandTeleportReticle;
 
     private void Awake()
     {
@@ -53,6 +59,11 @@ public class InputManager : MonoBehaviour
         get = this;
         if (!XRRig)
             XRRig = transform;
+
+        _leftHandLineRenderer = leftHandRig.GetComponent<XRInteractorLineVisual>();
+        _leftHandTeleportReticle = leftHandRig.GetComponent<XRInteractorLineVisual>().reticle;
+        _rightHandLineRenderer = rightHandRig.GetComponent<XRInteractorLineVisual>();
+        _rightHandTeleportReticle = rightHandRig.GetComponent<XRInteractorLineVisual>().reticle;
     }
 
     private void Start()
@@ -103,9 +114,21 @@ public class InputManager : MonoBehaviour
     {
         if (!LeftHand.isValid)
             InitializeController(leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator);
+        else
+        {
+            InputHelpers.IsPressed(leftHandRig.inputDevice, InputHelpers.Button.Grip, out var gripLPressed, 0.2f);
+            _leftHandTeleportReticle.SetActive(gripLPressed);
+            _leftHandLineRenderer.enabled = gripLPressed;
+        }
 
         if (!RightHand.isValid)
             InitializeController(rightHandChar, out RightHand, rightHandPrefab, rightHandRig, out _rightHandAnimator);
+        else
+        {
+            InputHelpers.IsPressed(rightHandRig.inputDevice, InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
+            _rightHandTeleportReticle.SetActive(gripRPressed);
+            _rightHandLineRenderer.enabled = gripRPressed;
+        }
 
         if (useHands)
             UpdateHandAnimators();
