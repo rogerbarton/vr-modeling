@@ -43,8 +43,11 @@ namespace libigl
         {
             name = name.Replace("(Clone)","").Trim();
             
-            _meshFilter = GetComponent<MeshFilter>();
-            Mesh = _meshFilter.mesh;
+            if(!Mesh) // Potentially set in ResetTransformToSpawn
+            {
+                _meshFilter = GetComponent<MeshFilter>();
+                Mesh = _meshFilter.mesh;
+            }
             Mesh.MarkDynamic();
 
             // First copy the Mesh arrays into a RowMajor UMeshData instance
@@ -105,6 +108,30 @@ namespace libigl
             DataRowMajor = null;
             Behaviour?.Dispose();
             Behaviour = null;
+        }
+        
+        /// <summary>
+        /// Move mesh up so it is resting on the spawnPoint, ie min of bounding box is at spawnPoint
+        /// </summary>
+        /// <param name="mesh">Needed for bounding box</param>
+        public void ResetTransformToSpawn()
+        {
+            if (!Mesh)
+            {
+                _meshFilter = GetComponent<MeshFilter>();
+                Mesh = _meshFilter.mesh;
+            }
+            
+            var spawn = MeshManager.get.meshSpawnPoint;
+            var scale = spawn.localScale;
+        
+            var pos = spawn.position;
+            pos.y -= Mesh.bounds.min.y * scale.y;
+
+            var t = transform;
+            t.position = pos;
+            t.localScale = scale;
+            t.rotation = spawn.transform.rotation;
         }
     }
 }

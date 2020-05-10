@@ -78,7 +78,7 @@ namespace UI
             var go = Instantiate(listCanvasPrefab, panelSpawnPoint.position, panelSpawnPoint.rotation, transform);
             go.GetComponent<Canvas>().worldCamera = Camera.main;
             
-            return go.GetComponentInChildren<VerticalLayoutGroup>().transform;
+            return go.transform;
         }
         
         private void OnDestroy()

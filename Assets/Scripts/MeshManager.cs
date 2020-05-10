@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class MeshManager : MonoBehaviour
 {
+    public static MeshManager get;
+    
     [Tooltip("List of all meshes that can be loaded and edited with libigl")]
     public GameObject[] meshPrefabs;
     [Tooltip("Where to place newly loaded meshes and how to scale them. Bottom of bounding box is placed here.")]
@@ -22,6 +24,18 @@ public class MeshManager : MonoBehaviour
     public static LibiglMesh ActiveMesh;
 
     public static event Action ActiveMeshChanged = delegate {};
+
+    private void Awake()
+    {
+        
+        if (get)
+        {
+            Debug.LogWarning("MeshManager instance already exists.");
+            enabled = false;
+            return;
+        }
+        get = this;
+    }
 
     private void Start()
     {
@@ -85,18 +99,9 @@ public class MeshManager : MonoBehaviour
         UnloadActiveMesh();
 
         // Details of spawnPoint
-        var spawnPos = meshSpawnPoint.position;
-        var scale = meshSpawnPoint.localScale;
         
-        var go = Instantiate(prefab, spawnPos, meshSpawnPoint.transform.rotation, transform);
-        go.transform.localScale = scale;
+        var go = Instantiate(prefab, transform);
         go.transform.parent = transform;
-
-        // Move mesh up so it is resting on the spawnPoint, ie min of bounding box is at spawnPoint
-        var mesh = go.GetComponent<MeshFilter>().mesh;
-        var pos = go.transform.position;
-        pos.y -= mesh.bounds.min.y * scale.y;
-        go.transform.position = pos;
         
         var lmesh = go.GetComponent<LibiglMesh>();
         if (!lmesh)
@@ -104,13 +109,15 @@ public class MeshManager : MonoBehaviour
             // Debug.LogWarning($"Prefab does not have a {nameof(LibiglMesh)} component, it will be added.");
             lmesh = go.AddComponent<LibiglMesh>();
         }
+        
+        lmesh.ResetTransformToSpawn();
 
         if (setAsActiveMesh)
             ActiveMesh = lmesh;
 
         return lmesh;
     }
-    
+
     /// <param name="prefabIndex">Index in <see cref="meshPrefabs"/></param>
     public void LoadMeshById(int prefabIndex)
     {
@@ -169,6 +176,8 @@ public class MeshManager : MonoBehaviour
 
     public static void SetActiveMesh(LibiglMesh libiglMesh)
     {
+        if(ActiveMesh == libiglMesh) return;
+        
         ActiveMesh = libiglMesh;
         ActiveMeshChanged();
     }
