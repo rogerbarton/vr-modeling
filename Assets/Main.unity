@@ -1975,6 +1975,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   XRRig: {fileID: 0}
+  useHands: 0
+  leftHandPrefab: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b,
+    type: 3}
+  rightHandPrefab: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364,
+    type: 3}
   controllerPrefabs:
   - {fileID: 7634514334346526944, guid: 0540e32b498ef284f8e1dcf80dfccd58, type: 3}
   - {fileID: 4245457492171364763, guid: c836783e3928a624e9ff9c70d4f21606, type: 3}
@@ -1988,9 +1993,9 @@ MonoBehaviour:
   - {fileID: 5928091942230486030, guid: c4b9c875ed967534eb12cd57aeeb1183, type: 3}
   - {fileID: 6654152787936889342, guid: 61e60013ce1d7d942b8975c98fdf8154, type: 3}
   leftHandChar: 320
-  leftHandRig: {fileID: 324874805}
+  leftHandRig: {fileID: 324874809}
   rightHandChar: 576
-  rightHandRig: {fileID: 506401548}
+  rightHandRig: {fileID: 506401552}
 --- !u!1 &708273530
 GameObject:
   m_ObjectHideFlags: 0
@@ -3467,32 +3472,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1364721371}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1364721374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364721373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d1a7708e76601b4ea829921c33bc624, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_allowOffhandGrab: 1
-  m_snapPosition: 0
-  m_snapOrientation: 0
-  m_snapOffset: {fileID: 0}
-  m_grabPoints: []
-  m_grabbedKinematic: 0
-  m_grabbedCollider: {fileID: 0}
-  m_grabbedBy: {fileID: 0}
-  m_materialColorField: 
-  m_crosshair: {fileID: 0}
-  m_crosshairManager: {fileID: 0}
-  m_renderer: {fileID: 0}
-  m_inRange: 0
-  m_targeted: 0
 --- !u!65 &1364721375
 BoxCollider:
   m_ObjectHideFlags: 0
