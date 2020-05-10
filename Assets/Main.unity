@@ -1284,22 +1284,22 @@ PrefabInstance:
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 88
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
@@ -2273,22 +2273,22 @@ PrefabInstance:
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 54
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 108
       objectReference: {fileID: 0}
     - target: {fileID: 8277389786397317203, guid: 94476ca65644b9b44b59e4332136c1fd,
         type: 3}
@@ -3484,7 +3484,15 @@ MonoBehaviour:
   m_snapOrientation: 0
   m_snapOffset: {fileID: 0}
   m_grabPoints: []
+  m_grabbedKinematic: 0
+  m_grabbedCollider: {fileID: 0}
+  m_grabbedBy: {fileID: 0}
   m_materialColorField: 
+  m_crosshair: {fileID: 0}
+  m_crosshairManager: {fileID: 0}
+  m_renderer: {fileID: 0}
+  m_inRange: 0
+  m_targeted: 0
 --- !u!65 &1364721375
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3580,7 +3588,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

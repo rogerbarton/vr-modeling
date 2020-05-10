@@ -27,7 +27,7 @@ namespace libigl.Editor
         // Use this material if a model specific material is not set (must be located in Models or Materials folder)
         private const string DefaultMaterialName = "OffDefault";
         // Use this shader if we cant find the default material by name
-        private const string _DefaultMaterialNameFallbackShader = "Diffuse";
+        private const string _DefaultMaterialNameFallbackShader = "Universal Render Pipeline/Lit";
 
         /// <summary>
         /// Called whenever a .off file is imported by Unity
@@ -66,7 +66,7 @@ namespace libigl.Editor
                     else
                     {
                         _defaultMaterial = new Material(Shader.Find(_DefaultMaterialNameFallbackShader));
-                        Debug.LogWarning($"Could not find material asset with DefaultMaterialName:{DefaultMaterialName}, using fallback shader.");
+                        Debug.LogWarning($"Could not find material asset with DefaultMaterialName: {DefaultMaterialName}, using fallback shader.");
                     }
                 }
 
