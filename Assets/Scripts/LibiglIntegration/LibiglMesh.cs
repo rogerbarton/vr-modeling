@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using libigl.Behaviour;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityNativeTool;
@@ -28,7 +29,7 @@ namespace libigl
         /// The libigl behaviour instance that is executing on this mesh
         /// </summary>
         public LibiglBehaviour Behaviour { get; private set; }
-        
+
         /// <summary>
         /// Expensive operations executed in <see cref="LibiglBehaviour.Execute"/> are done in this thread
         /// </summary>
@@ -41,9 +42,9 @@ namespace libigl
 
         private void Start()
         {
-            name = name.Replace("(Clone)","").Trim();
-            
-            if(!Mesh) // Potentially set in ResetTransformToSpawn
+            name = name.Replace("(Clone)", "").Trim();
+
+            if (!Mesh) // Potentially set in ResetTransformToSpawn
             {
                 _meshFilter = GetComponent<MeshFilter>();
                 Mesh = _meshFilter.mesh;
@@ -54,18 +55,22 @@ namespace libigl
             DataRowMajor = new UMeshData(Mesh);
             // Then create the LibiglBehaviour instance which will create a ColMajor instance of the data in the State
             Behaviour = new LibiglBehaviour(this);
+
+#if UNITY_EDITOR
+            DisposeBeforeUnload += Dispose;
+#endif
         }
 
         private void Update()
         {
             // Handle creating and cleaning up after a _workerThread has executed
             // This is where the LibiglBehaviour comes in
-            
-            if(_workerThread != null && !_workerThread.IsAlive)
+
+            if (_workerThread != null && !_workerThread.IsAlive)
                 PostExecuteThread();
-            
+
             Behaviour.Update();
-            
+
             if (_workerThread == null)
                 ExecuteThread();
         }
@@ -77,9 +82,9 @@ namespace libigl
         private void ExecuteThread()
         {
             Assert.IsTrue(_workerThread == null);
-            
+
             Behaviour.PreExecute();
-            
+
             _workerThread = new Thread(() => { Behaviour.Execute(); });
             _workerThread.Name = "LibiglWorker";
             _workerThread.Start();
@@ -101,15 +106,35 @@ namespace libigl
 
         private void OnDestroy()
         {
+            Dispose();
+        }
+
+        private void Dispose()
+        {
             // Dispose all Native data (NativeArrays and anything created with 'new' in C++)
+            // Note: may be called twice in the editor
             _workerThread?.Abort();
             _workerThread = null;
             DataRowMajor?.Dispose();
             DataRowMajor = null;
             Behaviour?.Dispose();
             Behaviour = null;
+
+#if UNITY_EDITOR
+            DisposeBeforeUnload -= Dispose;
+#endif
         }
-        
+
+#if UNITY_EDITOR
+        public static event Action DisposeBeforeUnload = delegate { };
+
+        [NativeDllBeforeUnloadTrigger]
+        public static void OnBeforeDllUnloaded()
+        {
+            DisposeBeforeUnload();
+        }
+#endif
+
         /// <summary>
         /// Move mesh up so it is resting on the spawnPoint, ie min of bounding box is at spawnPoint
         /// </summary>
@@ -121,10 +146,10 @@ namespace libigl
                 _meshFilter = GetComponent<MeshFilter>();
                 Mesh = _meshFilter.mesh;
             }
-            
+
             var spawn = MeshManager.get.meshSpawnPoint;
             var scale = spawn.localScale;
-        
+
             var pos = spawn.position;
             pos.y -= Mesh.bounds.min.y * scale.y;
 
