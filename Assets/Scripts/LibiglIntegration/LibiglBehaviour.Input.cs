@@ -32,6 +32,16 @@ namespace libigl.Behaviour
                     else 
                         Debug.LogWarning("Could not get Right Hand Position");
                 }
+
+                if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisValue))
+                {
+                    if (Mathf.Abs(primaryAxisValue.y) > 0.01f)
+                    {
+                        _input.SelectRadiusSqr = Mathf.Clamp(Mathf.Sqrt(_input.SelectRadiusSqr) + 0.5f * primaryAxisValue.y * Time.deltaTime, 
+                            0.01f, 1f);
+                        _input.SelectRadiusSqr *= _input.SelectRadiusSqr;
+                    }
+                }
             }
         }
 

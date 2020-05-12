@@ -68,3 +68,5 @@ Assets/Plugins/__libigl-interface.*
 Assets/Plugins/libigl-editor.*
 Assets/Plugins/UnityNativeTool/stubLluiPlugin.*
 !Assets/Plugins/UnityNativeTool/stubLluiPlugin.dll
+
+Assets/Main/
