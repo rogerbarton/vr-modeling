@@ -107,7 +107,8 @@ namespace libigl.Behaviour
             public void Deconstruct()
             {
                 MeshManager.ActiveMeshChanged -= ActiveMeshChanged;
-                Object.Destroy(_canvas.gameObject);
+                if(_canvas)
+                    Object.Destroy(_canvas.gameObject);
             }
 
             /// <summary>

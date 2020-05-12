@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
@@ -54,24 +54,8 @@ namespace libigl.Editor
             var meshRenderer = gameObject.AddComponent<MeshRenderer>();
             var newMaterial = material;
             if(!newMaterial) // Set material as default if it is null
-            {
-                if(!_defaultMaterial)
-                {
-                    var guids = AssetDatabase.FindAssets($"{DefaultMaterialName} t:{nameof(material)}", 
-                        new[] {"Assets/Models", "Assets/Materials"});
-                    if(guids.Length > 0)
-                    {
-                        _defaultMaterial = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guids[0]));
-                    }
-                    else
-                    {
-                        _defaultMaterial = new Material(Shader.Find(_DefaultMaterialNameFallbackShader));
-                        Debug.LogWarning($"Could not find material asset with DefaultMaterialName: {DefaultMaterialName}, using fallback shader.");
-                    }
-                }
+                newMaterial = GetDefaultMaterial();
 
-                newMaterial = _defaultMaterial;
-            }
             meshRenderer.material = newMaterial;
             // Copy the material into the imported mesh if it is not the default by name
             if(newMaterial.name != DefaultMaterialName)
@@ -143,6 +127,25 @@ namespace libigl.Editor
             mesh.MarkModified();
             mesh.RecalculateBounds();
             #endregion
+        }
+
+        private Material GetDefaultMaterial()
+        {
+            if (_defaultMaterial) return _defaultMaterial;
+            
+            var guids = AssetDatabase.FindAssets($"{DefaultMaterialName} t:{nameof(material)}", 
+                new[] {"Assets/Materials"});
+            if(guids.Length > 0)
+            {
+                _defaultMaterial = AssetDatabase.LoadAssetAtPath<Material>(AssetDatabase.GUIDToAssetPath(guids[0]));
+            }
+            else
+            {
+                _defaultMaterial = new Material(Shader.Find(_DefaultMaterialNameFallbackShader));
+                Debug.LogWarning($"Could not find material asset with DefaultMaterialName: {DefaultMaterialName}, using fallback shader.");
+            }
+
+            return _defaultMaterial;
         }
     }
 }

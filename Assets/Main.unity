@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18160844, g: 0.22725946, b: 0.30741447, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -187,6 +187,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 406178398203839086, guid: d46b50af8be5587489b94d964055c7aa,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2a8c3e17cd5c4ad499d61954e0e32667, type: 2}
     - target: {fileID: 6507119248310564417, guid: d46b50af8be5587489b94d964055c7aa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3242,8 +3247,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshPrefabs:
-  - {fileID: -927199367670048503, guid: 412ea41b9f801a04fb3242cd0d70c1e8, type: 3}
   - {fileID: -6639996736880469515, guid: d46b50af8be5587489b94d964055c7aa, type: 3}
+  - {fileID: -927199367670048503, guid: 412ea41b9f801a04fb3242cd0d70c1e8, type: 3}
   - {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf, type: 3}
   - {fileID: -927199367670048503, guid: ed96836b958c8394ca62cce76eba9ec0, type: 3}
   - {fileID: -6639996736880469515, guid: 1e95cc7284bda81438ce767425ef8a5c, type: 3}

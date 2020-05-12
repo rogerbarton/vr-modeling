@@ -31,7 +31,17 @@ extern "C" {
 
 	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr).cast<int>();
 
+	    // Get selection size
 	    state->SSize = mask.sum();
 	    LOG("Selected: " << state->SSize << " vertices");
+
+	    // Set Colors
+	    Eigen::RowVector4f White, Red;
+	    White << 1.f, 1.f, 1.f, 1.f;
+	    Red << 1.f, 0.2f, 0.2f, 1.f;
+
+	    *state->CPtr = mask.cast<float>() * Red + (1.f - mask.cast<float>().array()).matrix() * White;
+
+	    state->DirtyState |= DirtyFlag::CDirty;
     }
 }

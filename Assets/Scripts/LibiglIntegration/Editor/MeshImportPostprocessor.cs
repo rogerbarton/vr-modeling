@@ -27,6 +27,8 @@ namespace libigl.Editor
                 mesh.SetVertexBufferParams(mesh.vertexCount, Native.VertexBufferLayout);
                 Debug.Log("Converted VertexBufferLayout for: " + mesh.name);
             }
+            
+            // TODO: apply default material to see vertex colors
         }
     }
 }
