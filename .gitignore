@@ -70,3 +70,5 @@ Assets/Plugins/UnityNativeTool/stubLluiPlugin.*
 !Assets/Plugins/UnityNativeTool/stubLluiPlugin.dll
 
 Assets/Main/
+
+vr-modeling-build*
