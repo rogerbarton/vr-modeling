@@ -10,15 +10,15 @@ extern "C" {
     	auto& dirty = state->DirtyState;
 
 	    if((dirty & DirtyFlag::VDirty) > 0)
-		    TransposeToMap(state->VPtr, data.VPtr);
+		    TransposeToMap(state->V, data.VPtr);
 	    if((dirty & DirtyFlag::NDirty) > 0)
-		    TransposeToMap(state->NPtr, data.NPtr);
+		    TransposeToMap(state->N, data.NPtr);
 	    if((dirty & DirtyFlag::CDirty) > 0)
-		    TransposeToMap(state->CPtr, data.CPtr);
+		    TransposeToMap(state->C, data.CPtr);
 	    if((dirty & DirtyFlag::UVDirty) > 0)
-		    TransposeToMap(state->UVPtr, data.UVPtr);
+		    TransposeToMap(state->UV, data.UVPtr);
 	    if((dirty & DirtyFlag::FDirty) > 0)
-		    TransposeToMap(state->FPtr, data.FPtr);
+		    TransposeToMap(state->F, data.FPtr);
     }
 
     void LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,

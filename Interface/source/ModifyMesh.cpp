@@ -7,7 +7,7 @@
 
 extern "C" {
     void TranslateMesh(State* state, Vector3 value) {
-        auto& V = *state->VPtr;
+        auto& V = *state->V;
         const auto valueMap = Eigen::Map<Eigen::RowVector3f>(&value.x);
 
         V.rowwise() += valueMap;
@@ -26,18 +26,18 @@ extern "C" {
 	    		[&state](int i)->bool{ return (*state->S)(i) >= 0; }) - b.data());
 
 	    // Create boundary conditions
-	    igl::slice(*state->VPtr, b, igl::colon<int>(0, 2), D_bc);
+	    igl::slice(*state->V, b, igl::colon<int>(0, 2), D_bc);
 	    // D_bc.rowwise() += Eigen::RowVector3f::Constant(0.1f);
 
 	    // Do Harmonic and apply it
-	    igl::harmonic(*state->VPtr, *state->FPtr, b, D_bc, 2.f, D);
-	    *state->VPtr += D;
+	    igl::harmonic(*state->V, *state->F, b, D_bc, 2.f, D);
+	    *state->V = D;
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
 
     void SphereSelect(State* state, Vector3 position, float radiusSqr) {
-        auto& V = *state->VPtr;
+        auto& V = *state->V;
         auto& mask = *state->S;
         const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 
@@ -52,7 +52,7 @@ extern "C" {
 	    White << 1.f, 1.f, 1.f, 1.f;
 	    Red << 1.f, 0.2f, 0.2f, 1.f;
 
-	    *state->CPtr = mask.cast<float>() * Red + (1.f - mask.cast<float>().array()).matrix() * White;
+	    *state->C = mask.cast<float>() * Red + (1.f - mask.cast<float>().array()).matrix() * White;
 
 	    state->DirtyState |= DirtyFlag::CDirty;
     }

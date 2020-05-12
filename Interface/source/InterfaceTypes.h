@@ -81,11 +81,11 @@ struct InputState
 struct State {
 	unsigned int DirtyState = DirtyFlag::None;
 
-	Eigen::MatrixXf* VPtr;
-	Eigen::MatrixXf* NPtr;
-	Eigen::MatrixXf* CPtr;
-	Eigen::MatrixXf* UVPtr;
-	Eigen::MatrixXi* FPtr;
+	Eigen::MatrixXf* V;
+	Eigen::MatrixXf* N;
+	Eigen::MatrixXf* C;
+	Eigen::MatrixXf* UV;
+	Eigen::MatrixXi* F;
 	
 	int VSize = 0;
 	int FSize = 0;
