@@ -99,3 +99,12 @@ struct State {
 
 	explicit State(const UMeshDataNative udata);
 };
+
+struct Color{
+	static Eigen::RowVector4f White;
+	static Eigen::RowVector4f Black;
+	static Eigen::RowVector4f Red;
+	static Eigen::RowVector4f Green;
+	static Eigen::RowVector4f Blue;
+	static Eigen::RowVector4f Orange;
+};
