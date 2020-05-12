@@ -2,6 +2,8 @@
 #include "InterfaceTypes.h"
 #include "NumericTypes.h"
 #include <igl/harmonic.h>
+#include <igl/colon.h>
+#include <igl/slice.h>
 
 extern "C" {
     void TranslateMesh(State* state, Vector3 value) {
@@ -12,16 +14,26 @@ extern "C" {
     }
 
     void Harmonic(State* state) {
-	    Eigen::VectorXi b(1);
-	    Eigen::MatrixXf D, D_bc(1, 3);
-	    b << 0;
-	    D_bc.setZero();
+	    Eigen::MatrixXf D, V_bc;
 
 	    LOG("Harmonic");
 
-	    // TODO
-	    // igl::harmonic(*state->VPtr, *state->FPtr, b, D_bc, 2.f, D);
-	    // V = D;
+	    // From Tutorial 401
+	    // Create boundary selection
+	    Eigen::VectorXi b;
+	    igl::colon<int>(0, state->VSize, b);
+	    b.conservativeResize(std::stable_partition(b.data(), b.data() + state->SSize,
+	    		[&state](int i)->bool{ return (*state->S)(i) >= 0; }) - b.data());
+
+	    // Create boundary conditions
+	    igl::slice(*state->VPtr, b, igl::colon<int>(0, 2), V_bc);
+	    V_bc.rowwise() += Eigen::RowVector3f::Constant(0.1f);
+
+	    // Do Harmonic and apply it
+	    igl::harmonic(*state->VPtr, *state->FPtr, b, V_bc, 2.f, D);
+	    *state->VPtr += D;
+
+	    state->DirtyState |= DirtyFlag::VDirty;
     }
 
     void SphereSelect(State* state, Vector3 position, float radiusSqr) {
