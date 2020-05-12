@@ -20,6 +20,7 @@ namespace libigl
     {
         private MeshFilter _meshFilter;
         public Mesh Mesh { get; private set; }
+        public MeshRenderer MeshRenderer { get; private set; }
 
         /// <summary>
         /// The Unity Mesh data in RowMajor easily accessible as NativeArrays
@@ -48,6 +49,7 @@ namespace libigl
             {
                 _meshFilter = GetComponent<MeshFilter>();
                 Mesh = _meshFilter.mesh;
+                MeshRenderer = GetComponent<MeshRenderer>();
             }
             Mesh.MarkDynamic();
 

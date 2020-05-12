@@ -3265,6 +3265,7 @@ MonoBehaviour:
   - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
   meshSpawnPoint: {fileID: 285171626}
   uiListItemParent: {fileID: 481839857}
+  wireframeMaterial: {fileID: 2100000, guid: 9774aba7e4ba456498b39e537f69cc49, type: 2}
 --- !u!4 &1244380012
 Transform:
   m_ObjectHideFlags: 0

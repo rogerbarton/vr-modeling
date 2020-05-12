@@ -24,6 +24,7 @@ public class MeshManager : MonoBehaviour
     public static LibiglMesh ActiveMesh;
 
     public static event Action ActiveMeshChanged = delegate {};
+    public Material wireframeMaterial;
 
     private void Awake()
     {

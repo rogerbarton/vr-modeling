@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UI;
 using UnityEngine;
@@ -61,10 +62,11 @@ namespace libigl.Behaviour
         /// </summary>
         public static void InitializeActionUi()
         {
-            UiManager.get.CreateActionUi("Test", () => Debug.Log("Test"), new []{"test"}, 0);
             UiManager.get.CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour._input.Translate = true; }, new []{"translate", "move"}, 1);
-            UiManager.get.CreateActionUi("Select", () => { MeshManager.ActiveMesh.Behaviour._input.Select = true; }, new [] {"select"});
             UiManager.get.CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour._input.Harmonic = true; }, new [] {"smooth", "harmonic", "laplacian"}, 2);
+            
+            // Tools TODO change tool with UI
+            UiManager.get.CreateActionUi("Select", () => { MeshManager.ActiveMesh.Behaviour._input.Select = true; }, new [] {"select"});
         }
 
         
@@ -77,6 +79,10 @@ namespace libigl.Behaviour
 
             public Button SetActiveBtn;
             public Button ResetTransformBtn;
+            
+            public Button ToggleWireframe;
+            
+            public Button AddSelectionBtn;
 
             private LibiglBehaviour _behaviour;
             private Transform _canvas;
@@ -112,6 +118,30 @@ namespace libigl.Behaviour
                 ResetTransformBtn = Object.Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
                 ResetTransformBtn.GetComponentInChildren<TMP_Text>().text = "Reset Transform";
                 ResetTransformBtn.onClick.AddListener(() => { behaviour._libiglMesh.ResetTransformToSpawn(); });
+                
+                // Shaders
+                // var ShaderHeader = Object.Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
+                // ShaderHeader.text = "Shader";
+                
+                ToggleWireframe = Object.Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+                ToggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
+                ToggleWireframe.onClick.AddListener(() =>
+                {
+                    var materials = behaviour._libiglMesh.MeshRenderer.materials;
+                    if (materials.Length == 1)
+                        materials = materials.Append(MeshManager.get.wireframeMaterial).ToArray();
+                    else
+                        materials = new[] {materials.First()};
+                    behaviour._libiglMesh.MeshRenderer.materials = materials;
+                });
+                
+                // Selection
+                var selectionHeader = Object.Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
+                selectionHeader.text = "Selection";
+                
+                AddSelectionBtn = Object.Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+                AddSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
+                AddSelectionBtn.onClick.AddListener(() => { /*TODO*/ });
             }
 
             public void Deconstruct()
