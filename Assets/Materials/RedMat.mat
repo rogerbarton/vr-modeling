@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OrangeMat
+  m_Name: RedMat
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -302,7 +302,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.8784314, g: 0.53141195, b: 0.14509802, a: 1}
+    - _BaseColor: {r: 0.7735849, g: 0.32809117, b: 0.28097185, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.8773585, g: 0.39725125, b: 0.14484683, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
