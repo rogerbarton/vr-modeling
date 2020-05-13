@@ -69,6 +69,7 @@ struct InputState
 
 	// Select
 	bool Select;
+	int SelectActiveId;
 	Vector3 SelectPos;
 	float SelectRadiusSqr;
 

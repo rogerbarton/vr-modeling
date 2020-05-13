@@ -31,6 +31,7 @@ namespace libigl.Behaviour
         // Private C++ state
         public readonly void* S;
         public readonly int SSize;
+        public readonly int SCount;
     }
 
     /// <summary>
