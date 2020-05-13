@@ -45,13 +45,7 @@ namespace libigl
         {
             name = name.Replace("(Clone)", "").Trim();
 
-            if (!Mesh) // Potentially set in ResetTransformToSpawn
-            {
-                _meshFilter = GetComponent<MeshFilter>();
-                Mesh = _meshFilter.mesh;
-                MeshRenderer = GetComponent<MeshRenderer>();
-            }
-            Mesh.MarkDynamic();
+            FindMeshComponents();
 
             // First copy the Mesh arrays into a RowMajor UMeshData instance
             DataRowMajor = new UMeshData(Mesh);
@@ -143,11 +137,7 @@ namespace libigl
         /// <param name="mesh">Needed for bounding box</param>
         public void ResetTransformToSpawn()
         {
-            if (!Mesh)
-            {
-                _meshFilter = GetComponent<MeshFilter>();
-                Mesh = _meshFilter.mesh;
-            }
+            FindMeshComponents();
 
             var spawn = MeshManager.get.meshSpawnPoint;
             var scale = spawn.localScale;
@@ -159,6 +149,19 @@ namespace libigl
             t.position = pos;
             t.localScale = scale;
             t.rotation = spawn.transform.rotation;
+        }
+
+        /// <summary>
+        /// Sets up references to the Mesh components
+        /// </summary>
+        private void FindMeshComponents()
+        {
+            if (Mesh) return;
+            
+            _meshFilter = GetComponent<MeshFilter>();
+            Mesh = _meshFilter.mesh;
+            MeshRenderer = GetComponent<MeshRenderer>();
+            Mesh.MarkDynamic();
         }
     }
 }

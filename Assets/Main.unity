@@ -196,7 +196,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 9774aba7e4ba456498b39e537f69cc49, type: 2}
+      objectReference: {fileID: 2100000, guid: 35e914815e45d9340a89f1fbd52fd441, type: 2}
     - target: {fileID: 406178398203839086, guid: d46b50af8be5587489b94d964055c7aa,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3265,7 +3265,7 @@ MonoBehaviour:
   - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
   meshSpawnPoint: {fileID: 285171626}
   uiListItemParent: {fileID: 481839857}
-  wireframeMaterial: {fileID: 2100000, guid: 9774aba7e4ba456498b39e537f69cc49, type: 2}
+  wireframeMaterial: {fileID: 2100000, guid: 82378c7d7f5d4d2458ea1acbe21acc52, type: 2}
 --- !u!4 &1244380012
 Transform:
   m_ObjectHideFlags: 0
