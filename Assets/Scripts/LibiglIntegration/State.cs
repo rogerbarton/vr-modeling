@@ -45,6 +45,7 @@ namespace libigl.Behaviour
         
         // Select
         public bool Select;
+        public int SelectActiveId;
         public Vector3 SelectPos;
         public float SelectRadiusSqr;
         

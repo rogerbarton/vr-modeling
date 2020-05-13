@@ -17,7 +17,7 @@ namespace libigl.Behaviour
         {
             if (!_state->Input.Select) return;
             
-            Native.SphereSelect(_state, _state->Input.SelectPos, _state->Input.SelectRadiusSqr);
+            Native.SphereSelect(_state, _state->Input.SelectPos, _state->Input.SelectRadiusSqr, _state->Input.SelectActiveId);
         }
 
         private void ActionHarmonic()

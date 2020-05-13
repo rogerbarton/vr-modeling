@@ -95,16 +95,19 @@ struct State {
 
 	// Private C++ state
 	Eigen::VectorXi* S;
-	int SSize = 0;
+	int SSize = 0;  // Amount of vertices selected in activeSelection
+	int SCount = 0; // Number of selections
 
 	explicit State(const UMeshDataNative udata);
 };
 
+using Color_t = Eigen::RowVector4f;
 struct Color{
-	static Eigen::RowVector4f White;
-	static Eigen::RowVector4f Black;
-	static Eigen::RowVector4f Red;
-	static Eigen::RowVector4f Green;
-	static Eigen::RowVector4f Blue;
-	static Eigen::RowVector4f Orange;
+	static Color_t White;
+	static Color_t Black;
+	static Color_t Red;
+	static Color_t Green;
+	static Color_t Blue;
+	static Color_t Orange;
+	static const Color_t& GetColorById(int id);
 };

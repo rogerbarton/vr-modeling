@@ -36,24 +36,51 @@ extern "C" {
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
 
-    void SphereSelect(State* state, Vector3 position, float radiusSqr) {
-        auto& V = *state->V;
-        auto& mask = *state->S;
-        const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
+    void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId) {
+	    const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
+	    const int maskId = 1 << selectionId;
+	    state->SCount = std::max(state->SCount, selectionId + 1);
 
-	    mask = ((V.rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr).cast<int>();
+	    *state->S = ((state->V->rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr)
+			    .cast<int>().matrix()
+			    .binaryExpr(*state->S, [&](int a, int s) -> int { return a * maskId + (1-a)* s; });
 
 	    // Get selection size
-	    state->SSize = mask.sum();
+	    state->SSize = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();
 	    // LOG("Selected: " << state->SSize << " vertices");
 
 	    // Set Colors
-	    Eigen::RowVector4f White, Red;
-	    White << 1.f, 1.f, 1.f, 1.f;
-	    Red << 1.f, 0.2f, 0.2f, 1.f;
+	    SetColorBySelection(state, selectionId);
+    }
 
-	    *state->C = mask.cast<float>() * Red + (1.f - mask.cast<float>().array()).matrix() * White;
+    /**
+     * Set the vertex colors based on the selection
+     * @param selectionId Which selection to show, -1 to show all selections
+     */
+    void SetColorBySelection(State* state, int selectionId) {
 
+	    if(selectionId >= 0)
+	    {
+		    const int maskId = 1 << selectionId;
+			const auto& color = Color::GetColorById(selectionId);
+
+			const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
+		    *state->C = mask * color + (1.f - mask.array()).matrix() * Color::White;
+	    }
+	    else
+	    {
+	    	// Loop over for each selection and add the color, assumes there are not multiple selections per vertex
+	    	// Normalize color by the maskId so we can save doing this computation for each element in S
+			while(selectionId < state->SCount) {
+				const int maskId = 1 << selectionId;
+
+				Color_t color = Color::GetColorById(selectionId).array() / maskId;
+				// copy from above
+				const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
+				*state->C += mask * color;
+				selectionId++;
+			}
+	    }
 	    state->DirtyState |= DirtyFlag::CDirty;
     }
 }

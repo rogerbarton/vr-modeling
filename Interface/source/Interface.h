@@ -32,5 +32,6 @@ extern "C" {
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(State* state, Vector3 value);
     UNITY_INTERFACE_EXPORT void Harmonic(State* state);
-    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, Vector3 position, float radiusSqr);
+    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId = 0);
+	UNITY_INTERFACE_EXPORT void SetColorBySelection(State* state, int selectionId = -1);
 }
