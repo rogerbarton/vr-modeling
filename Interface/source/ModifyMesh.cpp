@@ -29,7 +29,7 @@ extern "C" {
 	    // D_bc.rowwise() += Eigen::RowVector3f::Constant(0.1f);
 
 	    // Do Harmonic and apply it
-	    igl::harmonic(*state->V, *state->F, b, D_bc, 2.f, D);
+	    igl::harmonic(*state->V, *state->F, b, D_bc, 2, D);
 	    *state->V = D;
 
 	    state->DirtyState |= DirtyFlag::VDirty;
@@ -40,11 +40,12 @@ extern "C" {
 	    const int maskId = 1 << selectionId;
 	    state->SCount = std::max(state->SCount, selectionId + 1);
 
-	    const std::function<int(int, int)> AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };
-	    const std::function<int(int, int)> SubtractSelection = [&](int a, int s) -> int { return ~(a << selectionId) & s; };
-	    const std::function<int(int, int)> ToggleSelection = [&](int a, int s) -> int { return a << selectionId ^ s; };
+	    using BinaryExpr = const std::function<int(int, int)>;
+	    BinaryExpr AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };
+	    BinaryExpr SubtractSelection = [&](int a, int s) -> int { return ~(a << selectionId) & s; };
+	    BinaryExpr ToggleSelection = [&](int a, int s) -> int { return a << selectionId ^ s; };
 
-	    const std::function<int(int, int)>* Apply;
+	    BinaryExpr* Apply;
 	    if(selectionMode == SelectionMode::Add)
 	    	Apply = &AddSelection;
 	    else if(selectionMode == SelectionMode::Subtract)
@@ -68,6 +69,18 @@ extern "C" {
 
 	    // Set Colors
 	    SetColorBySelection(state, selectionId);
+    }
+
+    /**
+     * Resets a particular selection
+     * @param selectionId  Which selection to clear, -1 to clear all selections
+     */
+    void ClearSelection(State* state, int selectionId){
+
+    	const unsigned int maskId = selectionId == 0 ? 0 : ~(1u << (unsigned int)selectionId);
+    	state->S->unaryExpr([&](int& s)->int{
+    		return maskId & s;
+    	});
     }
 
     /**

@@ -85,8 +85,13 @@ namespace libigl
         [DllImport(DllName)]
         public static extern unsafe void Harmonic(State* state);
 
+        
+        // Selection.cpp
         [DllImport(DllName)]
         public static extern unsafe void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId);
+        
+        [DllImport(DllName)]
+        public static extern unsafe void ClearSelection(State* state, int selectionId);
         
         [DllImport(DllName)]
         public static extern unsafe void SetColorBySelection(State* state, int selectionId);
