@@ -61,8 +61,8 @@ namespace libigl.Behaviour
         public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
-            _input.Translate |= Input.GetKeyDown(KeyCode.W);
-            _input.Select |= Input.GetMouseButtonDown(0);
+            _input.DoTransform |= Input.GetKeyDown(KeyCode.W);
+            _input.DoSelect |= Input.GetMouseButtonDown(0);
             
             // if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
             // {
@@ -87,8 +87,15 @@ namespace libigl.Behaviour
         public void Execute()
         {
             // Add your logic here
-            ActionTranslate();
-            ActionSelect();
+            switch (_input.ActiveTool)
+            {
+                case ToolType.Default:
+                    break;
+                case ToolType.Select:
+                    ActionSelect();
+                    break;
+            }
+            ActionTransform();
             ActionHarmonic();
             
             // Apply changes back to the RowMajor so they can be applied to the mesh
