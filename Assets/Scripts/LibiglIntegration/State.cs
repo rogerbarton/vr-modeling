@@ -44,12 +44,13 @@ namespace libigl.Behaviour
         public uint ActiveTool;
         
         // Generic Input
-        public float TriggerL;
-        public float TriggerR;
+        public float GripL;
+        public float GripR;
         public Vector3 HandPosL;
         public Vector3 HandPosR;
-        public Vector3 PrevHandPosL;
-        public Vector3 PrevHandPosR;
+        // The previous position of the hand when the last transformation was made
+        public Vector3 PrevTrafoHandPosL;
+        public Vector3 PrevTrafoHandPosR;
 
         // Transform
         public bool DoTransform;
@@ -57,7 +58,7 @@ namespace libigl.Behaviour
         public bool SecondaryTransformHandActive;
 
         // Select
-        public int SelectActiveId;
+        public int ActiveSelectionId;
         public int SSize;
 
         public bool DoSelect;

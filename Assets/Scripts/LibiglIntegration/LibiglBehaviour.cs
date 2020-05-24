@@ -51,6 +51,26 @@ namespace libigl.Behaviour
         public void Update()
         {
             UpdateInput();
+
+            var i = _state->Input;
+            if (i.ActiveTool != ToolType.Select && i.DoTransform)
+            {
+                // Transform the whole mesh
+                if (i.SecondaryTransformHandActive)
+                {
+                    GetTransformData(_input, out var translate, out var scale, out var angle, out var axis);
+                    var uTransform = _libiglMesh.transform;
+                    uTransform.Translate(translate);
+                    uTransform.Rotate(axis, angle);
+                    uTransform.localScale *= scale;
+                }
+                else
+                    _libiglMesh.transform.Translate(GetTranslateVector(_input));
+                
+                // Consume the input and update the previous position directly
+                _input.PrevTrafoHandPosL = _input.HandPosL;
+                _input.PrevTrafoHandPosR = _input.HandPosR;
+            }
         }
         
         /// <summary>
@@ -95,7 +115,7 @@ namespace libigl.Behaviour
                     ActionSelect();
                     break;
             }
-            ActionTransform();
+            ActionTransformSelection();
             ActionHarmonic();
             
             // Apply changes back to the RowMajor so they can be applied to the mesh

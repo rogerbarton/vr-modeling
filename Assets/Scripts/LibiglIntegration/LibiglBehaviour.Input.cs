@@ -67,24 +67,25 @@ namespace libigl.Behaviour
 
         private void UpdateInputTransform()
         {
-            HandTransformInput(InputManager.get.LeftHand, false, ref _input.TriggerL, ref _input.HandPosL);
-            HandTransformInput(InputManager.get.RightHand, true, ref _input.TriggerR, ref _input.HandPosR);
+            HandTransformInput(InputManager.get.LeftHand, false, ref _input.GripL, ref _input.HandPosL);
+            HandTransformInput(InputManager.get.RightHand, true, ref _input.GripR, ref _input.HandPosR);
         }
 
         /// <summary>
         /// Updates transform tool input for a hand
         /// </summary>
-        /// <param name="inputTrigger">Where to store the trigger input value</param>
+        /// <param name="inputGrip">Where to store the trigger input value</param>
         /// <param name="inputHandPos">Where to store the hand position input value</param>
-        private void HandTransformInput(InputDevice inputDevice, bool isRight, ref float inputTrigger, ref Vector3 inputHandPos)
+        private void HandTransformInput(InputDevice inputDevice, bool isRight, ref float inputGrip, ref Vector3 inputHandPos)
         {
-            if (!inputDevice.TryGetFeatureValue(CommonUsages.trigger, out var trigger)) return;
+            if (!inputDevice.TryGetFeatureValue(CommonUsages.grip, out var grip)) return;
             
-            inputTrigger = trigger;
+            inputGrip = grip;
             inputDevice.TryGetFeatureValue(CommonUsages.devicePosition, out var handPos);
             inputHandPos = handPos;
 
-            if (trigger > 0.01f)
+            // Handling changes in the selection 'state machine'
+            if (grip > 0.01f)
             {
                 if (!_input.DoTransform)
                 {
@@ -97,7 +98,12 @@ namespace libigl.Behaviour
             else
             {
                 if (_input.DoTransform && _input.PrimaryTransformHand)
-                    _input.DoTransform = false;
+                {
+                    if (_input.SecondaryTransformHandActive)
+                        _input.PrimaryTransformHand = !isRight;
+                    else
+                        _input.DoTransform = false;
+                }
             }
 
         }
@@ -107,8 +113,12 @@ namespace libigl.Behaviour
         /// </summary>
         private void ConsumeInput()
         {
-            _input.PrevHandPosL = _input.HandPosL;
-            _input.PrevHandPosR = _input.HandPosR;
+            if(_input.ActiveTool == ToolType.Select && _input.DoTransform)
+            {
+                // Only update this if we are transforming on the thread, i.e. transforming the selection
+                _input.PrevTrafoHandPosL = _input.HandPosL;
+                _input.PrevTrafoHandPosR = _input.HandPosR;
+            }
             
             // Consume inputs here
             _input.DoTransform = false;
