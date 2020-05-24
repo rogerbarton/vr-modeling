@@ -10,10 +10,10 @@ namespace UI
         public Button editBtn;
         public Button clearBtn;
 
-        [SerializeField] private Image editImage;
+        [SerializeField] private Image editImage = null;
 
-        [SerializeField] private Sprite editSprite;
-        [SerializeField] private Sprite activeSprite;
+        [SerializeField] private Sprite editSprite = null;
+        [SerializeField] private Sprite activeSprite = null;
 
 
         public void ToggleEditSprite(bool isActive)

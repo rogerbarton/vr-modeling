@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: {fileID: 5203451504192261632}
   items: []
-  visible: 0
+  visible: 1
   checkmarkIcon: {fileID: 1842964492542874151}
 --- !u!222 &8076285010803198202
 CanvasRenderer:
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

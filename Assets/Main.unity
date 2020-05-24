@@ -2200,9 +2200,11 @@ MonoBehaviour:
     type: 3}
   groupPrefab: {fileID: 4553715744232311783, guid: c17a9997ac3b29b4c9b77d5cf4e4eea1,
     type: 3}
-  selectionPrefab: {fileID: 0}
+  selectionPrefab: {fileID: 4820344337120694933, guid: c7f7809fd0fffdf438be3d82231ca78e,
+    type: 3}
   panelSpawnPoint: {fileID: 1144852320}
   actionsListParent: {fileID: 788621609}
+  actionsListPrefab: {fileID: 0}
 --- !u!1001 &788621608
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3268,6 +3270,7 @@ MonoBehaviour:
   - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
   meshSpawnPoint: {fileID: 285171626}
   uiListItemParent: {fileID: 481839857}
+  uiListItemPrefab: {fileID: 0}
   wireframeMaterial: {fileID: 2100000, guid: 82378c7d7f5d4d2458ea1acbe21acc52, type: 2}
 --- !u!4 &1244380012
 Transform:
@@ -4971,6 +4974,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Selection
+      objectReference: {fileID: 0}
+    - target: {fileID: 4820344337120694933, guid: c7f7809fd0fffdf438be3d82231ca78e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7f7809fd0fffdf438be3d82231ca78e, type: 3}

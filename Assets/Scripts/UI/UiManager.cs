@@ -2,6 +2,7 @@ using libigl.Behaviour;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
@@ -26,7 +27,8 @@ namespace UI
         
         [Tooltip("The Content of the Actions Canvas scroll list. Convention: the last child serves as the prefab for a new item.")]
         public Transform actionsListParent;
-        private GameObject _actionsListPrefab;
+        [Tooltip("If null then the first child button found in actionsListParent will be used.")]
+        [SerializeField] private GameObject actionsListPrefab;
     
 
         private void Awake()
@@ -40,8 +42,8 @@ namespace UI
             get = this;
         
             // Convention: Use the last child as the prefab
-            if (!_actionsListPrefab && actionsListParent.childCount > 0)
-                _actionsListPrefab = actionsListParent.GetChild(actionsListParent.childCount -1).gameObject;
+            if (!actionsListPrefab && actionsListParent.childCount > 0)
+                actionsListPrefab = actionsListParent.GetComponentInChildren<Button>(true).gameObject;
 
             LibiglBehaviour.InitializeActionUi();
         }
@@ -53,7 +55,7 @@ namespace UI
         public void CreateActionUi(string uiText, UnityAction onClick, string[] speechKeywords = null, int gestureId = -1)
         {
             // Parenting, layout, ui
-            var go = Instantiate(_actionsListPrefab, actionsListParent);
+            var go = Instantiate(actionsListPrefab, actionsListParent);
             go.SetActive(true);
             var textField = go.GetComponentInChildren<TMP_Text>();
             textField.text = uiText;

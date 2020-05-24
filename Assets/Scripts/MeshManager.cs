@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using libigl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class MeshManager : MonoBehaviour
@@ -16,7 +17,8 @@ public class MeshManager : MonoBehaviour
     
     [Tooltip("Parent for UI buttons to load each mesh, usually the 'Content' view of a scroll list.")]
     public Transform uiListItemParent;
-    private GameObject _uiListItemPrefab;
+    [Tooltip("If null then the first child button found in uiListItemParent will be used.")]
+    [SerializeField] private GameObject uiListItemPrefab;
     
     /// <summary>
     /// The mesh currently loaded and being modified
@@ -44,8 +46,8 @@ public class MeshManager : MonoBehaviour
             ActiveMesh = LoadMesh(meshPrefabs[0]);
 
         // Convention: Use the first child as the prefab
-        if (!_uiListItemPrefab && uiListItemParent.childCount > 0)
-            _uiListItemPrefab = uiListItemParent.GetChild(uiListItemParent.childCount -1).gameObject;
+        if (!uiListItemPrefab && uiListItemParent.childCount > 0)
+            uiListItemPrefab = uiListItemParent.GetComponentInChildren<Button>(true).gameObject;
         
         // Create listitem foreach 
         foreach (var prefab in meshPrefabs)
@@ -62,7 +64,7 @@ public class MeshManager : MonoBehaviour
     private void SetupUi(GameObject meshPrefab, bool isValid)
     {
         // Parenting, layout, ui
-        var go = Instantiate(_uiListItemPrefab, uiListItemParent);
+        var go = Instantiate(uiListItemPrefab, uiListItemParent);
         go.SetActive(true);
         var textField = go.GetComponentInChildren<TMP_Text>();
         textField.text = meshPrefab.name;
