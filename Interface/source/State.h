@@ -21,6 +21,7 @@ struct InputState
 
 	// Select
 	int ActiveSelectionId;
+	unsigned int ActiveSelectionMode;
 	int SSize;
 
 	bool DoSelect;

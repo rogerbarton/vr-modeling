@@ -95,7 +95,8 @@ namespace libigl
         
         // Selection.cpp
         [DllImport(DllName)]
-        public static extern unsafe void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId);
+        public static extern unsafe void SphereSelect(State* state, Vector3 position, float radiusSqr, 
+            int selectionId, uint selectionMode);
         
         [DllImport(DllName)]
         public static extern unsafe void ClearSelection(State* state, int selectionId);

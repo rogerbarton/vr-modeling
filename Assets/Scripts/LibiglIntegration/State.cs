@@ -59,6 +59,7 @@ namespace libigl.Behaviour
 
         // Select
         public int ActiveSelectionId;
+        public uint ActiveSelectionMode;
         public int SSize;
 
         public bool DoSelect;
@@ -81,5 +82,12 @@ namespace libigl.Behaviour
         public const uint Select = 1;
         public const uint Laser = 2;
         public const uint ViewOnly = 4;
+    }
+
+    public static class SelectionMode
+    {
+        public const uint Add = 0;
+        public const uint Subtract = 1;
+        public const uint Toggle = 2;
     }
 }

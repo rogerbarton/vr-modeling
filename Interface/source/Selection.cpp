@@ -2,7 +2,7 @@
 #include "Interface.h"
 #include <igl/slice.h>
 
-void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, int selectionMode) {
+void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, unsigned int selectionMode) {
 	const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 	const int maskId = 1 << selectionId;
 	state->SCount = std::max(state->SCount, selectionId + 1);
@@ -69,7 +69,7 @@ void SetColorBySelection(State* state, int selectionId) {
 		while(selectionId < state->SCount) {
 			const int maskId = 1 << selectionId;
 
-			Color_t color = Color::GetColorById(selectionId).array() / maskId;
+			Color_t color = Color::GetColorById(selectionId).array() / (float)maskId;
 			// copy from above
 			const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
 			*state->C += mask * color;
