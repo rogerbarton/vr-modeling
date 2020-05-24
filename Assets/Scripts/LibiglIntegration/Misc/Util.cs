@@ -1,7 +1,4 @@
-﻿using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine;
-using UnityEngine.Assertions;
+﻿using UnityEngine;
 
 namespace libigl
 {
@@ -33,5 +30,32 @@ namespace libigl
 
             return result;
         }
+        
+        public static class Colors
+        {
+            public static readonly Color White = Color.white;
+            public static readonly Color Black = Color.black;
+            public static readonly Color Red = new Color(0.7735849f, 0.3280911f, 0.280972f, 1f);
+            public static readonly Color Green = new Color(0.4173074f, 0.7264151f, 0.366634f, 1f);
+            public static readonly Color Blue = new Color(0.3019607f, 0.4429668f, 0.858823f, 1f);
+            public static readonly Color Orange = new Color(0.8784314f, 0.5314119f, 0.145098f, 1f);
+
+            public static Color GetColorById(int id)
+            {
+                switch (id % 4)
+                {
+                    case 0:
+                        return Red;
+                    case 1:
+                        return Green;
+                    case 2:
+                        return Blue;
+                    case 3:
+                        return Orange;
+                    default:
+                        return Color.magenta;
+                }
+            }
+        };
     }
 }
