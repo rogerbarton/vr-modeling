@@ -20,5 +20,19 @@ State::State(const UMeshDataNative udata) {
 	TransposeFromMap(udata.UVPtr, UV);
 	TransposeFromMap(udata.FPtr, F);
 
+	// Selection
 	S->setZero();
+
+	SSize = new unsigned int[32];
+	std::fill(SSize, SSize + 32, 0);
+}
+
+State::~State() {
+	delete V;
+	delete N;
+	delete C;
+	delete UV;
+	delete F;
+	delete S;
+	delete[] SSize;
 }

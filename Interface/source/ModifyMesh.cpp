@@ -52,7 +52,7 @@ extern "C" {
 	    // Create boundary selection
 	    Eigen::VectorXi b;
 	    igl::colon<int>(0, state->VSize, b);
-	    b.conservativeResize(std::stable_partition(b.data(), b.data() + state->SSize,
+	    b.conservativeResize(std::stable_partition(b.data(), b.data() + state->VSize,
 	                                               [&](int i) -> bool { return (*state->S)(i) & maskId; }) - b.data());
 
 	    // Create boundary conditions

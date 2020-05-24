@@ -11,6 +11,7 @@ struct InputState
 	float GripR;
 	Vector3 HandPosL;
 	Vector3 HandPosR;
+	// The previous position of the hand when the last transformation was made
 	Vector3 PrevTrafoHandPosL;
 	Vector3 PrevTrafoHandPosR;
 
@@ -22,11 +23,13 @@ struct InputState
 	// Select
 	int ActiveSelectionId;
 	unsigned int ActiveSelectionMode;
-	int SSize;
+	int SCount;
 
 	bool DoSelect;
 	Vector3 SelectPos;
 	float SelectRadiusSqr;
+	// A Mask of the selections that should be cleared
+	int DoClearSelection;
 
 	// Harmonic
 	bool DoHarmonic;
@@ -51,8 +54,10 @@ struct State {
 
 	// Private C++ state
 	Eigen::VectorXi* S;
-	int SSize = 0;  // Amount of vertices selected in activeSelection
-	int SCount = 0; // Number of selections
+	unsigned int* SSize; // uint[32], vertices selected per selection
+	unsigned int SSizeAll; // Total vertices selected
 
 	explicit State(UMeshDataNative udata);
+
+	~State();
 };

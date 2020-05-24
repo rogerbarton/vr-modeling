@@ -5,7 +5,6 @@
 void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, unsigned int selectionMode) {
 	const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 	const int maskId = 1 << selectionId;
-	state->SCount = std::max(state->SCount, selectionId + 1);
 
 	using BinaryExpr = const std::function<int(int, int)>;
 	BinaryExpr AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };
@@ -30,8 +29,10 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
 			.binaryExpr(*state->S, *Apply);
 
 	// Get selection size
-	state->SSize = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();
-	// LOG("Selected: " << state->SSize << " vertices");
+	state->SSizeAll -= state->SSize[selectionId];
+	state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();
+	state->SSizeAll += state->SSize[selectionId];
+	// LOG("Selected: " << state->SSize[selectionId] << " vertices");
 
 	// Set Colors
 	SetColorBySelection(state, selectionId);
@@ -66,7 +67,7 @@ void SetColorBySelection(State* state, int selectionId) {
 	{
 		// Loop over for each selection and add the color, assumes there are not multiple selections per vertex
 		// Normalize color by the maskId so we can save doing this computation for each element in S
-		while(selectionId < state->SCount) {
+		while(selectionId < state->Input.SCount) {
 			const int maskId = 1 << selectionId;
 
 			Color_t color = Color::GetColorById(selectionId).array() / (float)maskId;
