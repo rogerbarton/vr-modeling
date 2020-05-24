@@ -2,7 +2,7 @@
 #include <PluginAPI/IUnityInterface.h>
 #include <RenderAPI/RenderAPI.h>
 #include <string>
-#include "InterfaceTypes.h"
+#include "State.h"
 
 // A global variable should be extern, so it can be seen in several cpp's. 
 // It is then defined in the Interface.cpp once

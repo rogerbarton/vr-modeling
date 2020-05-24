@@ -1,5 +1,4 @@
 #include "Interface.h"
-#include "InterfaceTypes.h"
 #include "NumericTypes.h"
 #include <igl/harmonic.h>
 #include <igl/colon.h>
