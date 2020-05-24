@@ -7,12 +7,14 @@
 // A global variable should be extern, so it can be seen in several cpp's. 
 // It is then defined in the Interface.cpp once
 extern StringCallback DebugLog;
+extern StringCallback DebugLogWarning;
+extern StringCallback DebugLogError;
 
 extern IUnityInterfaces* s_UnityInterfaces;
 
 extern "C" {
     // Interface.cpp
-    UNITY_INTERFACE_EXPORT void Initialize(StringCallback debugCallback);
+    UNITY_INTERFACE_EXPORT void Initialize(StringCallback debugCallback, StringCallback debugWarningCallback, StringCallback debugErrorCallback);
     UNITY_INTERFACE_EXPORT State* InitializeMesh(const UMeshDataNative data, const char* name);
     UNITY_INTERFACE_EXPORT void DisposeMesh(State* state);
 

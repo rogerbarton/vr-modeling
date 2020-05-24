@@ -10,6 +10,8 @@
  * @example @code if (DebugLog) DebugLog("Hello");
  */
 StringCallback DebugLog = nullptr;
+StringCallback DebugLogWarning = nullptr;
+StringCallback DebugLogError = nullptr;
 
 IUnityInterfaces* s_UnityInterfaces = nullptr;
 
@@ -20,9 +22,11 @@ extern "C" {
 	 * @see C# Native.Initialize()
 	 * @param debugCallback A C# delegate (function pointer) to print to the Unity Debug.Log
 	 */
-	void Initialize(const StringCallback debugCallback) {
+	void Initialize(const StringCallback debugCallback, StringCallback debugWarningCallback, StringCallback debugErrorCallback) {
 #ifndef NDEBUG
         DebugLog = debugCallback;
+        DebugLogWarning = debugWarningCallback;
+        DebugLogError = debugErrorCallback;
 #endif
 
 		Eigen::initParallel();

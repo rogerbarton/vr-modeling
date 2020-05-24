@@ -1,4 +1,5 @@
 #pragma once
+#include <Eigen/Dense>
 
 /**
  * Transpose an Eigen::Matrix to an Eigen::Map, given by the pointer to the first element

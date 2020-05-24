@@ -10,6 +10,8 @@ typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 // Macro to easily print to the Unity Debug.Log
 #ifndef NDEBUG
 #define LOG(message) if(DebugLog) { DebugLog(STR(message)); }
+#define LOGWARN(message) if(DebugLogWarning) { DebugLogWarning(STR(message)); }
+#define LOGERR(message) if(DebugLogError) { DebugLogError(STR(message)); }
 #else
 #define LOG(m)
 #endif

@@ -48,7 +48,7 @@ namespace libigl
         #endif
         public static void Initialize()
         {
-            Initialize(NativeCallbacks.DebugLog);
+            Initialize(NativeCallbacks.DebugLog, NativeCallbacks.DebugLogWarning, NativeCallbacks.DebugLogError);
         }
 
         /// <summary>
@@ -58,7 +58,8 @@ namespace libigl
 
         // Interface.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        private static extern void Initialize([In] NativeCallbacks.StringCallback debugCallback);
+        private static extern void Initialize(NativeCallbacks.StringCallback debugCallback,
+            NativeCallbacks.StringCallback debugWarningCallback, NativeCallbacks.StringCallback debugErrorCallback);
         
         [DllImport(DllName)]
         public static extern unsafe State* InitializeMesh([In,Out] UMeshDataNative data, string name);

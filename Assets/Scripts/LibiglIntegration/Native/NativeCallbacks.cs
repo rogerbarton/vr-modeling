@@ -19,6 +19,16 @@ namespace libigl
         {
             Debug.Log("[c++] " + message);
         }
+        
+        public static void DebugLogWarning(string message)
+        {
+            Debug.LogWarning("[c++] " + message);
+        }
+        
+        public static void DebugLogError(string message)
+        {
+            Debug.LogError("[c++] " + message);
+        }
 
         // public static void AllocateMesh(int VSize, int FSize, [Out] IntPtr V, [Out] IntPtr F)
         // {
