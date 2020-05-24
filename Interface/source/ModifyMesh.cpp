@@ -6,10 +6,21 @@
 extern "C" {
     void TranslateMesh(State* state, Vector3 value) {
         auto& V = *state->V;
-        const auto valueMap = Eigen::Map<Eigen::RowVector3f>(&value.x);
 
-        V.rowwise() += valueMap;
+        V.rowwise() += (Eigen::RowVector3f)value;
     }
+
+	void TranslateSelection(State* state, Vector3 value, int selectionId) {
+		auto& V = *state->V;
+		const auto& S = *state->S;
+		const unsigned int maskId = Selection::GetMask(selectionId);
+
+		for (int i = 0; i < V.rows(); ++i) {
+			if ((S(i) & maskId) > 0) {
+				V.rowwise() += (Eigen::RowVector3f)value;
+			}
+		}
+	}
 
     /**
      * Transform the selected vertices in place (translate + scale + rotate)
@@ -31,8 +42,9 @@ extern "C" {
 	    }
     }
 
-    void Harmonic(State* state) {
+    void Harmonic(State* state, int boundarySelectionId) {
 	    Eigen::MatrixXf D, D_bc;
+	    const unsigned int maskId = Selection::GetMask(boundarySelectionId);
 
 	    LOG("Harmonic");
 
@@ -41,7 +53,7 @@ extern "C" {
 	    Eigen::VectorXi b;
 	    igl::colon<int>(0, state->VSize, b);
 	    b.conservativeResize(std::stable_partition(b.data(), b.data() + state->SSize,
-	    		[&state](int i)->bool{ return (*state->S)(i) >= 0; }) - b.data());
+	                                               [&](int i) -> bool { return (*state->S)(i) & maskId; }) - b.data());
 
 	    // Create boundary conditions
 	    igl::slice(*state->V, b, igl::colon<int>(0, 2), D_bc);

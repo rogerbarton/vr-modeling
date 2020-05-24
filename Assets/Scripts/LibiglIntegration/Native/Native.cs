@@ -81,13 +81,16 @@ namespace libigl
         // ModifyMesh.cpp
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh(State* state, Vector3 value);
+        
+        [DllImport(DllName)]
+        public static extern unsafe void TranslateSelection(State* state, Vector3 value, int selectionId);
 
         [DllImport(DllName)]
         public static extern unsafe void TransformSelection(State* state, int selectionId, 
             Vector3 translation, float scale, float angle, Vector3 axis);
 
             [DllImport(DllName)]
-        public static extern unsafe void Harmonic(State* state);
+        public static extern unsafe void Harmonic(State* state, int boundarySelectionId);
 
         
         // Selection.cpp

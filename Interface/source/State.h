@@ -7,12 +7,12 @@ struct InputState
 	unsigned int ActiveTool;
 
 	// Generic Input
-	float TriggerL;
-	float TriggerR;
+	float GripL;
+	float GripR;
 	Vector3 HandPosL;
 	Vector3 HandPosR;
-	Vector3 PrevHandPosL;
-	Vector3 PrevHandPosR;
+	Vector3 PrevTrafoHandPosL;
+	Vector3 PrevTrafoHandPosR;
 
 	// Transform
 	bool DoTransform;
@@ -20,7 +20,7 @@ struct InputState
 	bool SecondaryTransformHandActive;
 
 	// Select
-	int SelectActiveId;
+	int ActiveSelectionId;
 	int SSize;
 
 	bool DoSelect;
