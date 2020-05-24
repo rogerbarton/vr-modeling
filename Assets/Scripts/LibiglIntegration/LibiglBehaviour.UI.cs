@@ -92,7 +92,7 @@ namespace libigl.Behaviour
                 
                 // Selection
                 SelectionGroup = Object.Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
-                SelectionGroup.GetComponentInChildren<TMP_Text>().text = "Selection";
+                SelectionGroup.title.text = "Selection";
                 
                 AddSelectionBtn = Object.Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
                 AddSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";

@@ -94,5 +94,13 @@ namespace libigl.Behaviour
             Native.Harmonic(_state, -1);
             _state->DirtyState |= DirtyFlag.VDirty;
         }
+
+        private void ActionUI()
+        {
+            if (_state->Input.DoClearSelection > 0)
+            {
+                Native.ClearSelection(_state, _state->Input.DoClearSelection);
+            }
+        }
     }
 }

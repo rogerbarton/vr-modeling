@@ -117,6 +117,7 @@ namespace libigl.Behaviour
             }
             ActionTransformSelection();
             ActionHarmonic();
+            ActionUI();
             
             // Apply changes back to the RowMajor so they can be applied to the mesh
             _libiglMesh.DataRowMajor.ApplyDirty(_state);
