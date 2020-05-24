@@ -33,6 +33,8 @@ extern "C" {
 
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(State* state, Vector3 value);
+    UNITY_INTERFACE_EXPORT void TransformSelection(State* state, int selectionId,
+    		Vector3 translation, float scale, float angle, Vector3 axis);
     UNITY_INTERFACE_EXPORT void Harmonic(State* state);
 
     // Selection.cpp

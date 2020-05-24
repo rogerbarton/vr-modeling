@@ -1,5 +1,6 @@
 #include "Interface.h"
 #include "NumericTypes.h"
+#include "Selection.h"
 #include <igl/harmonic.h>
 
 extern "C" {
@@ -8,6 +9,26 @@ extern "C" {
         const auto valueMap = Eigen::Map<Eigen::RowVector3f>(&value.x);
 
         V.rowwise() += valueMap;
+    }
+
+    /**
+     * Transform the selected vertices in place (translate + scale + rotate)
+     * @param selectionId Which selection to transform, -1 for all selections
+     */
+    void TransformSelection(State* state, int selectionId, Vector3 translation, float scale, float angle, Vector3 axis){
+	    auto& V = *state->V;
+	    const auto& S = *state->S;
+	    const unsigned int maskId = Selection::GetMask(selectionId);
+
+	    using namespace Eigen;
+	    Transform<float, 3, Affine> transform = Translation3f((Vector3f)translation) * AngleAxisf(angle, (Vector3f)axis) * Scaling(scale);
+
+	    for (int i = 0; i < V.rows(); ++i) {
+		    if((S(i) & maskId) > 0) {
+			    Vector3f v = V.row(i);
+			    V.row(i) = transform * v;
+		    }
+	    }
     }
 
     void Harmonic(State* state) {

@@ -24,7 +24,10 @@ struct Vector3
 
 	Vector3() = default;
 	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
-	Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
+	explicit Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
+
+	explicit operator Eigen::RowVector3f () const;
+	explicit operator Eigen::Vector3f() const;
 };
 
 /**

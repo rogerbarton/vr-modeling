@@ -1,5 +1,5 @@
+#include "Selection.h"
 #include "Interface.h"
-#include <igl/colon.h>
 #include <igl/slice.h>
 
 void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, int selectionMode) {
@@ -17,14 +17,13 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
 		Apply = &AddSelection;
 	else if(selectionMode == SelectionMode::Subtract)
 		Apply = &SubtractSelection;
-	else if(selectionMode == SelectionMode::Subtract)
+	else if(selectionMode == SelectionMode::Toggle)
 		Apply = &ToggleSelection;
 	else
 	{
 		LOGERR("Invalid selection mode: " << selectionMode);
 		return;
 	}
-
 
 	*state->S = ((state->V->rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr)
 			.cast<int>().matrix()
@@ -43,10 +42,9 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
  * @param selectionId  Which selection to clear, -1 to clear all selections
  */
 void ClearSelection(State* state, int selectionId){
-
-	const unsigned int maskId = selectionId == 0 ? 0 : ~(1u << (unsigned int)selectionId);
+	const unsigned int maskIdInv = ~Selection::GetMask(selectionId);
 	state->S->unaryExpr([&](int& s)->int{
-		return maskId & s;
+		return maskIdInv & s;
 	});
 }
 
@@ -79,4 +77,8 @@ void SetColorBySelection(State* state, int selectionId) {
 		}
 	}
 	state->DirtyState |= DirtyFlag::CDirty;
+}
+
+unsigned int Selection::GetMask(unsigned int selectionId) {
+	return selectionId == -1 ? -1 : 1u << selectionId;
 }

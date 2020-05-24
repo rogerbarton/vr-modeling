@@ -11,3 +11,15 @@ Color_t Color::Orange({0.8784314, 0.5314119, 0.145098, 1});
 const Color_t& Color::GetColorById(int id) {
 	return *(&Red + id % 4);
 }
+
+Vector3::operator Eigen::RowVector3f() const {
+	Eigen::RowVector3f v;
+	v << x,y,z;
+	return v;
+}
+
+Vector3::operator Eigen::Vector3f() const {
+	Eigen::Vector3f v;
+	v << x,y,z;
+	return v;
+}
