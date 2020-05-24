@@ -3,8 +3,11 @@ using UnityEngine.XR;
 
 namespace libigl.Behaviour
 {
-    public partial class LibiglBehaviour
+    public unsafe partial class LibiglBehaviour
     {
+        // C# only input variables
+        private Vector2 _lastPrimaryAxisValueL;
+        
         private void UpdateInput()
         {
             if (!InputManager.get.RightHand.isValid) return;
@@ -39,6 +42,15 @@ namespace libigl.Behaviour
         /// </summary>
         private void UpdateInputSelect()
         {
+            // Change the selection with the left hand primary2DAxis.y
+            if (InputManager.get.LeftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisL))
+            {
+                if (Mathf.Abs(_lastPrimaryAxisValueL.y) < 0.05f && Mathf.Abs(primaryAxisL.y) > 0.05f)
+                    _input.ChangeActiveSelection((int) Mathf.Sign(primaryAxisL.y));
+
+                _lastPrimaryAxisValueL = primaryAxisL;
+            }
+
             if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out var primaryBtnValue) &&
                 primaryBtnValue)
             {
