@@ -19,6 +19,8 @@ namespace UI
         public GameObject headerPrefab;
         public GameObject textPrefab;
         public GameObject buttonPrefab;
+        public GameObject groupPrefab;
+        public GameObject selectionPrefab;
 
         public Transform panelSpawnPoint;
         

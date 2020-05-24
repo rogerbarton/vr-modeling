@@ -30,8 +30,8 @@ namespace libigl.Behaviour
         
         // Private C++ state
         public readonly void* S;
-        public readonly int SSize;
-        public readonly int SCount;
+        public readonly uint* SSize; // uint[32], vertices selected per selection
+        public readonly uint SSizeAll; // Total vertices selected
     }
 
     /// <summary>
@@ -60,11 +60,13 @@ namespace libigl.Behaviour
         // Select
         public int ActiveSelectionId;
         public uint ActiveSelectionMode;
-        public int SSize;
+        public int SCount;
 
         public bool DoSelect;
         public Vector3 SelectPos;
         public float SelectRadiusSqr;
+        // A Mask of the selections that should be cleared
+        public int DoClearSelection; 
         
         // Harmonic
         public bool DoHarmonic;
@@ -73,6 +75,11 @@ namespace libigl.Behaviour
         {
             ActiveTool = ToolType.Default;
             SelectRadiusSqr = 0.1f;
+        }
+        
+        public void ChangeActiveSelection(int increment)
+        {
+            ActiveSelectionId = (ActiveSelectionId + increment) % SCount;
         }
     }
 
