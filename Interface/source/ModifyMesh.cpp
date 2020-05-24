@@ -36,14 +36,32 @@ extern "C" {
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
 
-    void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId) {
+    void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, int selectionMode) {
 	    const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 	    const int maskId = 1 << selectionId;
 	    state->SCount = std::max(state->SCount, selectionId + 1);
 
+	    const std::function<int(int, int)> AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };
+	    const std::function<int(int, int)> SubtractSelection = [&](int a, int s) -> int { return ~(a << selectionId) & s; };
+	    const std::function<int(int, int)> ToggleSelection = [&](int a, int s) -> int { return a << selectionId ^ s; };
+
+	    const std::function<int(int, int)>* Apply;
+	    if(selectionMode == SelectionMode::Add)
+	    	Apply = &AddSelection;
+	    else if(selectionMode == SelectionMode::Subtract)
+	    	Apply = &SubtractSelection;
+	    else if(selectionMode == SelectionMode::Subtract)
+	    	Apply = &ToggleSelection;
+	    else
+	    {
+		    LOGERR("Invalid selection mode: " << selectionMode);
+		    return;
+	    }
+
+
 	    *state->S = ((state->V->rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr)
 			    .cast<int>().matrix()
-			    .binaryExpr(*state->S, [&](int a, int s) -> int { return a * maskId + (1-a)* s; });
+			    .binaryExpr(*state->S, *Apply);
 
 	    // Get selection size
 	    state->SSize = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();

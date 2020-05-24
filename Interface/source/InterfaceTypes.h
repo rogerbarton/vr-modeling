@@ -114,3 +114,9 @@ struct Color{
 	static Color_t Orange;
 	static const Color_t& GetColorById(int id);
 };
+
+struct SelectionMode{
+	static const unsigned int Add = 0;
+	static const unsigned int Subtract = 1;
+	static const unsigned int Toggle = 2;
+};
