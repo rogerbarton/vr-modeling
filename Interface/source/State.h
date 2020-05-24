@@ -4,17 +4,31 @@
 
 struct InputState
 {
-	// Translate
-	bool Translate;
+	unsigned int ActiveTool;
+
+	// Generic Input
+	float TriggerL;
+	float TriggerR;
+	Vector3 HandPosL;
+	Vector3 HandPosR;
+	Vector3 PrevHandPosL;
+	Vector3 PrevHandPosR;
+
+	// Transform
+	bool DoTransform;
+	bool PrimaryTransformHand; // True=R
+	bool SecondaryTransformHandActive;
 
 	// Select
-	bool Select;
 	int SelectActiveId;
+	int SSize;
+
+	bool DoSelect;
 	Vector3 SelectPos;
 	float SelectRadiusSqr;
 
 	// Harmonic
-	bool Harmonic;
+	bool DoHarmonic;
 
 	InputState() = default;
 };

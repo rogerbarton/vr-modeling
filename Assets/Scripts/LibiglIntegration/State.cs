@@ -41,21 +41,44 @@ namespace libigl.Behaviour
     [StructLayout(LayoutKind.Sequential)]
     public struct InputState
     {
-        // Translate
-        public bool Translate;
+        public uint ActiveTool;
         
+        // Generic Input
+        public float TriggerL;
+        public float TriggerR;
+        public Vector3 HandPosL;
+        public Vector3 HandPosR;
+        public Vector3 PrevHandPosL;
+        public Vector3 PrevHandPosR;
+
+        // Transform
+        public bool DoTransform;
+        public bool PrimaryTransformHand; // True=R
+        public bool SecondaryTransformHandActive;
+
         // Select
-        public bool Select;
         public int SelectActiveId;
+        public int SSize;
+
+        public bool DoSelect;
         public Vector3 SelectPos;
         public float SelectRadiusSqr;
         
         // Harmonic
-        public bool Harmonic;
+        public bool DoHarmonic;
 
         public void InitializeDefaults()
         {
+            ActiveTool = ToolType.Default;
             SelectRadiusSqr = 0.1f;
         }
+    }
+
+    public static class ToolType
+    {
+        public const uint Default = 0;
+        public const uint Select = 1;
+        public const uint Laser = 2;
+        public const uint ViewOnly = 4;
     }
 }
