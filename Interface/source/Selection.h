@@ -2,8 +2,7 @@
 
 struct Selection{
 	/**
-	 * @param selectionId
-	 * @return Returns the bit-shifted mask, if @refitem selectionId is -1 mask is zero
+	 * @return Returns the bit-shifted mask, if selectionId is -1 mask is zero
 	 */
-	static unsigned int GetMask(unsigned int selectionId);
+	static unsigned int GetMask(int selectionId);
 };

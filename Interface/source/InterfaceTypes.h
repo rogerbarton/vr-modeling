@@ -16,18 +16,19 @@ typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 #define LOG(m)
 #endif
 
-struct Vector3
-{
+struct Vector3 {
 	float x;
-    float y;
-    float z;
+	float y;
+	float z;
 
 	Vector3() = default;
 	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 	explicit Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
 
-	explicit operator Eigen::RowVector3f () const;
+	explicit operator Eigen::RowVector3f() const;
 	explicit operator Eigen::Vector3f() const;
+
+	inline static const Vector3 Zero() { return Vector3(0.f, 0.f, 0.f); }
 };
 
 /**
@@ -75,7 +76,7 @@ struct Color{
 	static Color_t Green;
 	static Color_t Blue;
 	static Color_t Orange;
-	static const Color_t& GetColorById(int id);
+	static const Color_t& GetColorById(int selectionId);
 };
 
 struct ToolType

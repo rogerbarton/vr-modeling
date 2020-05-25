@@ -80,6 +80,6 @@ void SetColorBySelection(State* state, int selectionId) {
 	state->DirtyState |= DirtyFlag::CDirty;
 }
 
-unsigned int Selection::GetMask(unsigned int selectionId) {
+unsigned int Selection::GetMask(int selectionId) {
 	return selectionId == -1 ? -1 : 1u << selectionId;
 }
