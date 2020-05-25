@@ -24,7 +24,7 @@ struct InputState
 	int ActiveSelectionId = 0;
 	unsigned int ActiveSelectionMode = 0;
 	unsigned int SCount = 0;
-	unsigned int VisibleSelectionMask = 0;
+	unsigned int VisibleSelectionMask = -1; // All visible initially
 
 	bool DoSelect = false;
 	Vector3 SelectPos = Vector3::Zero();

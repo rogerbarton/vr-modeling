@@ -81,7 +81,7 @@ void SetColorByMask(State* state, unsigned int maskId) {
 		const Eigen::MatrixXf mask = state->S->unaryExpr([&](int a) -> int { return a & m; }).cast<float>();
 
 		const Color_t color = Color::GetColorById(selectionId).array() / (float) m;
-		*state->C *= mask * color.transpose();
+		*state->C *= mask * color;
 
 		++selectionId;
 	}
