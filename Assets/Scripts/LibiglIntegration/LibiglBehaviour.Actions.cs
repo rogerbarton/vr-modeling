@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace libigl.Behaviour
 {
@@ -69,14 +70,15 @@ namespace libigl.Behaviour
             angle = Vector3.Angle(v0, v1);
             
             // TODO: scale should be done from positions at start of both grips pressed 
-            scale = (i.HandPosL - i.HandPosR).magnitude - (i.PrevTrafoHandPosL - i.PrevTrafoHandPosR).magnitude;
-            
+            scale = (i.HandPosL - i.HandPosR).magnitude / (i.PrevTrafoHandPosL - i.PrevTrafoHandPosR).magnitude;
+            if (float.IsNaN(scale))
+                scale = 1f;
             // Apply soft editing
             var softFactor = i.PrimaryTransformHand ? i.GripL : i.GripR;
-            var softFactorSecondary = softFactor * (!i.PrimaryTransformHand ? i.GripL : i.GripR);
+            var softFactorSecondary = !i.PrimaryTransformHand ? i.GripL : i.GripR;
 
             translate *= softFactor;
-            scale = (scale -1) * softFactorSecondary + 1; 
+            scale = (scale -1) * softFactorSecondary + 1;
             angle *= softFactorSecondary;
         }
 
@@ -96,11 +98,11 @@ namespace libigl.Behaviour
             _state->DirtyState |= DirtyFlag.VDirty;
         }
 
-        private void ActionUI()
+        private void ActionUi()
         {
             if (_state->Input.DoClearSelection > 0)
             {
-                Native.ClearSelection(_state, _state->Input.DoClearSelection);
+                Native.ClearSelectionMask(_state, _state->Input.DoClearSelection);
             }
         }
 
