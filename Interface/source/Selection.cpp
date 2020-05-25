@@ -35,7 +35,7 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
 	// LOG("Selected: " << state->SSize[selectionId] << " vertices");
 
 	// Set Colors
-	SetColorBySelection(state, selectionId);
+	SetColorByMask(state, state->Input.VisibleSelectionMask);
 }
 
 /**
@@ -43,40 +43,49 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
  * @param selectionId  Which selection to clear, -1 to clear all selections
  */
 void ClearSelection(State* state, int selectionId){
-	const unsigned int maskIdInv = ~Selection::GetMask(selectionId);
-	state->S->unaryExpr([&](int& s)->int{
-		return maskIdInv & s;
-	});
+	ClearSelectionMask(state, Selection::GetMask(selectionId));
+}
+
+void ClearSelectionMask(State* state, unsigned int maskId) {
+	state->S->unaryExpr([&](int& s) -> int { return ~maskId & s; });
 }
 
 /**
- * Set the vertex colors based on the selection
- * @param selectionId Which selection to show, -1 to show all selections
+ * Set the vertex colors to show a single selection
+ * @param selectionId Which selection to show
  */
 void SetColorBySelection(State* state, int selectionId) {
+	const unsigned int maskId = Selection::GetMask(selectionId);
+	const auto& color = Color::GetColorById(selectionId);
 
-	if(selectionId >= 0)
-	{
-		const int maskId = 1 << selectionId;
-		const auto& color = Color::GetColorById(selectionId);
+	const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
+	*state->C = mask * color + (1.f - mask.array()).matrix() * Color::White;
 
-		const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
-		*state->C = mask * color + (1.f - mask.array()).matrix() * Color::White;
+	state->DirtyState |= DirtyFlag::CDirty;
+}
+
+/**
+ * Set the color based on a mask of visible selections
+ * @param maskId Which selections to show
+ */
+void SetColorByMask(State* state, unsigned int maskId) {
+	state->C->setOnes();
+
+	unsigned int selectionId = 0;
+	while (selectionId < state->Input.SCount) {
+		const unsigned int m = 1 << selectionId;
+		if ((m & maskId) == 0) // Skip selections that are not visible
+			continue;
+
+		// Normalize color by the maskId so we can multiply the mask by the color
+		const Eigen::MatrixXf mask = state->S->unaryExpr([&](int a) -> int { return a & m; }).cast<float>();
+
+		const Color_t color = Color::GetColorById(selectionId).array() / (float) m;
+		*state->C *= mask * color.transpose();
+
+		++selectionId;
 	}
-	else
-	{
-		// Loop over for each selection and add the color, assumes there are not multiple selections per vertex
-		// Normalize color by the maskId so we can save doing this computation for each element in S
-		while(selectionId < state->Input.SCount) {
-			const int maskId = 1 << selectionId;
 
-			Color_t color = Color::GetColorById(selectionId).array() / (float)maskId;
-			// copy from above
-			const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
-			*state->C += mask * color;
-			selectionId++;
-		}
-	}
 	state->DirtyState |= DirtyFlag::CDirty;
 }
 

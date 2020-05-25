@@ -60,16 +60,18 @@ namespace libigl
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize(NativeCallbacks.StringCallback debugCallback,
             NativeCallbacks.StringCallback debugWarningCallback, NativeCallbacks.StringCallback debugErrorCallback);
-        
+
         [DllImport(DllName)]
-        public static extern unsafe State* InitializeMesh([In,Out] UMeshDataNative data, string name);
+        public static extern unsafe State* InitializeMesh([In, Out] UMeshDataNative data, string name);
+
         [DllImport(DllName)]
         public static extern unsafe void DisposeMesh(State* data);
-        
+
 
         // IO.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        public static extern unsafe void LoadOFF([In] string path, [In] bool setCenter, [In] bool normalizeScale, [In] float scale,
+        public static extern unsafe void LoadOFF([In] string path, [In] bool setCenter, [In] bool normalizeScale,
+            [In] float scale,
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,
             [Out] out uint* FPtr, [Out] out int FSize);
@@ -100,8 +102,14 @@ namespace libigl
         
         [DllImport(DllName)]
         public static extern unsafe void ClearSelection(State* state, int selectionId);
-        
+
+        [DllImport(DllName)]
+        public static extern unsafe void ClearSelectionMask(State* state, uint maskId);
+
         [DllImport(DllName)]
         public static extern unsafe void SetColorBySelection(State* state, int selectionId);
+
+        [DllImport(DllName)]
+        public static extern unsafe void SetColorByMask(State* state, uint maskId);
     }
 }
