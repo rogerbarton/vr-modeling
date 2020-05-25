@@ -60,13 +60,14 @@ namespace libigl.Behaviour
         // Select
         public int ActiveSelectionId;
         public uint ActiveSelectionMode;
-        public int SCount;
+        public uint SCount;
+        public uint VisibleSelectionMask;
 
         public bool DoSelect;
         public Vector3 SelectPos;
         public float SelectRadiusSqr;
         // A Mask of the selections that should be cleared
-        public int DoClearSelection; 
+        public uint DoClearSelection; 
         
         // Harmonic
         public bool DoHarmonic;
@@ -79,7 +80,7 @@ namespace libigl.Behaviour
         
         public void ChangeActiveSelection(int increment)
         {
-            ActiveSelectionId = (ActiveSelectionId + increment) % SCount;
+            ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCount);
         }
     }
 
