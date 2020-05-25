@@ -26,6 +26,7 @@ namespace libigl.Behaviour
         {
             private LibiglBehaviour _behaviour;
             private Transform _canvas;
+            private UiDetailsPanel _detailsPanel;
             private Transform _listParent;
          
             // UI Components
@@ -49,6 +50,7 @@ namespace libigl.Behaviour
                 MeshManager.ActiveMeshChanged += ActiveMeshChanged;
 
                 _canvas = UiManager.get.CreateDetailsPanel();
+                _detailsPanel = _canvas.GetComponent<UiDetailsPanel>();
                 _listParent = _canvas.GetComponentInChildren<VerticalLayoutGroup>().transform;
 
                 MeshName = Object.Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
@@ -126,6 +128,14 @@ namespace libigl.Behaviour
                 if(_canvas)
                     Object.Destroy(_canvas.gameObject);
             }
+            
+            /// <summary>
+            /// Called in PreExecute just before the input is consumed
+            /// </summary>
+            public void UpdatePreExecute()
+            {
+                _detailsPanel.PreExecute();
+            }
 
             /// <summary>
             /// Update the UI Details panel after executing
@@ -140,14 +150,8 @@ namespace libigl.Behaviour
                         Selections[i].GetComponentInChildren<TMP_Text>().text =
                             $"{i}: {_behaviour._state->SSize[i]} vertices";
                 }
-            }
-
-            /// <summary>
-            /// Called in PreExecute just before the input is consumed
-            /// </summary>
-            public void UpdatePreExecute()
-            {
                 
+                _detailsPanel.PostExecute();
             }
 
             /// <summary>
