@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -17,8 +18,9 @@ namespace libigl.Behaviour
             UiManager.get.CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour._input.DoTransform = true; }, new []{"translate", "move"}, 1);
             UiManager.get.CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour._input.DoHarmonic = true; }, new [] {"smooth", "harmonic", "laplacian"}, 2);
             
-            // Tools TODO change tool with UI
-            UiManager.get.CreateActionUi("Select", () => { MeshManager.ActiveMesh.Behaviour._input.DoSelect = true; }, new [] {"select"});
+            UiManager.get.CreateActionUi("Default Tool", () => { MeshManager.ActiveMesh.Behaviour._input.ActiveTool = ToolType.Default; });
+            UiManager.get.CreateActionUi("Select Tool", () => { MeshManager.ActiveMesh.Behaviour._input.ActiveTool = ToolType.Select; }, new [] {"select"});
+            UiManager.get.CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour._input.DoSelect = true; });
         }
 
         
@@ -95,29 +97,48 @@ namespace libigl.Behaviour
                 // Selection
                 SelectionGroup = Object.Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
                 SelectionGroup.title.text = "Selection";
+                SelectionGroup.visible = true;
                 
                 AddSelectionBtn = Object.Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
                 AddSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
+                SelectionGroup.GetComponent<UiCollapsible>().AddItem(AddSelectionBtn.gameObject);
                 AddSelectionBtn.onClick.AddListener(AddSelection);
+                
+                // Setup first selection
                 AddSelection();
+                // Set it as the active one
+                Selections[_behaviour._input.ActiveSelectionId].ToggleEditSprite(true);
             }
 
             private void AddSelection()
             {
                 // Get the id and set it as the active one
-                var selectionId = _behaviour._input.SCount;
+                var selectionId = (int) _behaviour._input.SCount;
                 _behaviour._input.SCount++;
                 _behaviour._input.ActiveSelectionId = selectionId;
                 
                 // Add UI for the selection
                 var uiSelection = Object.Instantiate(UiManager.get.selectionPrefab, _listParent).GetComponent<UiSelection>();
-                uiSelection.text.text = $"{selectionId}: 0 vertices";
+                uiSelection.text.text = $"<b>{selectionId}</b>: 0 vertices";
                 SelectionGroup.GetComponent<UiCollapsible>().AddItem(uiSelection.gameObject);
-                uiSelection.editBtn.image.color = Util.Colors.GetColorById(selectionId);
+                uiSelection.visibleBtn.image.color = Util.Colors.GetColorById(selectionId);
 
                 // Behaviour when clicking buttons
-                uiSelection.editBtn.onClick.AddListener(() => { _behaviour._input.ActiveSelectionId = selectionId; });
-                uiSelection.clearBtn.onClick.AddListener(() => { _behaviour._input.DoClearSelection |= 1 << selectionId; });
+                uiSelection.visibleBtn.onClick.AddListener(() =>
+                {
+                    _behaviour._input.VisibleSelectionMask ^= 1u << selectionId;
+                    uiSelection.ToggleVisibleSprite((_behaviour._input.VisibleSelectionMask & 1u << selectionId) > 0);
+                });
+                uiSelection.editBtn.onClick.AddListener(() =>
+                {
+                    if(selectionId == _behaviour._input.ActiveSelectionId) return;
+                    
+                    // Disable the last active selection and set this one as active
+                    Selections[_behaviour._input.ActiveSelectionId].ToggleEditSprite(false);
+                    _behaviour._input.ActiveSelectionId = selectionId;
+                    uiSelection.ToggleEditSprite(true);
+                });
+                uiSelection.clearBtn.onClick.AddListener(() => { _behaviour._input.DoClearSelection |= 1u << selectionId; });
                 
                 Selections.Add(uiSelection);
             }
