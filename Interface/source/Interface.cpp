@@ -78,5 +78,7 @@ extern "C" {
 
 		LOG("UnityPluginUnload()")
 		DebugLog = nullptr;
+		DebugLogWarning = nullptr;
+		DebugLogError = nullptr;
 	}
 }
