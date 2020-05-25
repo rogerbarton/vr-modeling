@@ -11,9 +11,9 @@ namespace UI
     {
         public TMP_Text title;
         public List<GameObject> items;
-        public bool visible;
+        public bool visible = true;
         public RectTransform checkmarkIcon;
-
+        
         /// <summary>
         /// Add an item to the group, visibility is immediately set
         /// </summary>
@@ -28,16 +28,15 @@ namespace UI
         /// </summary>
         public void ToggleVisibility(bool value)
         {
-            visible = !visible;
-            foreach (var item in items)
-                item.SetActive(visible);
-
-            if (checkmarkIcon)
+            if (value != visible)
             {
-                var rot = checkmarkIcon.localRotation;
-                rot.z = value ? 0 : 90;
-                checkmarkIcon.localRotation = rot;
+                foreach (var item in items)
+                    item.SetActive(value);
+
+                if (checkmarkIcon)
+                    checkmarkIcon.Rotate(new Vector3(0, 0, value ? -90 : 90));
             }
+            visible = value;
         }
     }
 }
