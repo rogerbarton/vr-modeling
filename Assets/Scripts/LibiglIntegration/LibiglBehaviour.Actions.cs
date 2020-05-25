@@ -68,6 +68,7 @@ namespace libigl.Behaviour
             axis = Vector3.Cross(v0, v1);
             angle = Vector3.Angle(v0, v1);
             
+            // TODO: scale should be done from positions at start of both grips pressed 
             scale = (i.HandPosL - i.HandPosR).magnitude - (i.PrevTrafoHandPosL - i.PrevTrafoHandPosR).magnitude;
             
             // Apply soft editing
@@ -75,7 +76,7 @@ namespace libigl.Behaviour
             var softFactorSecondary = softFactor * (!i.PrimaryTransformHand ? i.GripL : i.GripR);
 
             translate *= softFactor;
-            scale *= softFactorSecondary;
+            scale = (scale -1) * softFactorSecondary + 1; 
             angle *= softFactorSecondary;
         }
 
@@ -101,6 +102,28 @@ namespace libigl.Behaviour
             {
                 Native.ClearSelection(_state, _state->Input.DoClearSelection);
             }
+        }
+
+        private void UpdateMeshTransform()
+        {
+            var i = _state->Input;
+            if (i.ActiveTool == ToolType.Select || !i.DoTransform) return;
+            
+            // Transform the whole mesh
+            if (i.SecondaryTransformHandActive)
+            {
+                GetTransformData(_input, out var translate, out var scale, out var angle, out var axis);
+                var uTransform = _libiglMesh.transform;
+                uTransform.Translate(translate);
+                uTransform.Rotate(axis, angle);
+                uTransform.localScale *= scale;
+            }
+            else
+                _libiglMesh.transform.Translate(GetTranslateVector(_input));
+                
+            // Consume the input and update the previous position directly
+            _input.PrevTrafoHandPosL = _input.HandPosL;
+            _input.PrevTrafoHandPosR = _input.HandPosR;
         }
     }
 }
