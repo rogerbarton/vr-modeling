@@ -123,8 +123,8 @@ namespace libigl.Behaviour
         public void Dispose()
         {
             // Be sure to dispose of any NativeArrays that are not garbage collected
-            
-            Object.Destroy(_uiDetails.gameObject);
+            if(_uiDetails)
+                Object.Destroy(_uiDetails.gameObject);
             
             // Delete the C++ state
             Native.DisposeMesh(State);

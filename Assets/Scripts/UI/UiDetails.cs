@@ -126,10 +126,14 @@ namespace UI
 
             _selections.Add(uiSelection);
 
+            // Apply current values
+            uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
+            
             // Set as active, TODO: extract shared function with onClick editBtn
             _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
             _behaviour.Input.ActiveSelectionId = selectionId;
             uiSelection.ToggleEditSprite(true);
+
         }
 
         public void OnDestroy()

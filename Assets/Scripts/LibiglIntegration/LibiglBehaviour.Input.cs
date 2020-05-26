@@ -135,6 +135,7 @@ namespace libigl.Behaviour
             // Consume inputs here
             Input.DoTransform = false;
             Input.DoSelect = false;
+            Input.DoClearSelection = 0;
             Input.DoHarmonic = false;
         }
     }
