@@ -15,6 +15,7 @@ namespace libigl.Behaviour
     {
         // ColMajor Mesh data Shared with UnityMeshData
         public uint DirtyState;
+        public uint DirtySelections;
 
         public readonly void* VPtr;
         public readonly void* NPtr;

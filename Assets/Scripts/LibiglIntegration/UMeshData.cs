@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using libigl.Behaviour;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -15,22 +15,30 @@ namespace libigl
     public class DirtyFlag
     {
         public const uint None = 0;
-        public const uint All = uint.MaxValue - 32 - 64;
         public const uint VDirty = 1;
         public const uint NDirty = 2;
         public const uint CDirty = 4;
         public const uint UVDirty = 8;
         public const uint FDirty = 16;
+
         /// <summary>
         /// Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
         /// </summary>
         public const uint DontComputeNormals = 32;
+
         /// <summary>
         /// Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
         /// </summary>
         public const uint DontComputeBounds = 64;
+
+        /// <summary>
+        /// Don't recompute colors if a visible selection has changed.
+        /// </summary>
+        public const uint DontComputeColorsBySelection = 128;
+
+        public const uint All = uint.MaxValue - DontComputeNormals - DontComputeBounds;
     }
-    
+
     /// <summary>
     /// Stores a copy of the Unity Mesh's arrays. This is purely for the interface between the Libigl Mesh <see cref="State"/>
     /// and the Unity Mesh / what will be rendered.
@@ -42,12 +50,14 @@ namespace libigl
 
         // Which data has changed and needs to be applied to the mesh
         public uint DirtyState = DirtyFlag.None;
+        public uint DirtySelections = 0;
         
         public NativeArray<Vector3> V;
         public NativeArray<Vector3> N;
         public NativeArray<Color> C;
         public NativeArray<Vector2> UV;
         public NativeArray<int> F;
+        public NativeArray<int> S; // VectorXf, Points to C++ data in the State
         public readonly int VSize;
         public readonly int FSize;
 
@@ -65,6 +75,18 @@ namespace libigl
             // Allocate & Copy the V, F matrices from the mesh
             Allocate(mesh);
             CopyFrom(mesh);
+        }
+        
+        /// <summary>
+        /// Initialize the UMeshData with shared data with the <paramref name="behaviour"/>.
+        /// </summary>
+        public unsafe void LinkBehaviourState(LibiglBehaviour behaviour)
+        {
+            S = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<int>(behaviour.State->S, VSize, Allocator.None);
+            
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref S, AtomicSafetyHandle.Create());
+#endif
         }
 
         /// <summary>
@@ -125,13 +147,13 @@ namespace libigl
         {
             Assert.IsTrue(VSize == state->VSize && FSize == state->FSize);
             
-            if(state->DirtyState == DirtyFlag.None) return;
-
             // Copy over and transpose data that has changed
             Native.ApplyDirty(state, _native);
             
             DirtyState |= state->DirtyState;
+            DirtySelections |= state->DirtySelections;
             state->DirtyState = DirtyFlag.None;
+            state->DirtySelections = 0;
         }
 
         /// <summary>
@@ -142,7 +164,6 @@ namespace libigl
         /// </summary>
         public void ApplyDirtyToMesh(Mesh mesh)
         {
-            if(DirtyState == DirtyFlag.None) return;
             Assert.IsTrue(IsRowMajor, "Data must be in RowMajor format to apply changes to the Unity mesh.");
 
             if ((DirtyState & DirtyFlag.VDirty) > 0)
@@ -162,8 +183,11 @@ namespace libigl
                 mesh.SetUVs(0, UV);
             if ((DirtyState & DirtyFlag.FDirty) > 0)
                 mesh.SetIndices(F, MeshTopology.Triangles, 0);
+            if (DirtySelections > 0)
+                mesh.SetUVs(1, UV);
 
             DirtyState = DirtyFlag.None;
+            DirtySelections = 0;
         }
         
         /// <summary> 
@@ -184,6 +208,7 @@ namespace libigl
             if (C.IsCreated) C.Dispose();
             if (UV.IsCreated) UV.Dispose();
             if (F.IsCreated) F.Dispose();
+            // S disposed by C++
         }
     }
 }

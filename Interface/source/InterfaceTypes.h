@@ -44,7 +44,6 @@ struct Vector3 {
  */
 struct DirtyFlag {
 	static const unsigned int None = 0;
-	static const unsigned int All = 0xFFFFFFFF;
 	static const unsigned int VDirty = 1;
 	static const unsigned int NDirty = 2;
 	static const unsigned int CDirty = 4;
@@ -58,6 +57,12 @@ struct DirtyFlag {
 	 * Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
 	 */
 	static const unsigned int DontComputeBounds = 64;
+	/**
+	 * Don't recompute colors if a visible selection has changed.
+	 */
+	static const unsigned int DontComputeColorsBySelection = 128;
+
+	static const unsigned int All = (unsigned int) -1 - DontComputeNormals - DontComputeBounds - DontComputeColorsBySelection;
 };
 
 /**

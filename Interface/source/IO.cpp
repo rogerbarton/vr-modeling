@@ -9,6 +9,14 @@ extern "C" {
     void ApplyDirty(State* state, const UMeshDataNative data){
     	auto& dirty = state->DirtyState;
 
+	    if((state->DirtySelections & state->Input.VisibleSelectionMask) > 0 && (dirty & DirtyFlag::DontComputeColorsBySelection) == 0)
+	    {
+		    // Set Colors if a visible selection is dirty
+		    SetColorByMask(state, state->Input.VisibleSelectionMask);
+
+		    dirty |= DirtyFlag::CDirty;
+	    }
+
 	    if((dirty & DirtyFlag::VDirty) > 0)
 		    TransposeToMap(state->V, data.VPtr);
 	    if((dirty & DirtyFlag::NDirty) > 0)

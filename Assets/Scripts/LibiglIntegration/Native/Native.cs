@@ -29,23 +29,23 @@ namespace libigl
             new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3, 1),
             // new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
             new VertexAttributeDescriptor(VertexAttribute.Color, VertexAttributeFormat.Float32, 3, 2),
-            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 3)
-            // new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2, 1)
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 3), // UV
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.UInt32, 1, 2) // Selection coupled with Color
         };
 
-        #if !UNITY_EDITOR
+#if !UNITY_EDITOR
         // In a build Initialize in the static ctor.
         // This is called once just before the first function is called in this class.
         static Native() { Initialize(); }
-        #endif
-        
+#endif
+
         /// <summary>
         /// Initializes the native library and sets up callbacks/delegates for C++ -> C# calls.
         /// Note: this may not be called on the main thread. So Unity functions may not be available
         /// </summary>
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [NativeDllLoadedTrigger] //Trigger this each time the dll is loaded, so we reinitialize if we reload it
-        #endif
+#endif
         public static void Initialize()
         {
             Initialize(NativeCallbacks.DebugLog, NativeCallbacks.DebugLogWarning, NativeCallbacks.DebugLogError);
@@ -75,31 +75,31 @@ namespace libigl
             [Out] out float* VPtr, [Out] out int VSize,
             [Out] out float* NPtr, [Out] out int NSize,
             [Out] out uint* FPtr, [Out] out int FSize);
-        
+
         [DllImport(DllName)]
         public static extern unsafe void ApplyDirty(State* state, UMeshDataNative data);
 
-        
+
         // ModifyMesh.cpp
         [DllImport(DllName)]
         public static extern unsafe void TranslateMesh(State* state, Vector3 value);
-        
+
         [DllImport(DllName)]
         public static extern unsafe void TranslateSelection(State* state, Vector3 value, int selectionId);
 
         [DllImport(DllName)]
-        public static extern unsafe void TransformSelection(State* state, int selectionId, 
+        public static extern unsafe void TransformSelection(State* state, int selectionId,
             Vector3 translation, float scale, float angle, Vector3 axis);
 
-            [DllImport(DllName)]
+        [DllImport(DllName)]
         public static extern unsafe void Harmonic(State* state, int boundarySelectionId);
 
-        
+
         // Selection.cpp
         [DllImport(DllName)]
-        public static extern unsafe void SphereSelect(State* state, Vector3 position, float radiusSqr, 
+        public static extern unsafe void SphereSelect(State* state, Vector3 position, float radiusSqr,
             int selectionId, uint selectionMode);
-        
+
         [DllImport(DllName)]
         public static extern unsafe void ClearSelection(State* state, int selectionId);
 

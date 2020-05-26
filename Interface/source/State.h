@@ -38,6 +38,7 @@ struct InputState
 
 struct State {
 	unsigned int DirtyState{DirtyFlag::None};
+	unsigned int DirtySelections{0};
 
 	Eigen::MatrixXf* V;
 	Eigen::MatrixXf* N;

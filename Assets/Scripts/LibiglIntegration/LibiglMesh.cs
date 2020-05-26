@@ -52,6 +52,8 @@ namespace libigl
             // Then create the LibiglBehaviour instance which will create a ColMajor instance of the data in the State
             Behaviour = new LibiglBehaviour(this);
 
+            DataRowMajor.LinkBehaviourState(Behaviour);
+
 #if UNITY_EDITOR
             DisposeBeforeUnload += Dispose;
 #endif

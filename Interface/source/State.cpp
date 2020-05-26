@@ -25,9 +25,6 @@ State::State(const UMeshDataNative udata) {
 
 	SSize = new unsigned int[32];
 	std::fill(SSize, SSize + 32, 0);
-
-	// Initialize with zeroed memory (?)
-	Input = InputState();
 }
 
 State::~State() {

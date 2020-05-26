@@ -4,7 +4,7 @@
 
 void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, unsigned int selectionMode) {
 	const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
-	const int maskId = 1 << selectionId;
+	const unsigned int maskId = 1 << selectionId;
 
 	using BinaryExpr = const std::function<int(int, int)>;
 	BinaryExpr AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };
@@ -32,10 +32,9 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
 	state->SSizeAll -= state->SSize[selectionId];
 	state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();
 	state->SSizeAll += state->SSize[selectionId];
-	// LOG("Selected: " << state->SSize[selectionId] << " vertices");
+	// LOG("Selected: " << state->SSize[selectionId] << " vertices, total selected: " << state->SSizeAll);
 
-	// Set Colors
-	SetColorByMask(state, state->Input.VisibleSelectionMask);
+	state->DirtySelections |= maskId;
 }
 
 /**
@@ -48,6 +47,7 @@ void ClearSelection(State* state, int selectionId){
 
 void ClearSelectionMask(State* state, unsigned int maskId) {
 	state->S->unaryExpr([&](int& s) -> int { return ~maskId & s; });
+	state->DirtySelections |= maskId;
 }
 
 /**
