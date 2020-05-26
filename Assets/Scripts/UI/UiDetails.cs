@@ -109,6 +109,10 @@ namespace UI
             {
                 _behaviour.Input.VisibleSelectionMask ^= 1u << selectionId;
                 uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
+                
+                // Repaint colors if 
+                if(_behaviour.State->SSize[selectionId] > 0)
+                    _behaviour.Input.VisibleSelectionMaskChanged = true;
             });
             uiSelection.editBtn.onClick.AddListener(() =>
             {

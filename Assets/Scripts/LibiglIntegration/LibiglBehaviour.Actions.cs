@@ -101,9 +101,10 @@ namespace libigl.Behaviour
         private void ActionUi()
         {
             if (State->Input.DoClearSelection > 0)
-            {
                 Native.ClearSelectionMask(State, State->Input.DoClearSelection);
-            }
+            
+            if(State->Input.VisibleSelectionMaskChanged)
+                Native.SetColorByMask(State, State->Input.VisibleSelectionMask);
         }
 
         private void UpdateMeshTransform()

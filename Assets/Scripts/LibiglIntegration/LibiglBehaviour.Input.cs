@@ -136,6 +136,7 @@ namespace libigl.Behaviour
             Input.DoTransform = false;
             Input.DoSelect = false;
             Input.DoClearSelection = 0;
+            Input.VisibleSelectionMaskChanged = false;
             Input.DoHarmonic = false;
         }
     }

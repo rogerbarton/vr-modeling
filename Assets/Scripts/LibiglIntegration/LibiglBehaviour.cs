@@ -35,10 +35,10 @@ namespace libigl.Behaviour
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             LibiglMesh = libiglMesh;
-            Input.InitializeDefaults();
             
             // Initialize C++ and create the State from the DataRowMajor
             State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
+            Input = State->Input; //Copy defaults from state
             
             _uiDetails = UiManager.get.CreateDetailsPanel();
             _uiDetails.Initialize(this);

@@ -4,7 +4,7 @@
 
 struct InputState
 {
-	unsigned int ActiveTool{0};
+	unsigned int ActiveTool{ToolType::Select};
 
 	// Generic Input
 	float GripL{0};
@@ -25,10 +25,11 @@ struct InputState
 	unsigned int ActiveSelectionMode{0};
 	unsigned int SCount{0};
 	unsigned int VisibleSelectionMask{(unsigned int)-1}; // All visible initially
+    bool VisibleSelectionMaskChanged{false};
 
 	bool DoSelect{false};
 	Vector3 SelectPos{Vector3::Zero()};
-	float SelectRadiusSqr{0};
+	float SelectRadiusSqr{0.1f};
 	// A Mask of the selections that should be cleared
 	unsigned int DoClearSelection{0};
 

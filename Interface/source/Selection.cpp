@@ -46,7 +46,7 @@ void ClearSelection(State* state, int selectionId){
 }
 
 void ClearSelectionMask(State* state, unsigned int maskId) {
-	state->S->unaryExpr([&](int& s) -> int { return ~maskId & s; });
+	*state->S = state->S->unaryExpr([&](int s) -> int { return ~maskId & s; });
 	state->DirtySelections |= maskId;
 }
 

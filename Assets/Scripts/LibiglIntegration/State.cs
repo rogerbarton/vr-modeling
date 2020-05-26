@@ -63,6 +63,7 @@ namespace libigl.Behaviour
         public uint ActiveSelectionMode;
         public uint SCount;
         public uint VisibleSelectionMask;
+        public bool VisibleSelectionMaskChanged;
 
         public bool DoSelect;
         public Vector3 SelectPos;
@@ -73,12 +74,6 @@ namespace libigl.Behaviour
         // Harmonic
         public bool DoHarmonic;
 
-        public void InitializeDefaults()
-        {
-            ActiveTool = ToolType.Default;
-            SelectRadiusSqr = 0.1f;
-        }
-        
         public void ChangeActiveSelection(int increment)
         {
             ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCount);

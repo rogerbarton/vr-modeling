@@ -13,8 +13,6 @@ extern "C" {
 	    {
 		    // Set Colors if a visible selection is dirty
 		    SetColorByMask(state, state->Input.VisibleSelectionMask);
-
-		    dirty |= DirtyFlag::CDirty;
 	    }
 
 	    if((dirty & DirtyFlag::VDirty) > 0)
