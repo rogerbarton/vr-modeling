@@ -7,25 +7,25 @@ namespace libigl.Behaviour
     {
         private void ActionTransformSelection()
         {
-            var i = _state->Input;
+            var i = State->Input;
             if (!i.DoTransform || i.ActiveTool != ToolType.Select) return;
 
             if (!i.SecondaryTransformHandActive)
             {
                 // Only translate selection
-                var translate = GetTranslateVector(_state->Input);
+                var translate = GetTranslateVector(State->Input);
 
-                Native.TranslateSelection(_state, translate, i.ActiveSelectionId);
+                Native.TranslateSelection(State, translate, i.ActiveSelectionId);
             }
             else
             {
                 // Do full transformation
-                GetTransformData(_input, out var translate, out var scale, out var angle, out var axis);
+                GetTransformData(Input, out var translate, out var scale, out var angle, out var axis);
                 angle *= Mathf.Deg2Rad; // Eigen uses rad, Unity uses deg
 
-                Native.TransformSelection(_state, i.ActiveSelectionId, translate, scale, angle, axis.normalized);
+                Native.TransformSelection(State, i.ActiveSelectionId, translate, scale, angle, axis.normalized);
             }
-            _state->DirtyState |= DirtyFlag.VDirty;
+            State->DirtyState |= DirtyFlag.VDirty;
         }
 
         /// <summary>
@@ -84,48 +84,48 @@ namespace libigl.Behaviour
 
         private void ActionSelect()
         {
-            if (!_state->Input.DoSelect) return;
+            if (!State->Input.DoSelect) return;
             
-            Native.SphereSelect(_state, _state->Input.SelectPos, _state->Input.SelectRadiusSqr, 
-                _state->Input.ActiveSelectionId, _state->Input.ActiveSelectionMode);
+            Native.SphereSelect(State, State->Input.SelectPos, State->Input.SelectRadiusSqr, 
+                State->Input.ActiveSelectionId, State->Input.ActiveSelectionMode);
         }
 
         private void ActionHarmonic()
         {
-            if (!_state->Input.DoHarmonic) return;
+            if (!State->Input.DoHarmonic) return;
             
-            Native.Harmonic(_state, -1);
-            _state->DirtyState |= DirtyFlag.VDirty;
+            Native.Harmonic(State, -1);
+            State->DirtyState |= DirtyFlag.VDirty;
         }
 
         private void ActionUi()
         {
-            if (_state->Input.DoClearSelection > 0)
+            if (State->Input.DoClearSelection > 0)
             {
-                Native.ClearSelectionMask(_state, _state->Input.DoClearSelection);
+                Native.ClearSelectionMask(State, State->Input.DoClearSelection);
             }
         }
 
         private void UpdateMeshTransform()
         {
-            var i = _state->Input;
+            var i = State->Input;
             if (i.ActiveTool == ToolType.Select || !i.DoTransform) return;
             
             // Transform the whole mesh
             if (i.SecondaryTransformHandActive)
             {
-                GetTransformData(_input, out var translate, out var scale, out var angle, out var axis);
-                var uTransform = _libiglMesh.transform;
+                GetTransformData(Input, out var translate, out var scale, out var angle, out var axis);
+                var uTransform = LibiglMesh.transform;
                 uTransform.Translate(translate);
                 uTransform.Rotate(axis, angle);
                 uTransform.localScale *= scale;
             }
             else
-                _libiglMesh.transform.Translate(GetTranslateVector(_input));
+                LibiglMesh.transform.Translate(GetTranslateVector(Input));
                 
             // Consume the input and update the previous position directly
-            _input.PrevTrafoHandPosL = _input.HandPosL;
-            _input.PrevTrafoHandPosR = _input.HandPosR;
+            Input.PrevTrafoHandPosL = Input.HandPosL;
+            Input.PrevTrafoHandPosR = Input.HandPosR;
         }
     }
 }

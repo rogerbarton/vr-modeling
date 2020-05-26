@@ -1,13 +1,15 @@
 using System;
+using UI;
 using UnityEngine;
 using UnityEngine.XR;
+using Object = UnityEngine.Object;
 
 namespace libigl.Behaviour
 {
     /// <summary>
     /// This is where the behaviour that interfaces with libigl is. It follows a Pre/Post/Execute threading pattern.
     /// This is a <c>partial</c> class, meaning it is split between several files.
-    /// <remarks>See also <see cref="LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks</remarks>
+    /// <remarks>See also <see cref="libigl.LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks</remarks>
     /// </summary>
     public unsafe partial class LibiglBehaviour : IDisposable
     {
@@ -15,36 +17,37 @@ namespace libigl.Behaviour
         /// A <b>pointer</b> to the C++ state.
         /// This is allocated and deleted in C++ within <see cref="Native.InitializeMesh"/> and <see cref="Native.DisposeMesh"/>.
         /// </summary>
-        private State* _state;
+        public State* State;
 
         /// <summary>
         /// The input state on the main thread. This is copied to the thread input state <c>State.Input</c> at the end of PreExecute
         /// and is then immediately consumed by <see cref="ConsumeInput"/>.
         /// </summary>
-        private InputState _input;
+        public InputState Input;
         
         /// <summary>
-        /// Reference to the <see cref="LibiglMesh"/> used to apply changes to the <see cref="LibiglMesh.DataRowMajor"/> and the Unity <see cref="LibiglMesh.Mesh"/>
+        /// Reference to the <see cref="libigl.LibiglMesh"/> used to apply changes to the <see cref="libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="libigl.LibiglMesh.Mesh"/>
         /// </summary>
-        private readonly LibiglMesh _libiglMesh;
+        public readonly LibiglMesh LibiglMesh;
 
-        private readonly UiDetails _uiDetails = new UiDetails();
+        private readonly UiDetails _uiDetails;
 
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
-            _libiglMesh = libiglMesh;
-            _input.InitializeDefaults();
+            LibiglMesh = libiglMesh;
+            Input.InitializeDefaults();
             
             // Initialize C++ and create the State from the DataRowMajor
-            _state = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), _libiglMesh.name);
+            State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
             
+            _uiDetails = UiManager.get.CreateDetailsPanel();
             _uiDetails.Initialize(this);
         }
 
         /// <summary>
         /// Called every frame, the normal Unity Update. Use this to update UI, input responsively.
         /// Do not call any expensive libigl methods here, use Execute instead<br/>
-        /// Be careful not to modify the shared state if there is a job running <see cref="LibiglMesh.IsJobRunning"/>.
+        /// Be careful not to modify the shared state if there is a job running <see cref="libigl.LibiglMesh.IsJobRunning"/>.
         /// Consider making a copy of certain data, using <see cref="PreExecute"/> or using atomics/Interlocked.
         /// Update is called just before <see cref="PreExecute"/>.
         /// </summary>
@@ -62,8 +65,8 @@ namespace libigl.Behaviour
         public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
-            _input.DoTransform |= Input.GetKeyDown(KeyCode.W);
-            _input.DoSelect |= Input.GetMouseButtonDown(0);
+            Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
+            Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
             
             // if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
             // {
@@ -73,7 +76,7 @@ namespace libigl.Behaviour
 
             _uiDetails.UpdatePreExecute();
             // Copy the InputState to the State by copying
-            _state->Input = _input;
+            State->Input = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
             ConsumeInput();
         }
@@ -81,14 +84,14 @@ namespace libigl.Behaviour
         /// <summary>
         /// Perform expensive computations here. This is called similarly to Update.<br/>
         /// Called on a worker thread from which any Unity API function, with a few exceptions such as <c>Debug.Log</c>, cannot be called.
-        /// <remarks>There is one worker thread per <see cref="LibiglMesh"/>.<br/>
+        /// <remarks>There is one worker thread per <see cref="libigl.LibiglMesh"/>.<br/>
         /// You should call <c>_libiglMesh.DataRowMajor.ApplyDirty(_state)</c> here to apply changes to the
         /// RowMajor <see cref="UMeshData"/> outside the main thread.</remarks>
         /// </summary>
         public void Execute()
         {
             // Add your logic here
-            switch (_input.ActiveTool)
+            switch (Input.ActiveTool)
             {
                 case ToolType.Default:
                     break;
@@ -101,7 +104,7 @@ namespace libigl.Behaviour
             ActionUi();
             
             // Apply changes back to the RowMajor so they can be applied to the mesh
-            _libiglMesh.DataRowMajor.ApplyDirty(_state);
+            LibiglMesh.DataRowMajor.ApplyDirty(State);
         }
 
         /// <summary>
@@ -114,18 +117,18 @@ namespace libigl.Behaviour
             _uiDetails.UpdatePostExecute();
             
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
-            _libiglMesh.DataRowMajor.ApplyDirtyToMesh(_libiglMesh.Mesh);
+            LibiglMesh.DataRowMajor.ApplyDirtyToMesh(LibiglMesh.Mesh);
         }
 
         public void Dispose()
         {
             // Be sure to dispose of any NativeArrays that are not garbage collected
             
-            _uiDetails.Deconstruct();
+            Object.Destroy(_uiDetails.gameObject);
             
             // Delete the C++ state
-            Native.DisposeMesh(_state);
-            _state = null;
+            Native.DisposeMesh(State);
+            State = null;
         }
     }
 }
