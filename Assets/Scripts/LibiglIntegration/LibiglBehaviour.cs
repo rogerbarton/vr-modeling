@@ -118,6 +118,10 @@ namespace libigl.Behaviour
             
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
             LibiglMesh.DataRowMajor.ApplyDirtyToMesh(LibiglMesh.Mesh);
+            
+            // Consume Dirty
+            State->DirtyState = DirtyFlag.None;
+            State->DirtySelections = 0;
         }
 
         public void Dispose()

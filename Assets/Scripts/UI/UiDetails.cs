@@ -159,7 +159,7 @@ namespace UI
         public void UpdatePostExecute()
         {
             // Update Selection UI
-            if (_behaviour.Input.DoSelect)
+            if (_behaviour.State->DirtySelections > 0)
             {
                 _selectCount.text = $"Selected: {_behaviour.State->SSizeAll}";
                 for (var i = 0; i < _selections.Count; i++)
@@ -176,11 +176,6 @@ namespace UI
         private void ActiveMeshChanged()
         {
             _setActiveBtn.gameObject.SetActive(!_behaviour.LibiglMesh.IsActiveMesh());
-        }
-
-        public void ActiveSelectionChanged()
-        {
-            // TODO: Update UI that shows active selection
         }
     }
 }

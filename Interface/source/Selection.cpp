@@ -29,9 +29,8 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
 			.binaryExpr(*state->S, *Apply);
 
 	// Get selection size
-	state->SSizeAll -= state->SSize[selectionId];
 	state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();
-	state->SSizeAll += state->SSize[selectionId];
+	state->SSizeAll = state->S->unaryExpr([&](int a) -> int { return a > 0; }).sum();
 	// LOG("Selected: " << state->SSize[selectionId] << " vertices, total selected: " << state->SSizeAll);
 
 	state->DirtySelections |= maskId;

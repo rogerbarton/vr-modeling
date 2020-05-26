@@ -152,8 +152,6 @@ namespace libigl
             
             DirtyState |= state->DirtyState;
             DirtySelections |= state->DirtySelections;
-            state->DirtyState = DirtyFlag.None;
-            state->DirtySelections = 0;
         }
 
         /// <summary>
