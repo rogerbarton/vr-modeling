@@ -9,8 +9,18 @@ extern "C" {
     void ApplyDirty(State* state, const UMeshDataNative data){
     	auto& dirty = state->DirtyState;
 
-	    if((state->DirtySelections & state->Input.VisibleSelectionMask) > 0 && (dirty & DirtyFlag::DontComputeColorsBySelection) == 0)
-	    {
+	    if((state->DirtySelections & state->Input.VisibleSelectionMask) > 0 && (dirty & DirtyFlag::DontComputeColorsBySelection) == 0) {
+		    // Update selection sizes
+		    state->SSizeAll = state->S->unaryExpr([&](int a) -> int { return a > 0; }).sum();
+
+		    for (unsigned int selectionId = 0; selectionId < state->Input.SCount; ++selectionId) {
+			    const unsigned int maskId = 1u << selectionId;
+			    if ((maskId & state->DirtySelections) == 0)
+				    continue;
+
+			    state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).sum();
+		    }
+
 		    // Set Colors if a visible selection is dirty
 		    SetColorByMask(state, state->Input.VisibleSelectionMask);
 	    }

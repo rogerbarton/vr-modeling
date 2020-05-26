@@ -28,9 +28,6 @@ void SphereSelect(State* state, Vector3 position, float radiusSqr, int selection
 			.cast<int>().matrix()
 			.binaryExpr(*state->S, *Apply);
 
-	// Get selection size
-	state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return a & maskId; }).sum();
-	state->SSizeAll = state->S->unaryExpr([&](int a) -> int { return a > 0; }).sum();
 	// LOG("Selected: " << state->SSize[selectionId] << " vertices, total selected: " << state->SSizeAll);
 
 	state->DirtySelections |= maskId;
@@ -70,21 +67,17 @@ void SetColorBySelection(State* state, int selectionId) {
 void SetColorByMask(State* state, unsigned int maskId) {
 	state->C->setZero();
 
-	unsigned int selectionId = 0;
-	while (selectionId < state->Input.SCount) {
-		const unsigned int m = 1 << selectionId;
-		if ((m & maskId) == 0) {// Skip selections that are not visible
-			++selectionId;
+
+	for (unsigned int selectionId = 0; selectionId < state->Input.SCount; ++selectionId) {
+		const unsigned int m = 1u << selectionId;
+		if ((m & maskId) == 0) // Skip selections that are not visible
 			continue;
-		}
 
 		// Normalize color by the maskId so we can multiply the mask by the color
 		const Eigen::MatrixXf mask = state->S->unaryExpr([&](int a) -> int { return a & m; }).cast<float>();
 
 		const Color_t color = Color::GetColorById(selectionId).array() / (float) m;
 		*state->C += mask * color;
-
-		++selectionId;
 	}
 
 	state->DirtyState |= DirtyFlag::CDirty;
