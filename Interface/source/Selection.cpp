@@ -69,19 +69,21 @@ void SetColorBySelection(State* state, int selectionId) {
  * @param maskId Which selections to show
  */
 void SetColorByMask(State* state, unsigned int maskId) {
-	state->C->setOnes();
+	state->C->setZero();
 
 	unsigned int selectionId = 0;
 	while (selectionId < state->Input.SCount) {
 		const unsigned int m = 1 << selectionId;
-		if ((m & maskId) == 0) // Skip selections that are not visible
+		if ((m & maskId) == 0) {// Skip selections that are not visible
+			++selectionId;
 			continue;
+		}
 
 		// Normalize color by the maskId so we can multiply the mask by the color
 		const Eigen::MatrixXf mask = state->S->unaryExpr([&](int a) -> int { return a & m; }).cast<float>();
 
 		const Color_t color = Color::GetColorById(selectionId).array() / (float) m;
-		*state->C *= mask * color;
+		*state->C += mask * color;
 
 		++selectionId;
 	}
