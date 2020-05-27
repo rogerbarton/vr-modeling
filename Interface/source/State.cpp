@@ -22,6 +22,7 @@ State::State(const UMeshDataNative udata) {
 
 	// Selection
 	S->setZero();
+	DirtySelections = (unsigned int)-1;
 
 	SSize = new unsigned int[32];
 	std::fill(SSize, SSize + 32, 0);
