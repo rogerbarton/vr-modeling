@@ -111,8 +111,19 @@ namespace libigl
         {
             // Dispose all Native data (NativeArrays and anything created with 'new' in C++)
             // Note: may be called twice in the editor
-            _workerThread?.Interrupt();
-            _workerThread = null;
+            if(_workerThread != null)
+            {
+                try
+                {
+                    _workerThread.Abort();
+                    _workerThread.Join();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                _workerThread = null;
+            }
             DataRowMajor?.Dispose();
             DataRowMajor = null;
             Behaviour?.Dispose();
