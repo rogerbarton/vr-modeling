@@ -15,10 +15,16 @@ void SelectionColor_float (float uv1, out float4 Color)
     Orange = float4(0.8784314, 0.5314119, 0.145098, 1);
     Pink = float4(1, 0, 1, 1);
     
-    uint maskId = (uint)uv1;
+    uint maskId = asuint(uv1);
    
-    
-    
-    Color = Pink;
+    Color = White;
+    [unroll(32)] 
+    for (uint selectionId = 0; selectionId < 32; ++selectionId) {
+		uint m = 1u << selectionId;
+		if ((m & maskId) == 0) // Skip selections that are not visible
+			continue;
+        
+        Color = (Color + Pink) / 2; 
+	}
 }
 #endif //SELECTIONCOLOR_HLSL
