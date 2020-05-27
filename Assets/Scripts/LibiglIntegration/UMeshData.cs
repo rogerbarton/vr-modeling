@@ -182,7 +182,7 @@ namespace libigl
             if ((DirtyState & DirtyFlag.FDirty) > 0)
                 mesh.SetIndices(F, MeshTopology.Triangles, 0);
             if (DirtySelections > 0)
-                mesh.SetUVs(1, UV);
+                mesh.SetUVs(1, S);
 
             DirtyState = DirtyFlag.None;
             DirtySelections = 0;
