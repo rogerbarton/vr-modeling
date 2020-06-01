@@ -1,3 +1,4 @@
+using System;
 using libigl.Behaviour;
 using TMPro;
 using UnityEngine;
@@ -27,9 +28,10 @@ namespace UI
         
         [Tooltip("The Content of the Actions Canvas scroll list. Convention: the last child serves as the prefab for a new item.")]
         public Transform actionsListParent;
-        [Tooltip("If null then the first child button found in actionsListParent will be used.")]
-        [SerializeField] private GameObject actionsListPrefab;
-    
+
+        private UiCollapsible _toolGroup;
+        private UiCollapsible _meshGroup;
+        private UiCollapsible _debugGroup;
 
         private void Awake()
         {
@@ -40,37 +42,11 @@ namespace UI
                 return;
             }
             get = this;
-        
-            // Convention: Use the last child as the prefab
-            if (!actionsListPrefab && actionsListParent.childCount > 0)
-                actionsListPrefab = actionsListParent.GetComponentInChildren<Button>(true).gameObject;
-
-            LibiglBehaviour.InitializeActionUi();
         }
 
-        /// <summary>
-        /// Generates UI, gesture and speed entry points based on an action
-        /// </summary>
-        /// <param name="onClick">Code to execute when an entry point is triggered</param>
-        public void CreateActionUi(string uiText, UnityAction onClick, string[] speechKeywords = null, int gestureId = -1)
+        private void Start()
         {
-            // Parenting, layout, ui
-            var go = Instantiate(actionsListPrefab, actionsListParent);
-            go.SetActive(true);
-            var textField = go.GetComponentInChildren<TMP_Text>();
-            textField.text = uiText;
-
-            // setup callbacks/events
-            var button = go.GetComponent<Button>();
-            button.onClick.AddListener(onClick);
-
-            // Setup speech keywords
-            Speech.CreateKeywordRecognizer(speechKeywords, onClick);
-
-            // TODO: Setup gesture recognition
-            if (gestureId >= 0)
-            {
-            }
+            InitializeStaticUi();
         }
 
         /// <summary>
@@ -84,7 +60,79 @@ namespace UI
             
             return go.GetComponent<UiDetails>();
         }
-        
+
+
+        /// <summary>
+        /// Generates the UI unrelated to a mesh or to manipulate the <i>active mesh</i> <see cref="MeshManager.ActiveMesh"/>
+        /// </summary>
+        private void InitializeStaticUi()
+        {
+            // Tools
+            _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            _toolGroup.title.text = "Tools & Actions";
+            _toolGroup.SetVisibility(true);
+
+            CreateActionUi("Default Tool",
+                () => { MeshManager.ActiveMesh.Behaviour.Input.ActiveTool = ToolType.Default; }, _toolGroup);
+            CreateActionUi("Select Tool",
+                () => { MeshManager.ActiveMesh.Behaviour.Input.ActiveTool = ToolType.Select; }, _toolGroup,
+                new[] {"select"});
+
+            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonic = true; }, _toolGroup,
+                new[] {"smooth", "harmonic", "laplacian"});
+            CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
+                new[] {"translate", "move"});
+            CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
+
+            // Meshes
+            _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            _meshGroup.title.text = "Load Mesh";
+            _meshGroup.SetVisibility(true);
+
+            foreach (var meshPrefab in MeshManager.get.meshPrefabs)
+            {
+                // Create button to load each mesh
+                var go = Instantiate(buttonPrefab, actionsListParent);
+                _meshGroup.AddItem(go);
+                var textField = go.GetComponentInChildren<TMP_Text>();
+                textField.text = meshPrefab.name;
+
+                // setup callbacks/events
+                var button = go.GetComponent<Button>();
+                button.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab));
+                button.interactable = MeshManager.get.CheckPrefabValidity(meshPrefab);
+            }
+
+            // Debug
+            _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            _debugGroup.title.text = "Debug";
+            _debugGroup.SetVisibility(true);
+        }
+
+        /// <summary>
+        /// Generates UI, gesture and speed entry points based on an action
+        /// </summary>
+        /// <param name="onClick">Code to execute when an entry point is triggered</param>
+        /// <param name="collapsible">The group to add this item under</param>
+        private void CreateActionUi(string uiText, UnityAction onClick, UiCollapsible collapsible = null, string[] speechKeywords = null)
+        {
+            // Parenting, layout, ui
+            var go = Instantiate(buttonPrefab, actionsListParent);
+            if(collapsible != null)
+                collapsible.AddItem(go);
+            else
+                go.SetActive(true);
+            var textField = go.GetComponentInChildren<TMP_Text>();
+            textField.text = uiText;
+
+            // setup callbacks/events
+            var button = go.GetComponent<Button>();
+            button.onClick.AddListener(onClick);
+
+            // Setup speech keywords
+            Speech.CreateKeywordRecognizer(speechKeywords, onClick);
+        }
+
         private void OnDestroy()
         {
             Speech.Dispose();

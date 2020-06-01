@@ -26,7 +26,7 @@ namespace UI
         /// <summary>
         /// Change the visibility, callable from UI Event OnClick
         /// </summary>
-        public void ToggleVisibility(bool value)
+        public void SetVisibility(bool value)
         {
             if (value != visible)
             {

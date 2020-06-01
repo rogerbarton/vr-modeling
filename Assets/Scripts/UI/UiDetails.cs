@@ -13,6 +13,7 @@ namespace UI
         private LibiglBehaviour _behaviour;
         private Transform _listParent;
         public UiProgressIcon progressIcon;
+        public Image activeIcon;
 
         // UI Components
         private TMP_Text _meshName;
@@ -78,11 +79,11 @@ namespace UI
             // Selection
             _selectionGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _selectionGroup.title.text = "Selections";
-            _selectionGroup.visible = true;
+            _selectionGroup.SetVisibility(true);
 
             _addSelectionBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _addSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
-            _selectionGroup.GetComponent<UiCollapsible>().AddItem(_addSelectionBtn.gameObject);
+            _selectionGroup.AddItem(_addSelectionBtn.gameObject);
             _addSelectionBtn.onClick.AddListener(AddSelection);
 
             // Setup first selection
@@ -101,7 +102,7 @@ namespace UI
             var uiSelection = Instantiate(UiManager.get.selectionPrefab, _listParent)
                 .GetComponent<UiSelection>();
             uiSelection.text.text = $"<b>{selectionId}</b>: 0 vertices";
-            _selectionGroup.GetComponent<UiCollapsible>().AddItem(uiSelection.gameObject);
+            _selectionGroup.AddItem(uiSelection.gameObject);
             uiSelection.visibleBtn.image.color = Util.Colors.GetColorById(selectionId);
 
             // Behaviour when clicking buttons

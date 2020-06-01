@@ -30,7 +30,6 @@ public class MeshManager : MonoBehaviour
 
     private void Awake()
     {
-        
         if (get)
         {
             Debug.LogWarning("MeshManager instance already exists.");
@@ -44,35 +43,6 @@ public class MeshManager : MonoBehaviour
     {
         if(meshPrefabs.Length > 0)
             ActiveMesh = LoadMesh(meshPrefabs[0]);
-
-        // Convention: Use the first child as the prefab
-        if (!uiListItemPrefab && uiListItemParent.childCount > 0)
-            uiListItemPrefab = uiListItemParent.GetComponentInChildren<Button>(true).gameObject;
-        
-        // Create listitem foreach 
-        foreach (var prefab in meshPrefabs)
-        {
-            var isValid = CheckPrefabValidity(prefab);
-            SetupUi(prefab, isValid);
-        }
-    }
-
-    /// <summary>
-    /// Generates UI for loading the <paramref name="meshPrefab"/>
-    /// </summary>
-    /// <param name="isValid">Whether the prefab is a valid mesh prefab. See <see cref="CheckPrefabValidity"/></param>
-    private void SetupUi(GameObject meshPrefab, bool isValid)
-    {
-        // Parenting, layout, ui
-        var go = Instantiate(uiListItemPrefab, uiListItemParent);
-        go.SetActive(true);
-        var textField = go.GetComponentInChildren<TMP_Text>();
-        textField.text = meshPrefab.name;
-            
-        // setup callbacks/events
-        var button = go.GetComponent<Button>();
-        button.onClick.AddListener(() => LoadMesh(meshPrefab));
-        button.interactable = isValid;
     }
 
     private void Update()
@@ -131,7 +101,7 @@ public class MeshManager : MonoBehaviour
     /// Checks if a prefab can be loaded and modified with libigl. Does not modify the prefab only logs errors.
     /// </summary>
     /// <returns>True if the prefab can be used with libigl</returns>
-    private bool CheckPrefabValidity(GameObject prefab)
+    public bool CheckPrefabValidity(GameObject prefab)
     {
         var meshFilter = prefab.GetComponent<MeshFilter>();
         if (!meshFilter)
