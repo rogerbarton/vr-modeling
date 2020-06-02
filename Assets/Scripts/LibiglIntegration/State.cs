@@ -73,6 +73,7 @@ namespace libigl.Behaviour
         
         // Harmonic
         public bool DoHarmonic;
+        // public bool DoArap;
 
         public void ChangeActiveSelection(int increment)
         {

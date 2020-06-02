@@ -13,69 +13,46 @@ namespace UI
         private LibiglBehaviour _behaviour;
         private Transform _listParent;
         public UiProgressIcon progressIcon;
-        public Image activeIcon;
+
+        public Button activeBtn;
+        [SerializeField] private Image activeImage = null;
+        [SerializeField] private Sprite editSprite = null;
+        [SerializeField] private Sprite activeSprite = null;
 
         // UI Components
         private TMP_Text _meshName;
         private TMP_Text _vertexCount;
-        private TMP_Text _faceCount;
-        private TMP_Text _selectCount;
-
-        private Button _setActiveBtn;
-        private Button _resetTransformBtn;
 
         private Button _toggleWireframe;
 
         private UiCollapsible _selectionGroup;
         private Button _addSelectionBtn;
         private readonly List<UiSelection> _selections = new List<UiSelection>();
+        private UiCollapsible _operationsGroup;
+        private UiCollapsible _shaderGroup;
+        private UiCollapsible _debugGroup;
+        private Button _harmonicToggle;
+        private Button _arapToggle;
 
         public void Initialize(LibiglBehaviour behaviour)
         {
             _behaviour = behaviour;
             MeshManager.ActiveMeshChanged += ActiveMeshChanged;
 
+            activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
+            var isActive = _behaviour.LibiglMesh.IsActiveMesh();
+            activeImage.sprite = isActive ? activeSprite : editSprite;
+            
             _listParent = GetComponentInChildren<VerticalLayoutGroup>().transform;
 
+            // Start UI Generation
             _meshName = Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
             _meshName.text = _behaviour.LibiglMesh.name;
 
             _vertexCount = Instantiate(UiManager.get.textPrefab, _listParent).GetComponent<TMP_Text>();
-            _vertexCount.text = $"Vertices: {_behaviour.State->VSize}";
+            UpdateVertexCountText();
 
-            _faceCount = Instantiate(UiManager.get.textPrefab, _listParent).GetComponent<TMP_Text>();
-            _faceCount.text = $"Faces: {_behaviour.State->FSize}";
-
-            _selectCount = Instantiate(UiManager.get.textPrefab, _listParent).GetComponent<TMP_Text>();
-            _selectCount.text = $"Selected: {_behaviour.State->SSizeAll}";
-
-            // Set mesh as the active one if not active already
-            _setActiveBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _setActiveBtn.GetComponentInChildren<TMP_Text>().text = "Set As Active";
-            _setActiveBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
-            _setActiveBtn.gameObject.SetActive(!_behaviour.LibiglMesh.IsActiveMesh());
-
-            // Reset Transform to spawnPoint button 
-            _resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _resetTransformBtn.GetComponentInChildren<TMP_Text>().text = "Reset Transform";
-            _resetTransformBtn.onClick.AddListener(() => { behaviour.LibiglMesh.ResetTransformToSpawn(); });
-
-            // Shaders
-            // var ShaderHeader = Object.Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
-            // ShaderHeader.text = "Shader";
-
-            _toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
-            _toggleWireframe.onClick.AddListener(() =>
-            {
-                var materials = behaviour.LibiglMesh.MeshRenderer.materials;
-                if (materials.Length == 1)
-                    materials = materials.Append(MeshManager.get.wireframeMaterial).ToArray();
-                else
-                    materials = new[] {materials.First()};
-                behaviour.LibiglMesh.MeshRenderer.materials = materials;
-            });
-
+            
             // Selection
             _selectionGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _selectionGroup.title.text = "Selections";
@@ -90,6 +67,58 @@ namespace UI
             AddSelection();
             // Set it as the active one
             _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
+            
+            
+            // Operations
+            _operationsGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            _operationsGroup.title.text = "Operations";
+            _operationsGroup.SetVisibility(true);
+            
+            _harmonicToggle = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _operationsGroup.AddItem(_harmonicToggle.gameObject);
+            _harmonicToggle.GetComponentInChildren<TMP_Text>().text = "Harmonic";
+            _harmonicToggle.onClick.AddListener(() => { behaviour.Input.DoHarmonic = true; });
+            
+            _arapToggle = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _operationsGroup.AddItem(_arapToggle.gameObject);
+            _arapToggle.GetComponentInChildren<TMP_Text>().text = "ARAP";
+            // _arapToggle.onClick.AddListener(() => { behaviour.Input.DoArap = true; });
+
+            var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _operationsGroup.AddItem(resetTransformBtn.gameObject);
+            resetTransformBtn.GetComponentInChildren<TMP_Text>().text = "Reset Transform";
+            resetTransformBtn.onClick.AddListener(() => { behaviour.LibiglMesh.ResetTransformToSpawn(); });
+            
+            
+            // Shaders
+            _shaderGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            _shaderGroup.title.text = "Selections";
+            _shaderGroup.SetVisibility(true);
+
+            _toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _shaderGroup.AddItem(_toggleWireframe.gameObject);
+            _shaderGroup.AddItem(_toggleWireframe.gameObject);
+            _toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
+            _toggleWireframe.onClick.AddListener(() =>
+            {
+                var materials = behaviour.LibiglMesh.MeshRenderer.materials;
+                if (materials.Length == 1)
+                    materials = materials.Append(MeshManager.get.wireframeMaterial).ToArray();
+                else
+                    materials = new[] {materials.First()};
+                behaviour.LibiglMesh.MeshRenderer.materials = materials;
+            });
+
+            
+            // Debug
+            _debugGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            _debugGroup.title.text = "Show Debug";
+            _debugGroup.SetVisibility(false);
+            
+            var doSelectBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _debugGroup.AddItem(doSelectBtn.gameObject);
+            doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
+            doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
         }
 
         private void AddSelection()
@@ -110,9 +139,9 @@ namespace UI
             {
                 _behaviour.Input.VisibleSelectionMask ^= 1u << selectionId;
                 uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
-                
+
                 // Repaint colors if 
-                if(_behaviour.State->SSize[selectionId] > 0)
+                if (_behaviour.State->SSize[selectionId] > 0)
                     _behaviour.Input.VisibleSelectionMaskChanged = true;
             });
             uiSelection.editBtn.onClick.AddListener(() =>
@@ -126,20 +155,29 @@ namespace UI
             });
             uiSelection.clearBtn.onClick.AddListener(() =>
             {
-                _behaviour.Input.DoClearSelection |= 1u << selectionId;
+                // Either clear the selection or delete it in the UI if it is the last one and is empty
+                if(_behaviour.State->SSize[selectionId] > 0)
+                    _behaviour.Input.DoClearSelection |= 1u << selectionId;
+                else if (selectionId == _selections.Count -1 && _selections.Count > 1)
+                {
+                    _selections.RemoveAt(selectionId);
+                    Destroy(_selections[selectionId].gameObject);
+                }
             });
 
             _selections.Add(uiSelection);
 
             // Apply current values
             uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
-            
+
             // Set as active, TODO: extract shared function with onClick editBtn
             _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
             _behaviour.Input.ActiveSelectionId = selectionId;
             uiSelection.ToggleEditSprite(true);
 
         }
+
+        #region Callbacks
 
         public void OnDestroy()
         {
@@ -162,7 +200,7 @@ namespace UI
             // Update Selection UI
             if (_behaviour.State->DirtySelections > 0)
             {
-                _selectCount.text = $"Selected: {_behaviour.State->SSizeAll}";
+                UpdateVertexCountText();
                 for (var i = 0; i < _selections.Count; i++)
                     _selections[i].GetComponentInChildren<TMP_Text>().text =
                         $"{i}: {_behaviour.State->SSize[i]} vertices";
@@ -176,7 +214,20 @@ namespace UI
         /// </summary>
         private void ActiveMeshChanged()
         {
-            _setActiveBtn.gameObject.SetActive(!_behaviour.LibiglMesh.IsActiveMesh());
+            var isActive = _behaviour.LibiglMesh.IsActiveMesh();
+            activeImage.sprite = isActive ? activeSprite : editSprite;
         }
+
+        #endregion
+
+        #region Helper Functions
+
+        private void UpdateVertexCountText()
+        {
+            _vertexCount.text =
+                $"V: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} F: {_behaviour.State->FSize}";
+        }
+
+        #endregion
     }
 }
