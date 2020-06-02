@@ -181,9 +181,12 @@ namespace libigl
                 mesh.SetUVs(0, UV);
             if ((DirtyState & DirtyFlag.FDirty) > 0)
                 mesh.SetIndices(F, MeshTopology.Triangles, 0);
-            if (DirtySelections > 0)
-                mesh.SetUVs(1, S);
-
+            // if (DirtySelections > 0)
+                // mesh.SetUVs(1, S);
+            // TODO: fix this
+            // Unsupported conversion of vertex data (format 11 to 0, dimensions 1 to 1)
+            // UnityEngine.Mesh:SetUVs(Int32, NativeArray`1)
+            
             DirtyState = DirtyFlag.None;
             DirtySelections = 0;
         }
