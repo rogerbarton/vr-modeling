@@ -17,7 +17,7 @@ extern "C" {
 
 		for (int i = 0; i < V.rows(); ++i) {
 			if ((S(i) & maskId) > 0) {
-				V.rowwise() += (Eigen::RowVector3f)value;
+				V.row(i) += (Eigen::RowVector3f)value;
 			}
 		}
 	}
