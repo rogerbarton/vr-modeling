@@ -109,13 +109,15 @@ namespace libigl.Behaviour
             }
             else
             {
-                if (Input.DoTransform && Input.PrimaryTransformHand)
-                {
-                    if (Input.SecondaryTransformHandActive)
-                        Input.PrimaryTransformHand = !isRight;
-                    else
-                        Input.DoTransform = false;
-                }
+                 if(Input.PrimaryTransformHand == isRight)
+                 {
+                     if (Input.SecondaryTransformHandActive)
+                         Input.PrimaryTransformHand = !isRight;
+                     else
+                         Input.DoTransform = false;
+                 }
+                 else
+                     Input.SecondaryTransformHandActive = false;
             }
 
         }

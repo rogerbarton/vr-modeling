@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace libigl.Behaviour
@@ -37,11 +37,11 @@ namespace libigl.Behaviour
         {
             Vector3 t;
             if(i.PrimaryTransformHand)
-                 t = i.HandPosL - i.PrevTrafoHandPosL;
-            else
                 t = i.HandPosR - i.PrevTrafoHandPosR;
+            else
+                t = i.HandPosL - i.PrevTrafoHandPosL;
             
-            var softFactor = i.PrimaryTransformHand ? i.GripL : i.GripR;
+            var softFactor = i.PrimaryTransformHand ? i.GripR : i.GripL;
             return t * softFactor;
         }
 
@@ -55,15 +55,15 @@ namespace libigl.Behaviour
             Vector3 v0, v1;
             if(i.PrimaryTransformHand)
             {
-                translate = i.HandPosL - i.PrevTrafoHandPosL;
-                v0 = i.PrevTrafoHandPosL - i.PrevTrafoHandPosR;
-                v1 = i.HandPosL - i.HandPosR;
-            }
-            else
-            {
                 translate = i.HandPosR - i.PrevTrafoHandPosR;
                 v0 = i.PrevTrafoHandPosR - i.PrevTrafoHandPosL;
                 v1 = i.HandPosR - i.HandPosL;
+            }
+            else
+            {
+                translate = i.HandPosL - i.PrevTrafoHandPosL;
+                v0 = i.PrevTrafoHandPosL - i.PrevTrafoHandPosR;
+                v1 = i.HandPosL - i.HandPosR;
             }
                 
             axis = Vector3.Cross(v0, v1);
@@ -74,8 +74,8 @@ namespace libigl.Behaviour
             if (float.IsNaN(scale))
                 scale = 1f;
             // Apply soft editing
-            var softFactor = i.PrimaryTransformHand ? i.GripL : i.GripR;
-            var softFactorSecondary = !i.PrimaryTransformHand ? i.GripL : i.GripR;
+            var softFactor = i.PrimaryTransformHand ? i.GripR : i.GripL;
+            var softFactorSecondary = !i.PrimaryTransformHand ? i.GripR : i.GripL;
 
             translate *= softFactor;
             scale = (scale -1) * softFactorSecondary + 1;
