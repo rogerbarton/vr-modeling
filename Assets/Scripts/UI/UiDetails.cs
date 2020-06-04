@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using libigl;
 using libigl.Behaviour;
@@ -31,8 +32,8 @@ namespace UI
         private UiCollapsible _operationsGroup;
         private UiCollapsible _shaderGroup;
         private UiCollapsible _debugGroup;
-        private Button _harmonicToggle;
-        private Button _arapToggle;
+        private UiToggleAction _harmonicToggle;
+        private UiToggleAction _arapToggle;
 
         public void Initialize(LibiglBehaviour behaviour)
         {
@@ -74,15 +75,32 @@ namespace UI
             _operationsGroup.title.text = "Operations";
             _operationsGroup.SetVisibility(true);
             
-            _harmonicToggle = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _harmonicToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_harmonicToggle.gameObject);
-            _harmonicToggle.GetComponentInChildren<TMP_Text>().text = "Harmonic";
-            _harmonicToggle.onClick.AddListener(() => { behaviour.Input.DoHarmonic = true; });
+            _harmonicToggle.text.text = "Harmonic";
+            _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input.DoHarmonicOnce = true; });
+            _harmonicToggle.toggle.isOn = behaviour.Input.DoHarmonic;
+            _harmonicToggle.toggle.onValueChanged.AddListener(value =>
+            {
+                behaviour.Input.DoHarmonicOnce = value;
+                behaviour.Input.DoHarmonic = value;
+            });
             
-            _arapToggle = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            var harmonicShowDisplacements = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _operationsGroup.AddItem(harmonicShowDisplacements.gameObject);
+            harmonicShowDisplacements.GetComponentInChildren<TMP_Text>().text = "Toggle deform field";
+            harmonicShowDisplacements.onClick.AddListener(() => { behaviour.Input.HarmonicShowDisplacement = !behaviour.Input.HarmonicShowDisplacement; });
+            
+            _arapToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_arapToggle.gameObject);
-            _arapToggle.GetComponentInChildren<TMP_Text>().text = "ARAP";
-            // _arapToggle.onClick.AddListener(() => { behaviour.Input.DoArap = true; });
+            _arapToggle.text.text = "ARAP";
+            _arapToggle.button.onClick.AddListener(() => { behaviour.Input.DoArapOnce = true; });
+            _arapToggle.toggle.isOn = behaviour.Input.DoArap;
+            _arapToggle.toggle.onValueChanged.AddListener(value =>
+            {
+                behaviour.Input.DoArapOnce = value;
+                behaviour.Input.DoArap = value;
+            });
 
             var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _operationsGroup.AddItem(resetTransformBtn.gameObject);
@@ -160,13 +178,23 @@ namespace UI
                     _behaviour.Input.DoClearSelection |= 1u << selectionId;
                 else if (selectionId == _selections.Count -1 && _selections.Count > 1)
                 {
-                    _selections.RemoveAt(selectionId);
+                    if (_behaviour.Input.ActiveSelectionId == selectionId)
+                    {
+                        _behaviour.Input.ActiveSelectionId--;
+                        _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
+                    }
+
+                    _behaviour.Input.SCount--;
                     Destroy(_selections[selectionId].gameObject);
+                    _selections.RemoveAt(selectionId);
                 }
             });
 
+            if (_selections.Count > 0)
+                uiSelection.transform.SetSiblingIndex(_selections[_selections.Count - 1].transform.GetSiblingIndex() + 1);
             _selections.Add(uiSelection);
 
+            
             // Apply current values
             uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
 

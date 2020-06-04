@@ -33,8 +33,12 @@ struct InputState
 	// A Mask of the selections that should be cleared
 	unsigned int DoClearSelection{0};
 
-	// Harmonic
-	bool DoHarmonic{false};
+	// Deformations
+	bool DoHarmonicOnce{false}; // Trigger execution once
+	bool DoHarmonic{false};     // Trigger execution every frame
+	bool HarmonicShowDisplacement{false};
+	bool DoArapOnce{false};
+	bool DoArap{false};
 };
 
 struct State {

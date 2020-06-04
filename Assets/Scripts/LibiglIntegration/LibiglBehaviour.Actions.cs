@@ -92,7 +92,7 @@ namespace libigl.Behaviour
 
         private void ActionHarmonic()
         {
-            if (!State->Input.DoHarmonic) return;
+            if (!State->Input.DoHarmonicOnce) return;
             
             Native.Harmonic(State, -1);
             State->DirtyState |= DirtyFlag.VDirty;

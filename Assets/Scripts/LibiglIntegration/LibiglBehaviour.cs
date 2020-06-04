@@ -54,7 +54,8 @@ namespace libigl.Behaviour
         public void Update()
         {
             UpdateInput();
-            UpdateMeshTransform();
+            if(LibiglMesh.IsActiveMesh())
+                UpdateMeshTransform();
         }
         
         /// <summary>
@@ -90,18 +91,21 @@ namespace libigl.Behaviour
         /// </summary>
         public void Execute()
         {
-            // Add your logic here
-            switch (Input.ActiveTool)
-            {
-                case ToolType.Default:
-                    break;
-                case ToolType.Select:
-                    ActionSelect();
-                    break;
-            }
-            ActionTransformSelection();
-            ActionHarmonic();
             ActionUi();
+            if(LibiglMesh.IsActiveMesh())
+            {
+                switch (Input.ActiveTool)
+                {
+                    case ToolType.Default:
+                        break;
+                    case ToolType.Select:
+                        ActionSelect();
+                        ActionTransformSelection();
+                        break;
+                }
+
+                ActionHarmonic();
+            }
             
             // Apply changes back to the RowMajor so they can be applied to the mesh
             LibiglMesh.DataRowMajor.ApplyDirty(State);

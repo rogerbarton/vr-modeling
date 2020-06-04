@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +14,13 @@ namespace UI
         public List<GameObject> items;
         public bool visible = true;
         public RectTransform checkmarkIcon;
-        
+        private int _lastSiblingIndex;
+
+        private void OnEnable()
+        {
+            _lastSiblingIndex = transform.GetSiblingIndex();
+        }
+
         /// <summary>
         /// Add an item to the group, visibility is immediately set
         /// </summary>
@@ -21,6 +28,13 @@ namespace UI
         {
             items.Add(item);
             item.SetActive(visible);
+            item.transform.SetSiblingIndex(_lastSiblingIndex + 1);
+            _lastSiblingIndex = item.transform.GetSiblingIndex();
+        }
+
+        public void RemoveLast()
+        {
+            _lastSiblingIndex--;
         }
 
         /// <summary>

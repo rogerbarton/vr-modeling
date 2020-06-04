@@ -71,9 +71,12 @@ namespace libigl.Behaviour
         // A Mask of the selections that should be cleared
         public uint DoClearSelection; 
         
-        // Harmonic
-        public bool DoHarmonic;
-        // public bool DoArap;
+        // Deformations
+        public bool DoHarmonicOnce; // Trigger execution once
+        public bool DoHarmonic;     // Trigger execution every frame
+        public bool HarmonicShowDisplacement;
+        public bool DoArapOnce;
+        public bool DoArap;
 
         public void ChangeActiveSelection(int increment)
         {

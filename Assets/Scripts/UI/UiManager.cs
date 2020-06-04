@@ -23,6 +23,7 @@ namespace UI
         public GameObject buttonPrefab;
         public GameObject groupPrefab;
         public GameObject selectionPrefab;
+        public GameObject toggleActionPrefab;
 
         public Transform panelSpawnPoint;
         
@@ -78,7 +79,7 @@ namespace UI
                 () => { MeshManager.ActiveMesh.Behaviour.Input.ActiveTool = ToolType.Select; }, _toolGroup,
                 new[] {"select"});
 
-            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonic = true; }, _toolGroup,
+            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,
                 new[] {"smooth", "harmonic", "laplacian"});
             CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
                 new[] {"translate", "move"});
