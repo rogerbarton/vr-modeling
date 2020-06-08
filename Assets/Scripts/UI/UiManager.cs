@@ -23,6 +23,7 @@ namespace UI
         public GameObject buttonPrefab;
         public GameObject groupPrefab;
         public GameObject selectionPrefab;
+        public GameObject selectionModePrefab;
         public GameObject toggleActionPrefab;
 
         public Transform panelSpawnPoint;

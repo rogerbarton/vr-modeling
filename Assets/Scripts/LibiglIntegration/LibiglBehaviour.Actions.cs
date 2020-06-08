@@ -85,7 +85,7 @@ namespace libigl.Behaviour
             if (!ExecuteInput.DoSelect) return;
             
             Native.SphereSelect(State, ExecuteInput.SelectPos, ExecuteInput.SelectRadiusSqr, 
-                ExecuteInput.ActiveSelectionId, ExecuteInput.ActiveSelectionMode);
+                ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.ActiveSelectionMode);
         }
 
         private void ActionHarmonic()

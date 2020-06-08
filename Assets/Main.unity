@@ -2195,6 +2195,8 @@ MonoBehaviour:
     type: 3}
   selectionPrefab: {fileID: 4820344337120694933, guid: c7f7809fd0fffdf438be3d82231ca78e,
     type: 3}
+  selectionModePrefab: {fileID: 4820344337120694933, guid: f45e20b542f3058478bf980e55ec1c00,
+    type: 3}
   toggleActionPrefab: {fileID: 4820344337120694933, guid: 08da19e23595c0a4d8362d25baad3637,
     type: 3}
   panelSpawnPoint: {fileID: 1144852320}

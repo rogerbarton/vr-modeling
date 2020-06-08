@@ -28,7 +28,7 @@ namespace libigl.Behaviour
 
         // Select
         public int ActiveSelectionId;
-        public uint ActiveSelectionMode;
+        public SelectionMode ActiveSelectionMode;
         public uint VisibleSelectionMask;
         public bool VisibleSelectionMaskChanged;
         public uint SCountUi; // For UI, will be copied to the state in PreExecute
@@ -66,10 +66,10 @@ namespace libigl.Behaviour
         public const uint ViewOnly = 4;
     }
 
-    public static class SelectionMode
+    public enum SelectionMode
     {
-        public const uint Add = 0;
-        public const uint Subtract = 1;
-        public const uint Toggle = 2;
+        Add,
+        Subtract,
+        Toggle
     }
 }
