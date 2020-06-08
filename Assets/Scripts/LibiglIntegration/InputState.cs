@@ -1,3 +1,4 @@
+﻿using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace libigl.Behaviour
@@ -46,10 +47,10 @@ namespace libigl.Behaviour
         public bool DoArap;
 
         /// <returns>An instance with the default values</returns>
-        public static unsafe InputState* GetInstance()
+        public static GCHandle GetInstance()
         {
             var i = new InputState {ActiveTool = ToolType.Select, VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadiusSqr = 0.1f};
-            return &i;
+            return GCHandle.Alloc(i, GCHandleType.Pinned);
         }
         
         public void ChangeActiveSelection(int increment)

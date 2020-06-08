@@ -38,17 +38,19 @@ namespace libigl.Behaviour
         /// <summary>
         /// Create Managed only data, called after constructing in C++.
         /// </summary>
-        public void ConstructManaged()
+        public GCHandle ConstructManaged()
         {
-            Input = InputState.GetInstance();
+            var handle = InputState.GetInstance();
+            Input = (InputState*) handle.AddrOfPinnedObject();
+            return handle;
         }
 
         /// <summary>
         /// Destroy managed data, clean up, called before deleting in C++.
         /// </summary>
-        public void DestructManaged()
+        public void DestructManaged(GCHandle thisHandle)
         {
-            
+            thisHandle.Free();
         }
     }
 }

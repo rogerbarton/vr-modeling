@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using UI;
 using UnityEngine;
 using UnityEngine.XR;
@@ -18,12 +19,15 @@ namespace libigl.Behaviour
         /// This is allocated and deleted in C++ within <see cref="Native.InitializeMesh"/> and <see cref="Native.DisposeMesh"/>.
         /// </summary>
         public State* State;
+        private GCHandle _stateHandle;
+
 
         /// <summary>
         /// The input state on the main thread. This is copied to the thread input state <c>State.Input</c> at the end of PreExecute
         /// and is then immediately consumed by <see cref="ConsumeInput"/>.
         /// </summary>
         public readonly InputState* Input;
+        private GCHandle _inputHandle;
         
         /// <summary>
         /// Reference to the <see cref="libigl.LibiglMesh"/> used to apply changes to the <see cref="libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="libigl.LibiglMesh.Mesh"/>
@@ -38,8 +42,10 @@ namespace libigl.Behaviour
             
             // Initialize C++ and create the State from the DataRowMajor
             State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
-            State->ConstructManaged();
-            Input = InputState.GetInstance();
+            _stateHandle = State->ConstructManaged();
+            _inputHandle = InputState.GetInstance();
+            Input = (InputState*) _inputHandle.AddrOfPinnedObject();
+            
             *Input = *State->Input; // copy
             
             _uiDetails = UiManager.get.CreateDetailsPanel();
@@ -133,8 +139,10 @@ namespace libigl.Behaviour
             if(_uiDetails)
                 Object.Destroy(_uiDetails.gameObject);
             
+            _inputHandle.Free();
+            
             // Delete the State fully inside C++
-            State->DestructManaged();
+            State->DestructManaged(_stateHandle);
             Native.DisposeMesh(State);
             State = null;
         }
