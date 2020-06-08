@@ -19,7 +19,7 @@ namespace libigl.Behaviour
         /// This is allocated and deleted in C++ within <see cref="Native.InitializeMesh"/> and <see cref="Native.DisposeMesh"/>.
         /// </summary>
         public State* State;
-        private GCHandle _stateHandle;
+        private readonly GCHandle _stateInputHandle;
 
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace libigl.Behaviour
             
             // Initialize C++ and create the State from the DataRowMajor
             State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
-            _stateHandle = State->ConstructManaged();
+            _stateInputHandle = State->ConstructManaged();
             _inputHandle = InputState.GetInstance();
             Input = (InputState*) _inputHandle.AddrOfPinnedObject();
             
@@ -142,7 +142,7 @@ namespace libigl.Behaviour
             _inputHandle.Free();
             
             // Delete the State fully inside C++
-            State->DestructManaged(_stateHandle);
+            State->DestructManaged(_stateInputHandle);
             Native.DisposeMesh(State);
             State = null;
         }
