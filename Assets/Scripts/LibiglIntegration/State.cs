@@ -38,6 +38,9 @@ namespace libigl.Behaviour
         /// <summary>
         /// Create Managed only data, called after constructing in C++.
         /// </summary>
+        /// <returns>A GCHandle to the managed input state in order to prevent garbage collection.
+        /// Ensure that you free this at the end by passing it to <see cref="DestructManaged"/>.
+        /// This is done so the GCHandle is not stored in the shared <see cref="State"/></returns>
         public GCHandle ConstructManaged()
         {
             var handle = InputState.GetInstance();
@@ -48,9 +51,10 @@ namespace libigl.Behaviour
         /// <summary>
         /// Destroy managed data, clean up, called before deleting in C++.
         /// </summary>
-        public void DestructManaged(GCHandle thisHandle)
+        /// <param name="inputHandle">The GCHandle from <see cref="ConstructManaged"/> for the Input state</param>
+        public void DestructManaged(GCHandle inputHandle)
         {
-            thisHandle.Free();
+            inputHandle.Free();
         }
     }
 }
