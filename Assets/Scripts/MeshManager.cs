@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using libigl;
 using TMPro;
 using UnityEngine;
@@ -14,18 +15,15 @@ public class MeshManager : MonoBehaviour
     public GameObject[] meshPrefabs;
     [Tooltip("Where to place newly loaded meshes and how to scale them. Bottom of bounding box is placed here.")]
     public Transform meshSpawnPoint;
-    
-    [Tooltip("Parent for UI buttons to load each mesh, usually the 'Content' view of a scroll list.")]
-    public Transform uiListItemParent;
-    [Tooltip("If null then the first child button found in uiListItemParent will be used.")]
-    [SerializeField] private GameObject uiListItemPrefab;
-    
+
     /// <summary>
     /// The mesh currently loaded and being modified
     /// </summary>
     public static LibiglMesh ActiveMesh;
 
-    public static event Action ActiveMeshChanged = delegate {};
+    public List<LibiglMesh> allMeshes = new List<LibiglMesh>();
+
+    public static event Action ActiveMeshSet = delegate {};
     public Material wireframeMaterial;
 
     private void Awake()
@@ -45,16 +43,6 @@ public class MeshManager : MonoBehaviour
             ActiveMesh = LoadMesh(meshPrefabs[0]);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            LoadMeshById(0);
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            LoadMeshById(1);
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            LoadMeshById(2);
-    }
-
     #region Mesh Creation
 
     /// <summary>
@@ -65,11 +53,12 @@ public class MeshManager : MonoBehaviour
     /// <param name="performValidityChecks">Check that the prefab can be properly used with libigl.
     /// Meshes from the <see cref="meshPrefabs"/> list are checked during Start and do not need to be checked again.</param>
     /// <returns>LibiglMesh component on the new instance, null if there was an error</returns>
-    public LibiglMesh LoadMesh(GameObject prefab, bool setAsActiveMesh = true, bool performValidityChecks = false)
+    public LibiglMesh LoadMesh(GameObject prefab, bool unloadActiveMesh = true, bool setAsActiveMesh = true, bool performValidityChecks = false)
     {
         if(performValidityChecks && !CheckPrefabValidity(prefab)) return null;
 
-        UnloadActiveMesh();
+        if(unloadActiveMesh)
+            UnloadActiveMesh();
 
         // Details of spawnPoint
         
@@ -86,15 +75,9 @@ public class MeshManager : MonoBehaviour
         lmesh.ResetTransformToSpawn();
 
         if (setAsActiveMesh)
-            ActiveMesh = lmesh;
+            SetActiveMesh(lmesh);
 
         return lmesh;
-    }
-
-    /// <param name="prefabIndex">Index in <see cref="meshPrefabs"/></param>
-    public void LoadMeshById(int prefabIndex)
-    {
-        LoadMesh(meshPrefabs[prefabIndex]);
     }
 
     /// <summary>
@@ -152,6 +135,39 @@ public class MeshManager : MonoBehaviour
         if(ActiveMesh == libiglMesh) return;
         
         ActiveMesh = libiglMesh;
-        ActiveMeshChanged();
+        ActiveMeshSet();
+    }
+
+    /// <summary>
+    /// Use this to delete a mesh safely.
+    /// Handles case when mesh is the active one, <see cref="ActiveMesh"/>
+    /// </summary>
+    public void DestroyMesh(LibiglMesh libiglMesh)
+    {
+        if (ActiveMesh == libiglMesh)
+        {
+            // Assign new active mesh
+            foreach (var mesh in allMeshes.Where(mesh => mesh != ActiveMesh))
+            {
+                SetActiveMesh(mesh);
+                break;
+            }
+        }
+
+        if (ActiveMesh == libiglMesh)
+            SetActiveMesh(LoadMesh(meshPrefabs[0]));
+        
+        Destroy(libiglMesh.gameObject);
+    }
+
+    public void RegisterMesh(LibiglMesh libiglMesh)
+    {
+        allMeshes.Add(libiglMesh);
+    }
+
+    public void UnregisterMesh(LibiglMesh libiglMesh)
+    {
+        if(allMeshes.Contains(libiglMesh))
+            allMeshes.Remove(libiglMesh);
     }
 }

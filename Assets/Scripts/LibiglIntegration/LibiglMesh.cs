@@ -41,6 +41,11 @@ namespace libigl
         /// <returns>True if this is the active mesh set by the <see cref="MeshManager"/></returns>
         public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
 
+        private void OnEnable()
+        {
+            MeshManager.get.RegisterMesh(this);
+        }
+
         private void Start()
         {
             name = name.Replace("(Clone)", "").Trim();
@@ -128,6 +133,8 @@ namespace libigl
             DataRowMajor = null;
             Behaviour?.Dispose();
             Behaviour = null;
+            
+            MeshManager.get.UnregisterMesh(this);
 
 #if UNITY_EDITOR
             DisposeBeforeUnload -= Dispose;

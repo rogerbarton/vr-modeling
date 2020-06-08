@@ -38,7 +38,7 @@ namespace UI
         public void Initialize(LibiglBehaviour behaviour)
         {
             _behaviour = behaviour;
-            MeshManager.ActiveMeshChanged += ActiveMeshChanged;
+            MeshManager.ActiveMeshSet += ActiveMeshSet;
 
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
@@ -66,7 +66,7 @@ namespace UI
             _addSelectionBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _addSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
             _selectionGroup.AddItem(_addSelectionBtn.gameObject);
-            _addSelectionBtn.onClick.AddListener(AddSelection);
+            _addSelectionBtn.onClick.AddListener(() => AddSelection());
 
             // Setup first selection
             AddSelection();
@@ -141,12 +141,23 @@ namespace UI
             _debugGroup.AddItem(doSelectBtn.gameObject);
             doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
             doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
+            
+            // Misc
+            var deleteBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            deleteBtn.GetComponentInChildren<TMP_Text>().text = "Delete Mesh";
+            deleteBtn.onClick.AddListener(() =>
+            {
+                MeshManager.get.DestroyMesh(behaviour.LibiglMesh);
+            });
         }
-
-        private void AddSelection()
+        
+        /// <returns>true if selection was successfully added, max 32 selections</returns>
+        public bool AddSelection()
         {
             // Get the id and set it as the active one
             var selectionId = (int) _behaviour.Input.SCountUi;
+            if (selectionId > 31) return false;
+            
             _behaviour.Input.SCountUi++;
 
             // Add UI for the selection
@@ -189,6 +200,8 @@ namespace UI
                     }
 
                     _behaviour.Input.SCountUi--;
+                    _behaviour.Input.VisibleSelectionMask ^= (uint)1 << selectionId;
+                    _behaviour.State->SSize[selectionId] = 0;
                     Destroy(_selections[selectionId].gameObject);
                     _selections.RemoveAt(selectionId);
                 }
@@ -207,13 +220,14 @@ namespace UI
             _behaviour.Input.ActiveSelectionId = selectionId;
             uiSelection.ToggleEditSprite(true);
 
+            return true;
         }
 
         #region Callbacks
 
         public void OnDestroy()
         {
-            MeshManager.ActiveMeshChanged -= ActiveMeshChanged;
+            MeshManager.ActiveMeshSet -= ActiveMeshSet;
         }
 
         /// <summary>
@@ -222,6 +236,11 @@ namespace UI
         public void UpdatePreExecute()
         {
             progressIcon.PreExecute();
+
+            // Add a selection in case of the NewSelectionOnDraw
+            if (_behaviour.Input.DoSelectStarted && _behaviour.Input.NewSelectionOnDraw &&
+                _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0)
+                AddSelection();
         }
 
         /// <summary>
@@ -235,7 +254,7 @@ namespace UI
                 UpdateVertexCountText();
                 for (var i = 0; i < _selections.Count; i++)
                     _selections[i].GetComponentInChildren<TMP_Text>().text =
-                        $"{i}: {_behaviour.State->SSize[i]} vertices";
+                        $"<b>{i}</b>: {_behaviour.State->SSize[i]} vertices";
             }
 
             progressIcon.PostExecute();
@@ -244,7 +263,7 @@ namespace UI
         /// <summary>
         /// Called when the active mesh changes
         /// </summary>
-        private void ActiveMeshChanged()
+        private void ActiveMeshSet()
         {
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
@@ -257,7 +276,7 @@ namespace UI
         private void UpdateVertexCountText()
         {
             _vertexCount.text =
-                $"V: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} F: {_behaviour.State->FSize}";
+                $"<b>V</b>: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} <b>F</b>: {_behaviour.State->FSize}";
         }
 
         #endregion

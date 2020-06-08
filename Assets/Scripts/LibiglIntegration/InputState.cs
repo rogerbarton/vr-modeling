@@ -29,11 +29,13 @@ namespace libigl.Behaviour
         // Select
         public int ActiveSelectionId;
         public SelectionMode ActiveSelectionMode;
+        public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
         public uint VisibleSelectionMask;
         public bool VisibleSelectionMaskChanged;
         public uint SCountUi; // For UI, will be copied to the state in PreExecute
 
         public bool DoSelect;
+        public bool DoSelectStarted;
         public Vector3 SelectPos;
         public float SelectRadiusSqr;
         // A Mask of the selections that should be cleared

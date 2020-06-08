@@ -71,11 +71,12 @@ namespace libigl.Behaviour
             // Add logic here that uses the Unity API (e.g. Input)
             Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
             Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
-
+            Input.DoSelectStarted = !Input.DoSelectStarted && Input.DoSelect;
+            
+            _uiDetails.UpdatePreExecute();
+            
             // Apply changes in UI to the state
             State->SCount = Input.SCountUi;
-
-            _uiDetails.UpdatePreExecute();
             
             // Copy the InputState to the State by copying
             ExecuteInput = Input;

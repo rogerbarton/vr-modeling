@@ -187,6 +187,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -6639996736880469515, guid: d46b50af8be5587489b94d964055c7aa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: d46b50af8be5587489b94d964055c7aa,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -2199,6 +2204,8 @@ MonoBehaviour:
     type: 3}
   toggleActionPrefab: {fileID: 4820344337120694933, guid: 08da19e23595c0a4d8362d25baad3637,
     type: 3}
+  iconActionPrefab: {fileID: 4820344337120694933, guid: 3a952b41e90a70a4bbc7969a8ffea755,
+    type: 3}
   panelSpawnPoint: {fileID: 1144852320}
   actionsListParent: {fileID: 788621609}
 --- !u!1001 &788621608
@@ -3265,8 +3272,6 @@ MonoBehaviour:
   - {fileID: -6639996736880469515, guid: 1e95cc7284bda81438ce767425ef8a5c, type: 3}
   - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
   meshSpawnPoint: {fileID: 285171626}
-  uiListItemParent: {fileID: 0}
-  uiListItemPrefab: {fileID: 0}
   wireframeMaterial: {fileID: 2100000, guid: 82378c7d7f5d4d2458ea1acbe21acc52, type: 2}
 --- !u!4 &1244380012
 Transform:

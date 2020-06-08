@@ -25,6 +25,7 @@ namespace UI
         public GameObject selectionPrefab;
         public GameObject selectionModePrefab;
         public GameObject toggleActionPrefab;
+        public GameObject iconActionPrefab;
 
         public Transform panelSpawnPoint;
         
@@ -34,6 +35,8 @@ namespace UI
         private UiCollapsible _toolGroup;
         private UiCollapsible _meshGroup;
         private UiCollapsible _debugGroup;
+
+        private LayerMask _uiLayerMask;
 
         private void Awake()
         {
@@ -49,6 +52,7 @@ namespace UI
         private void Start()
         {
             InitializeStaticUi();
+            _uiLayerMask = LayerMask.GetMask("UI");
         }
 
         /// <summary>
@@ -59,7 +63,15 @@ namespace UI
         {
             var go = Instantiate(listCanvasPrefab, panelSpawnPoint.position, panelSpawnPoint.rotation, transform);
             go.GetComponent<Canvas>().worldCamera = Camera.main;
-            
+
+            // Move the panel until it is not colliding
+            var t = go.transform;
+            var results = new Collider[1];
+            while (Physics.OverlapSphereNonAlloc(t.position, 0.4f, results, _uiLayerMask, QueryTriggerInteraction.Ignore) > 0)
+            {
+                t.Translate(-Vector3.right * 0.8f);
+            }
+
             return go.GetComponent<UiDetails>();
         }
 
@@ -94,15 +106,18 @@ namespace UI
             foreach (var meshPrefab in MeshManager.get.meshPrefabs)
             {
                 // Create button to load each mesh
-                var go = Instantiate(buttonPrefab, actionsListParent);
-                _meshGroup.AddItem(go);
-                var textField = go.GetComponentInChildren<TMP_Text>();
+                var iconAction = Instantiate(iconActionPrefab, actionsListParent).GetComponent<UiIconAction>();
+                _meshGroup.AddItem(iconAction.gameObject);
+                var textField = iconAction.actionBtn.GetComponentInChildren<TMP_Text>();
                 textField.text = meshPrefab.name;
 
                 // setup callbacks/events
-                var button = go.GetComponent<Button>();
-                button.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab));
-                button.interactable = MeshManager.get.CheckPrefabValidity(meshPrefab);
+                iconAction.actionBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab));
+                iconAction.iconBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab, false));
+                
+                var validMesh = MeshManager.get.CheckPrefabValidity(meshPrefab);
+                iconAction.actionBtn.interactable = validMesh;
+                iconAction.iconBtn.interactable = validMesh;
             }
 
             // Debug
