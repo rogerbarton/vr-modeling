@@ -3,17 +3,16 @@
 #include "NumericTypes.h"
 #include "Util.h"
 #include <igl/readOFF.h>
-#include <igl/per_vertex_normals.h>
 
 extern "C" {
-    void ApplyDirty(State* state, const UMeshDataNative data){
+    void ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleSelectionMask){
     	auto& dirty = state->DirtyState;
 
 	    if(state->DirtySelections > 0) {
 		    // Update selection sizes
 		    state->SSizeAll = state->S->unaryExpr([&](int a) -> int { return a > 0; }).sum();
 
-		    for (unsigned int selectionId = 0; selectionId < state->Input.SCount; ++selectionId) {
+		    for (unsigned int selectionId = 0; selectionId < state->SCount; ++selectionId) {
 			    const unsigned int maskId = 1u << selectionId;
 			    if ((maskId & state->DirtySelections) == 0)
 				    continue;
@@ -22,8 +21,8 @@ extern "C" {
 		    }
 
 		    // Set Colors if a visible selection is dirty
-		    if((state->DirtySelections & state->Input.VisibleSelectionMask) > 0 && (dirty & DirtyFlag::DontComputeColorsBySelection) == 0)
-		    	SetColorByMask(state, state->Input.VisibleSelectionMask);
+		    if((state->DirtySelections & visibleSelectionMask) > 0 && (dirty & DirtyFlag::DontComputeColorsBySelection) == 0)
+		    	SetColorByMask(state, visibleSelectionMask);
 	    }
 
 	    if((dirty & DirtyFlag::VDirty) > 0)

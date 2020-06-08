@@ -77,7 +77,7 @@ namespace libigl
             [Out] out uint* FPtr, [Out] out int FSize);
 
         [DllImport(DllName)]
-        public static extern unsafe void ApplyDirty(State* state, UMeshDataNative data);
+        public static extern unsafe void ApplyDirty(State* state, UMeshDataNative data, uint visibleSelectionMask);
 
 
         // ModifyMesh.cpp

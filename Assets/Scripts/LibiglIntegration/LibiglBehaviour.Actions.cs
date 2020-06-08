@@ -8,22 +8,22 @@ namespace libigl.Behaviour
         private void ActionTransformSelection()
         {
             var i = State->Input;
-            if (!i.DoTransform || i.ActiveTool != ToolType.Select) return;
+            if (!i->DoTransform || i->ActiveTool != ToolType.Select) return;
 
-            if (!i.SecondaryTransformHandActive)
+            if (!i->SecondaryTransformHandActive)
             {
                 // Only translate selection
-                var translate = GetTranslateVector(State->Input);
+                var translate = GetTranslateVector(i);
 
-                Native.TranslateSelection(State, translate, i.ActiveSelectionId);
+                Native.TranslateSelection(State, translate, i->ActiveSelectionId);
             }
             else
             {
                 // Do full transformation
-                GetTransformData(Input, out var translate, out var scale, out var angle, out var axis);
+                GetTransformData(i, out var translate, out var scale, out var angle, out var axis);
                 angle *= Mathf.Deg2Rad; // Eigen uses rad, Unity uses deg
 
-                Native.TransformSelection(State, i.ActiveSelectionId, translate, scale, angle, axis.normalized);
+                Native.TransformSelection(State, i->ActiveSelectionId, translate, scale, angle, axis.normalized);
             }
             State->DirtyState |= DirtyFlag.VDirty;
         }
@@ -33,15 +33,15 @@ namespace libigl.Behaviour
         /// </summary>
         /// <param name="i">The input state to use</param>
         /// <returns></returns>
-        private static Vector3 GetTranslateVector(InputState i)
+        private static Vector3 GetTranslateVector(InputState* i)
         {
             Vector3 t;
-            if(i.PrimaryTransformHand)
-                t = i.HandPosR - i.PrevTrafoHandPosR;
+            if(i->PrimaryTransformHand)
+                t = i->HandPosR - i->PrevTrafoHandPosR;
             else
-                t = i.HandPosL - i.PrevTrafoHandPosL;
+                t = i->HandPosL - i->PrevTrafoHandPosL;
             
-            var softFactor = i.PrimaryTransformHand ? i.GripR : i.GripL;
+            var softFactor = i->PrimaryTransformHand ? i->GripR : i->GripL;
             return t * softFactor;
         }
 
@@ -50,32 +50,32 @@ namespace libigl.Behaviour
         /// </summary>
         /// <param name="i">InputState to use</param>
         /// <param name="angle">In degrees</param>
-        private static void GetTransformData(InputState i, out Vector3 translate, out float scale, out float angle, out Vector3 axis)
+        private static void GetTransformData(InputState* i, out Vector3 translate, out float scale, out float angle, out Vector3 axis)
         {
             Vector3 v0, v1;
-            if(i.PrimaryTransformHand)
+            if(i->PrimaryTransformHand)
             {
-                translate = i.HandPosR - i.PrevTrafoHandPosR;
-                v0 = i.PrevTrafoHandPosR - i.PrevTrafoHandPosL;
-                v1 = i.HandPosR - i.HandPosL;
+                translate = i->HandPosR - i->PrevTrafoHandPosR;
+                v0 = i->PrevTrafoHandPosR - i->PrevTrafoHandPosL;
+                v1 = i->HandPosR - i->HandPosL;
             }
             else
             {
-                translate = i.HandPosL - i.PrevTrafoHandPosL;
-                v0 = i.PrevTrafoHandPosL - i.PrevTrafoHandPosR;
-                v1 = i.HandPosL - i.HandPosR;
+                translate = i->HandPosL - i->PrevTrafoHandPosL;
+                v0 = i->PrevTrafoHandPosL - i->PrevTrafoHandPosR;
+                v1 = i->HandPosL - i->HandPosR;
             }
                 
             axis = Vector3.Cross(v0, v1);
             angle = Vector3.Angle(v0, v1);
             
             // TODO: scale should be done from positions at start of both grips pressed 
-            scale = (i.HandPosL - i.HandPosR).magnitude / (i.PrevTrafoHandPosL - i.PrevTrafoHandPosR).magnitude;
+            scale = (i->HandPosL - i->HandPosR).magnitude / (i->PrevTrafoHandPosL - i->PrevTrafoHandPosR).magnitude;
             if (float.IsNaN(scale))
                 scale = 1f;
             // Apply soft editing
-            var softFactor = i.PrimaryTransformHand ? i.GripR : i.GripL;
-            var softFactorSecondary = !i.PrimaryTransformHand ? i.GripR : i.GripL;
+            var softFactor = i->PrimaryTransformHand ? i->GripR : i->GripL;
+            var softFactorSecondary = !i->PrimaryTransformHand ? i->GripR : i->GripL;
 
             translate *= softFactor;
             scale = (scale -1) * softFactorSecondary + 1;
@@ -84,15 +84,15 @@ namespace libigl.Behaviour
 
         private void ActionSelect()
         {
-            if (!State->Input.DoSelect) return;
+            if (!State->Input->DoSelect) return;
             
-            Native.SphereSelect(State, State->Input.SelectPos, State->Input.SelectRadiusSqr, 
-                State->Input.ActiveSelectionId, State->Input.ActiveSelectionMode);
+            Native.SphereSelect(State, State->Input->SelectPos, State->Input->SelectRadiusSqr, 
+                State->Input->ActiveSelectionId, State->Input->ActiveSelectionMode);
         }
 
         private void ActionHarmonic()
         {
-            if (!State->Input.DoHarmonicOnce) return;
+            if (!State->Input->DoHarmonicOnce) return;
             
             Native.Harmonic(State, -1);
             State->DirtyState |= DirtyFlag.VDirty;
@@ -100,33 +100,33 @@ namespace libigl.Behaviour
 
         private void ActionUi()
         {
-            if (State->Input.DoClearSelection > 0)
-                Native.ClearSelectionMask(State, State->Input.DoClearSelection);
+            if (State->Input->DoClearSelection > 0)
+                Native.ClearSelectionMask(State, State->Input->DoClearSelection);
             
-            if(State->Input.VisibleSelectionMaskChanged)
-                Native.SetColorByMask(State, State->Input.VisibleSelectionMask);
+            if(State->Input->VisibleSelectionMaskChanged)
+                Native.SetColorByMask(State, State->Input->VisibleSelectionMask);
         }
 
         private void UpdateMeshTransform()
         {
-            var i = State->Input;
-            if (i.ActiveTool == ToolType.Select || !i.DoTransform) return;
+            var i = Input;
+            if (i->ActiveTool == ToolType.Select || !i->DoTransform) return;
             
             // Transform the whole mesh
-            if (i.SecondaryTransformHandActive)
+            if (i->SecondaryTransformHandActive)
             {
-                GetTransformData(Input, out var translate, out var scale, out var angle, out var axis);
+                GetTransformData(i, out var translate, out var scale, out var angle, out var axis);
                 var uTransform = LibiglMesh.transform;
                 uTransform.Translate(translate);
                 uTransform.Rotate(axis, angle);
                 uTransform.localScale *= scale;
             }
             else
-                LibiglMesh.transform.Translate(GetTranslateVector(Input));
+                LibiglMesh.transform.Translate(GetTranslateVector(i));
                 
             // Consume the input and update the previous position directly
-            Input.PrevTrafoHandPosL = Input.HandPosL;
-            Input.PrevTrafoHandPosR = Input.HandPosR;
+            i->PrevTrafoHandPosL = i->HandPosL;
+            i->PrevTrafoHandPosR = i->HandPosR;
         }
     }
 }

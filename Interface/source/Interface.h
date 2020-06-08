@@ -21,7 +21,7 @@ extern "C" {
     // IO.cpp
     UNITY_INTERFACE_EXPORT void LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,
     		void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
-    UNITY_INTERFACE_EXPORT void ApplyDirty(State* state, const UMeshDataNative data);
+    UNITY_INTERFACE_EXPORT void ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleSelectionMask);
 
     // ModifyMesh.cpp
     UNITY_INTERFACE_EXPORT void TranslateMesh(State* state, Vector3 value);

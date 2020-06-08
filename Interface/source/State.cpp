@@ -26,6 +26,8 @@ State::State(const UMeshDataNative udata) {
 
 	SSize = new unsigned int[32];
 	std::fill(SSize, SSize + 32, 0);
+
+	Native = new NativeState{};
 }
 
 State::~State() {
@@ -36,4 +38,5 @@ State::~State() {
 	delete F;
 	delete S;
 	delete[] SSize;
+	delete Native;
 }

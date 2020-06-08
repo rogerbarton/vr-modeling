@@ -68,7 +68,7 @@ void SetColorByMask(State* state, unsigned int maskId) {
 	state->C->setZero();
 
 
-	for (unsigned int selectionId = 0; selectionId < state->Input.SCount; ++selectionId) {
+	for (unsigned int selectionId = 0; selectionId < state->SCount; ++selectionId) {
 		const unsigned int m = 1u << selectionId;
 		if ((m & maskId) == 0) // Skip selections that are not visible
 			continue;

@@ -67,7 +67,7 @@ namespace UI
             // Setup first selection
             AddSelection();
             // Set it as the active one
-            _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
+            _selections[_behaviour.Input->ActiveSelectionId].ToggleEditSprite(true);
             
             
             // Operations
@@ -78,28 +78,28 @@ namespace UI
             _harmonicToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_harmonicToggle.gameObject);
             _harmonicToggle.text.text = "Harmonic";
-            _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input.DoHarmonicOnce = true; });
-            _harmonicToggle.toggle.isOn = behaviour.Input.DoHarmonic;
+            _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input->DoHarmonicOnce = true; });
+            _harmonicToggle.toggle.isOn = behaviour.Input->DoHarmonic;
             _harmonicToggle.toggle.onValueChanged.AddListener(value =>
             {
-                behaviour.Input.DoHarmonicOnce = value;
-                behaviour.Input.DoHarmonic = value;
+                behaviour.Input->DoHarmonicOnce = value;
+                behaviour.Input->DoHarmonic = value;
             });
             
             var harmonicShowDisplacements = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _operationsGroup.AddItem(harmonicShowDisplacements.gameObject);
             harmonicShowDisplacements.GetComponentInChildren<TMP_Text>().text = "Toggle deform field";
-            harmonicShowDisplacements.onClick.AddListener(() => { behaviour.Input.HarmonicShowDisplacement = !behaviour.Input.HarmonicShowDisplacement; });
+            harmonicShowDisplacements.onClick.AddListener(() => { behaviour.Input->HarmonicShowDisplacement = !behaviour.Input->HarmonicShowDisplacement; });
             
             _arapToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_arapToggle.gameObject);
             _arapToggle.text.text = "ARAP";
-            _arapToggle.button.onClick.AddListener(() => { behaviour.Input.DoArapOnce = true; });
-            _arapToggle.toggle.isOn = behaviour.Input.DoArap;
+            _arapToggle.button.onClick.AddListener(() => { behaviour.Input->DoArapOnce = true; });
+            _arapToggle.toggle.isOn = behaviour.Input->DoArap;
             _arapToggle.toggle.onValueChanged.AddListener(value =>
             {
-                behaviour.Input.DoArapOnce = value;
-                behaviour.Input.DoArap = value;
+                behaviour.Input->DoArapOnce = value;
+                behaviour.Input->DoArap = value;
             });
 
             var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
@@ -136,14 +136,14 @@ namespace UI
             var doSelectBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _debugGroup.AddItem(doSelectBtn.gameObject);
             doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
-            doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
+            doSelectBtn.onClick.AddListener(() => { behaviour.Input->DoSelect = true; });
         }
 
         private void AddSelection()
         {
             // Get the id and set it as the active one
-            var selectionId = (int) _behaviour.Input.SCount;
-            _behaviour.Input.SCount++;
+            var selectionId = (int) _behaviour.Input->SCountUi;
+            _behaviour.Input->SCountUi++;
 
             // Add UI for the selection
             var uiSelection = Instantiate(UiManager.get.selectionPrefab, _listParent)
@@ -155,36 +155,36 @@ namespace UI
             // Behaviour when clicking buttons
             uiSelection.visibleBtn.onClick.AddListener(() =>
             {
-                _behaviour.Input.VisibleSelectionMask ^= 1u << selectionId;
-                uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
+                _behaviour.Input->VisibleSelectionMask ^= 1u << selectionId;
+                uiSelection.ToggleVisibleSprite((_behaviour.Input->VisibleSelectionMask & 1u << selectionId) > 0);
 
                 // Repaint colors if 
                 if (_behaviour.State->SSize[selectionId] > 0)
-                    _behaviour.Input.VisibleSelectionMaskChanged = true;
+                    _behaviour.Input->VisibleSelectionMaskChanged = true;
             });
             uiSelection.editBtn.onClick.AddListener(() =>
             {
-                if (selectionId == _behaviour.Input.ActiveSelectionId) return;
+                if (selectionId == _behaviour.Input->ActiveSelectionId) return;
 
                 // Disable the last active selection and set this one as active
-                _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
-                _behaviour.Input.ActiveSelectionId = selectionId;
+                _selections[_behaviour.Input->ActiveSelectionId].ToggleEditSprite(false);
+                _behaviour.Input->ActiveSelectionId = selectionId;
                 uiSelection.ToggleEditSprite(true);
             });
             uiSelection.clearBtn.onClick.AddListener(() =>
             {
                 // Either clear the selection or delete it in the UI if it is the last one and is empty
                 if(_behaviour.State->SSize[selectionId] > 0)
-                    _behaviour.Input.DoClearSelection |= 1u << selectionId;
+                    _behaviour.Input->DoClearSelection |= 1u << selectionId;
                 else if (selectionId == _selections.Count -1 && _selections.Count > 1)
                 {
-                    if (_behaviour.Input.ActiveSelectionId == selectionId)
+                    if (_behaviour.Input->ActiveSelectionId == selectionId)
                     {
-                        _behaviour.Input.ActiveSelectionId--;
-                        _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
+                        _behaviour.Input->ActiveSelectionId--;
+                        _selections[_behaviour.Input->ActiveSelectionId].ToggleEditSprite(true);
                     }
 
-                    _behaviour.Input.SCount--;
+                    _behaviour.Input->SCountUi--;
                     Destroy(_selections[selectionId].gameObject);
                     _selections.RemoveAt(selectionId);
                 }
@@ -196,11 +196,11 @@ namespace UI
 
             
             // Apply current values
-            uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
+            uiSelection.ToggleVisibleSprite((_behaviour.Input->VisibleSelectionMask & 1u << selectionId) > 0);
 
             // Set as active, TODO: extract shared function with onClick editBtn
-            _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
-            _behaviour.Input.ActiveSelectionId = selectionId;
+            _selections[_behaviour.Input->ActiveSelectionId].ToggleEditSprite(false);
+            _behaviour.Input->ActiveSelectionId = selectionId;
             uiSelection.ToggleEditSprite(true);
 
         }

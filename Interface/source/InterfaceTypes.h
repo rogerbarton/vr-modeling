@@ -92,14 +92,6 @@ struct Color{
 	static const Color_t& GetColorById(int selectionId);
 };
 
-struct ToolType
-{
-	static const unsigned int Default = 0;
-	static const unsigned int Select = 1;
-	static const unsigned int Laser = 2;
-	static const unsigned int ViewOnly = 4;
-};
-
 struct SelectionMode{
 	static const unsigned int Add = 0;
 	static const unsigned int Subtract = 1;

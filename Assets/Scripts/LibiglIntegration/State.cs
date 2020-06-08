@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using UnityEngine;
 
 namespace libigl.Behaviour
 {
@@ -26,76 +25,30 @@ namespace libigl.Behaviour
         public readonly int VSize;
         public readonly int FSize;
 
-        // Latest InputState from PreExecute 
-        public InputState Input;
-        
-        // Private C++ state
         public readonly void* S;
         public readonly uint* SSize; // uint[32], vertices selected per selection
         public readonly uint SSizeAll; // Total vertices selected
-    }
+        public uint SCount; // Amount of selections
 
-    /// <summary>
-    /// Struct for storing the current input. (This is a value type so assigning will copy).
-    /// Anything that may change as we are executing should be in the InputState as it is copied in PreExecute.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct InputState
-    {
-        public uint ActiveTool;
-        
-        // Generic Input
-        public float GripL;
-        public float GripR;
-        public Vector3 HandPosL;
-        public Vector3 HandPosR;
-        // The previous position of the hand when the last transformation was made
-        public Vector3 PrevTrafoHandPosL;
-        public Vector3 PrevTrafoHandPosR;
+        // Latest InputState, Managed only 
+        public InputState* Input;
+        // Native only state
+        private readonly void* Native;
 
-        // Transform
-        public bool DoTransform;
-        public bool PrimaryTransformHand; // True=R
-        public bool SecondaryTransformHandActive;
-
-        // Select
-        public int ActiveSelectionId;
-        public uint ActiveSelectionMode;
-        public uint SCount;
-        public uint VisibleSelectionMask;
-        public bool VisibleSelectionMaskChanged;
-
-        public bool DoSelect;
-        public Vector3 SelectPos;
-        public float SelectRadiusSqr;
-        // A Mask of the selections that should be cleared
-        public uint DoClearSelection; 
-        
-        // Deformations
-        public bool DoHarmonicOnce; // Trigger execution once
-        public bool DoHarmonic;     // Trigger execution every frame
-        public bool HarmonicShowDisplacement;
-        public bool DoArapOnce;
-        public bool DoArap;
-
-        public void ChangeActiveSelection(int increment)
+        /// <summary>
+        /// Create Managed only data, called after constructing in C++.
+        /// </summary>
+        public void ConstructManaged()
         {
-            ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCount);
+            Input = InputState.GetInstance();
         }
-    }
 
-    public static class ToolType
-    {
-        public const uint Default = 0;
-        public const uint Select = 1;
-        public const uint Laser = 2;
-        public const uint ViewOnly = 4;
-    }
-
-    public static class SelectionMode
-    {
-        public const uint Add = 0;
-        public const uint Subtract = 1;
-        public const uint Toggle = 2;
+        /// <summary>
+        /// Destroy managed data, clean up, called before deleting in C++.
+        /// </summary>
+        public void DestructManaged()
+        {
+            
+        }
     }
 }

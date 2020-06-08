@@ -66,7 +66,7 @@ namespace UI
         /// <summary>
         /// Generates the UI unrelated to a mesh or to manipulate the <i>active mesh</i> <see cref="MeshManager.ActiveMesh"/>
         /// </summary>
-        private void InitializeStaticUi()
+        private unsafe void InitializeStaticUi()
         {
             // Tools
             _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
@@ -74,16 +74,16 @@ namespace UI
             _toolGroup.SetVisibility(true);
 
             CreateActionUi("Default Tool",
-                () => { MeshManager.ActiveMesh.Behaviour.Input.ActiveTool = ToolType.Default; }, _toolGroup);
+                () => { MeshManager.ActiveMesh.Behaviour.Input->ActiveTool = ToolType.Default; }, _toolGroup);
             CreateActionUi("Select Tool",
-                () => { MeshManager.ActiveMesh.Behaviour.Input.ActiveTool = ToolType.Select; }, _toolGroup,
+                () => { MeshManager.ActiveMesh.Behaviour.Input->ActiveTool = ToolType.Select; }, _toolGroup,
                 new[] {"select"});
 
-            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,
+            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input->DoHarmonicOnce = true; }, _toolGroup,
                 new[] {"smooth", "harmonic", "laplacian"});
-            CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
+            CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input->DoTransform = true; }, _toolGroup,
                 new[] {"translate", "move"});
-            CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
+            CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input->DoSelect = true; }, _toolGroup);
 
             // Meshes
             _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();

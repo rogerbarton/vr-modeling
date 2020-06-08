@@ -148,7 +148,7 @@ namespace libigl
             Assert.IsTrue(VSize == state->VSize && FSize == state->FSize);
             
             // Copy over and transpose data that has changed
-            Native.ApplyDirty(state, _native);
+            Native.ApplyDirty(state, _native, state->Input->VisibleSelectionMask);
             
             DirtyState |= state->DirtyState;
             DirtySelections |= state->DirtySelections;

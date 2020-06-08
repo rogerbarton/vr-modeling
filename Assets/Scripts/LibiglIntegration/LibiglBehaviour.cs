@@ -23,7 +23,7 @@ namespace libigl.Behaviour
         /// The input state on the main thread. This is copied to the thread input state <c>State.Input</c> at the end of PreExecute
         /// and is then immediately consumed by <see cref="ConsumeInput"/>.
         /// </summary>
-        public InputState Input;
+        public readonly InputState* Input;
         
         /// <summary>
         /// Reference to the <see cref="libigl.LibiglMesh"/> used to apply changes to the <see cref="libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="libigl.LibiglMesh.Mesh"/>
@@ -38,7 +38,9 @@ namespace libigl.Behaviour
             
             // Initialize C++ and create the State from the DataRowMajor
             State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
-            Input = State->Input; //Copy defaults from state
+            State->ConstructManaged();
+            Input = InputState.GetInstance();
+            *Input = *State->Input; // copy
             
             _uiDetails = UiManager.get.CreateDetailsPanel();
             _uiDetails.Initialize(this);
@@ -66,18 +68,15 @@ namespace libigl.Behaviour
         public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
-            Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
-            Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
-            
-            // if (Math.Abs(Input.mouseScrollDelta.y) > 0.01f)
-            // {
-            //     _input.SelectRadiusSqr += 0.1f * Input.mouseScrollDelta.y;
-            //     Mathf.Clamp(_input.SelectRadiusSqr, 0.025f, 1f);
-            // }
+            Input->DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
+            Input->DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
+
+            // Apply changes in UI to the state
+            State->SCount = Input->SCountUi;
 
             _uiDetails.UpdatePreExecute();
             // Copy the InputState to the State by copying
-            State->Input = Input;
+            *State->Input = *Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
             ConsumeInput();
         }
@@ -94,7 +93,7 @@ namespace libigl.Behaviour
             ActionUi();
             if(LibiglMesh.IsActiveMesh())
             {
-                switch (Input.ActiveTool)
+                switch (Input->ActiveTool)
                 {
                     case ToolType.Default:
                         break;
@@ -134,7 +133,8 @@ namespace libigl.Behaviour
             if(_uiDetails)
                 Object.Destroy(_uiDetails.gameObject);
             
-            // Delete the C++ state
+            // Delete the State fully inside C++
+            State->DestructManaged();
             Native.DisposeMesh(State);
             State = null;
         }
