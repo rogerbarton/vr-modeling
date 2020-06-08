@@ -1,10 +1,9 @@
 using System.Runtime.InteropServices;
-using libigl.Behaviour;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityNativeTool;
 
-namespace libigl
+namespace Libigl
 {
     /// <summary>
     /// Contains all runtime C++ function declarations.

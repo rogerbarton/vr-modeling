@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using UnityEngine;
 
-namespace libigl.Behaviour
+namespace Libigl
 {
     
     /// <summary>

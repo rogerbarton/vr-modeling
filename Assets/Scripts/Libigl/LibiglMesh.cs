@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using libigl.Behaviour;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityNativeTool;
 
-namespace libigl
+namespace Libigl
 {
     /// <summary>
     /// Handles the interface between Unity meshes and libigl.<br/>

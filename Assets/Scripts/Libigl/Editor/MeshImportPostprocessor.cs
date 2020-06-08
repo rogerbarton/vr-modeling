@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace libigl.Editor
+namespace Libigl.Editor
 {
     public class MeshImportPostprocessor : AssetPostprocessor
     {

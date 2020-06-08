@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using Object = UnityEngine.Object;
 
-namespace libigl.Behaviour
+namespace Libigl
 {
     /// <summary>
     /// This is where the behaviour that interfaces with libigl is. It follows a Pre/Post/Execute threading pattern.

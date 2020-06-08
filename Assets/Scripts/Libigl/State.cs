@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace libigl.Behaviour
+namespace Libigl
 {
     /// <summary>
     /// The C++ state for a mesh, Stores only pointers so this can be shared between C++ and C#.<br/>

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace libigl
+namespace Libigl
 {
     /// <summary>
     /// Stores pointers to the native arrays in <see cref="UMeshData"/> so we can pass this to C++.

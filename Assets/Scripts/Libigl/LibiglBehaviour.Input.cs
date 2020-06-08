@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR;
 
-namespace libigl.Behaviour
+namespace Libigl
 {
     public unsafe partial class LibiglBehaviour
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace libigl
+namespace Libigl
 {
     public static class Util
     {

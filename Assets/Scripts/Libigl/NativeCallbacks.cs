@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace libigl
+namespace Libigl
 {
     /// <summary>
     /// Contains all callbacks from the native context

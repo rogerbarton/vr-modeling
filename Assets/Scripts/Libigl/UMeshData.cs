@@ -1,11 +1,10 @@
 using System;
-using libigl.Behaviour;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace libigl
+namespace Libigl
 {
     /// <summary>
     /// Marks which data has changed in <c>UMeshData</c> as a bitmask and needs to be applied to the mesh.<br/>
