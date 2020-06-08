@@ -12,7 +12,7 @@ namespace libigl.Behaviour
         {
             if (!InputManager.get.RightHand.isValid) return;
 
-            switch (Input->ActiveTool)
+            switch (Input.ActiveTool)
             {
                 case ToolType.Default:
                     UpdateInputDefault();
@@ -33,7 +33,7 @@ namespace libigl.Behaviour
             if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.secondaryButton,
                 out var secondaryBtnValue) && secondaryBtnValue)
             {
-                Input->DoTransform = true;
+                Input.DoTransform = true;
             }
         }
 
@@ -46,7 +46,7 @@ namespace libigl.Behaviour
             if (InputManager.get.LeftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisL))
             {
                 if (Mathf.Abs(_lastPrimaryAxisValueL.y) < 0.05f && Mathf.Abs(primaryAxisL.y) > 0.05f)
-                    Input->ChangeActiveSelection((int) Mathf.Sign(primaryAxisL.y));
+                    Input.ChangeActiveSelection((int) Mathf.Sign(primaryAxisL.y));
 
                 _lastPrimaryAxisValueL = primaryAxisL;
             }
@@ -54,11 +54,11 @@ namespace libigl.Behaviour
             if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out var primaryBtnValue) &&
                 primaryBtnValue)
             {
-                Input->DoSelect = true;
+                Input.DoSelect = true;
                 if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.devicePosition,
                     out var rightHandPos))
                 {
-                    Input->SelectPos = LibiglMesh.transform.InverseTransformPoint(
+                    Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(
                         InputManager.get.XRRig.TransformPoint(rightHandPos));
                 }
                 else
@@ -69,18 +69,18 @@ namespace libigl.Behaviour
             {
                 if (Mathf.Abs(primaryAxisValue.y) > 0.01f)
                 {
-                    Input->SelectRadiusSqr = Mathf.Clamp(
-                        Mathf.Sqrt(Input->SelectRadiusSqr) + 0.5f * primaryAxisValue.y * Time.deltaTime,
+                    Input.SelectRadiusSqr = Mathf.Clamp(
+                        Mathf.Sqrt(Input.SelectRadiusSqr) + 0.5f * primaryAxisValue.y * Time.deltaTime,
                         0.01f, 1f);
-                    Input->SelectRadiusSqr *= Input->SelectRadiusSqr;
+                    Input.SelectRadiusSqr *= Input.SelectRadiusSqr;
                 }
             }
         }
 
         private void UpdateInputTransform()
         {
-            HandTransformInput(InputManager.get.LeftHand, false, ref Input->GripL, ref Input->HandPosL);
-            HandTransformInput(InputManager.get.RightHand, true, ref Input->GripR, ref Input->HandPosR);
+            HandTransformInput(InputManager.get.LeftHand, false, ref Input.GripL, ref Input.HandPosL);
+            HandTransformInput(InputManager.get.RightHand, true, ref Input.GripR, ref Input.HandPosR);
         }
 
         /// <summary>
@@ -99,25 +99,25 @@ namespace libigl.Behaviour
             // Handling changes in the selection 'state machine'
             if (grip > 0.01f)
             {
-                if (!Input->DoTransform)
+                if (!Input.DoTransform)
                 {
-                    Input->DoTransform = true;
-                    Input->PrimaryTransformHand = isRight;
+                    Input.DoTransform = true;
+                    Input.PrimaryTransformHand = isRight;
                 }
                 else
-                    Input->SecondaryTransformHandActive = true;
+                    Input.SecondaryTransformHandActive = true;
             }
             else
             {
-                 if(Input->PrimaryTransformHand == isRight)
+                 if(Input.PrimaryTransformHand == isRight)
                  {
-                     if (Input->SecondaryTransformHandActive)
-                         Input->PrimaryTransformHand = !isRight;
+                     if (Input.SecondaryTransformHandActive)
+                         Input.PrimaryTransformHand = !isRight;
                      else
-                         Input->DoTransform = false;
+                         Input.DoTransform = false;
                  }
                  else
-                     Input->SecondaryTransformHandActive = false;
+                     Input.SecondaryTransformHandActive = false;
             }
 
         }
@@ -127,22 +127,22 @@ namespace libigl.Behaviour
         /// </summary>
         private void ConsumeInput()
         {
-            if(Input->ActiveTool == ToolType.Select && Input->DoTransform)
+            if(Input.ActiveTool == ToolType.Select && Input.DoTransform)
             {
                 // Only update this if we are transforming on the thread, i.e. transforming the selection
-                Input->PrevTrafoHandPosL = Input->HandPosL;
-                Input->PrevTrafoHandPosR = Input->HandPosR;
+                Input.PrevTrafoHandPosL = Input.HandPosL;
+                Input.PrevTrafoHandPosR = Input.HandPosR;
             }
             
             // Consume inputs here
-            Input->DoTransform = false;
-            Input->DoSelect = false;
-            Input->DoClearSelection = 0;
-            Input->VisibleSelectionMaskChanged = false;
-            if(!Input->DoHarmonic)
-                Input->DoHarmonicOnce = false;
-            if(!Input->DoArap)
-                Input->DoArapOnce = false;
+            Input.DoTransform = false;
+            Input.DoSelect = false;
+            Input.DoClearSelection = 0;
+            Input.VisibleSelectionMaskChanged = false;
+            if(!Input.DoHarmonic)
+                Input.DoHarmonicOnce = false;
+            if(!Input.DoArap)
+                Input.DoArapOnce = false;
         }
     }
 }

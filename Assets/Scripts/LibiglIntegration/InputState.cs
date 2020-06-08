@@ -47,10 +47,9 @@ namespace libigl.Behaviour
         public bool DoArap;
 
         /// <returns>An instance with the default values</returns>
-        public static GCHandle GetInstance()
+        public static InputState GetInstance()
         {
-            var i = new InputState {ActiveTool = ToolType.Select, VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadiusSqr = 0.1f};
-            return GCHandle.Alloc(i, GCHandleType.Pinned);
+            return new InputState {ActiveTool = ToolType.Select, VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadiusSqr = 0.1f};
         }
         
         public void ChangeActiveSelection(int increment)

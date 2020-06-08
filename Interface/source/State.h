@@ -26,8 +26,6 @@ struct State {
 	unsigned int SSizeAll{0}; // Total vertices selected
 	unsigned int SCount{1}; // Amount of selections
 
-	// Latest InputState, Managed only
-	void* Input;
 	// Native only state
 	NativeState* Native;
 

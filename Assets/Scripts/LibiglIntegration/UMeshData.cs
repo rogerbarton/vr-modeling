@@ -143,12 +143,12 @@ namespace libigl
         /// The DirtyState is propagated so <see cref="ApplyDirtyToMesh"/> (called on the main thread) will apply the changes.
         /// <seealso cref="Native.ApplyDirty"/>
         /// </summary>
-        public unsafe void ApplyDirty(State* state)
+        public unsafe void ApplyDirty(State* state, InputState inputState)
         {
             Assert.IsTrue(VSize == state->VSize && FSize == state->FSize);
             
             // Copy over and transpose data that has changed
-            Native.ApplyDirty(state, _native, state->Input->VisibleSelectionMask);
+            Native.ApplyDirty(state, _native, inputState.VisibleSelectionMask);
             
             DirtyState |= state->DirtyState;
             DirtySelections |= state->DirtySelections;
