@@ -21,8 +21,14 @@ namespace UI
         public void SetData(UiInputLabelData data)
         {
             gameObject.SetActive(data.isActive);
+            if (!data.isActive) return;
+            
+            icon.gameObject.SetActive(data.icon);
             icon.sprite = data.icon;
             text.text = data.text;
+                
+            // We need to refresh the layout explicitly
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) transform);
         }
     }
 }
