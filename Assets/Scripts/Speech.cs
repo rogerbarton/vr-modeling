@@ -65,7 +65,7 @@ public static class Speech
     public static void Dispose()
     {
         AllKeywords.Clear();
-        foreach (var recognizer in KeywordRecognizers.Where(recognizer => recognizer.IsRunning))
+        foreach (var recognizer in KeywordRecognizers)
             recognizer.Dispose();
     }
 }
