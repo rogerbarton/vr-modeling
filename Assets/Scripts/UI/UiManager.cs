@@ -86,24 +86,6 @@ namespace UI
         /// </summary>
         private unsafe void InitializeStaticUi()
         {
-            // Tools
-            _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
-            _toolGroup.title.text = "Tools & Actions";
-            _toolGroup.SetVisibility(true);
-
-            CreateActionUi("Default Tool",
-                () => { InputManager.get.SetActiveTool(ToolType.Default); }, _toolGroup);
-            CreateActionUi("Select Tool",
-                () => { InputManager.get.SetActiveTool(ToolType.Select); }, _toolGroup,
-                new[] {"select"});
-
-            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,
-                new[] {"smooth", "harmonic", "laplacian"});
-            CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
-                new[] {"translate", "move"});
-            CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
-            
-
             // Meshes
             _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _meshGroup.title.text = "Load Mesh";
@@ -125,7 +107,26 @@ namespace UI
                 iconAction.actionBtn.interactable = validMesh;
                 iconAction.iconBtn.interactable = validMesh;
             }
+            
+            
+            // Tools
+            _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            _toolGroup.title.text = "Tools & Actions";
+            _toolGroup.SetVisibility(true);
 
+            CreateActionUi("Default Tool",
+                () => { InputManager.get.SetActiveTool(ToolType.Default); }, _toolGroup);
+            CreateActionUi("Select Tool",
+                () => { InputManager.get.SetActiveTool(ToolType.Select); }, _toolGroup,
+                new[] {"select"});
+
+            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,
+                new[] {"smooth", "harmonic", "laplacian"});
+            CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
+                new[] {"translate", "move"});
+            CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
+
+            
             // Debug
             _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Debug";
