@@ -79,15 +79,15 @@ public class InputManager : MonoBehaviour
 
     private void Start()
     {
-        InitializeController(leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator, out LeftHandHints);
-        InitializeController(rightHandChar, out RightHand, rightHandPrefab, rightHandRig, out _rightHandAnimator, out RightHandHints);
+        InitializeController(leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator, out LeftHandHints, toolInputHintsL);
+        InitializeController(rightHandChar, out RightHand, rightHandPrefab, rightHandRig, out _rightHandAnimator, out RightHandHints, toolInputHintsR);
     }
 
     /// <summary>
     /// Gets the XR InputDevice and sets the correct model to display.
     /// </summary>
     private void InitializeController(InputDeviceCharacteristics c, out InputDevice inputDevice, GameObject handPrefab,
-        XRController modelParent, out Animator handAnimator, out UiInputHints inputHints)
+        XRController modelParent, out Animator handAnimator, out UiInputHints inputHints, IReadOnlyList<UiInputHintData> toolInputHints)
     {
         var devices = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(c, devices);
@@ -115,6 +115,8 @@ public class InputManager : MonoBehaviour
                 handAnimator = go.GetComponent<Animator>();
 
             inputHints = go.GetComponentInChildren<UiInputHints>();
+            if(ActiveTool < toolInputHints.Count)
+                inputHints.SetData(toolInputHints[ActiveTool]);
         }
         else
         {
@@ -132,7 +134,7 @@ public class InputManager : MonoBehaviour
     {
         if (!LeftHand.isValid)
             InitializeController(leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator,
-                out LeftHandHints);
+                out LeftHandHints, toolInputHintsL);
         else
         {
             // Teleport ray
@@ -155,7 +157,7 @@ public class InputManager : MonoBehaviour
 
         if (!RightHand.isValid)
             InitializeController(rightHandChar, out RightHand, rightHandPrefab, rightHandRig, out _rightHandAnimator,
-                out RightHandHints);
+                out RightHandHints, toolInputHintsR);
         else
         {
             // Teleport ray
