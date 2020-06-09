@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 778260ba7fad3ea4496b1b9b40ad8b7f,
+  m_LightingDataAsset: {fileID: 112000000, guid: 12001cd5646025a47b0daa23bbb9f9ce,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -1955,6 +1955,16 @@ MonoBehaviour:
     type: 3}
   panelSpawnPoint: {fileID: 1144852320}
   actionsListParent: {fileID: 788621609}
+  uvGridMaterial: {fileID: 2100000, guid: 2ceaa084356e7304cb03a7f3f2dccb27, type: 2}
+  toggleUvGridRenderers:
+  - {fileID: 1213095691}
+  - {fileID: 726841470}
+--- !u!23 &726841470 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 873897935049138797, guid: b1a52f8d3cef4be4dabac3b47592cee7,
+    type: 3}
+  m_PrefabInstance: {fileID: 5597405228587232397}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &788621608
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2771,6 +2781,12 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!23 &1213095691 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5605881808321677515, guid: b1a52f8d3cef4be4dabac3b47592cee7,
+    type: 3}
+  m_PrefabInstance: {fileID: 5597405228587232397}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1233269428
 PrefabInstance:
   m_ObjectHideFlags: 0

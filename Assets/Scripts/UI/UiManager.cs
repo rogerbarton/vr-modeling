@@ -34,6 +34,13 @@ namespace UI
         private UiCollapsible _meshGroup;
         private UiCollapsible _debugGroup;
 
+        [Tooltip("Debug material placed on objects when enabled.")]
+        public Material uvGridMaterial;
+        [Tooltip("Replaces the first material of the renderer with the UV grid when enabled.")]
+        public MeshRenderer[] toggleUvGridRenderers;
+        private bool _isShowingUvGrid;
+        private Material[] _uvGridInitialMaterials;
+
         private LayerMask _uiLayerMask;
 
         private void Awake()
@@ -95,6 +102,7 @@ namespace UI
             CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
                 new[] {"translate", "move"});
             CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
+            
 
             // Meshes
             _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
@@ -122,6 +130,23 @@ namespace UI
             _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Debug";
             _debugGroup.SetVisibility(true);
+            
+            var toggleUvGridAction = Instantiate(buttonPrefab, actionsListParent).GetComponent<Button>();
+            _debugGroup.AddItem(toggleUvGridAction.gameObject);
+            toggleUvGridAction.GetComponentInChildren<TMP_Text>().text = "Toggle UV Grid";
+
+            // Get references to normal materials
+            _uvGridInitialMaterials = new Material[toggleUvGridRenderers.Length];
+            for (var i = 0; i < toggleUvGridRenderers.Length; i++)
+                _uvGridInitialMaterials[i] = toggleUvGridRenderers[i].material;
+
+            toggleUvGridAction.onClick.AddListener(() =>
+            {
+                // Toggle uv debug material
+                _isShowingUvGrid = !_isShowingUvGrid;
+                for (var i = 0; i < toggleUvGridRenderers.Length; i++)
+                    toggleUvGridRenderers[i].material =  _isShowingUvGrid ? uvGridMaterial : _uvGridInitialMaterials[i];
+            });
         }
 
         /// <summary>
