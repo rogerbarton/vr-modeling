@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Libigl;
 using UI;
@@ -81,6 +81,12 @@ public class InputManager : MonoBehaviour
     {
         InitializeController(leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator, out LeftHandHints, toolInputHintsL);
         InitializeController(rightHandChar, out RightHand, rightHandPrefab, rightHandRig, out _rightHandAnimator, out RightHandHints, toolInputHintsR);
+        
+        _leftHandTeleportReticle.SetActive(false);
+        _rightHandTeleportReticle.SetActive(false);
+        
+        _leftHandLineRenderer.material = filledLineMat;
+        _rightHandLineRenderer.material = filledLineMat;
     }
 
     /// <summary>
@@ -138,21 +144,21 @@ public class InputManager : MonoBehaviour
         else
         {
             // Teleport ray
-            leftHandRig.inputDevice.IsPressed(InputHelpers.Button.Grip, out var gripLPressed, 0.2f);
-            _leftHandTeleportReticle.SetActive(gripLPressed);
-            _leftHandLineRenderer.material = gripLPressed ? filledLineMat : dottedLineMat;
+            var success = leftHandRig.inputDevice.IsPressed(InputHelpers.Button.PrimaryAxis2DUp, out var teleportPressed, 0.2f);
+            _leftHandTeleportReticle.SetActive(teleportPressed);
+            _leftHandLineRenderer.material = teleportPressed ? filledLineMat : dottedLineMat;
             
             // Changing Active Tool
             leftHandRig.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out var secondaryBtnPressed, 0.2f);
             if(secondaryBtnPressed && ! _prevSecondaryBtnPressedL)
-                SetActiveTool(ActiveTool + 1 % ToolType.Size);
+                SetActiveTool((ActiveTool + 1) % ToolType.Size);
             _prevSecondaryBtnPressedL = secondaryBtnPressed;
             
             // Toggling UI hints
-            leftHandRig.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressedL, 0.2f);
-            if(axisClickPressedL && !_prevAxisClickPressedL)
-                LeftHandHints.enabled = !LeftHandHints.enabled;
-            _prevAxisClickPressedL = axisClickPressedL;
+            leftHandRig.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
+            if(axisClickPressed && !_prevAxisClickPressedL)
+                LeftHandHints.gameObject.SetActive(!LeftHandHints.gameObject.activeSelf);
+            _prevAxisClickPressedL = axisClickPressed;
         }
 
         if (!RightHand.isValid)
@@ -166,10 +172,10 @@ public class InputManager : MonoBehaviour
             _rightHandLineRenderer.material = gripRPressed ? filledLineMat : dottedLineMat;
             
             // Toggling UI hints
-            leftHandRig.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressedR, 0.2f);
-            if(axisClickPressedR && !_prevAxisClickPressedR)
-                RightHandHints.enabled = !RightHandHints.enabled;
-            _prevAxisClickPressedR = axisClickPressedR;
+            rightHandRig.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
+            if(axisClickPressed && !_prevAxisClickPressedR)
+                RightHandHints.gameObject.SetActive(!RightHandHints.gameObject.activeSelf);
+            _prevAxisClickPressedR = axisClickPressed;
         }
 
         if (useHands)
