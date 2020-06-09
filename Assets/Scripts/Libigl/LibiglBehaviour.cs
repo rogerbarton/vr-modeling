@@ -67,16 +67,12 @@ namespace Libigl
         public void PreExecute()
         {
             // Add logic here that uses the Unity API (e.g. Input)
-            Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
-            Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
-            Input.DoSelectStarted = !Input.DoSelectStarted && Input.DoSelect;
-            
-            _uiDetails.UpdatePreExecute();
+            PreExecuteInput();
             
             // Apply changes in UI to the state
-            State->SCount = Input.SCountUi;
+            _uiDetails.UpdatePreExecute();
             
-            // Copy the InputState to the State by copying
+            // Copy the Input to ExecuteInput so the thread has its own copy
             ExecuteInput = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
             ConsumeInput();

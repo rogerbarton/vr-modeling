@@ -38,7 +38,7 @@ namespace Libigl
         /// <returns>True if this is the active mesh set by the <see cref="MeshManager"/></returns>
         public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
 
-        private void OnEnable()
+        private void Awake()
         {
             MeshManager.get.RegisterMesh(this);
         }

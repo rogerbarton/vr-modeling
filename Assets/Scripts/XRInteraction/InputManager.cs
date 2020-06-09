@@ -48,6 +48,9 @@ public class InputManager : MonoBehaviour
     private GameObject _rightHandTeleportReticle;
     public Material filledLineMat;
     public Material dottedLineMat;
+    
+    // Tools & Input State
+    [NonSerialized] public uint ActiveTool;
 
     private void Awake()
     {
@@ -118,7 +121,7 @@ public class InputManager : MonoBehaviour
             InitializeController(leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator);
         else
         {
-            InputHelpers.IsPressed(leftHandRig.inputDevice, InputHelpers.Button.Grip, out var gripLPressed, 0.2f);
+            leftHandRig.inputDevice.IsPressed(InputHelpers.Button.Grip, out var gripLPressed, 0.2f);
             _leftHandTeleportReticle.SetActive(gripLPressed);
             _leftHandLineRenderer.material = gripLPressed ? filledLineMat : dottedLineMat;
         }
@@ -127,7 +130,7 @@ public class InputManager : MonoBehaviour
             InitializeController(rightHandChar, out RightHand, rightHandPrefab, rightHandRig, out _rightHandAnimator);
         else
         {
-            InputHelpers.IsPressed(rightHandRig.inputDevice, InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
+            rightHandRig.inputDevice.IsPressed(InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
             _rightHandTeleportReticle.SetActive(gripRPressed);
             _rightHandLineRenderer.material = gripRPressed ? filledLineMat : dottedLineMat;
         }

@@ -240,6 +240,9 @@ namespace UI
             if (_behaviour.Input.DoSelectStarted && _behaviour.Input.NewSelectionOnDraw &&
                 _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0)
                 AddSelection();
+            
+            // Copy UI selection count to the state (as it is shared with C++)
+            _behaviour.State->SCount = _behaviour.Input.SCountUi;
         }
 
         /// <summary>

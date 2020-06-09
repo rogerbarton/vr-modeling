@@ -122,6 +122,16 @@ namespace Libigl
 
         }
 
+        private void PreExecuteInput()
+        {
+            Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
+            Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
+            Input.DoSelectStarted = !Input.DoSelectStarted && Input.DoSelect;
+
+            // Copy state from the input manager
+            Input.ActiveTool = InputManager.get.ActiveTool;
+        }
+        
         /// <summary>
         /// Consumes and resets flags raised. Should be called in PreExecute after copying to the State.
         /// </summary>
