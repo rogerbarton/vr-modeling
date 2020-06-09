@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,6 +8,7 @@ public static class Speech
 {
     private static readonly List<string> AllKeywords = new List<string>();
     private static readonly List<KeywordRecognizer> KeywordRecognizers = new List<KeywordRecognizer>();
+    private static bool _enabled;
     
     /// <summary>
     /// Creates a new KeywordRecognizer that calls <paramref name="onRecognized"/> when any keyword in <paramref name="speechKeywords"/> is heard and recognized.
@@ -25,7 +25,8 @@ public static class Speech
         
         var recognizer = new KeywordRecognizer(speechKeywords);
         recognizer.OnPhraseRecognized += _ => { onRecognized(); };
-        recognizer.Start();
+        if(_enabled)
+            recognizer.Start();
         KeywordRecognizers.Add(recognizer);
     }
     
@@ -39,6 +40,26 @@ public static class Speech
 
         speechKeywords = speechKeywords.Except(AllKeywords).ToArray();
         AllKeywords.AddRange(speechKeywords);
+    }
+    
+    /// <summary>
+    /// Turn speech recognition on and off dynamically
+    /// </summary>
+    public static void SetEnabled(bool value)
+    {
+        if (!_enabled && value)
+        {
+            foreach (var recognizer in KeywordRecognizers.Where(recognizer => !recognizer.IsRunning))
+                recognizer.Start();
+        }
+        
+        if (_enabled && !value)
+        {
+            foreach (var recognizer in KeywordRecognizers.Where(recognizer => recognizer.IsRunning))
+                recognizer.Stop();
+        }
+
+        _enabled = value;
     }
     
     public static void Dispose()
