@@ -85,9 +85,9 @@ namespace UI
             _toolGroup.SetVisibility(true);
 
             CreateActionUi("Default Tool",
-                () => { InputManager.get.ActiveTool = ToolType.Default; }, _toolGroup);
+                () => { InputManager.get.SetActiveTool(ToolType.Default); }, _toolGroup);
             CreateActionUi("Select Tool",
-                () => { InputManager.get.ActiveTool = ToolType.Select; }, _toolGroup,
+                () => { InputManager.get.SetActiveTool(ToolType.Select); }, _toolGroup,
                 new[] {"select"});
 
             CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,

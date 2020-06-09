@@ -9,8 +9,11 @@ namespace Libigl
     /// </summary>
     public struct InputState
     {
-        public uint ActiveTool;
-        
+        /// <summary>
+        /// Copy for threading of <see cref="InputManager.ActiveTool"/>
+        /// </summary>
+        public int ActiveTool { get; private set; }
+
         // Generic Input
         public float GripL;
         public float GripR;
@@ -50,21 +53,33 @@ namespace Libigl
         /// <returns>An instance with the default values</returns>
         public static InputState GetInstance()
         {
-            return new InputState {ActiveTool = ToolType.Select, VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadiusSqr = 0.1f};
+            return new InputState {VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadiusSqr = 0.1f};
         }
         
         public void ChangeActiveSelection(int increment)
         {
             ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCountUi);
         }
+
+        /// <summary>
+        /// Only for private items of InputState
+        /// </summary>
+        public void PreExecute()
+        {
+            // Copy state from the input manager
+            ActiveTool = InputManager.get.ActiveTool;
+        }
     }
 
     public static class ToolType
     {
-        public const uint Default = 0;
-        public const uint Select = 1;
-        public const uint Laser = 2;
-        public const uint ViewOnly = 4;
+        public const int Invalid = -1;
+        public const int Default = 0;
+        public const int Select = 1;
+        // public const int Laser = 2;
+        // public const int ViewOnly = 3;
+
+        public const int Size = 2;
     }
 
     public enum SelectionMode

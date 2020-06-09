@@ -128,8 +128,7 @@ namespace Libigl
             Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
             Input.DoSelectStarted = !Input.DoSelectStarted && Input.DoSelect;
 
-            // Copy state from the input manager
-            Input.ActiveTool = InputManager.get.ActiveTool;
+            Input.PreExecute();
         }
         
         /// <summary>
