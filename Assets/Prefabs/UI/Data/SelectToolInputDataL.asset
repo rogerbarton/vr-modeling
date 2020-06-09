@@ -29,9 +29,9 @@ MonoBehaviour:
     icon: {fileID: 0}
     text: 
   secondaryBtn:
-    isActive: 0
-    icon: {fileID: 0}
-    text: 
+    isActive: 1
+    icon: {fileID: 21300000, guid: 687113760b0344d40870d4c2437445e1, type: 3}
+    text: Change Tool
   primaryAxisX:
     isActive: 1
     icon: {fileID: 21300000, guid: b7bfe81f7a7143f4180c481b80135653, type: 3}
