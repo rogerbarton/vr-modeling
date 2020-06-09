@@ -13,7 +13,7 @@ namespace UI
         public UiInputLabel primaryAxisX;
         public UiInputLabel primaryAxisY;
 
-        public void SetData(UiInputHintData data)
+        public void SetData(UiInputHintsData data)
         {
             title.SetData(data.title);
             trigger.SetData(data.trigger);

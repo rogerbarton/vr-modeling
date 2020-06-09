@@ -55,8 +55,8 @@ public class InputManager : MonoBehaviour
     
     // Tools & Input State
     public int ActiveTool { get; private set; } = ToolType.Select;
-    public UiInputHintData[] toolInputHintsL;
-    public UiInputHintData[] toolInputHintsR;
+    public UiInputHintsData[] toolInputHintsL;
+    public UiInputHintsData[] toolInputHintsR;
 
     private void Awake()
     {
@@ -87,7 +87,7 @@ public class InputManager : MonoBehaviour
     /// Gets the XR InputDevice and sets the correct model to display.
     /// </summary>
     private void InitializeController(InputDeviceCharacteristics c, out InputDevice inputDevice, GameObject handPrefab,
-        XRController modelParent, out Animator handAnimator, out UiInputHints inputHints, IReadOnlyList<UiInputHintData> toolInputHints)
+        XRController modelParent, out Animator handAnimator, out UiInputHints inputHints, IReadOnlyList<UiInputHintsData> toolInputHints)
     {
         var devices = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(c, devices);
@@ -115,7 +115,7 @@ public class InputManager : MonoBehaviour
                 handAnimator = go.GetComponent<Animator>();
 
             inputHints = go.GetComponentInChildren<UiInputHints>();
-            if(ActiveTool < toolInputHints.Count)
+            if(inputHints && ActiveTool < toolInputHints.Count)
                 inputHints.SetData(toolInputHints[ActiveTool]);
         }
         else
