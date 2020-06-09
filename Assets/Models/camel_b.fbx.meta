@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: ed96836b958c8394ca62cce76eba9ec0
+labels:
+- EditableMesh
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable: []

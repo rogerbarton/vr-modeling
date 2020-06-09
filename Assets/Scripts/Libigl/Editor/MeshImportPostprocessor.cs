@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Libigl.Editor
@@ -12,6 +14,10 @@ namespace Libigl.Editor
         /// <param name="g"></param>
         private void OnPostprocessModel(GameObject g)
         {
+            if(!Path.GetDirectoryName(assetPath).EndsWith("EditableMeshes") && 
+               !AssetDatabase.GetLabels(assetImporter).Contains("EditableMesh"))
+                return;
+
             //Get all meshes associated with this model/gameobject and reformat them
             var meshFilters = g.GetComponentsInChildren<MeshFilter>();
             if (meshFilters.Length == 0)
