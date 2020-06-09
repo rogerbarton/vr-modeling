@@ -5,6 +5,7 @@ namespace UI
     [CreateAssetMenu(menuName = "Data/Input Hint Data")]
     public class UiInputHintData : ScriptableObject
     {
+        public UiInputLabelData title;
         public UiInputLabelData trigger;
         public UiInputLabelData grip;
         public UiInputLabelData primaryBtn;

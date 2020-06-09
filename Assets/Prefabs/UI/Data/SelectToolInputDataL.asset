@@ -10,10 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4f28b455084a6eb3a33be14c382823, type: 3}
-  m_Name: SelectToolInputDataR
+  m_Name: SelectToolInputDataL
   m_EditorClassIdentifier: 
+  title:
+    isActive: 0
+    icon: {fileID: 0}
+    text: 
   trigger:
-    isActive: 1
+    isActive: 0
     icon: {fileID: 21300000, guid: 44725158c4803004b9e1547180e18c1b, type: 3}
     text: Select
   grip:
@@ -34,5 +38,5 @@ MonoBehaviour:
     text: Turn
   primaryAxisY:
     isActive: 1
-    icon: {fileID: 21300000, guid: 774f87476d4afb84a8c62adbb24ee16c, type: 3}
-    text: Resize Brush
+    icon: {fileID: 21300000, guid: 25fed328b626ceb4cac4d948dcedecf9, type: 3}
+    text: Teleport
