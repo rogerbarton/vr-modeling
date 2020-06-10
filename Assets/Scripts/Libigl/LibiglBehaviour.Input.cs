@@ -143,6 +143,7 @@ namespace Libigl
             }
             
             // Consume inputs here
+            Input.DoTransformPrev = Input.DoTransform;
             Input.DoTransform = false;
             Input.DoSelectPrev = Input.DoSelect;
             Input.DoSelect = false;

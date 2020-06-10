@@ -6,7 +6,7 @@ namespace Libigl
     {
         private void ActionTransformSelection()
         {
-            if (!ExecuteInput.DoTransform || ExecuteInput.ActiveTool != ToolType.Select) return;
+            if (!ExecuteInput.DoTransform || !ExecuteInput.DoTransformPrev || ExecuteInput.ActiveTool != ToolType.Select) return;
 
             if (!ExecuteInput.SecondaryTransformHandActive)
             {
@@ -107,7 +107,7 @@ namespace Libigl
 
         private void UpdateMeshTransform()
         {
-            if (Input.ActiveTool == ToolType.Select || !Input.DoTransform) return;
+            if (Input.ActiveTool == ToolType.Select || !Input.DoTransform || !Input.DoTransformPrev) return;
             
             // Transform the whole mesh
             if (Input.SecondaryTransformHandActive)

@@ -25,6 +25,7 @@ namespace Libigl
 
         // Transform
         public bool DoTransform;
+        public bool DoTransformPrev;
         public bool PrimaryTransformHand; // True=R
         public bool SecondaryTransformHandActive;
 
