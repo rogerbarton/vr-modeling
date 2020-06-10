@@ -34,8 +34,8 @@ MonoBehaviour:
     text: Grab
   primaryAxisX:
     isActive: 0
-    icon: {fileID: 21300000, guid: b7bfe81f7a7143f4180c481b80135653, type: 3}
-    text: Turn
+    icon: {fileID: 0}
+    text: 
   primaryAxisY:
     isActive: 0
     icon: {fileID: 0}
