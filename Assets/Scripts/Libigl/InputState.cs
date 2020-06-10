@@ -37,7 +37,7 @@ namespace Libigl
         public uint SCountUi; // For UI, will be copied to the state in PreExecute
 
         public bool DoSelect;
-        public bool DoSelectStarted;
+        public bool DoSelectPrev;
         public Vector3 SelectPos;
         public float SelectRadiusSqr;
         // A Mask of the selections that should be cleared

@@ -126,7 +126,6 @@ namespace Libigl
         {
             Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
             Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
-            Input.DoSelectStarted = !Input.DoSelectStarted && Input.DoSelect;
 
             Input.PreExecute();
         }
@@ -145,6 +144,7 @@ namespace Libigl
             
             // Consume inputs here
             Input.DoTransform = false;
+            Input.DoSelectPrev = Input.DoSelect;
             Input.DoSelect = false;
             Input.DoClearSelection = 0;
             Input.VisibleSelectionMaskChanged = false;
