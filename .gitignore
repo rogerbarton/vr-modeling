@@ -76,3 +76,7 @@ vr-modeling-build*
 *.blend1*
 *.blend2*
 *.blend3*
+
+Assets/Scripts/Editor/UnityBuildPipeline/
+
+Assets/Scripts/Editor/UnityBuildPipeline.meta
