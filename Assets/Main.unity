@@ -2969,6 +2969,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1842457740693614888, guid: e0dc7e994c98ae84996300a04afa66c7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5897804203036001846, guid: e0dc7e994c98ae84996300a04afa66c7,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2978,6 +2983,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060086830360728712, guid: e0dc7e994c98ae84996300a04afa66c7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9060086831265740502, guid: e0dc7e994c98ae84996300a04afa66c7,
         type: 3}
@@ -3038,6 +3048,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TeleportBase
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060086831265740503, guid: e0dc7e994c98ae84996300a04afa66c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0dc7e994c98ae84996300a04afa66c7, type: 3}
@@ -4373,6 +4388,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1842457740693614888, guid: e0dc7e994c98ae84996300a04afa66c7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5897804203036001846, guid: e0dc7e994c98ae84996300a04afa66c7,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -4382,6 +4402,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060086830360728712, guid: e0dc7e994c98ae84996300a04afa66c7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9060086831265740502, guid: e0dc7e994c98ae84996300a04afa66c7,
         type: 3}
@@ -4442,6 +4467,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TeleportBase
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060086831265740503, guid: e0dc7e994c98ae84996300a04afa66c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0dc7e994c98ae84996300a04afa66c7, type: 3}
