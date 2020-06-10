@@ -72,3 +72,7 @@ Assets/Plugins/UnityNativeTool/stubLluiPlugin.*
 Assets/Main/
 
 vr-modeling-build*
+
+*.blend1*
+*.blend2*
+*.blend3*
