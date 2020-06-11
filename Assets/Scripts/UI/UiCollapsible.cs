@@ -11,9 +11,10 @@ namespace UI
     public class UiCollapsible : MonoBehaviour
     {
         public TMP_Text title;
-        public List<GameObject> items;
-        public bool visible = true;
         public RectTransform checkmarkIcon;
+        
+        private readonly List<GameObject> _items = new List<GameObject>();
+        private bool _visible = true;
         private int _lastSiblingIndex;
 
         private void OnEnable()
@@ -26,8 +27,8 @@ namespace UI
         /// </summary>
         public void AddItem(GameObject item)
         {
-            items.Add(item);
-            item.SetActive(visible);
+            _items.Add(item);
+            item.SetActive(_visible);
             item.transform.SetSiblingIndex(_lastSiblingIndex + 1);
             _lastSiblingIndex = item.transform.GetSiblingIndex();
         }
@@ -37,20 +38,31 @@ namespace UI
             _lastSiblingIndex--;
         }
 
+        public void ToggleVisibility()
+        {
+            SetVisibility(!_visible);
+        }
+
         /// <summary>
         /// Change the visibility, callable from UI Event OnClick
         /// </summary>
         public void SetVisibility(bool value)
         {
-            if (value != visible)
+            if (value != _visible)
             {
-                foreach (var item in items)
+                foreach (var item in _items)
                     item.SetActive(value);
 
                 if (checkmarkIcon)
                     checkmarkIcon.Rotate(new Vector3(0, 0, value ? -90 : 90));
             }
-            visible = value;
+            _visible = value;
+        }
+
+        public void Remove(GameObject go)
+        {
+            _items.Remove(go);
+            _lastSiblingIndex--;
         }
     }
 }

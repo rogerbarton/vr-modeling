@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5470110093003960459}
-  - component: {fileID: 6933376908538822467}
+  - component: {fileID: -5787534453388253595}
   - component: {fileID: 7318249937174749788}
   - component: {fileID: 8076285010803198202}
   - component: {fileID: 9045438324282984021}
@@ -42,7 +42,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6933376908538822467
+--- !u!114 &-5787534453388253595
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4553715744232311783}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -81,16 +81,13 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 9031098205425106527}
-  toggleTransition: 1
-  graphic: {fileID: 9031098205425106527}
-  m_Group: {fileID: 0}
-  onValueChanged:
+  m_TargetGraphic: {fileID: 9045438324282984021}
+  m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7318249937174749788}
-        m_MethodName: SetVisibility
-        m_Mode: 0
+        m_MethodName: ToggleVisibility
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -98,8 +95,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 1
-  m_IsOn: 1
+        m_CallState: 2
 --- !u!114 &7318249937174749788
 MonoBehaviour:
   m_ObjectHideFlags: 0

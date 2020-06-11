@@ -69,8 +69,14 @@ namespace UI
 
             // Setup first selection
             AddSelection();
-            // Set it as the active one
-            _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
+            
+            var clearAllSelections = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _selectionGroup.AddItem(clearAllSelections.gameObject);
+            clearAllSelections.GetComponentInChildren<TMP_Text>().text = "Clear All";
+            clearAllSelections.onClick.AddListener(() =>
+            {
+                _behaviour.Input.DoClearSelection = uint.MaxValue;
+            });
             
             
             // Operations
@@ -118,7 +124,6 @@ namespace UI
 
             _toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _shaderGroup.AddItem(_toggleWireframe.gameObject);
-            _shaderGroup.AddItem(_toggleWireframe.gameObject);
             _toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
             _toggleWireframe.onClick.AddListener(() =>
             {
@@ -128,6 +133,14 @@ namespace UI
                 else
                     materials = new[] {materials.First()};
                 behaviour.LibiglMesh.MeshRenderer.materials = materials;
+            });
+            
+            var toggleBounds = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _shaderGroup.AddItem(toggleBounds.gameObject);
+            toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
+            toggleBounds.onClick.AddListener(() =>
+            {
+                behaviour.LibiglMesh.BoundingBox.gameObject.SetActive(!behaviour.LibiglMesh.BoundingBox.gameObject.activeSelf);
             });
 
             
@@ -160,64 +173,8 @@ namespace UI
             _behaviour.Input.SCountUi++;
 
             // Add UI for the selection
-            var uiSelection = Instantiate(UiManager.get.selectionPrefab, _listParent)
-                .GetComponent<UiSelection>();
-            uiSelection.text.text = $"<b>{selectionId}</b>: 0 vertices";
-            _selectionGroup.AddItem(uiSelection.gameObject);
-            uiSelection.visibleBtn.image.color = Util.Colors.GetColorById(selectionId);
-
-            // Behaviour when clicking buttons
-            uiSelection.visibleBtn.onClick.AddListener(() =>
-            {
-                _behaviour.Input.VisibleSelectionMask ^= 1u << selectionId;
-                uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
-
-                // Repaint colors if 
-                if (_behaviour.State->SSize[selectionId] > 0)
-                    _behaviour.Input.VisibleSelectionMaskChanged = true;
-            });
-            uiSelection.editBtn.onClick.AddListener(() =>
-            {
-                if (selectionId == _behaviour.Input.ActiveSelectionId) return;
-
-                // Disable the last active selection and set this one as active
-                _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
-                _behaviour.Input.ActiveSelectionId = selectionId;
-                uiSelection.ToggleEditSprite(true);
-            });
-            uiSelection.clearBtn.onClick.AddListener(() =>
-            {
-                // Either clear the selection or delete it in the UI if it is the last one and is empty
-                if(_behaviour.State->SSize[selectionId] > 0)
-                    _behaviour.Input.DoClearSelection |= 1u << selectionId;
-                else if (selectionId == _selections.Count -1 && _selections.Count > 1)
-                {
-                    if (_behaviour.Input.ActiveSelectionId == selectionId)
-                    {
-                        _behaviour.Input.ActiveSelectionId--;
-                        _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
-                    }
-
-                    _behaviour.Input.SCountUi--;
-                    _behaviour.Input.VisibleSelectionMask ^= (uint)1 << selectionId;
-                    _behaviour.State->SSize[selectionId] = 0;
-                    Destroy(_selections[selectionId].gameObject);
-                    _selections.RemoveAt(selectionId);
-                }
-            });
-
-            if (_selections.Count > 0)
-                uiSelection.transform.SetSiblingIndex(_selections[_selections.Count - 1].transform.GetSiblingIndex() + 1);
-            _selections.Add(uiSelection);
-
-            
-            // Apply current values
-            uiSelection.ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
-
-            // Set as active, TODO: extract shared function with onClick editBtn
-            _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
-            _behaviour.Input.ActiveSelectionId = selectionId;
-            uiSelection.ToggleEditSprite(true);
+            var uiSelection = Instantiate(UiManager.get.selectionPrefab, _listParent).GetComponent<UiSelection>();
+            uiSelection.Initialize(selectionId, _selectionGroup, _behaviour, _selections);
 
             return true;
         }
@@ -256,8 +213,10 @@ namespace UI
             {
                 UpdateVertexCountText();
                 for (var i = 0; i < _selections.Count; i++)
-                    _selections[i].GetComponentInChildren<TMP_Text>().text =
-                        $"<b>{i}</b>: {_behaviour.State->SSize[i]} vertices";
+                {
+                    if ((_behaviour.State->DirtySelections & 1 << i) > 0)
+                        _selections[i].UpdateText();
+                }
             }
 
             progressIcon.PostExecute();
