@@ -19,6 +19,7 @@ namespace UI
         public GameObject headerPrefab;
         public GameObject textPrefab;
         public GameObject buttonPrefab;
+        public GameObject togglePrefab;
         public GameObject groupPrefab;
         public GameObject selectionPrefab;
         public GameObject selectionModePrefab;

@@ -95,10 +95,11 @@ namespace UI
                 behaviour.Input.DoHarmonic = value;
             });
             
-            var harmonicShowDisplacements = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            var harmonicShowDisplacements = Instantiate(UiManager.get.togglePrefab, _listParent).GetComponent<Toggle>();
             _operationsGroup.AddItem(harmonicShowDisplacements.gameObject);
             harmonicShowDisplacements.GetComponentInChildren<TMP_Text>().text = "Toggle deform field";
-            harmonicShowDisplacements.onClick.AddListener(() => { behaviour.Input.HarmonicShowDisplacement = !behaviour.Input.HarmonicShowDisplacement; });
+            harmonicShowDisplacements.isOn = behaviour.Input.HarmonicShowDisplacement;
+            harmonicShowDisplacements.onValueChanged.AddListener((value) => { behaviour.Input.HarmonicShowDisplacement = value; });
             
             _arapToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_arapToggle.gameObject);
