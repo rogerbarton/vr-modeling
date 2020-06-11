@@ -3621,8 +3621,9 @@ MonoBehaviour:
   - {fileID: 3725482248623168509, guid: 349a62edbb1b55f44bb793865b1edd74, type: 3}
   - {fileID: -6639996736880469515, guid: 0cd3ddb80e4243a41ab126c11102ff0b, type: 3}
   meshSpawnPoint: {fileID: 285171626}
-  allMeshes: []
   wireframeMaterial: {fileID: 2100000, guid: 82378c7d7f5d4d2458ea1acbe21acc52, type: 2}
+  boundingBoxPrefab: {fileID: 8418104587217665642, guid: 2b21c16d9fe1aa94c97852cb7c1e4836,
+    type: 3}
 --- !u!4 &1244380012
 Transform:
   m_ObjectHideFlags: 0

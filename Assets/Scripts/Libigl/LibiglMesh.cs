@@ -38,6 +38,8 @@ namespace Libigl
         /// <returns>True if this is the active mesh set by the <see cref="MeshManager"/></returns>
         public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
 
+        [NonSerialized] public Transform BoundingBox;
+        
         private void Awake()
         {
             MeshManager.get.RegisterMesh(this);
@@ -55,6 +57,9 @@ namespace Libigl
             Behaviour = new LibiglBehaviour(this);
 
             DataRowMajor.LinkBehaviourState(Behaviour);
+
+            BoundingBox = Instantiate(MeshManager.get.boundingBoxPrefab, Vector3.zero, Quaternion.identity, transform).transform;
+            UpdateBoundingBox();
 
 #if UNITY_EDITOR
             DisposeBeforeUnload += Dispose;
@@ -179,6 +184,12 @@ namespace Libigl
             Mesh = _meshFilter.mesh;
             MeshRenderer = GetComponent<MeshRenderer>();
             Mesh.MarkDynamic();
+        }
+
+        public void UpdateBoundingBox()
+        {
+            BoundingBox.localPosition = Mesh.bounds.center;
+            BoundingBox.localScale = 2 * Mesh.bounds.extents;
         }
     }
 }

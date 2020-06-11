@@ -18,10 +18,12 @@ public class MeshManager : MonoBehaviour
     /// </summary>
     public static LibiglMesh ActiveMesh;
 
-    public List<LibiglMesh> allMeshes = new List<LibiglMesh>();
+    [NonSerialized] public readonly List<LibiglMesh> AllMeshes = new List<LibiglMesh>();
 
     public static event Action ActiveMeshSet = delegate {};
     public Material wireframeMaterial;
+
+    public GameObject boundingBoxPrefab;
 
     private void Awake()
     {
@@ -144,7 +146,7 @@ public class MeshManager : MonoBehaviour
         if (ActiveMesh == libiglMesh)
         {
             // Assign new active mesh
-            foreach (var mesh in allMeshes.Where(mesh => mesh != ActiveMesh))
+            foreach (var mesh in AllMeshes.Where(mesh => mesh != ActiveMesh))
             {
                 SetActiveMesh(mesh);
                 break;
@@ -159,12 +161,12 @@ public class MeshManager : MonoBehaviour
 
     public void RegisterMesh(LibiglMesh libiglMesh)
     {
-        allMeshes.Add(libiglMesh);
+        AllMeshes.Add(libiglMesh);
     }
 
     public void UnregisterMesh(LibiglMesh libiglMesh)
     {
-        if(allMeshes.Contains(libiglMesh))
-            allMeshes.Remove(libiglMesh);
+        if(AllMeshes.Contains(libiglMesh))
+            AllMeshes.Remove(libiglMesh);
     }
 }

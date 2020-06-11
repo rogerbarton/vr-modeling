@@ -119,6 +119,9 @@ namespace Libigl
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
             LibiglMesh.DataRowMajor.ApplyDirtyToMesh(LibiglMesh.Mesh);
             
+            if ((State->DirtyState & DirtyFlag.VDirty) > 0 && (State->DirtyState & DirtyFlag.DontComputeBounds) == 0)
+                LibiglMesh.UpdateBoundingBox();
+            
             // Consume Dirty
             State->DirtyState = DirtyFlag.None;
             State->DirtySelections = 0;
