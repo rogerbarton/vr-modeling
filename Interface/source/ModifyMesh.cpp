@@ -42,14 +42,15 @@ extern "C" {
 	    }
     }
 
-    void Harmonic(State* state, int boundarySelectionId) {
-	    Eigen::MatrixXf D, D_bc;
+    void Harmonic(State* state, int boundarySelectionId, bool showDeformationField) {
+	    Eigen::MatrixXf D_bc;
 	    const unsigned int maskId = Selection::GetMask(boundarySelectionId);
 
 	    LOG("Harmonic");
 
 	    // From Tutorial 401
 	    // Create boundary selection
+	    // TODO: Calculate this if the selection has changed since the last harmonic call
 	    Eigen::VectorXi b;
 	    igl::colon<int>(0, state->VSize, b);
 	    b.conservativeResize(std::stable_partition(b.data(), b.data() + state->VSize,
@@ -57,11 +58,17 @@ extern "C" {
 
 	    // Create boundary conditions
 	    igl::slice(*state->V, b, igl::colon<int>(0, 2), D_bc);
-	    // D_bc.rowwise() += Eigen::RowVector3f::Constant(0.1f);
 
 	    // Do Harmonic and apply it
-	    igl::harmonic(*state->V, *state->F, b, D_bc, 2, D);
-	    *state->V = D;
+	    if (showDeformationField) {
+		    Eigen::MatrixXf V0_bc;
+		    igl::slice(*state->Native->V0, b, igl::colon<int>(0, 2), V0_bc);
+		    D_bc -= V0_bc;
+
+		    igl::harmonic(*state->Native->V0, *state->F, b, D_bc, 2, *state->V);
+		    *state->V += *state->Native->V0;
+	    } else
+		    igl::harmonic(*state->Native->V0, *state->F, b, D_bc, 2, *state->V);
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
