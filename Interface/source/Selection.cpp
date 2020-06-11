@@ -2,9 +2,10 @@
 #include "Interface.h"
 #include <igl/slice.h>
 
-void SphereSelect(State* state, Vector3 position, float radiusSqr, int selectionId, unsigned int selectionMode) {
+void SphereSelect(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode) {
 	const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
 	const unsigned int maskId = 1 << selectionId;
+	const float radiusSqr = radius * radius;
 
 	using BinaryExpr = const std::function<int(int, int)>;
 	BinaryExpr AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };

@@ -58,8 +58,7 @@ namespace Libigl
                 if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.devicePosition,
                     out var rightHandPos))
                 {
-                    Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(
-                        InputManager.get.XRRig.TransformPoint(rightHandPos));
+                    Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
                 }
                 else
                     Debug.LogWarning("Could not get Right Hand Position");
@@ -69,10 +68,11 @@ namespace Libigl
             {
                 if (Mathf.Abs(primaryAxisValue.y) > 0.01f)
                 {
-                    Input.SelectRadiusSqr = Mathf.Clamp(
-                        Mathf.Sqrt(Input.SelectRadiusSqr) + 0.5f * primaryAxisValue.y * Time.deltaTime,
-                        0.01f, 1f);
-                    Input.SelectRadiusSqr *= Input.SelectRadiusSqr;
+                    var brush = InputManager.get.BrushR;
+                    Input.SelectRadius = Mathf.Clamp(Input.SelectRadius + 0.5f * primaryAxisValue.y * Time.deltaTime,
+                        brush.RadiusRange.x, brush.RadiusRange.y);
+
+                    brush.SetRadius(Input.SelectRadius);
                 }
             }
         }

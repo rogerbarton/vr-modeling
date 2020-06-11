@@ -84,7 +84,7 @@ namespace Libigl
         {
             if (!ExecuteInput.DoSelect) return;
             
-            Native.SphereSelect(State, ExecuteInput.SelectPos, ExecuteInput.SelectRadiusSqr, 
+            Native.SphereSelect(State, ExecuteInput.SelectPos, ExecuteInput.SelectRadius, 
                 ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.ActiveSelectionMode);
         }
 

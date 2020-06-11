@@ -40,7 +40,7 @@ namespace Libigl
         public bool DoSelect;
         public bool DoSelectPrev;
         public Vector3 SelectPos;
-        public float SelectRadiusSqr;
+        public float SelectRadius;
         // A Mask of the selections that should be cleared
         public uint DoClearSelection; 
         
@@ -54,7 +54,7 @@ namespace Libigl
         /// <returns>An instance with the default values</returns>
         public static InputState GetInstance()
         {
-            return new InputState {VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadiusSqr = 0.1f};
+            return new InputState {VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadius = 0.1f};
         }
         
         public void ChangeActiveSelection(int increment)
