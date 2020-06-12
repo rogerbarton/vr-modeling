@@ -23,7 +23,6 @@ namespace Libigl
 
                 Native.TransformSelection(State, ExecuteInput.ActiveSelectionId, translate, scale, angle, axis.normalized);
             }
-            State->DirtyState |= DirtyFlag.VDirty;
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace Libigl
             if (!ExecuteInput.DoHarmonicOnce) return;
             
             Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
-            State->DirtyState |= DirtyFlag.VDirty;
+        }
         }
 
         private void ActionUi()
