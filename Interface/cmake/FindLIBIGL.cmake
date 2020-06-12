@@ -14,13 +14,13 @@ find_path(LIBIGL_INCLUDE_DIR igl/readOBJ.h
         ENV LIBIGL_ROOT
         ENV LIBIGL_DIR
     PATHS
+        ${CMAKE_SOURCE_DIR}/external/libigl
         ${CMAKE_SOURCE_DIR}/../..
         ${CMAKE_SOURCE_DIR}/..
         ${CMAKE_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/libigl
         ${CMAKE_SOURCE_DIR}/../libigl
         ${CMAKE_SOURCE_DIR}/../../libigl
-        ${CMAKE_SOURCE_DIR}/external/libigl
         /usr
         /usr/local
         /usr/local/igl/libigl
