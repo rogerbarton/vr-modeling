@@ -42,33 +42,63 @@ extern "C" {
 	    }
     }
 
-    void Harmonic(State* state, int boundarySelectionId, bool showDeformationField) {
-	    Eigen::MatrixXf D_bc;
-	    const unsigned int maskId = Selection::GetMask(boundarySelectionId);
+	/**
+	 * Recalculates the boundary based on if the relevant selections have changed
+	 * @return True if boundary has changed
+	 */
+	bool UpdateBoundary(State* state, unsigned int boundaryMask) {
+		if (state->Native->BoundaryMask == boundaryMask && (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0) return false;
 
+		igl::colon<int>(0, state->VSize, state->Native->boundary);
+		state->Native->boundary.conservativeResize(
+				std::stable_partition(state->Native->boundary.data(), state->Native->boundary.data() + state->VSize,
+				                      [&](int i) -> bool { return (*state->S)(i) & boundaryMask; })
+				- state->Native->boundary.data());
+
+		state->Native->DirtySelectionsForBoundary &= ~boundaryMask;
+		return true;
+	}
+
+    // From Tutorial 401
+    void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField) {
 	    LOG("Harmonic");
 
-	    // From Tutorial 401
-	    // Create boundary selection
-	    // TODO: Calculate this if the selection has changed since the last harmonic call
-	    Eigen::VectorXi b;
-	    igl::colon<int>(0, state->VSize, b);
-	    b.conservativeResize(std::stable_partition(b.data(), b.data() + state->VSize,
-	                                               [&](int i) -> bool { return (*state->S)(i) & maskId; }) - b.data());
-
-	    // Create boundary conditions
-	    igl::slice(*state->V, b, igl::colon<int>(0, 2), D_bc);
+		// Create boundary conditions
+		UpdateBoundary(state, boundaryMask);
+	    Eigen::MatrixXf bc;
+	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
 
 	    // Do Harmonic and apply it
 	    if (showDeformationField) {
 		    Eigen::MatrixXf V0_bc;
-		    igl::slice(*state->Native->V0, b, igl::colon<int>(0, 2), V0_bc);
-		    D_bc -= V0_bc;
+		    igl::slice(*state->Native->V0, state->Native->boundary, igl::colon<int>(0, 2), V0_bc);
+		    bc -= V0_bc;
 
-		    igl::harmonic(*state->Native->V0, *state->F, b, D_bc, 2, *state->V);
+		    igl::harmonic(*state->Native->V0, *state->F, state->Native->boundary, bc, 2, *state->V);
 		    *state->V += *state->Native->V0;
 	    } else
-		    igl::harmonic(*state->Native->V0, *state->F, b, D_bc, 2, *state->V);
+		    igl::harmonic(*state->Native->V0, *state->F, state->Native->boundary, bc, 2, *state->V);
+
+	    state->DirtyState |= DirtyFlag::VDirty;
+    }
+
+    void Arap(State* state, unsigned int boundaryMask) {
+	    LOG("Arap");
+
+	    bool recomputeArapData = UpdateBoundary(state, boundaryMask);
+	    Eigen::MatrixXf bc;
+	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
+
+	    if(state->Native->arapData == nullptr) {
+		    state->Native->arapData = new igl::ARAPData<float>();
+		    state->Native->arapData->max_iter = 100;
+		    recomputeArapData = true;
+	    }
+
+	    if (recomputeArapData)
+		    igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->boundary, *state->Native->arapData);
+
+	    igl::arap_solve(bc, *state->Native->arapData, *state->V);
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }

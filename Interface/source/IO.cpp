@@ -17,12 +17,19 @@ extern "C" {
 			    if ((maskId & state->DirtySelections) == 0)
 				    continue;
 
+			    auto before = state->SSize[selectionId];
 			    state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).sum();
+
+			    // Set flag if size has changed
+			    if(before != state->SSize[selectionId])
+			    	state->DirtySelectionsResized |= 1 << selectionId;
 		    }
+		    state->Native->DirtySelectionsForBoundary |= state->DirtySelectionsResized;
 
 		    // Set Colors if a visible selection is dirty
 		    if((state->DirtySelections & visibleSelectionMask) > 0 && (dirty & DirtyFlag::DontComputeColorsBySelection) == 0)
 		    	SetColorByMask(state, visibleSelectionMask);
+
 	    }
 
 	    if((dirty & DirtyFlag::VDirty) > 0)

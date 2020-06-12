@@ -210,12 +210,12 @@ namespace UI
         public void UpdatePostExecute()
         {
             // Update Selection UI
-            if (_behaviour.State->DirtySelections > 0)
+            if (_behaviour.State->DirtySelectionsResized > 0)
             {
                 UpdateVertexCountText();
                 for (var i = 0; i < _selections.Count; i++)
                 {
-                    if ((_behaviour.State->DirtySelections & 1 << i) > 0)
+                    if ((_behaviour.State->DirtySelectionsResized & 1 << i) > 0)
                         _selections[i].UpdateText();
                 }
             }

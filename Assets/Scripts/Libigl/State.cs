@@ -15,6 +15,7 @@ namespace Libigl
         // ColMajor Mesh data Shared with UnityMeshData
         public uint DirtyState;
         public uint DirtySelections;
+        public uint DirtySelectionsResized;
 
         public readonly void* VPtr;
         public readonly void* NPtr;

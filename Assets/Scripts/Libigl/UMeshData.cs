@@ -50,6 +50,7 @@ namespace Libigl
         // Which data has changed and needs to be applied to the mesh
         public uint DirtyState = DirtyFlag.None;
         public uint DirtySelections = 0;
+        public uint DirtySelectionsResized = 0;
         
         public NativeArray<Vector3> V;
         public NativeArray<Vector3> N;
@@ -151,6 +152,7 @@ namespace Libigl
             
             DirtyState |= state->DirtyState;
             DirtySelections |= state->DirtySelections;
+            DirtySelectionsResized |= state->DirtySelectionsResized;
         }
 
         /// <summary>
@@ -188,6 +190,7 @@ namespace Libigl
             
             DirtyState = DirtyFlag.None;
             DirtySelections = 0;
+            DirtySelectionsResized = 0;
         }
         
         /// <summary> 

@@ -91,7 +91,10 @@ namespace Libigl
             Vector3 translation, float scale, float angle, Vector3 axis);
 
         [DllImport(DllName)]
-        public static extern unsafe void Harmonic(State* state, int boundarySelectionId, bool showDeformationField);
+        public static extern unsafe void Harmonic(State* state, uint boundaryMask, bool showDeformationField);
+        
+        [DllImport(DllName)]
+        public static extern unsafe void Arap(State* state, uint boundaryMask);
 
 
         // Selection.cpp

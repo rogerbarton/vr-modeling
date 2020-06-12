@@ -125,6 +125,7 @@ namespace Libigl
             // Consume Dirty
             State->DirtyState = DirtyFlag.None;
             State->DirtySelections = 0;
+            State->DirtySelectionsResized = 0;
         }
 
         public void Dispose()

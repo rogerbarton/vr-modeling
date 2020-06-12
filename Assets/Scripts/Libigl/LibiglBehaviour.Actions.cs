@@ -92,7 +92,7 @@ namespace Libigl
         {
             if (!ExecuteInput.DoHarmonicOnce) return;
             
-            Native.Harmonic(State, (int) ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
+            Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
             State->DirtyState |= DirtyFlag.VDirty;
         }
 
