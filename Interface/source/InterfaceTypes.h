@@ -22,6 +22,8 @@ extern IUnityInterfaces* s_UnityInterfaces;
 #define LOGERR(message) if(DebugLogError) { DebugLogError(STR(message)); }
 #else
 #define LOG(m)
+#define LOGWARN(m)
+#define LOGERR(m)
 #endif
 
 struct Vector3 {
