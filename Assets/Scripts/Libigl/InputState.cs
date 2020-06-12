@@ -54,7 +54,7 @@ namespace Libigl
         /// <returns>An instance with the default values</returns>
         public static InputState GetInstance()
         {
-            return new InputState {VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadius = 0.1f};
+            return new InputState {VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadius = 0.1f, HarmonicShowDisplacement = true};
         }
         
         public void ChangeActiveSelection(int increment)
