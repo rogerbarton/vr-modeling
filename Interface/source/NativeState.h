@@ -15,7 +15,7 @@ struct NativeState{
 	// Initial V, before deformations
 	Eigen::MatrixXf* V0;
 
-	igl::ARAPData* arapData{nullptr};
+	igl::ARAPData<float>* arapData{nullptr};
 
 	explicit NativeState(Eigen::MatrixXf* V) : V0(new Eigen::MatrixXf(*V)) {}
 
