@@ -93,6 +93,12 @@ namespace Libigl
             
             Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
         }
+        
+        private void ActionArap()
+        {
+            if (!ExecuteInput.DoArapOnce) return;
+            
+            Native.Arap(State, ExecuteInput.VisibleSelectionMask);
         }
 
         private void ActionUi()

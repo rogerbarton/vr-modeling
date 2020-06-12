@@ -123,6 +123,8 @@ namespace UI
 
             CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,
                 new[] {"smooth", "harmonic", "laplacian"});
+            CreateActionUi("Arap", () => { MeshManager.ActiveMesh.Behaviour.Input.DoArapOnce = true; }, _toolGroup,
+                new[] {"rigid"});
             CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
                 new[] {"translate", "move"});
             CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
