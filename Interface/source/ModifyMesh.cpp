@@ -90,15 +90,15 @@ extern "C" {
 	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
 
 	    if(state->Native->arapData == nullptr) {
-		    state->Native->arapData = new igl::ARAPData<float>();
+		    state->Native->arapData = new igl::ARAPData();
 		    state->Native->arapData->max_iter = 100;
 		    recomputeArapData = true;
 	    }
 
-	    if (recomputeArapData)
-		    igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->boundary, *state->Native->arapData);
+	    // if (recomputeArapData)
+		//     igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->boundary, *state->Native->arapData);
 
-	    igl::arap_solve(bc, *state->Native->arapData, *state->V);
+	    // igl::arap_solve(bc, *state->Native->arapData, *state->V);
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
