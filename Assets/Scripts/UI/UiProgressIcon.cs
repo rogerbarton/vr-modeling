@@ -14,7 +14,7 @@ namespace UI
         [Tooltip("Only show the progress icon after a certain time.")]
         public float progressDelayTime = 1f;
         [Tooltip("Once the icon is showing, how long to wait until a timeout occurs.")]
-        public float timeoutTime = 3f;
+        public float timeoutTime = 9f;
 
         private Image _backgroundImage;
         private Image _iconImage;
