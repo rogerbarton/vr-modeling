@@ -3,7 +3,7 @@
 #include <igl/slice.h>
 
 void SphereSelect(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode) {
-	const auto posMap = Eigen::Map<Eigen::RowVector3f>(&position.x);
+	const Eigen::RowVector3f posEigen = position.AsEigenRow();
 	const unsigned int maskId = 1 << selectionId;
 	const float radiusSqr = radius * radius;
 
@@ -25,7 +25,7 @@ void SphereSelect(State* state, Vector3 position, float radius, int selectionId,
 		return;
 	}
 
-	*state->S = ((state->V->rowwise() - posMap).array().square().matrix().rowwise().sum().array() < radiusSqr)
+	*state->S = ((state->V->rowwise() - posEigen).array().square().matrix().rowwise().sum().array() < radiusSqr)
 			.cast<int>().matrix()
 			.binaryExpr(*state->S, *Apply);
 

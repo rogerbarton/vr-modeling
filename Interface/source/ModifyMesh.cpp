@@ -7,17 +7,18 @@ extern "C" {
     void TranslateMesh(State* state, Vector3 value) {
         auto& V = *state->V;
 
-        V.rowwise() += (Eigen::RowVector3f)value;
+        V.rowwise() += value.AsEigenRow();
     }
 
 	void TranslateSelection(State* state, Vector3 value, int selectionId) {
 		auto& V = *state->V;
 		const auto& S = *state->S;
 		const unsigned int maskId = Selection::GetMask(selectionId);
+		const Eigen::RowVector3f valueEigen = value.AsEigenRow();
 
 		for (int i = 0; i < V.rows(); ++i) {
 			if ((S(i) & maskId) > 0) {
-				V.row(i) += (Eigen::RowVector3f)value;
+				V.row(i) += valueEigen;
 			}
 		}
 	}
@@ -32,7 +33,7 @@ extern "C" {
 	    const unsigned int maskId = Selection::GetMask(selectionId);
 
 	    using namespace Eigen;
-	    Transform<float, 3, Affine> transform = Translation3f((Vector3f)translation) * AngleAxisf(angle, (Vector3f)axis) * Scaling(scale);
+	    Transform<float, 3, Affine> transform = Translation3f(translation.AsEigen()) * AngleAxisf(angle, axis.AsEigen()) * Scaling(scale);
 
 	    for (int i = 0; i < V.rows(); ++i) {
 		    if((S(i) & maskId) > 0) {

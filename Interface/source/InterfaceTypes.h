@@ -33,8 +33,11 @@ struct Vector3 {
 	Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 	explicit Vector3(Eigen::Vector3f value) : x(value(0)), y(value(1)), z(value(2)) {}
 
-	explicit operator Eigen::RowVector3f() const;
-	explicit operator Eigen::Vector3f() const;
+	// Do not overload cast operator, this causes conflicts with Eigen's cast operator on some versions
+	// explicit operator Eigen::RowVector3f() const;
+	// explicit operator Eigen::Vector3f() const;
+	Eigen::Vector3f AsEigen() const;
+	Eigen::RowVector3f AsEigenRow() const;
 
 	inline static const Vector3 Zero() { return Vector3(0.f, 0.f, 0.f); }
 };
