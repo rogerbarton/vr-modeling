@@ -52,7 +52,9 @@ extern "C" {
 	 * @return True if boundary has changed
 	 */
 	bool UpdateBoundary(State* state, unsigned int boundaryMask) {
-		if (state->Native->BoundaryMask == boundaryMask && (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0) return false;
+		if (state->Native->BoundaryMask == boundaryMask &&
+		    (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0)
+			return false;
 
 		igl::colon<int>(0, state->VSize, state->Native->boundary);
 		state->Native->boundary.conservativeResize(
@@ -68,8 +70,8 @@ extern "C" {
     void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField) {
 	    LOG("Harmonic");
 
-		// Create boundary conditions
-		UpdateBoundary(state, boundaryMask);
+	    // Create boundary conditions
+	    UpdateBoundary(state, boundaryMask);
 	    Eigen::MatrixXf bc;
 	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
 
@@ -94,14 +96,18 @@ extern "C" {
 	    Eigen::MatrixXf bc;
 	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
 
-	    if(state->Native->arapData == nullptr) {
+	    if (state->Native->arapData == nullptr) {
 		    state->Native->arapData = new igl::ARAPData<float>();
 		    state->Native->arapData->max_iter = 100;
 		    recomputeArapData = true;
 	    }
 
-	    if (recomputeArapData)
-		    igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->boundary, *state->Native->arapData);
+	    if (recomputeArapData) {
+	    	LOG("Arap precompute...")
+		    igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->boundary,
+		                             *state->Native->arapData);
+	    	LOG("Arap precompute done.")
+	    }
 
 	    igl::arap_solve(bc, *state->Native->arapData, *state->V);
 
