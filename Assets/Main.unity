@@ -1868,8 +1868,8 @@ MonoBehaviour:
     type: 3}
   controllerPrefabs:
   - {fileID: 7634514334346526944, guid: 0540e32b498ef284f8e1dcf80dfccd58, type: 3}
-  - {fileID: 4245457492171364763, guid: c836783e3928a624e9ff9c70d4f21606, type: 3}
-  - {fileID: 4024951872544157354, guid: cfa8dc06d611ba340b06bbefba58ee46, type: 3}
+  - {fileID: 5562781063453813989, guid: c836783e3928a624e9ff9c70d4f21606, type: 3}
+  - {fileID: 6284776731911077548, guid: cfa8dc06d611ba340b06bbefba58ee46, type: 3}
   - {fileID: 7523567926693483842, guid: 8f9d81300dd62e149bf474f82431d313, type: 3}
   - {fileID: 5191550869875014123, guid: 49f4f1a7a28407045a976c48f4258588, type: 3}
   - {fileID: 9000736557278403223, guid: f4f0f8d7d1c07ae488d0528c37be539b, type: 3}
