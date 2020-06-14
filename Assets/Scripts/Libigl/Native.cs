@@ -95,6 +95,9 @@ namespace Libigl
         
         [DllImport(DllName)]
         public static extern unsafe void Arap(State* state, uint boundaryMask);
+        
+        [DllImport(DllName)]
+        public static extern unsafe void ResetV(State* state);
 
 
         // Selection.cpp

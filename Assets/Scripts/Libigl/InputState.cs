@@ -45,11 +45,13 @@ namespace Libigl
         public uint DoClearSelection; 
         
         // Deformations
-        public bool DoHarmonicOnce; // Trigger execution once
-        public bool DoHarmonic;     // Trigger execution every frame
+        public bool DoHarmonic; // Trigger execution once
+        public bool DoHarmonicRepeat; // Trigger execution every frame
         public bool HarmonicShowDisplacement;
-        public bool DoArapOnce;
         public bool DoArap;
+        public bool DoArapRepeat;
+
+        public bool ResetV;
 
         /// <returns>An instance with the default values</returns>
         public static InputState GetInstance()

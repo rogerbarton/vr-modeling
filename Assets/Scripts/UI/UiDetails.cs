@@ -87,12 +87,18 @@ namespace UI
             _harmonicToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_harmonicToggle.gameObject);
             _harmonicToggle.text.text = "Harmonic";
-            _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input.DoHarmonicOnce = true; });
-            _harmonicToggle.toggle.isOn = behaviour.Input.DoHarmonic;
+            _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input.DoHarmonic = true; });
+            _harmonicToggle.toggle.isOn = behaviour.Input.DoHarmonicRepeat;
             _harmonicToggle.toggle.onValueChanged.AddListener(value =>
             {
-                behaviour.Input.DoHarmonicOnce = value;
                 behaviour.Input.DoHarmonic = value;
+                behaviour.Input.DoHarmonicRepeat = value;
+                if (value && behaviour.Input.DoArapRepeat)
+                {
+                    behaviour.Input.DoArap = false;
+                    behaviour.Input.DoArapRepeat = false;
+                    _arapToggle.toggle.isOn = false;
+                }
             });
             
             var harmonicShowDisplacements = Instantiate(UiManager.get.togglePrefab, _listParent).GetComponent<Toggle>();
@@ -104,12 +110,26 @@ namespace UI
             _arapToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             _operationsGroup.AddItem(_arapToggle.gameObject);
             _arapToggle.text.text = "ARAP";
-            _arapToggle.button.onClick.AddListener(() => { behaviour.Input.DoArapOnce = true; });
-            _arapToggle.toggle.isOn = behaviour.Input.DoArap;
+            _arapToggle.button.onClick.AddListener(() => { behaviour.Input.DoArap = true; });
+            _arapToggle.toggle.isOn = behaviour.Input.DoArapRepeat;
             _arapToggle.toggle.onValueChanged.AddListener(value =>
             {
-                behaviour.Input.DoArapOnce = value;
                 behaviour.Input.DoArap = value;
+                behaviour.Input.DoArapRepeat = value;
+                if (value && behaviour.Input.DoHarmonicRepeat)
+                {
+                    behaviour.Input.DoHarmonic = false;
+                    behaviour.Input.DoHarmonicRepeat = false;
+                    _harmonicToggle.toggle.isOn = false;
+                }
+            });
+            
+            var resetMeshBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _operationsGroup.AddItem(resetMeshBtn.gameObject);
+            resetMeshBtn.GetComponentInChildren<TMP_Text>().text = "Reset Mesh Vertices";
+            resetMeshBtn.onClick.AddListener(() =>
+            {
+                behaviour.Input.ResetV = true;
             });
 
             var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
@@ -156,7 +176,12 @@ namespace UI
             doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
             
             // Misc
+            var objectGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            objectGroup.title.text = "Object";
+            objectGroup.SetVisibility(false);
+
             var deleteBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            objectGroup.AddItem(deleteBtn.gameObject);
             deleteBtn.GetComponentInChildren<TMP_Text>().text = "Delete Mesh";
             deleteBtn.onClick.AddListener(() =>
             {

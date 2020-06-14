@@ -149,10 +149,11 @@ namespace Libigl
             Input.DoSelect = false;
             Input.DoClearSelection = 0;
             Input.VisibleSelectionMaskChanged = false;
-            if(!Input.DoHarmonic)
-                Input.DoHarmonicOnce = false;
-            if(!Input.DoArap)
-                Input.DoArapOnce = false;
+            if(!Input.DoHarmonicRepeat)
+                Input.DoHarmonic = false;
+            if(!Input.DoArapRepeat)
+                Input.DoArap = false;
+            Input.ResetV = false;
         }
     }
 }

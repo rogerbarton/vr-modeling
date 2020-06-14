@@ -121,9 +121,9 @@ namespace UI
                 () => { InputManager.get.SetActiveTool(ToolType.Select); }, _toolGroup,
                 new[] {"select"});
 
-            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonicOnce = true; }, _toolGroup,
+            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonic = true; }, _toolGroup,
                 new[] {"smooth", "harmonic", "laplacian"});
-            CreateActionUi("Arap", () => { MeshManager.ActiveMesh.Behaviour.Input.DoArapOnce = true; }, _toolGroup,
+            CreateActionUi("Arap", () => { MeshManager.ActiveMesh.Behaviour.Input.DoArap = true; }, _toolGroup,
                 new[] {"rigid"});
             CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
                 new[] {"translate", "move"});

@@ -89,14 +89,14 @@ namespace Libigl
 
         private void ActionHarmonic()
         {
-            if (!ExecuteInput.DoHarmonicOnce) return;
+            if (!ExecuteInput.DoHarmonic) return;
             
             Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
         }
         
         private void ActionArap()
         {
-            if (!ExecuteInput.DoArapOnce) return;
+            if (!ExecuteInput.DoArap) return;
             
             Native.Arap(State, ExecuteInput.VisibleSelectionMask);
         }
@@ -108,6 +108,9 @@ namespace Libigl
             
             if(ExecuteInput.VisibleSelectionMaskChanged)
                 Native.SetColorByMask(State, ExecuteInput.VisibleSelectionMask);
+
+            if (ExecuteInput.ResetV)
+                Native.ResetV(State);
         }
 
         private void UpdateMeshTransform()

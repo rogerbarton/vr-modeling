@@ -113,4 +113,9 @@ extern "C" {
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
+
+	void ResetV(State* state){
+		*state->V = *state->Native->V0;
+	}
+
 }
