@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace XrInput
 {
@@ -31,8 +31,8 @@ namespace XrInput
             {
                 ActiveTool = ToolType.Select, 
                 BrushRadius = 0.1f,
-                ActiveTransformMode = TransformMode.TwoHandedNoScale,
-                ActiveTransformCenter = TransformCenter.Selection,
+                ActiveTransformMode = TransformMode.IndividualTranslateRotate,
+                ActiveTransformCenter = TransformCenter.Hand,
                 ActiveSelectionMode = SelectionMode.Add
             };
         }
@@ -66,34 +66,24 @@ namespace XrInput
     public enum TransformMode
     {
         /// <summary>
-        /// 1. One Handed Translate
+        /// Individual Translate 
         /// </summary>
-        OneHandedTranslate,
+        IndividualTranslate,
 
         /// <summary>
-        /// 2. One Handed Translate+Rotate
+        /// Individual Translate+Rotate 
         /// </summary>
-        OneHandedTranslateRotate,
+        IndividualTranslateRotate,
 
         /// <summary>
-        /// 3. Two Handed individual Translate 
+        /// Joint Translate+Rotate 
         /// </summary>
-        TwoHandedIndividualTranslate,
+        Joint,
 
         /// <summary>
-        /// 4. Two Handed individual Translate+Rotate 
+        /// Joint Translate+Rotate+Scale 
         /// </summary>
-        TwoHandedIndividualTranslateRotate,
-
-        /// <summary>
-        /// 5. Two Handed joint Translate+Rotate 
-        /// </summary>
-        TwoHandedJoint,
-
-        /// <summary>
-        /// 6. Two Handed joint Translate+Rotate+Scale 
-        /// </summary>
-        TwoHandedJointScale,
+        JointScale,
     }
 
 }
