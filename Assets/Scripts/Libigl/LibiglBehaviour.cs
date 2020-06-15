@@ -91,7 +91,7 @@ namespace Libigl
             ActionUi();
             if(LibiglMesh.IsActiveMesh())
             {
-                switch (Input.ActiveTool)
+                switch (ExecuteInput.Shared.ActiveTool)
                 {
                     case ToolType.Default:
                         break;

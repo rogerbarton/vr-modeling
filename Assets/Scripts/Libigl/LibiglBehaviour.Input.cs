@@ -13,7 +13,7 @@ namespace Libigl
         {
             if (!InputManager.get.RightHand.isValid) return;
 
-            switch (Input.ActiveTool)
+            switch (InputManager.Input.ActiveTool)
             {
                 case ToolType.Default:
                     UpdateInputDefault();
@@ -125,10 +125,10 @@ namespace Libigl
 
         private void PreExecuteInput()
         {
+            Input.Shared = InputManager.Input;
+            
             Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
             Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
-
-            Input.PreExecute();
         }
         
         /// <summary>
@@ -136,7 +136,7 @@ namespace Libigl
         /// </summary>
         private void ConsumeInput()
         {
-            if(Input.ActiveTool == ToolType.Select && Input.DoTransform)
+            if(Input.Shared.ActiveTool == ToolType.Select && Input.DoTransform)
             {
                 // Only update this if we are transforming on the thread, i.e. transforming the selection
                 Input.PrevTrafoHandPosL = Input.HandPosL;

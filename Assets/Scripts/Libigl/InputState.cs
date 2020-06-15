@@ -10,10 +10,8 @@ namespace Libigl
     /// </summary>
     public struct InputState
     {
-        /// <summary>
-        /// Copy for threading of <see cref="InputManager.ActiveTool"/>
-        /// </summary>
-        public int ActiveTool { get; private set; }
+        // Copy for threading
+        public SharedInputState Shared;
 
         // Generic Input
         public float GripL;
@@ -63,15 +61,6 @@ namespace Libigl
         public void ChangeActiveSelection(int increment)
         {
             ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCountUi);
-        }
-
-        /// <summary>
-        /// Only for private items of InputState
-        /// </summary>
-        public void PreExecute()
-        {
-            // Copy state from the input manager
-            ActiveTool = InputManager.Input.ActiveTool;
         }
     }
 

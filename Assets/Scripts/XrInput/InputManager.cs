@@ -12,7 +12,6 @@ namespace XrInput
     {
         public static InputManager get;
         public static SharedInputState Input;
-        public static SharedInputState InputPrev;
 
         /// <summary>
         /// Get the XR Rig Transform, to determine world positions
@@ -151,7 +150,7 @@ namespace XrInput
 
         private void Update()
         {
-            InputPrev = Input;
+            // InputPrev = Input;
             
             if (!LeftHand.isValid)
                 InitializeController(false, leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator,
