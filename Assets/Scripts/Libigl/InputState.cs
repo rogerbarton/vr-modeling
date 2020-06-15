@@ -50,7 +50,8 @@ namespace Libigl
                 VisibleSelectionMask = uint.MaxValue, 
                 SelectRadius = 0.1f, 
                 HarmonicShowDisplacement = true,
-                SharedPrev = SharedInputState.GetInstance()
+                Shared = InputManager.Input,
+                SharedPrev = InputManager.InputPrev
             };
         }
 

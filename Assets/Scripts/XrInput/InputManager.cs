@@ -11,6 +11,8 @@ namespace XrInput
     {
         public static InputManager get;
         public static SharedInputState Input;
+        // Input at the last frame (main thread)
+        public static SharedInputState InputPrev;
 
         /// <summary>
         /// Get the XR Rig Transform, to determine world positions
@@ -88,6 +90,7 @@ namespace XrInput
             _rightHandLineRenderer.material = filledLineMat;
 
             Input = SharedInputState.GetInstance();
+            InputPrev = Input;
 
             SetActiveTool(ToolType.Select);
         }
@@ -151,7 +154,6 @@ namespace XrInput
 
         private void Update()
         {
-            // InputPrev = Input;
             UpdateSharedState();
             
             if (!LeftHand.isValid)

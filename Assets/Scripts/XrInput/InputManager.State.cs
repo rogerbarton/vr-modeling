@@ -7,6 +7,8 @@ namespace XrInput
     {
         private void UpdateSharedState()
         {
+            InputPrev = Input;
+
             LeftHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripL);
             LeftHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
             RightHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripR);
