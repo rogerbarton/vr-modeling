@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using XRInteraction;
 
 namespace Libigl
 {
@@ -70,7 +71,7 @@ namespace Libigl
         public void PreExecute()
         {
             // Copy state from the input manager
-            ActiveTool = InputManager.get.ActiveTool;
+            ActiveTool = InputManager.Input.ActiveTool;
         }
     }
 

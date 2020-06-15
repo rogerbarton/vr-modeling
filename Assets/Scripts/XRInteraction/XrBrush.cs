@@ -1,6 +1,7 @@
 ﻿using System;
 using Libigl;
 using UnityEngine;
+using XRInteraction;
 
 public class XrBrush : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class XrBrush : MonoBehaviour
 
     public void OnActiveToolChanged()
     {
-        switch (InputManager.get.ActiveTool)
+        switch (InputManager.Input.ActiveTool)
         {
             case ToolType.Default:
                 gameObject.SetActive(false);
