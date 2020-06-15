@@ -29,7 +29,7 @@ namespace UI
 
         public Transform panelSpawnPoint;
         
-        [Tooltip("The Content of the Actions Canvas scroll list. Convention: the last child serves as the prefab for a new item.")]
+        [Tooltip("The Content of the Actions Canvas scroll list.")]
         public Transform actionsListParent;
 
         private UiCollapsible _toolGroup;
@@ -115,6 +115,10 @@ namespace UI
             _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _toolGroup.title.text = "Tools & Actions";
             _toolGroup.SetVisibility(true);
+            
+            var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
+            _toolGroup.AddItem(selectionMode.gameObject);
+            selectionMode.Initialize();
 
             CreateActionUi("Default Tool",
                 () => { InputManager.get.SetActiveTool(ToolType.Default); }, _toolGroup);

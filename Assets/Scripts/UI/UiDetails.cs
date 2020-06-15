@@ -59,10 +59,6 @@ namespace UI
             _selectionGroup.title.text = "Selections";
             _selectionGroup.SetVisibility(true);
 
-            var selectionMode = Instantiate(UiManager.get.selectionModePrefab, _listParent).GetComponent<UiSelectionMode>();
-            _selectionGroup.AddItem(selectionMode.gameObject);
-            selectionMode.Initialize(_behaviour);
-            
             _addSelectionBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _addSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
             _selectionGroup.AddItem(_addSelectionBtn.gameObject);

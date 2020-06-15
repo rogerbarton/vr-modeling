@@ -1,5 +1,6 @@
 ﻿using Libigl;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using XrInput;
 
@@ -12,35 +13,34 @@ namespace UI
     /// </summary>
     public class UiSelectionMode : MonoBehaviour
     {
-        public Image[] images;
+        [FormerlySerializedAs("images")] public Image[] icons;
         public Color activeColor;
 
         public Button newSelectionOnDrawBtn;
 
-        private int _modeId = (int) SelectionMode.Add;
-        private LibiglBehaviour _behaviour;
-        public void Initialize(LibiglBehaviour behaviour)
+        private SelectionMode _modeId = (int) SelectionMode.Add;
+
+        public void Initialize()
         {
-            _behaviour = behaviour;
-            _modeId = _behaviour.Input.ActiveSelectionId.GetHashCode();
-            for (var i = 0; i < images.Length; i++)
+            _modeId = InputManager.Input.ActiveSelectionMode;
+            for (var i = 0; i < icons.Length; i++)
             {
                 var i1 = i;
-                images[i].GetComponent<Button>().onClick.AddListener(() => { SetMode(i1); });
-                images[i].color = _modeId == i ? activeColor : Color.white;
+                icons[i].GetComponent<Button>().onClick.AddListener(() => { SetMode((SelectionMode) i1); });
+                icons[i].color = _modeId.GetHashCode() == i ? activeColor : Color.white;
             }
             
             newSelectionOnDrawBtn.onClick.AddListener(ToggleNewSelectionOnDraw);
         }
 
-        public void SetMode(int selectionMode)
+        public void SetMode(SelectionMode selectionMode)
         {
             if (_modeId == selectionMode) return;
 
-            images[_modeId].color = Color.white;
+            icons[_modeId.GetHashCode()].color = Color.white;
             _modeId = selectionMode;
             InputManager.Input.ActiveSelectionMode = (SelectionMode) _modeId;
-            images[_modeId].color = activeColor;
+            icons[_modeId.GetHashCode()].color = activeColor;
 
             if (_modeId != (int) SelectionMode.Add)
             {
