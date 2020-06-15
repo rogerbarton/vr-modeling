@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using XRInteraction;
+using XrInput;
 
 namespace UI
 {

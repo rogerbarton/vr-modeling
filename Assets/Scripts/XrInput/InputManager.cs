@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
-namespace XRInteraction
+namespace XrInput
 {
     public class InputManager : MonoBehaviour
     {

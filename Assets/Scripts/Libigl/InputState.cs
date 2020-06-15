@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using XRInteraction;
+using XrInput;
 
 namespace Libigl
 {

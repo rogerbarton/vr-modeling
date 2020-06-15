@@ -1,6 +1,6 @@
 ﻿using Libigl;
 
-namespace XRInteraction
+namespace XrInput
 {
     public struct SharedInputState
     {
