@@ -6,21 +6,32 @@
 /**
  * Contains all variables that are only used in C++ for a mesh
  */
-struct NativeState{
-	Eigen::VectorXi boundary;
-	unsigned int DirtySelectionsForBoundary{0};
-	unsigned int BoundaryMask{0};
+struct NativeState {
+	// --- Harmonic & ARAP
 
-	// Harmonic & ARAP
+	// Vertex indices part of the boundary
+	Eigen::VectorXi Boundary;
+	// Positions of vertices in the Boundary (rows correspond)
+	Eigen::MatrixXf BoundaryConditions;
+	// The selections currently used for the Boundary
+	
+	unsigned int BoundaryMask{0};
+	// Selections that have changed since the last time the Boundary was calculated
+	unsigned int DirtySelectionsForBoundary{0};
+	// Whether the boundary conditions have changed since the last time they were calculated
+	bool DirtyBoundaryConditions{true};
+
 	// Initial V, before deformations
 	Eigen::MatrixXf* V0;
 
-	igl::ARAPData<float>* arapData{nullptr};
+	// Pre-computations for Arap
+	igl::ARAPData<float>* ArapData{nullptr};
 
 	explicit NativeState(Eigen::MatrixXf* V) : V0(new Eigen::MatrixXf(*V)) {}
 
 	virtual ~NativeState() {
 		delete V0;
-		delete arapData;
+		delete ArapData;
 	}
+
 };

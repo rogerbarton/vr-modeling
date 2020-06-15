@@ -56,65 +56,79 @@ extern "C" {
 		    (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0)
 			return false;
 
-		igl::colon<int>(0, state->VSize, state->Native->boundary);
-		state->Native->boundary.conservativeResize(
-				std::stable_partition(state->Native->boundary.data(), state->Native->boundary.data() + state->VSize,
+		igl::colon<int>(0, state->VSize, state->Native->Boundary);
+		state->Native->Boundary.conservativeResize(
+				std::stable_partition(state->Native->Boundary.data(), state->Native->Boundary.data() + state->VSize,
 				                      [&](int i) -> bool { return (*state->S)(i) & boundaryMask; })
-				- state->Native->boundary.data());
+				- state->Native->Boundary.data());
 
 		state->Native->DirtySelectionsForBoundary &= ~boundaryMask;
+		state->Native->DirtyBoundaryConditions = true;
+		return true;
+	}
+
+	/**
+	 * Recalculates the boundary conditions for Harmonic and Arap
+	 * @return True if the boundary conditions have changed
+	 */
+	bool UpdateBoundaryConditions(State* state, unsigned int boundaryMask) {
+		if (!state->Native->DirtyBoundaryConditions)
+			return false;
+
+		igl::slice(*state->V, state->Native->Boundary, igl::colon<int>(0, 2), state->Native->BoundaryConditions);
+
+		state->Native->DirtyBoundaryConditions = false;
 		return true;
 	}
 
     // From Tutorial 401
     void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField) {
-	    LOG("Harmonic");
 
 	    // Create boundary conditions
-	    UpdateBoundary(state, boundaryMask);
-	    Eigen::MatrixXf bc;
-	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
+	    bool boundaryChanged = UpdateBoundary(state, boundaryMask);
+	    bool solveHarmonic = boundaryChanged || UpdateBoundaryConditions(state, boundaryMask);
+
+	    if(!solveHarmonic) return;
 
 	    // Do Harmonic and apply it
 	    if (showDeformationField) {
 		    Eigen::MatrixXf V0_bc;
-		    igl::slice(*state->Native->V0, state->Native->boundary, igl::colon<int>(0, 2), V0_bc);
-		    bc -= V0_bc;
+		    igl::slice(*state->Native->V0, state->Native->Boundary, igl::colon<int>(0, 2), V0_bc);
 
-		    igl::harmonic(*state->Native->V0, *state->F, state->Native->boundary, bc, 2, *state->V);
+		    igl::harmonic(*state->Native->V0, *state->F, state->Native->Boundary, state->Native->BoundaryConditions - V0_bc, 2, *state->V);
 		    *state->V += *state->Native->V0;
 	    } else
-		    igl::harmonic(*state->Native->V0, *state->F, state->Native->boundary, bc, 2, *state->V);
+		    igl::harmonic(*state->Native->V0, *state->F, state->Native->Boundary, state->Native->BoundaryConditions, 2, *state->V);
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
 
     void Arap(State* state, unsigned int boundaryMask) {
-	    LOG("Arap");
 
 	    bool recomputeArapData = UpdateBoundary(state, boundaryMask);
-	    Eigen::MatrixXf bc;
-	    igl::slice(*state->V, state->Native->boundary, igl::colon<int>(0, 2), bc);
+	    bool solveArap = recomputeArapData || UpdateBoundaryConditions(state, boundaryMask);
 
-	    if (state->Native->arapData == nullptr) {
-		    state->Native->arapData = new igl::ARAPData<float>();
-		    state->Native->arapData->max_iter = 100;
+	    if (state->Native->ArapData == nullptr) {
+		    state->Native->ArapData = new igl::ARAPData<float>();
+		    state->Native->ArapData->max_iter = 100;
 		    recomputeArapData = true;
 	    }
 
 	    if (recomputeArapData) {
 	    	LOG("Arap precompute...")
-		    igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->boundary,
-		                             *state->Native->arapData);
+		    igl::arap_precomputation(*state->Native->V0, *state->F, 3, state->Native->Boundary,
+		                             *state->Native->ArapData);
 	    	LOG("Arap precompute done.")
 	    }
 
-	    igl::arap_solve(bc, *state->Native->arapData, *state->V);
+	    if(!solveArap) return;
+
+	    igl::arap_solve(state->Native->BoundaryConditions, *state->Native->ArapData, *state->V);
 
 	    state->DirtyState |= DirtyFlag::VDirty;
     }
 
-	void ResetV(State* state){
+	void ResetV(State* state) {
 		*state->V = *state->Native->V0;
 	}
 

@@ -32,8 +32,10 @@ extern "C" {
 
 	    }
 
-	    if((dirty & DirtyFlag::VDirty) > 0)
+	    if((dirty & DirtyFlag::VDirty) > 0) {
 		    TransposeToMap(state->V, data.VPtr);
+		    state->Native->DirtyBoundaryConditions = true;
+	    }
 	    if((dirty & DirtyFlag::NDirty) > 0)
 		    TransposeToMap(state->N, data.NPtr);
 	    if((dirty & DirtyFlag::CDirty) > 0)
