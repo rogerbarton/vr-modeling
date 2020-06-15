@@ -5,8 +5,11 @@ namespace XrInput
     {
         // Tools & Input State
         public int ActiveTool;
-        public SelectionMode ActiveSelectionMode;
         
+        // Selection
+        public SelectionMode ActiveSelectionMode;
+        public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
+
         public static SharedInputState GetInstance()
         {
             return new SharedInputState{ActiveTool = ToolType.Select, ActiveSelectionMode = SelectionMode.Add};

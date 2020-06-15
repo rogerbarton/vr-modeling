@@ -44,23 +44,23 @@ namespace UI
 
             if (_modeId != (int) SelectionMode.Add)
             {
-                _behaviour.Input.NewSelectionOnDraw = false;
+                InputManager.Input.NewSelectionOnDraw = false;
                 RepaintNewSelectionOnDrawBtn();
             }
         }
 
         public void ToggleNewSelectionOnDraw()
         {
-            if (!_behaviour.Input.NewSelectionOnDraw)
+            if (!InputManager.Input.NewSelectionOnDraw)
                 SetMode((int) SelectionMode.Add);
 
-            _behaviour.Input.NewSelectionOnDraw = !_behaviour.Input.NewSelectionOnDraw;
+            InputManager.Input.NewSelectionOnDraw = !InputManager.Input.NewSelectionOnDraw;
             RepaintNewSelectionOnDrawBtn();
         }
 
         private void RepaintNewSelectionOnDrawBtn()
         {
-            newSelectionOnDrawBtn.image.color = _behaviour.Input.NewSelectionOnDraw ? activeColor : Color.white;
+            newSelectionOnDrawBtn.image.color = InputManager.Input.NewSelectionOnDraw ? activeColor : Color.white;
         }
     }
 }

@@ -5,6 +5,7 @@ using Libigl;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using XrInput;
 
 namespace UI
 {
@@ -220,7 +221,7 @@ namespace UI
             progressIcon.PreExecute();
 
             // Add a selection in case of the NewSelectionOnDraw
-            if (_behaviour.Input.NewSelectionOnDraw &&
+            if (InputManager.Input.NewSelectionOnDraw &&
                 _behaviour.Input.DoSelect && !_behaviour.Input.DoSelectPrev && // Just started stroke 
                 _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty
                 AddSelection();

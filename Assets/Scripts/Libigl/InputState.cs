@@ -30,7 +30,6 @@ namespace Libigl
 
         // Select
         public int ActiveSelectionId;
-        public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
         public uint VisibleSelectionMask;
         public bool VisibleSelectionMaskChanged;
         public uint SCountUi; // For UI, will be copied to the state in PreExecute
