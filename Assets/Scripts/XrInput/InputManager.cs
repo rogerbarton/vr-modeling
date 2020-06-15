@@ -88,6 +88,8 @@ namespace XrInput
             _leftHandLineRenderer.material = filledLineMat;
             _rightHandLineRenderer.material = filledLineMat;
 
+            Input = SharedInputState.GetInstance();
+
             SetActiveTool(ToolType.Select);
         }
 

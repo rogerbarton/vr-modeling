@@ -5,10 +5,11 @@ namespace XrInput
     {
         // Tools & Input State
         public int ActiveTool;
-
+        public SelectionMode ActiveSelectionMode;
+        
         public static SharedInputState GetInstance()
         {
-            return new SharedInputState{ActiveTool = ToolType.Select};
+            return new SharedInputState{ActiveTool = ToolType.Select, ActiveSelectionMode = SelectionMode.Add};
         }
     }
 
@@ -21,5 +22,12 @@ namespace XrInput
         // public const int ViewOnly = 3;
 
         public const int Size = 2;
+    }
+
+    public enum SelectionMode
+    {
+        Add,
+        Subtract,
+        Toggle
     }
 }

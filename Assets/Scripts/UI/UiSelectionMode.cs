@@ -1,6 +1,7 @@
 ﻿using Libigl;
 using UnityEngine;
 using UnityEngine.UI;
+using XrInput;
 
 namespace UI
 {
@@ -38,7 +39,7 @@ namespace UI
 
             images[_modeId].color = Color.white;
             _modeId = selectionMode;
-            _behaviour.Input.ActiveSelectionMode = (SelectionMode) _modeId;
+            InputManager.Input.ActiveSelectionMode = (SelectionMode) _modeId;
             images[_modeId].color = activeColor;
 
             if (_modeId != (int) SelectionMode.Add)

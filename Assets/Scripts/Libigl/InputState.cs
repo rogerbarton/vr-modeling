@@ -30,7 +30,6 @@ namespace Libigl
 
         // Select
         public int ActiveSelectionId;
-        public SelectionMode ActiveSelectionMode;
         public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
         public uint VisibleSelectionMask;
         public bool VisibleSelectionMaskChanged;
@@ -55,19 +54,12 @@ namespace Libigl
         /// <returns>An instance with the default values</returns>
         public static InputState GetInstance()
         {
-            return new InputState {VisibleSelectionMask = unchecked((uint)-1), ActiveSelectionMode = SelectionMode.Add, SelectRadius = 0.1f, HarmonicShowDisplacement = true};
+            return new InputState {VisibleSelectionMask = uint.MaxValue, SelectRadius = 0.1f, HarmonicShowDisplacement = true};
         }
         
         public void ChangeActiveSelection(int increment)
         {
             ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCountUi);
         }
-    }
-
-    public enum SelectionMode
-    {
-        Add,
-        Subtract,
-        Toggle
     }
 }
