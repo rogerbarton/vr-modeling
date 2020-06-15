@@ -2,7 +2,7 @@
 #include "Interface.h"
 #include <igl/slice.h>
 
-void SphereSelect(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode) {
+void SelectSphere(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode) {
 	const Eigen::RowVector3f posEigen = position.AsEigenRow();
 	const unsigned int maskId = 1 << selectionId;
 	const float radiusSqr = radius * radius;
@@ -26,12 +26,34 @@ void SphereSelect(State* state, Vector3 position, float radius, int selectionId,
 	}
 
 	*state->S = ((state->V->rowwise() - posEigen).array().square().matrix().rowwise().sum().array() < radiusSqr)
-			.cast<int>().matrix()
+			.cast<int>().matrix() // to VectorXi
+			// element = 0 or 1, if it is inside the sphere or not
 			.binaryExpr(*state->S, *Apply);
 
 	// LOG("Selected: " << state->SSize[selectionId] << " vertices, total selected: " << state->SSizeAll);
 
 	state->DirtySelections |= maskId;
+}
+
+/**
+ * @return A mask of all selections with a vertex inside the sphere
+ */
+unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius){
+	const Eigen::RowVector3f posEigen = position.AsEigenRow();
+	const float radiusSqr = radius * radius;
+	unsigned int mask = 0;
+
+	(((state->V->rowwise() - posEigen).array().square().matrix().rowwise().sum().array() < radiusSqr)
+			.cast<int>().matrix() // to VectorXi
+			* *state->S)
+			// element = 0 or its mask if it is inside the sphere or not
+			// For each vertex we call this lambda to aggregate the mask
+			.unaryExpr([&mask](const int a)->int{
+				mask |= a;
+				return a;
+			});
+
+	return mask;
 }
 
 /**

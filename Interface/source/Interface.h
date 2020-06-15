@@ -33,7 +33,8 @@ extern "C" {
     UNITY_INTERFACE_EXPORT 	void ResetV(State* state);
 
     // Selection.cpp
-    UNITY_INTERFACE_EXPORT void SphereSelect(State* state, Vector3 position, float radius, int selectionId = 0, unsigned int selectionMode = SelectionMode::Add);
+    UNITY_INTERFACE_EXPORT void SelectSphere(State* state, Vector3 position, float radius, int selectionId = 0, unsigned int selectionMode = SelectionMode::Add);
+    UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius);
     UNITY_INTERFACE_EXPORT void ClearSelection(State* state, int selectionId = -1);
     UNITY_INTERFACE_EXPORT void ClearSelectionMask(State* state, unsigned int maskId);
     UNITY_INTERFACE_EXPORT void SetColorBySelection(State* state, int selectionId = -1);
