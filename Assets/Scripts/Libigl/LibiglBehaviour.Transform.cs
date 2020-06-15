@@ -5,6 +5,18 @@ using XrInput;
 
 namespace Libigl
 {
+    public struct TransformDelta
+    {
+        public Vector3 Translate;
+        public Quaternion Rotate;
+        public float Scale;
+
+        public static TransformDelta Identity()
+        {
+            return new TransformDelta {Scale = 1f};
+        }
+    }
+    
     public partial class LibiglBehaviour
     {
         private bool _primaryTransformHand; // True=R
@@ -14,16 +26,9 @@ namespace Libigl
         private Vector3 _transformStartHandPosR;
         private Quaternion _transformStartHandRotL;
         private Quaternion _transformStartHandRotR;
+
+        private TransformDelta _meshTransform;
         
-        private void ConsumeInputTransform()
-        {
-            Input.TranslateDelta = Vector3.zero;
-            Input.ScaleDelta = 1f;
-            Input.RotateDelta = Quaternion.identity;
-
-            ResetTransformStartPositions();
-        }
-
         private void ResetTransformStartPositions()
         {
             _transformStartHandPosL = InputManager.Input.HandPosL;
@@ -55,7 +60,8 @@ namespace Libigl
             
             
             // while pressing
-            // TransformMesh
+            UpdateMeshTransform();
+            
 
             
             // on depressed
@@ -64,7 +70,7 @@ namespace Libigl
                 _doTransformL = true;
                 
                 // GetTransformDelta
-                GetTransformDelta();
+                GetTransformDelta(ref Input.TransformDelta);
                 
                 // Change state
                 if(_primaryTransformHand == false)
@@ -76,24 +82,44 @@ namespace Libigl
                 }
             }
         }
+        
+        
+        // Transform the whole mesh
+        private void UpdateMeshTransform()
+        {
+            if (InputManager.Input.ActiveTool == ToolType.Select || !Input.DoTransform || !Input.DoTransformPrev) return;
+            
+            var uTransform = LibiglMesh.transform;
+            uTransform.Translate(_meshTransform.Translate, Space.World);
+            uTransform.rotation *= _meshTransform.Rotate;
+            uTransform.localScale *= _meshTransform.Scale;
+            
+            // Reset
+            _meshTransform = TransformDelta.Identity();
+            ResetTransformStartPositions();
+        }
+        
+        
 
         // Only for selections, transforming the mesh is done directly
-        private void GetTransformDelta()
+        private void GetTransformDelta(ref TransformDelta transformDelta)
         {
             // Find out which mode we are in, call the according function
             switch (InputManager.Input.ActiveTransformMode)
             {
                 case TransformMode.IndividualTranslate:
-                    TransformIndividual(false);
+                    if(_doTransformL) TransformIndividual(false, false, ref transformDelta);
+                    if(_doTransformR) TransformIndividual(true, false, ref transformDelta);
                     break;
                 case TransformMode.IndividualTranslateRotate:
-                    TransformIndividual(true);
+                    if(_doTransformL) TransformIndividual(false, true, ref transformDelta);
+                    if(_doTransformR) TransformIndividual(true, true, ref transformDelta);
                     break;
                 case TransformMode.Joint:
-                    TransformJoint(false);
+                    TransformJoint(false, ref transformDelta);
                     break;
                 case TransformMode.JointScale:
-                    TransformJoint(true);
+                    TransformJoint(true, ref transformDelta);
                     break;
             }
 
@@ -102,31 +128,31 @@ namespace Libigl
 
 
 
-        private void TransformIndividual(bool withRotate)
+        private void TransformIndividual(bool isRight, bool withRotate, ref TransformDelta transformDelta)
         {
             Vector3 translate;
-            if (_primaryTransformHand)
+            if (isRight)
                 translate = InputManager.Input.HandPosR - _transformStartHandPosR;
             else
                 translate = InputManager.Input.HandPosL - _transformStartHandPosL;
 
             var softFactor = _primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
-            Input.TranslateDelta += translate * softFactor;
+            transformDelta.Translate += translate * softFactor;
 
             
             // Rotate - Optional
             if (!withRotate) return;
 
             Quaternion rotate;
-            if (_primaryTransformHand)
+            if (isRight)
                 rotate = InputManager.Input.HandRotR * Quaternion.Inverse(_transformStartHandRotR);
             else
                 rotate = InputManager.Input.HandRotR * Quaternion.Inverse(_transformStartHandRotR);
 
-            Input.RotateDelta *= Quaternion.Lerp(Quaternion.identity, rotate, softFactor);
+            transformDelta.Rotate *= Quaternion.Lerp(Quaternion.identity, rotate, softFactor);
         }
 
-        private void TransformJoint(bool withScale)
+        private void TransformJoint(bool withScale, ref TransformDelta transformDelta)
         {
             Vector3 v0, v1, translate;
             if(_primaryTransformHand)
@@ -153,8 +179,8 @@ namespace Libigl
             angle *= softFactorSecondary;
 
             // Apply to InputState
-            Input.TranslateDelta += translate;
-            Input.RotateDelta *= Quaternion.AngleAxis(angle, axis);
+            transformDelta.Translate += translate;
+            transformDelta.Rotate *= Quaternion.AngleAxis(angle, axis);
 
             
             // Scale - Optional
@@ -167,7 +193,7 @@ namespace Libigl
                 
             scale = (scale -1) * softFactorSecondary + 1;
 
-            Input.ScaleDelta *= scale;
+            transformDelta.Scale *= scale;
         }
 
 

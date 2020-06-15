@@ -17,9 +17,6 @@ namespace Libigl
             else
             {
                 // Do full transformation
-                GetTransformData(ref ExecuteInput, out var translate, out var scale, out var angle, out var axis);
-                angle *= Mathf.Deg2Rad; // Eigen uses rad, Unity uses deg
-
                 Native.TransformSelection(State, ExecuteInput.ActiveSelectionId, ExecuteInput.TranslateDelta,
                     ExecuteInput.ScaleDelta, ExecuteInput.RotateDelta);
             }
@@ -57,24 +54,6 @@ namespace Libigl
 
             if (ExecuteInput.ResetV)
                 Native.ResetV(State);
-        }
-
-        private void UpdateMeshTransform()
-        {
-            if (InputManager.Input.ActiveTool == ToolType.Select || !Input.DoTransform || !Input.DoTransformPrev) return;
-            
-            // Transform the whole mesh
-            if (Input.SecondaryTransformHandActive)
-            {
-                //TODO: Use InputManager.InputPrev
-                GetTransformData(ref Input, out var translate, out var scale, out var angle, out var axis);
-                var uTransform = LibiglMesh.transform;
-                uTransform.Translate(translate);
-                uTransform.Rotate(axis, angle);
-                uTransform.localScale *= scale;
-            }
-            else
-                LibiglMesh.transform.Translate(GetTranslateVector(ref Input));
         }
     }
 }

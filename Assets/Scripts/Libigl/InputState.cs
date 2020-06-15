@@ -19,9 +19,7 @@ namespace Libigl
         // Transform
         public bool DoTransform;
         public bool DoTransformPrev;
-        public Vector3 TranslateDelta;
-        public Quaternion RotateDelta;
-        public float ScaleDelta;
+        public TransformDelta TransformDelta;
 
         // Select
         public int ActiveSelectionId;
