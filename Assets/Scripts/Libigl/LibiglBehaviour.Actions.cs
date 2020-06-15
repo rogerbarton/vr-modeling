@@ -9,12 +9,10 @@ namespace Libigl
         {
             if (!ExecuteInput.DoTransform || !ExecuteInput.DoTransformPrev || ExecuteInput.Shared.ActiveTool != ToolType.Select) return;
 
-            if (!ExecuteInput.SecondaryTransformHandActive)
+            if (ExecuteInput.RotateDelta == Quaternion.identity && ExecuteInput.ScaleDelta == 1f)
             {
                 // Only translate selection
-                var translate = GetTranslateVector(ref ExecuteInput);
-
-                Native.TranslateSelection(State, translate, ExecuteInput.ActiveSelectionId);
+                Native.TranslateSelection(State, ExecuteInput.TranslateDelta, ExecuteInput.ActiveSelectionId);
             }
             else
             {
@@ -22,62 +20,9 @@ namespace Libigl
                 GetTransformData(ref ExecuteInput, out var translate, out var scale, out var angle, out var axis);
                 angle *= Mathf.Deg2Rad; // Eigen uses rad, Unity uses deg
 
-                Native.TransformSelection(State, ExecuteInput.ActiveSelectionId, translate, scale, angle, axis.normalized);
+                Native.TransformSelection(State, ExecuteInput.ActiveSelectionId, ExecuteInput.TranslateDelta,
+                    ExecuteInput.ScaleDelta, ExecuteInput.RotateDelta);
             }
-        }
-
-        /// <summary>
-        /// Determines the softenes translation vector
-        /// </summary>
-        /// <param name="i">The input state to use</param>
-        /// <returns></returns>
-        private static Vector3 GetTranslateVector(ref InputState i)
-        {
-            Vector3 t;
-            if(i.PrimaryTransformHand)
-                t = i.Shared.HandPosR - i.SharedPrev.HandPosR;
-            else
-                t = i.Shared.HandPosL - i.SharedPrev.HandPosL;
-            
-            var softFactor = i.PrimaryTransformHand ? i.Shared.GripR : i.Shared.GripL;
-            return t * softFactor;
-        }
-
-        /// <summary>
-        /// Determines the softened transformation from the input state
-        /// </summary>
-        /// <param name="i">InputState to use</param>
-        /// <param name="angle">In degrees</param>
-        private static void GetTransformData(ref InputState i, out Vector3 translate, out float scale, out float angle, out Vector3 axis)
-        {
-            Vector3 v0, v1;
-            if(i.PrimaryTransformHand)
-            {
-                translate = i.Shared.HandPosR - i.SharedPrev.HandPosR;
-                v0 = i.SharedPrev.HandPosR - i.SharedPrev.HandPosL;
-                v1 = i.Shared.HandPosR - i.Shared.HandPosL;
-            }
-            else
-            {
-                translate = i.Shared.HandPosL - i.SharedPrev.HandPosL;
-                v0 = i.SharedPrev.HandPosL - i.SharedPrev.HandPosR;
-                v1 = i.Shared.HandPosL - i.Shared.HandPosR;
-            }
-                
-            axis = Vector3.Cross(v0, v1);
-            angle = Vector3.Angle(v0, v1);
-            
-            // TODO: scale should be done from positions at start of both grips pressed 
-            scale = (i.Shared.HandPosL - i.Shared.HandPosR).magnitude / (i.SharedPrev.HandPosL - i.SharedPrev.HandPosR).magnitude;
-            if (float.IsNaN(scale))
-                scale = 1f;
-            // Apply soft editing
-            var softFactor = i.PrimaryTransformHand ? i.Shared.GripR : i.Shared.GripL;
-            var softFactorSecondary = !i.PrimaryTransformHand ? i.Shared.GripR : i.Shared.GripL;
-
-            translate *= softFactor;
-            scale = (scale -1) * softFactorSecondary + 1;
-            angle *= softFactorSecondary;
         }
 
         private void ActionSelect()

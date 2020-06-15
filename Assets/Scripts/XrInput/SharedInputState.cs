@@ -13,19 +13,25 @@ namespace XrInput
         public Vector3 HandPosL;
         public Vector3 HandPosR;
         
+        public float BrushRadius;
+        
+        // Transform
+        public TransformMode ActiveTransformMode; 
+        public TransformCenter ActiveTransformCenter; 
+        
         // Selection
         public SelectionMode ActiveSelectionMode;
         public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
-
-        public float BrushRadius;
 
         public static SharedInputState GetInstance()
         {
             return new SharedInputState
             {
                 ActiveTool = ToolType.Select, 
-                ActiveSelectionMode = SelectionMode.Add,
-                BrushRadius = 0.1f
+                BrushRadius = 0.1f,
+                ActiveTransformMode = TransformMode.TwoHandedNoScale,
+                ActiveTransformCenter = TransformCenter.Selection,
+                ActiveSelectionMode = SelectionMode.Add
             };
         }
     }
@@ -47,4 +53,45 @@ namespace XrInput
         Subtract,
         Toggle
     }
+
+    public enum TransformCenter
+    {
+        Mesh,
+        Selection,
+        Hand
+    }
+
+    public enum TransformMode
+    {
+        /// <summary>
+        /// 1. One Handed Translate
+        /// </summary>
+        OneHandedTranslate,
+
+        /// <summary>
+        /// 2. One Handed Translate+Rotate
+        /// </summary>
+        OneHandedTranslateRotate,
+
+        /// <summary>
+        /// 3. Two Handed individual Translate 
+        /// </summary>
+        TwoHandedIndividualTranslate,
+
+        /// <summary>
+        /// 4. Two Handed individual Translate+Rotate 
+        /// </summary>
+        TwoHandedIndividualTranslateRotate,
+
+        /// <summary>
+        /// 5. Two Handed joint Translate+Rotate 
+        /// </summary>
+        TwoHandedJoint,
+
+        /// <summary>
+        /// 6. Two Handed joint Translate+Rotate+Scale 
+        /// </summary>
+        TwoHandedJointScale,
+    }
+
 }

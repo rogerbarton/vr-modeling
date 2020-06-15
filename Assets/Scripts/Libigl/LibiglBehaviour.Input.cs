@@ -4,7 +4,7 @@ using XrInput;
 
 namespace Libigl
 {
-    public unsafe partial class LibiglBehaviour
+    public partial class LibiglBehaviour
     {
         // C# only input variables
         private Vector2 _lastPrimaryAxisValueL;
@@ -63,42 +63,6 @@ namespace Libigl
                 }
                 else
                     Debug.LogWarning("Could not get Right Hand Position");
-            }
-        }
-
-        private void UpdateInputTransform()
-        {
-            MapTransformActions(InputManager.get.LeftHand, false, InputManager.Input.GripL);
-            MapTransformActions(InputManager.get.RightHand, true, InputManager.Input.GripL);
-        }
-
-        /// <summary>
-        /// Updates transform tool input for a hand
-        /// </summary>
-        private void MapTransformActions(InputDevice inputDevice, bool isRight, float grip)
-        {
-            // Handling changes in the selection 'state machine'
-            if (grip > 0.01f)
-            {
-                if (!Input.DoTransform)
-                {
-                    Input.DoTransform = true;
-                    Input.PrimaryTransformHand = isRight;
-                }
-                else
-                    Input.SecondaryTransformHandActive = true;
-            }
-            else
-            {
-                 if(Input.PrimaryTransformHand == isRight)
-                 {
-                     if (Input.SecondaryTransformHandActive)
-                         Input.PrimaryTransformHand = !isRight;
-                     else
-                         Input.DoTransform = false;
-                 }
-                 else
-                     Input.SecondaryTransformHandActive = false;
             }
         }
 
