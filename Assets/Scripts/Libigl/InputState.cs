@@ -10,17 +10,9 @@ namespace Libigl
     /// </summary>
     public struct InputState
     {
-        // Copy for threading
+        // Copies for threading
         public SharedInputState Shared;
-
-        // Generic Input
-        public float GripL;
-        public float GripR;
-        public Vector3 HandPosL;
-        public Vector3 HandPosR;
-        // The previous position of the hand when the last transformation was made
-        public Vector3 PrevTrafoHandPosL;
-        public Vector3 PrevTrafoHandPosR;
+        public SharedInputState SharedPrev;
 
         // Transform
         public bool DoTransform;
@@ -53,9 +45,15 @@ namespace Libigl
         /// <returns>An instance with the default values</returns>
         public static InputState GetInstance()
         {
-            return new InputState {VisibleSelectionMask = uint.MaxValue, SelectRadius = 0.1f, HarmonicShowDisplacement = true};
+            return new InputState
+            {
+                VisibleSelectionMask = uint.MaxValue, 
+                SelectRadius = 0.1f, 
+                HarmonicShowDisplacement = true,
+                SharedPrev = SharedInputState.GetInstance()
+            };
         }
-        
+
         public void ChangeActiveSelection(int increment)
         {
             ActiveSelectionId = (int) ((ActiveSelectionId + increment) % SCountUi);

@@ -80,23 +80,15 @@ namespace Libigl
 
         private void UpdateInputTransform()
         {
-            HandTransformInput(InputManager.get.LeftHand, false, ref Input.GripL, ref Input.HandPosL);
-            HandTransformInput(InputManager.get.RightHand, true, ref Input.GripR, ref Input.HandPosR);
+            MapTransformActions(InputManager.get.LeftHand, false, InputManager.Input.GripL);
+            MapTransformActions(InputManager.get.RightHand, true, InputManager.Input.GripL);
         }
 
         /// <summary>
         /// Updates transform tool input for a hand
         /// </summary>
-        /// <param name="inputGrip">Where to store the trigger input value</param>
-        /// <param name="inputHandPos">Where to store the hand position input value</param>
-        private void HandTransformInput(InputDevice inputDevice, bool isRight, ref float inputGrip, ref Vector3 inputHandPos)
+        private void MapTransformActions(InputDevice inputDevice, bool isRight, float grip)
         {
-            if (!inputDevice.TryGetFeatureValue(CommonUsages.grip, out var grip)) return;
-            
-            inputGrip = grip;
-            inputDevice.TryGetFeatureValue(CommonUsages.devicePosition, out var handPos);
-            inputHandPos = handPos;
-
             // Handling changes in the selection 'state machine'
             if (grip > 0.01f)
             {
@@ -120,11 +112,11 @@ namespace Libigl
                  else
                      Input.SecondaryTransformHandActive = false;
             }
-
         }
 
         private void PreExecuteInput()
         {
+            Input.SharedPrev = Input.Shared;
             Input.Shared = InputManager.Input;
             
             Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
@@ -136,13 +128,6 @@ namespace Libigl
         /// </summary>
         private void ConsumeInput()
         {
-            if(Input.Shared.ActiveTool == ToolType.Select && Input.DoTransform)
-            {
-                // Only update this if we are transforming on the thread, i.e. transforming the selection
-                Input.PrevTrafoHandPosL = Input.HandPosL;
-                Input.PrevTrafoHandPosR = Input.HandPosR;
-            }
-            
             // Consume inputs here
             Input.DoTransformPrev = Input.DoTransform;
             Input.DoTransform = false;

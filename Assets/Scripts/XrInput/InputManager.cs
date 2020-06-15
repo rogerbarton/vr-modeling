@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Libigl;
 using UI;
 using UnityEngine;
 using UnityEngine.XR;
@@ -8,7 +7,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XrInput
 {
-    public class InputManager : MonoBehaviour
+    public partial class InputManager : MonoBehaviour
     {
         public static InputManager get;
         public static SharedInputState Input;
@@ -153,6 +152,7 @@ namespace XrInput
         private void Update()
         {
             // InputPrev = Input;
+            UpdateSharedState();
             
             if (!LeftHand.isValid)
                 InitializeController(false, leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator,

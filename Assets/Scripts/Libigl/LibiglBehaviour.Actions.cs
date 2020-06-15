@@ -35,11 +35,11 @@ namespace Libigl
         {
             Vector3 t;
             if(i.PrimaryTransformHand)
-                t = i.HandPosR - i.PrevTrafoHandPosR;
+                t = i.Shared.HandPosR - i.SharedPrev.HandPosR;
             else
-                t = i.HandPosL - i.PrevTrafoHandPosL;
+                t = i.Shared.HandPosL - i.SharedPrev.HandPosL;
             
-            var softFactor = i.PrimaryTransformHand ? i.GripR : i.GripL;
+            var softFactor = i.PrimaryTransformHand ? i.Shared.GripR : i.Shared.GripL;
             return t * softFactor;
         }
 
@@ -53,27 +53,27 @@ namespace Libigl
             Vector3 v0, v1;
             if(i.PrimaryTransformHand)
             {
-                translate = i.HandPosR - i.PrevTrafoHandPosR;
-                v0 = i.PrevTrafoHandPosR - i.PrevTrafoHandPosL;
-                v1 = i.HandPosR - i.HandPosL;
+                translate = i.Shared.HandPosR - i.SharedPrev.HandPosR;
+                v0 = i.SharedPrev.HandPosR - i.SharedPrev.HandPosL;
+                v1 = i.Shared.HandPosR - i.Shared.HandPosL;
             }
             else
             {
-                translate = i.HandPosL - i.PrevTrafoHandPosL;
-                v0 = i.PrevTrafoHandPosL - i.PrevTrafoHandPosR;
-                v1 = i.HandPosL - i.HandPosR;
+                translate = i.Shared.HandPosL - i.SharedPrev.HandPosL;
+                v0 = i.SharedPrev.HandPosL - i.SharedPrev.HandPosR;
+                v1 = i.Shared.HandPosL - i.Shared.HandPosR;
             }
                 
             axis = Vector3.Cross(v0, v1);
             angle = Vector3.Angle(v0, v1);
             
             // TODO: scale should be done from positions at start of both grips pressed 
-            scale = (i.HandPosL - i.HandPosR).magnitude / (i.PrevTrafoHandPosL - i.PrevTrafoHandPosR).magnitude;
+            scale = (i.Shared.HandPosL - i.Shared.HandPosR).magnitude / (i.SharedPrev.HandPosL - i.SharedPrev.HandPosR).magnitude;
             if (float.IsNaN(scale))
                 scale = 1f;
             // Apply soft editing
-            var softFactor = i.PrimaryTransformHand ? i.GripR : i.GripL;
-            var softFactorSecondary = !i.PrimaryTransformHand ? i.GripR : i.GripL;
+            var softFactor = i.PrimaryTransformHand ? i.Shared.GripR : i.Shared.GripL;
+            var softFactorSecondary = !i.PrimaryTransformHand ? i.Shared.GripR : i.Shared.GripL;
 
             translate *= softFactor;
             scale = (scale -1) * softFactorSecondary + 1;
@@ -121,6 +121,7 @@ namespace Libigl
             // Transform the whole mesh
             if (Input.SecondaryTransformHandActive)
             {
+                //TODO: Use InputManager.InputPrev
                 GetTransformData(ref Input, out var translate, out var scale, out var angle, out var axis);
                 var uTransform = LibiglMesh.transform;
                 uTransform.Translate(translate);
@@ -129,10 +130,6 @@ namespace Libigl
             }
             else
                 LibiglMesh.transform.Translate(GetTranslateVector(ref Input));
-                
-            // Consume the input and update the previous position directly
-            Input.PrevTrafoHandPosL = Input.HandPosL;
-            Input.PrevTrafoHandPosR = Input.HandPosR;
         }
     }
 }
