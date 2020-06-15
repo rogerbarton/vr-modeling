@@ -13,6 +13,20 @@ namespace XrInput
             LeftHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
             RightHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripR);
             RightHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosR);
+
+            // Brush Resizing
+            if (RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisValue))
+            {
+                if (Mathf.Abs(primaryAxisValue.y) > 0.01f)
+                {
+                    Input.BrushRadius = Mathf.Clamp(
+                        Input.BrushRadius + XrBrush.ResizeSpeed * primaryAxisValue.y * Time.deltaTime,
+                        XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
+
+                    BrushL.SetRadius(Input.BrushRadius);
+                    BrushR.SetRadius(Input.BrushRadius);
+                }
+            }
         }
     }
 }

@@ -17,9 +17,16 @@ namespace XrInput
         public SelectionMode ActiveSelectionMode;
         public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
 
+        public float BrushRadius;
+
         public static SharedInputState GetInstance()
         {
-            return new SharedInputState{ActiveTool = ToolType.Select, ActiveSelectionMode = SelectionMode.Add};
+            return new SharedInputState
+            {
+                ActiveTool = ToolType.Select, 
+                ActiveSelectionMode = SelectionMode.Add,
+                BrushRadius = 0.1f
+            };
         }
     }
 

@@ -64,18 +64,6 @@ namespace Libigl
                 else
                     Debug.LogWarning("Could not get Right Hand Position");
             }
-
-            if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisValue))
-            {
-                if (Mathf.Abs(primaryAxisValue.y) > 0.01f)
-                {
-                    var brush = InputManager.get.BrushR;
-                    Input.SelectRadius = Mathf.Clamp(Input.SelectRadius + 0.5f * primaryAxisValue.y * Time.deltaTime,
-                        brush.RadiusRange.x, brush.RadiusRange.y);
-
-                    brush.SetRadius(Input.SelectRadius);
-                }
-            }
         }
 
         private void UpdateInputTransform()

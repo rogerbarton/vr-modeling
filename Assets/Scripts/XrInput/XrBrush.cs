@@ -9,7 +9,9 @@ namespace XrInput
         public Transform center;
     
         // min and max radius
-        [NonSerialized] public Vector2 RadiusRange = new Vector2(0.025f, 1f);
+        public static Vector2 RadiusRange = new Vector2(0.025f, 1f);
+        public const float ResizeSpeed = 0.5f;
+        
         private bool _isRight;
     
         //TODO: get world position from center to get center of brush
