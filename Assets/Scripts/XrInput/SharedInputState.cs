@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace XrInput
 {
@@ -12,6 +12,8 @@ namespace XrInput
         public float GripR;
         public Vector3 HandPosL;
         public Vector3 HandPosR;
+        public Quaternion HandRotL;
+        public Quaternion HandRotR;
         
         public float BrushRadius;
         

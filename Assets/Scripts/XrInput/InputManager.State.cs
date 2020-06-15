@@ -11,8 +11,11 @@ namespace XrInput
 
             LeftHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripL);
             LeftHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
+            LeftHand.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotL);
+            
             RightHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripR);
             RightHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosR);
+            RightHand.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotR);
 
             // Brush Resizing
             if (RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisValue))
