@@ -1,6 +1,7 @@
 using System;
 using UI;
 using UnityEngine;
+using XrInput;
 using Object = UnityEngine.Object;
 
 namespace Libigl
@@ -8,7 +9,7 @@ namespace Libigl
     /// <summary>
     /// This is where the behaviour that interfaces with libigl is. It follows a Pre/Post/Execute threading pattern.
     /// This is a <c>partial</c> class, meaning it is split between several files.
-    /// <remarks>See also <see cref="libigl.LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks</remarks>
+    /// <remarks>See also <see cref="Libigl.LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks</remarks>
     /// </summary>
     public unsafe partial class LibiglBehaviour : IDisposable
     {
@@ -27,7 +28,7 @@ namespace Libigl
         public InputState ExecuteInput;
 
         /// <summary>
-        /// Reference to the <see cref="libigl.LibiglMesh"/> used to apply changes to the <see cref="libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="libigl.LibiglMesh.Mesh"/>
+        /// Reference to the <see cref="Libigl.LibiglMesh"/> used to apply changes to the <see cref="Libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="Mesh"/>
         /// </summary>
         public readonly LibiglMesh LibiglMesh;
 
@@ -48,15 +49,15 @@ namespace Libigl
         /// <summary>
         /// Called every frame, the normal Unity Update. Use this to update UI, input responsively.
         /// Do not call any expensive libigl methods here, use Execute instead<br/>
-        /// Be careful not to modify the shared state if there is a job running <see cref="libigl.LibiglMesh.IsJobRunning"/>.
+        /// Be careful not to modify the shared state if there is a job running <see cref="Libigl.LibiglMesh.IsJobRunning"/>.
         /// Consider making a copy of certain data, using <see cref="PreExecute"/> or using atomics/Interlocked.
         /// Update is called just before <see cref="PreExecute"/>.
         /// </summary>
         public void Update()
         {
             UpdateInput();
-            if(LibiglMesh.IsActiveMesh())
-                UpdateMeshTransform();
+            if (LibiglMesh.IsActiveMesh())
+                UpdateTransform();
         }
         
         /// <summary>
@@ -68,6 +69,7 @@ namespace Libigl
         {
             // Add logic here that uses the Unity API (e.g. Input)
             PreExecuteInput();
+            PreExecuteTransform();
             
             // Apply changes in UI to the state
             _uiDetails.UpdatePreExecute();
@@ -76,12 +78,13 @@ namespace Libigl
             ExecuteInput = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
             ConsumeInput();
+            ConsumeTransform();
         }
 
         /// <summary>
         /// Perform expensive computations here. This is called similarly to Update.<br/>
         /// Called on a worker thread from which any Unity API function, with a few exceptions such as <c>Debug.Log</c>, cannot be called.
-        /// <remarks>There is one worker thread per <see cref="libigl.LibiglMesh"/>.<br/>
+        /// <remarks>There is one worker thread per <see cref="Libigl.LibiglMesh"/>.<br/>
         /// You should call <c>_libiglMesh.DataRowMajor.ApplyDirty(_state)</c> here to apply changes to the
         /// RowMajor <see cref="UMeshData"/> outside the main thread.</remarks>
         /// </summary>
@@ -90,7 +93,7 @@ namespace Libigl
             ActionUi();
             if(LibiglMesh.IsActiveMesh())
             {
-                switch (Input.ActiveTool)
+                switch (ExecuteInput.Shared.ActiveTool)
                 {
                     case ToolType.Default:
                         break;

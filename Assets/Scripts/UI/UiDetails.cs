@@ -5,6 +5,7 @@ using Libigl;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using XrInput;
 
 namespace UI
 {
@@ -58,10 +59,6 @@ namespace UI
             _selectionGroup.title.text = "Selections";
             _selectionGroup.SetVisibility(true);
 
-            var selectionMode = Instantiate(UiManager.get.selectionModePrefab, _listParent).GetComponent<UiSelectionMode>();
-            _selectionGroup.AddItem(selectionMode.gameObject);
-            selectionMode.Initialize(_behaviour);
-            
             _addSelectionBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _addSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
             _selectionGroup.AddItem(_addSelectionBtn.gameObject);
@@ -220,7 +217,7 @@ namespace UI
             progressIcon.PreExecute();
 
             // Add a selection in case of the NewSelectionOnDraw
-            if (_behaviour.Input.NewSelectionOnDraw &&
+            if (InputManager.Input.NewSelectionOnDraw &&
                 _behaviour.Input.DoSelect && !_behaviour.Input.DoSelectPrev && // Just started stroke 
                 _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty
                 AddSelection();

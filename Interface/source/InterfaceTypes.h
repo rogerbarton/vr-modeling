@@ -1,6 +1,7 @@
 #pragma once
 #include <PluginAPI/IUnityInterface.h>
 #include <Eigen/Core>
+#include <Eigen/Geometry>
 
 // Function pointer to a C# void MyFct(string message)
 typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
@@ -41,7 +42,23 @@ struct Vector3 {
 	Eigen::Vector3f AsEigen() const;
 	Eigen::RowVector3f AsEigenRow() const;
 
-	inline static const Vector3 Zero() { return Vector3(0.f, 0.f, 0.f); }
+	inline static Vector3 Zero() { return Vector3(0.f, 0.f, 0.f); }
+};
+
+struct Quaternion {
+	float x;
+	float y;
+	float z;
+	float w;
+
+	Quaternion() = default;
+	Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+	explicit Quaternion(Eigen::Quaternionf& q) : x(q.x()), y(q.y()), z(q.z()), w(q.w()) {}
+
+	// Note! Eigen has a different ordering of the values.
+	inline Eigen::Quaternionf AsEigen() const { return Eigen::Quaternionf(w, x, y, z); }
+
+	inline static Quaternion Identity() { return Quaternion(0.f, 0.f, 0.f, 1.0f); }
 };
 
 /**

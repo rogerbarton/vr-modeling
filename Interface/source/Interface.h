@@ -27,7 +27,7 @@ extern "C" {
     UNITY_INTERFACE_EXPORT void TranslateMesh(State* state, Vector3 value);
     UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, int selectionId = -1);
     UNITY_INTERFACE_EXPORT void TransformSelection(State* state, int selectionId,
-    		Vector3 translation, float scale, float angle, Vector3 axis);
+    		Vector3 translation, float scale, Quaternion rotation);
     UNITY_INTERFACE_EXPORT void Harmonic(State* state, unsigned int boundaryMask = -1, bool showDeformationField = true);
     UNITY_INTERFACE_EXPORT void Arap(State* state, unsigned int boundaryMask = -1);
     UNITY_INTERFACE_EXPORT 	void ResetV(State* state);

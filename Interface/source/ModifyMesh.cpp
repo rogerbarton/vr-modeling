@@ -28,14 +28,14 @@ extern "C" {
      * Transform the selected vertices in place (translate + scale + rotate)
      * @param selectionId Which selection to transform, -1 for all selections
      */
-    void TransformSelection(State* state, int selectionId, Vector3 translation, float scale, float angle, Vector3 axis) {
+    void TransformSelection(State* state, int selectionId, Vector3 translation, float scale, Quaternion rotation) {
 	    auto& V = *state->V;
 	    const auto& S = *state->S;
 	    const unsigned int maskId = Selection::GetMask(selectionId);
 
 	    using namespace Eigen;
 	    Transform<float, 3, Affine> transform =
-			    Translation3f(translation.AsEigen()) * AngleAxisf(angle, axis.AsEigen()) * Scaling(scale);
+			    Translation3f(translation.AsEigen()) * rotation.AsEigen() * Scaling(scale);
 
 	    for (int i = 0; i < V.rows(); ++i) {
 		    if ((S(i) & maskId) > 0) {
