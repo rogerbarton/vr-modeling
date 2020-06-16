@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace UI
 {
     [System.Serializable]
-    public class UiInputLabelData
+    public struct UiInputLabelData
     {
         public bool isActive;
         public Sprite icon;
@@ -28,6 +28,16 @@ namespace UI
             text.text = data.text;
                 
             // We need to refresh the layout explicitly
+            LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) transform);
+        }
+
+        /// <summary>
+        /// Only set the text, makes the label active
+        /// </summary>
+        public void SetText(string data)
+        {
+            gameObject.SetActive(true);
+            text.text = data;
             LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform) transform);
         }
     }

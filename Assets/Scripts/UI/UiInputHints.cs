@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 
 namespace UI
@@ -24,6 +24,16 @@ namespace UI
             secondaryBtn.SetData(data.secondaryBtn);
             primaryAxisX.SetData(data.primaryAxisX);
             primaryAxisY.SetData(data.primaryAxisY);
+        }
+
+        public void SetTooltip(string data)
+        {
+            help.SetText(data);
+        }
+
+        public void ClearTooltip()
+        {
+            help.gameObject.SetActive(false);
         }
     }
 }

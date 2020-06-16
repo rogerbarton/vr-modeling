@@ -2,7 +2,9 @@
 using Libigl;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using XrInput;
 
 namespace UI
 {
@@ -50,6 +52,25 @@ namespace UI
             visibleBtn.onClick.AddListener(ToggleVisible);
             editBtn.onClick.AddListener(SetAsActive);
             clearBtn.onClick.AddListener(Clear);
+
+            // Hover Tooltip
+            var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
+            onHoverStart.callback.AddListener(_ =>
+            {
+                Debug.Log("Hover: visibleBtn");
+                InputManager.get.LeftHandHints.SetTooltip("Change selection visibility");
+            });
+            
+            var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
+            onHoverEnd.callback.AddListener(_ =>
+            {
+                InputManager.get.LeftHandHints.ClearTooltip();
+            });
+            
+            var trigger = visibleBtn.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Add(onHoverStart);
+            trigger.triggers.Add(onHoverEnd);
+            
             
             // Apply current values
             ToggleVisibleSprite((behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
