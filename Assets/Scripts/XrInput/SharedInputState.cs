@@ -19,7 +19,7 @@ namespace XrInput
         
         // Transform
         public TransformMode ActiveTransformMode; 
-        public TransformCenter ActiveTransformCenter; 
+        public PivotMode ActivePivotMode; 
         
         // Selection
         public SelectionMode ActiveSelectionMode;
@@ -32,7 +32,7 @@ namespace XrInput
                 ActiveTool = ToolType.Select, 
                 BrushRadius = 0.1f,
                 ActiveTransformMode = TransformMode.IndividualTranslateRotate,
-                ActiveTransformCenter = TransformCenter.Hand,
+                ActivePivotMode = PivotMode.Hand,
                 ActiveSelectionMode = SelectionMode.Add
             };
         }
@@ -56,11 +56,11 @@ namespace XrInput
         Toggle
     }
 
-    public enum TransformCenter
+    public enum PivotMode
     {
         Mesh,
-        Selection,
-        Hand
+        Hand,
+        Selection
     }
 
     public enum TransformMode

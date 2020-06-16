@@ -1939,21 +1939,23 @@ MonoBehaviour:
     type: 3}
   headerPrefab: {fileID: 7891394014557223998, guid: a8591ce6d48820243ba6322501dc154c,
     type: 3}
+  groupPrefab: {fileID: 4553715744232311783, guid: c17a9997ac3b29b4c9b77d5cf4e4eea1,
+    type: 3}
   textPrefab: {fileID: 3524948333861939191, guid: e690f21c258b94b45a6bdb1c427a463c,
     type: 3}
   buttonPrefab: {fileID: 2621696837101218300, guid: 947a63f86d0ba824f972b224d98e8c88,
     type: 3}
   togglePrefab: {fileID: 2621696837101218300, guid: 8ab00dcae3cb16e4883d1cb0ebcc2046,
     type: 3}
-  groupPrefab: {fileID: 4553715744232311783, guid: c17a9997ac3b29b4c9b77d5cf4e4eea1,
+  toggleActionPrefab: {fileID: 4820344337120694933, guid: 08da19e23595c0a4d8362d25baad3637,
+    type: 3}
+  iconActionPrefab: {fileID: 4820344337120694933, guid: 3a952b41e90a70a4bbc7969a8ffea755,
     type: 3}
   selectionPrefab: {fileID: 4820344337120694933, guid: c7f7809fd0fffdf438be3d82231ca78e,
     type: 3}
   selectionModePrefab: {fileID: 4820344337120694933, guid: f45e20b542f3058478bf980e55ec1c00,
     type: 3}
-  toggleActionPrefab: {fileID: 4820344337120694933, guid: 08da19e23595c0a4d8362d25baad3637,
-    type: 3}
-  iconActionPrefab: {fileID: 4820344337120694933, guid: 3a952b41e90a70a4bbc7969a8ffea755,
+  pivotModePrefab: {fileID: 4820344337120694933, guid: 24309523df093c246ba3492908fcaa03,
     type: 3}
   panelSpawnPoint: {fileID: 1144852320}
   actionsListParent: {fileID: 788621609}

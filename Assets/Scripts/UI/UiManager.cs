@@ -18,14 +18,15 @@ namespace UI
         // Prefabs for generating UI, e.g. Details panel
         public GameObject listCanvasPrefab;
         public GameObject headerPrefab;
+        public GameObject groupPrefab;
         public GameObject textPrefab;
         public GameObject buttonPrefab;
         public GameObject togglePrefab;
-        public GameObject groupPrefab;
-        public GameObject selectionPrefab;
-        public GameObject selectionModePrefab;
         public GameObject toggleActionPrefab;
         public GameObject iconActionPrefab;
+        public GameObject selectionPrefab;
+        public GameObject selectionModePrefab;
+        public GameObject pivotModePrefab;
 
         public Transform panelSpawnPoint;
         
@@ -119,6 +120,10 @@ namespace UI
             var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
             _toolGroup.AddItem(selectionMode.gameObject);
             selectionMode.Initialize();
+            
+            var pivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
+            _toolGroup.AddItem(pivotMode.gameObject);
+            pivotMode.Initialize();
 
             CreateActionUi("Default Tool",
                 () => { InputManager.get.SetActiveTool(ToolType.Default); }, _toolGroup);

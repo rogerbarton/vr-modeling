@@ -1,6 +1,4 @@
-﻿using Libigl;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using XrInput;
 
@@ -13,36 +11,36 @@ namespace UI
     /// </summary>
     public class UiSelectionMode : MonoBehaviour
     {
-        [FormerlySerializedAs("images")] public Image[] icons;
+        public Image[] icons;
         public Color activeColor;
 
         public Button newSelectionOnDrawBtn;
 
-        private SelectionMode _modeId = (int) SelectionMode.Add;
+        private SelectionMode _mode;
 
         public void Initialize()
         {
-            _modeId = InputManager.Input.ActiveSelectionMode;
+            _mode = InputManager.Input.ActiveSelectionMode;
             for (var i = 0; i < icons.Length; i++)
             {
                 var i1 = i;
                 icons[i].GetComponent<Button>().onClick.AddListener(() => { SetMode((SelectionMode) i1); });
-                icons[i].color = _modeId.GetHashCode() == i ? activeColor : Color.white;
+                icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
             }
             
             newSelectionOnDrawBtn.onClick.AddListener(ToggleNewSelectionOnDraw);
         }
 
-        public void SetMode(SelectionMode selectionMode)
+        public void SetMode(SelectionMode mode)
         {
-            if (_modeId == selectionMode) return;
+            if (_mode == mode) return;
 
-            icons[_modeId.GetHashCode()].color = Color.white;
-            _modeId = selectionMode;
-            InputManager.Input.ActiveSelectionMode = (SelectionMode) _modeId;
-            icons[_modeId.GetHashCode()].color = activeColor;
+            icons[_mode.GetHashCode()].color = Color.white;
+            _mode = mode;
+            InputManager.Input.ActiveSelectionMode = _mode;
+            icons[_mode.GetHashCode()].color = activeColor;
 
-            if (_modeId != (int) SelectionMode.Add)
+            if (_mode != (int) SelectionMode.Add)
             {
                 InputManager.Input.NewSelectionOnDraw = false;
                 RepaintNewSelectionOnDrawBtn();
