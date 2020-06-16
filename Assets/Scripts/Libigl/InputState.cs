@@ -18,7 +18,6 @@ namespace Libigl
 
         // Transform
         public bool DoTransform;
-        public bool DoTransformPrev;
         public TransformDelta TransformDelta;
 
         // Select

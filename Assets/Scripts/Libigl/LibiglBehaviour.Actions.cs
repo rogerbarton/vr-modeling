@@ -7,7 +7,7 @@ namespace Libigl
     {
         private void ActionTransformSelection()
         {
-            if (!ExecuteInput.DoTransform || !ExecuteInput.DoTransformPrev || ExecuteInput.Shared.ActiveTool != ToolType.Select) return;
+            if (!ExecuteInput.DoTransform || ExecuteInput.Shared.ActiveTool != ToolType.Select) return;
 
             if (ExecuteInput.TransformDelta.Rotate == Quaternion.identity && ExecuteInput.TransformDelta.Scale == 1f)
             {
