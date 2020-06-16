@@ -19,7 +19,7 @@ namespace Libigl
         public void Add(TransformDelta other)
         {
             Translate += other.Translate;
-            Rotate *= other.Rotate;
+            Rotate = other.Rotate * Rotate;
             Scale *= other.Scale;
         }
     }
@@ -119,7 +119,7 @@ namespace Libigl
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
             uTransform.Translate(transformDelta.Translate, Space.World);
-            uTransform.rotation *= transformDelta.Rotate;
+            uTransform.rotation = transformDelta.Rotate * uTransform.rotation;
             uTransform.localScale *= transformDelta.Scale;
         }
 
@@ -180,7 +180,7 @@ namespace Libigl
         }
 
 
-        private void GetTranslate(bool isRight, ref TransformDelta transformDelta, bool withRotate = false)
+        private void GetTranslate(bool isRight, ref TransformDelta transformDelta, bool withRotate = true)
         {
             Vector3 translate;
             if (isRight)
@@ -200,10 +200,10 @@ namespace Libigl
             else
                 rotate = InputManager.Input.HandRotL * Quaternion.Inverse(_transformStartHandRotL);
 
-            transformDelta.Rotate *= Quaternion.Lerp(Quaternion.identity, rotate, softFactor);
+            transformDelta.Rotate = Quaternion.Lerp(Quaternion.identity, rotate, softFactor) * transformDelta.Rotate;
         }
 
-        private void GetRotateScaleJoint(ref TransformDelta transformDelta, bool withRotate = false)
+        private void GetRotateScaleJoint(ref TransformDelta transformDelta, bool withRotate = true)
         {
             // Soft editing
             var softFactor = _primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
@@ -240,7 +240,7 @@ namespace Libigl
             var angle = Vector3.Angle(v0, v1);
             
             angle *= softFactor;
-            transformDelta.Rotate *= Quaternion.AngleAxis(angle, axis);
+            transformDelta.Rotate = Quaternion.AngleAxis(angle, axis) * transformDelta.Rotate;
         }
 
         #endregion
