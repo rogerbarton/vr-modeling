@@ -233,9 +233,8 @@ namespace Libigl
                 v0 = _transformStartHandPosL - _transformStartHandPosR;
                 v1 = InputManager.Input.HandPosL - InputManager.Input.HandPosR;
             }
-            v0 = LibiglMesh.transform.InverseTransformPoint(v0);
-            v1 = LibiglMesh.transform.InverseTransformPoint(v1);
             
+            // Implementation Note: could also use combination of Quaternion.FromToRotation() and Quaternion.Lerp()
             var axis = Vector3.Cross(v0, v1);
             var angle = Vector3.Angle(v0, v1);
             
