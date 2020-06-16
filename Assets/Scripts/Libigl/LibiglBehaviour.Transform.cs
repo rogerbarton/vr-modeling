@@ -118,7 +118,7 @@ namespace Libigl
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
-            uTransform.Translate(transformDelta.Translate);
+            uTransform.Translate(transformDelta.Translate, Space.World);
             uTransform.rotation *= transformDelta.Rotate;
             uTransform.localScale *= transformDelta.Scale;
         }
@@ -139,8 +139,8 @@ namespace Libigl
                 
                 // Convert to local space
                 var uTransform = LibiglMesh.transform;
-                // Input.TransformDelta.Translate = uTransform.InverseTransformPoint(Input.TransformDelta.Translate);
-                Input.TransformDelta.Rotate *= Quaternion.Inverse(uTransform.rotation);
+                Input.TransformDelta.Translate = uTransform.InverseTransformVector(Input.TransformDelta.Translate);
+                // Input.TransformDelta.Rotate *= Quaternion.Inverse(uTransform.rotation);
             }
         }
         
