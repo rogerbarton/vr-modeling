@@ -114,7 +114,7 @@ namespace Libigl
             
             // Get & Consume the transformation
             var transformDelta = TransformDelta.Identity();
-            GetTransformDelta(ref transformDelta);
+            GetTransformDelta(ref transformDelta, false);
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
@@ -128,7 +128,7 @@ namespace Libigl
             if (!_doTransformL && !_doTransformR) return;
 
             Input.DoTransform = true;
-            GetTransformDelta(ref Input.TransformDelta);
+            GetTransformDelta(ref Input.TransformDelta, true);
         }
 
         private void PreExecuteTransform()
@@ -169,12 +169,12 @@ namespace Libigl
         #region --- Calculating TransformDelta
 
         // Only for selections, transforming the mesh is done directly
-        private void GetTransformDelta(ref TransformDelta transformDelta)
+        private void GetTransformDelta(ref TransformDelta transformDelta, bool transformSelection)
         {
             if(_isTwoHanded)
-                GetRotateScaleJoint(ref transformDelta);
+                GetRotateScaleJoint(ref transformDelta, transformSelection);
             else if(_primaryTransformHand ? _doTransformR : _doTransformL)
-                GetTranslate(_primaryTransformHand, ref transformDelta);
+                GetTranslate(_primaryTransformHand, ref transformDelta, transformSelection);
 
             ResetTransformStartPositions();
         }
