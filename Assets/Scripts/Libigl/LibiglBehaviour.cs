@@ -56,8 +56,8 @@ namespace Libigl
         public void Update()
         {
             UpdateInput();
-            if(LibiglMesh.IsActiveMesh())
-                UpdateMeshTransform();
+            if (LibiglMesh.IsActiveMesh())
+                UpdateTransform();
         }
         
         /// <summary>
@@ -69,6 +69,7 @@ namespace Libigl
         {
             // Add logic here that uses the Unity API (e.g. Input)
             PreExecuteInput();
+            PreExecuteTransform();
             
             // Apply changes in UI to the state
             _uiDetails.UpdatePreExecute();

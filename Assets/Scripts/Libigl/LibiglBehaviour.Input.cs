@@ -17,11 +17,9 @@ namespace Libigl
             {
                 case ToolType.Default:
                     UpdateInputDefault();
-                    UpdateInputTransform();
                     break;
                 case ToolType.Select:
                     UpdateInputSelect();
-                    UpdateInputTransform();
                     break;
             }
         }
