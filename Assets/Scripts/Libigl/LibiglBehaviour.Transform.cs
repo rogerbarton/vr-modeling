@@ -225,12 +225,12 @@ namespace Libigl
             Vector3 v0, v1;
             if(_primaryTransformHand)
             {
-                v0 = Input.SharedPrev.HandPosR - Input.SharedPrev.HandPosL;
+                v0 = _transformStartHandPosR - _transformStartHandPosL;
                 v1 = InputManager.Input.HandPosR - InputManager.Input.HandPosL;
             }
             else
             {
-                v0 = Input.SharedPrev.HandPosL - Input.SharedPrev.HandPosR;
+                v0 = _transformStartHandPosL - _transformStartHandPosR;
                 v1 = InputManager.Input.HandPosL - InputManager.Input.HandPosR;
             }
             v0 = LibiglMesh.transform.InverseTransformPoint(v0);
@@ -239,7 +239,7 @@ namespace Libigl
             var axis = Vector3.Cross(v0, v1);
             var angle = Vector3.Angle(v0, v1);
             
-            angle *= softFactorSecondary;
+            angle *= softFactor;
             transformDelta.Rotate *= Quaternion.AngleAxis(angle, axis);
         }
 
