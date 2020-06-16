@@ -51,6 +51,9 @@ namespace Libigl
                 _transformStartHandRotL = InputManager.Input.HandRotL;
                 _doTransformL = true;
                 
+                // Get Mask at start pos
+                Input.SelectPos = _transformStartHandPosL;
+                
                 if (!Input.DoTransform)
                 {
                     Input.DoTransform = true;
@@ -70,7 +73,8 @@ namespace Libigl
                 _doTransformL = true;
                 
                 // GetTransformDelta
-                GetTransformDelta(ref Input.TransformDelta);
+                if(InputManager.Input.ActiveTool == ToolType.Select)
+                    GetTransformDelta(ref Input.TransformDelta);
                 
                 // Change state
                 if(_primaryTransformHand == false)
@@ -98,7 +102,14 @@ namespace Libigl
             _meshTransform = TransformDelta.Identity();
             ResetTransformStartPositions();
         }
-        
+
+
+        private void PreExecuteTransform()
+        {
+            if (InputManager.Input.ActiveTool != ToolType.Select || !Input.DoTransform || !Input.DoTransformPrev) return;
+            
+            GetTransformDelta(ref Input.TransformDelta);
+        }
         
 
         // Only for selections, transforming the mesh is done directly
