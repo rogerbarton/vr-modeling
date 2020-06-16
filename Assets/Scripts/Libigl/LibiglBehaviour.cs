@@ -78,6 +78,7 @@ namespace Libigl
             ExecuteInput = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
             ConsumeInput();
+            ConsumeTransform();
         }
 
         /// <summary>

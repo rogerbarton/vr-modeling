@@ -13,7 +13,7 @@ namespace Libigl
 
         public static TransformDelta Identity()
         {
-            return new TransformDelta {Scale = 1f};
+            return new TransformDelta {Rotate = Quaternion.identity, Scale = 1f};
         }
 
         public void Add(TransformDelta other)
@@ -118,7 +118,7 @@ namespace Libigl
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
-            uTransform.Translate(transformDelta.Translate, Space.Self);
+            uTransform.Translate(transformDelta.Translate);
             uTransform.rotation *= transformDelta.Rotate;
             uTransform.localScale *= transformDelta.Scale;
         }
@@ -138,10 +138,18 @@ namespace Libigl
                 ApplyTransformToSelection();
                 
                 // Convert to local space
-                Transform uTransform;
-                Input.TransformDelta.Translate = (uTransform = LibiglMesh.transform).InverseTransformPoint(Input.TransformDelta.Translate);
+                var uTransform = LibiglMesh.transform;
+                // Input.TransformDelta.Translate = uTransform.InverseTransformPoint(Input.TransformDelta.Translate);
                 Input.TransformDelta.Rotate *= Quaternion.Inverse(uTransform.rotation);
             }
+        }
+        
+        private void ConsumeTransform()
+        {
+            if(Input.DoTransform)
+                Input.TransformDelta = TransformDelta.Identity();
+
+            Input.DoTransform = false;
         }
 
         private void ResetTransformStartPositions()

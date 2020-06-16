@@ -49,7 +49,8 @@ namespace Libigl
                 VisibleSelectionMask = uint.MaxValue, 
                 HarmonicShowDisplacement = true,
                 Shared = InputManager.Input,
-                SharedPrev = InputManager.InputPrev
+                SharedPrev = InputManager.InputPrev,
+                TransformDelta = TransformDelta.Identity()
             };
         }
 

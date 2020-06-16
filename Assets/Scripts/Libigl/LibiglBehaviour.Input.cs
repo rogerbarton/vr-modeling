@@ -79,7 +79,6 @@ namespace Libigl
         private void ConsumeInput()
         {
             // Consume inputs here
-            Input.DoTransform = false;
             Input.DoSelectPrev = Input.DoSelect;
             Input.DoSelect = false;
             Input.DoClearSelection = 0;
