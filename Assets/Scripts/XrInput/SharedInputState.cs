@@ -10,8 +10,10 @@ namespace XrInput
         // Generic Input
         public float GripL;
         public float GripR;
+        // World Space Hand Position
         public Vector3 HandPosL;
         public Vector3 HandPosR;
+        // World Space Hand Rotation
         public Quaternion HandRotL;
         public Quaternion HandRotR;
         

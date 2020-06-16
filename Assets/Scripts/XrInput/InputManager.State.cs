@@ -9,6 +9,9 @@ namespace XrInput
         {
             InputPrev = Input;
 
+            var xrRigRotation = XRRig.rotation;
+            
+            // Read values and then convert to world space
             LeftHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripL);
             LeftHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
             LeftHand.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotL);
@@ -17,6 +20,12 @@ namespace XrInput
             RightHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosR);
             RightHand.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotR);
 
+            // Convert to world space
+            Input.HandPosL = XRRig.TransformPoint(Input.HandPosL);
+            Input.HandRotL *= Quaternion.Inverse(xrRigRotation);
+            Input.HandPosR = XRRig.TransformPoint(Input.HandPosR);
+            Input.HandRotR *= Quaternion.Inverse(xrRigRotation);
+            
             // Brush Resizing
             if (RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisValue))
             {
