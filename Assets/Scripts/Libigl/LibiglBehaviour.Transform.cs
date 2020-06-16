@@ -11,9 +11,12 @@ namespace Libigl
         public Quaternion Rotate;
         public float Scale;
 
+        public PivotMode PivotMode;
+        public Vector3 Pivot;
+
         public static TransformDelta Identity()
         {
-            return new TransformDelta {Rotate = Quaternion.identity, Scale = 1f};
+            return new TransformDelta {Rotate = Quaternion.identity, Scale = 1f, PivotMode = InputManager.Input.ActivePivotMode};
         }
 
         public void Add(TransformDelta other)
@@ -114,13 +117,23 @@ namespace Libigl
             
             // Get & Consume the transformation
             var transformDelta = TransformDelta.Identity();
-            GetTransformDelta(ref transformDelta, false);
+            GetTransformDelta(ref transformDelta, true);
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
             uTransform.Translate(transformDelta.Translate, Space.World);
-            uTransform.rotation = transformDelta.Rotate * uTransform.rotation;
             uTransform.localScale *= transformDelta.Scale;
+
+            var pivotLocal = uTransform.localScale.CwiseMul(uTransform.InverseTransformPoint(transformDelta.Pivot));
+            if (transformDelta.PivotMode != PivotMode.Mesh)
+                uTransform.position += uTransform.rotation * pivotLocal;
+            
+            uTransform.rotation = transformDelta.Rotate * uTransform.rotation;
+            
+            if (transformDelta.PivotMode != PivotMode.Mesh)
+                uTransform.position -= uTransform.rotation * pivotLocal;
+            
+            Debug.DrawRay(transformDelta.Pivot, uTransform.rotation * -pivotLocal, Color.magenta);
         }
 
         private void ApplyTransformToSelection()
@@ -128,7 +141,7 @@ namespace Libigl
             if (!_doTransformL && !_doTransformR) return;
 
             Input.DoTransform = true;
-            GetTransformDelta(ref Input.TransformDelta, true);
+            GetTransformDelta(ref Input.TransformDelta, false);
         }
 
         private void PreExecuteTransform()
@@ -169,12 +182,16 @@ namespace Libigl
         #region --- Calculating TransformDelta
 
         // Only for selections, transforming the mesh is done directly
-        private void GetTransformDelta(ref TransformDelta transformDelta, bool transformSelection)
+        private void GetTransformDelta(ref TransformDelta transformDelta, bool transformMesh)
         {
             if(_isTwoHanded)
-                GetRotateScaleJoint(ref transformDelta, transformSelection);
+                GetRotateScaleJoint(ref transformDelta, transformMesh);
             else if(_primaryTransformHand ? _doTransformR : _doTransformL)
-                GetTranslate(_primaryTransformHand, ref transformDelta, transformSelection);
+                GetTranslate(_primaryTransformHand, ref transformDelta, transformMesh);
+
+            // Update pivot to latest (overwrites for now)
+            if (InputManager.Input.ActivePivotMode == PivotMode.Hand)
+                transformDelta.Pivot = _primaryTransformHand ? InputManager.Input.HandPosR : InputManager.Input.HandPosL;
 
             ResetTransformStartPositions();
         }
