@@ -180,7 +180,7 @@ namespace Libigl
         }
 
 
-        private void GetTranslate(bool isRight, ref TransformDelta transformDelta, bool withRotate = true)
+        private void GetTranslate(bool isRight, ref TransformDelta transformDelta, bool withRotate = false)
         {
             Vector3 translate;
             if (isRight)
@@ -203,8 +203,25 @@ namespace Libigl
             transformDelta.Rotate *= Quaternion.Lerp(Quaternion.identity, rotate, softFactor);
         }
 
-        private void GetRotateScaleJoint(ref TransformDelta transformDelta)
+        private void GetRotateScaleJoint(ref TransformDelta transformDelta, bool withRotate = false)
         {
+            // Soft editing
+            var softFactor = _primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
+            var softFactorSecondary = !_primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
+
+            // Scale
+            var scale = (InputManager.Input.HandPosL - InputManager.Input.HandPosR).magnitude / 
+                        (_transformStartHandPosL - _transformStartHandPosR).magnitude;
+            
+            if (float.IsNaN(scale)) scale = 1f;
+            scale = (scale -1) * softFactorSecondary + 1;
+            
+            transformDelta.Scale *= scale;
+            
+            
+            // Rotate - Optional
+            if(!withRotate) return;
+            
             Vector3 v0, v1;
             if(_primaryTransformHand)
             {
@@ -218,26 +235,12 @@ namespace Libigl
             }
             v0 = LibiglMesh.transform.InverseTransformPoint(v0);
             v1 = LibiglMesh.transform.InverseTransformPoint(v1);
-
-            // Soft editing
-            var softFactor = _primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
-            var softFactorSecondary = !_primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
-
-            // Rotate
+            
             var axis = Vector3.Cross(v0, v1);
             var angle = Vector3.Angle(v0, v1);
             
             angle *= softFactorSecondary;
             transformDelta.Rotate *= Quaternion.AngleAxis(angle, axis);
-            
-            // Scale
-            var scale = (InputManager.Input.HandPosL - InputManager.Input.HandPosR).magnitude / 
-                        (_transformStartHandPosL - _transformStartHandPosR).magnitude;
-            
-            if (float.IsNaN(scale)) scale = 1f;
-            scale = (scale -1) * softFactorSecondary + 1;
-            
-            transformDelta.Scale *= scale;
         }
 
         #endregion
