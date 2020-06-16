@@ -6,6 +6,7 @@ namespace UI
     public class UiInputHintsData : ScriptableObject
     {
         public UiInputLabelData title;
+        public UiInputLabelData help;
         public UiInputLabelData trigger;
         public UiInputLabelData grip;
         public UiInputLabelData primaryBtn;

@@ -6,6 +6,7 @@ namespace UI
     public class UiInputHints : MonoBehaviour
     {
         public UiInputLabel title;
+        public UiInputLabel help;
         public UiInputLabel trigger;
         public UiInputLabel grip;
         public UiInputLabel primaryBtn;
@@ -16,6 +17,7 @@ namespace UI
         public void SetData(UiInputHintsData data)
         {
             title.SetData(data.title);
+            help.SetData(data.help);
             trigger.SetData(data.trigger);
             grip.SetData(data.grip);
             primaryBtn.SetData(data.primaryBtn);
