@@ -131,8 +131,8 @@ namespace XrInput
                     handAnimator = go.GetComponent<Animator>();
 
                 inputHints = go.GetComponentInChildren<UiInputHints>();
-                if (inputHints && State.ActiveTool < toolInputHints.Count)
-                    inputHints.SetData(toolInputHints[State.ActiveTool]);
+                if (inputHints && State.ActiveTool.GetHashCode() < toolInputHints.Count)
+                    inputHints.SetData(toolInputHints[State.ActiveTool.GetHashCode()]);
 
                 brush = go.GetComponentInChildren<XrBrush>();
                 if (brush) brush.Initialize(isRight);
@@ -170,7 +170,7 @@ namespace XrInput
                 // Changing Active Tool
                 handRigL.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out var secondaryBtnPressed, 0.2f);
                 if (secondaryBtnPressed && !_prevSecondaryBtnPressedL)
-                    SetActiveTool((State.ActiveTool + 1) % ToolType.Size);
+                    SetActiveTool((ToolType) ((State.ActiveTool.GetHashCode() + 1) % Enum.GetNames(typeof(ToolType)).Length));
                 _prevSecondaryBtnPressedL = secondaryBtnPressed;
 
                 // Toggling UI hints
@@ -225,21 +225,21 @@ namespace XrInput
         /// <summary>
         /// Sets the active tool and updates the UI
         /// </summary>
-        public void SetActiveTool(int value)
+        public void SetActiveTool(ToolType value)
         {
             State.ActiveTool = value;
 
             if(HandL.isValid)
             {
-                if (HandHintsL && value < toolInputHintsL.Length)
-                    HandHintsL.SetData(toolInputHintsL[value]);
+                if (HandHintsL && value.GetHashCode() < toolInputHintsL.Length)
+                    HandHintsL.SetData(toolInputHintsL[value.GetHashCode()]);
                 if (BrushL) BrushL.OnActiveToolChanged();
             }
 
             if(HandR.isValid)
             {
-                if (HandHintsR && value < toolInputHintsR.Length)
-                    HandHintsR.SetData(toolInputHintsR[value]);
+                if (HandHintsR && value.GetHashCode() < toolInputHintsR.Length)
+                    HandHintsR.SetData(toolInputHintsR[value.GetHashCode()]);
                 if (BrushR) BrushR.OnActiveToolChanged();
             }
         }
