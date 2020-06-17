@@ -103,21 +103,6 @@ struct UMeshDataNative
 	int FSize;
 };
 
-using Color_t = Eigen::RowVector4f;
-struct Color{
-	static Color_t White;
-	static Color_t Black;
-	static Color_t Red;
-	static Color_t Green;
-	static Color_t Blue;
-	static Color_t Orange;
-	static Color_t Purple;
-	static Color_t GreenLight;
-	static Color_t BlueLight;
-	static Color_t Yellow;
-	static const Color_t& GetColorById(int selectionId);
-};
-
 struct SelectionMode{
 	static const unsigned int Add = 0;
 	static const unsigned int Subtract = 1;

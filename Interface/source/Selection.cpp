@@ -1,5 +1,6 @@
 #include "Selection.h"
 #include "Interface.h"
+#include "Util.h"
 #include <igl/slice.h>
 
 void SelectSphere(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode) {
