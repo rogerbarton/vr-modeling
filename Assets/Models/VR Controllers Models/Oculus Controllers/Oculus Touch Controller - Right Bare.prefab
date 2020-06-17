@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9103817578321791992}
   m_Layer: 0
-  m_Name: Oculus Touch Controller - Right
+  m_Name: Oculus Touch Controller - Right Bare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: -7722241350414709671}
   - component: {fileID: -955004427317760439}
   - component: {fileID: -2902551122032049323}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: r_0oculus_rifts_touch_all
   m_TagString: Untagged
   m_Icon: {fileID: 0}
