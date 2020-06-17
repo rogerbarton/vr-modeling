@@ -149,22 +149,14 @@ namespace UI
             _toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _shaderGroup.AddItem(_toggleWireframe.gameObject);
             _toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
-            _toggleWireframe.onClick.AddListener(() =>
-            {
-                var materials = behaviour.LibiglMesh.MeshRenderer.materials;
-                if (materials.Length == 1)
-                    materials = materials.Append(MeshManager.get.wireframeMaterial).ToArray();
-                else
-                    materials = new[] {materials.First()};
-                behaviour.LibiglMesh.MeshRenderer.materials = materials;
-            });
+            _toggleWireframe.onClick.AddListener(() => { _behaviour.LibiglMesh.ToggleWireframe(); });
             
             var toggleBounds = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _shaderGroup.AddItem(toggleBounds.gameObject);
             toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
             toggleBounds.onClick.AddListener(() =>
             {
-                behaviour.LibiglMesh.BoundingBox.gameObject.SetActive(!behaviour.LibiglMesh.BoundingBox.gameObject.activeSelf);
+                behaviour.LibiglMesh.ToggleBounds();
             });
 
             

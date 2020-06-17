@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -190,6 +192,22 @@ namespace Libigl
         {
             BoundingBox.localPosition = Mesh.bounds.center;
             BoundingBox.localScale = 2 * Mesh.bounds.extents;
+        }
+
+        public void ToggleWireframe()
+        {
+            IEnumerable<Material> materials = MeshRenderer.sharedMaterials;
+            if (materials.Contains(MeshManager.get.wireframeMaterial))
+                materials = materials.Except(new[] {MeshManager.get.wireframeMaterial});
+            else
+                materials = materials.Append(MeshManager.get.wireframeMaterial);
+
+            MeshRenderer.sharedMaterials = materials.ToArray();
+        }
+
+        public void ToggleBounds()
+        {
+            BoundingBox.gameObject.SetActive(!BoundingBox.gameObject.activeSelf);
         }
     }
 }
