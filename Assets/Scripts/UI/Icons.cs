@@ -33,6 +33,7 @@ namespace UI
         public Sprite leftRightDotted;
 
         // Transformations
+        public Sprite openWith;
         public Sprite handFilled;
         public Sprite hand;
         public Sprite autorenew;
@@ -43,6 +44,8 @@ namespace UI
         public Sprite star;
         public Sprite visible;
         public Sprite notVisible;
+        public Sprite locked;
+        public Sprite unlocked;
         
         public Sprite miscServices;
         public Sprite tune;
