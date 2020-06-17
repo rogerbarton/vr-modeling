@@ -86,7 +86,7 @@ extern "C" {
 
 	    // Create boundary conditions
 	    bool boundaryChanged = UpdateBoundary(state, boundaryMask);
-	    bool solveHarmonic = boundaryChanged || UpdateBoundaryConditions(state, boundaryMask);
+	    bool solveHarmonic = UpdateBoundaryConditions(state, boundaryMask) || boundaryChanged;
 
 	    if(!solveHarmonic) return;
 
@@ -106,7 +106,7 @@ extern "C" {
     void Arap(State* state, unsigned int boundaryMask) {
 
 	    bool recomputeArapData = UpdateBoundary(state, boundaryMask);
-	    bool solveArap = recomputeArapData || UpdateBoundaryConditions(state, boundaryMask);
+	    bool solveArap = UpdateBoundaryConditions(state, boundaryMask) || recomputeArapData;
 
 	    if (state->Native->ArapData == nullptr) {
 		    state->Native->ArapData = new igl::ARAPData<float>();

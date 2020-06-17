@@ -10,9 +10,9 @@ struct NativeState {
 	// --- Harmonic & ARAP
 
 	// Vertex indices part of the boundary
-	Eigen::VectorXi Boundary;
+	Eigen::VectorXi Boundary{Eigen::VectorXi::Zero(0)};
 	// Positions of vertices in the Boundary (rows correspond)
-	Eigen::MatrixXf BoundaryConditions;
+	Eigen::MatrixXf BoundaryConditions{Eigen::VectorXf::Zero(0)};
 	// The selections currently used for the Boundary
 	
 	unsigned int BoundaryMask{0};
