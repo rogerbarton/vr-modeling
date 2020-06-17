@@ -11,7 +11,7 @@ namespace Libigl
         
         private void UpdateInput()
         {
-            if (!InputManager.get.RightHand.isValid) return;
+            if (!LibiglMesh.IsActiveMesh()) return;
 
             switch (InputManager.Input.ActiveTool)
             {
@@ -29,11 +29,6 @@ namespace Libigl
         /// </summary>
         private void UpdateInputDefault()
         {
-            if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.secondaryButton,
-                out var secondaryBtnValue) && secondaryBtnValue)
-            {
-                Input.DoTransform = true;
-            }
         }
 
         /// <summary>
