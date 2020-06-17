@@ -40,11 +40,11 @@ public class MeshManager : MonoBehaviour
 
     private void Start()
     {
-        if(meshPrefabs.Length > 0)
-            SetActiveMesh(LoadMesh(meshPrefabs[0]));
-        
         _defaultLayer = LayerMask.NameToLayer("Default");
         _holographicLayer = LayerMask.NameToLayer("HolographicHighlight");
+        
+        if(meshPrefabs.Length > 0)
+            SetActiveMesh(LoadMesh(meshPrefabs[0]));
     }
 
     #region Mesh Creation
