@@ -2,7 +2,7 @@
 #include "Interface.h"
 #include <igl/slice.h>
 
-void SelectSphere(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode) {
+void SelectSphere(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode, bool discard) {
 	const Eigen::RowVector3f posEigen = position.AsEigenRow();
 	const unsigned int maskId = 1 << selectionId;
 	const float radiusSqr = radius * radius;
@@ -10,19 +10,23 @@ void SelectSphere(State* state, Vector3 position, float radius, int selectionId,
 	using BinaryExpr = const std::function<int(int, int)>;
 	BinaryExpr AddSelection = [&](int a, int s) -> int { return a << selectionId | s; };
 	BinaryExpr SubtractSelection = [&](int a, int s) -> int { return ~(a << selectionId) & s; };
-	BinaryExpr ToggleSelection = [&](int a, int s) -> int { return a << selectionId ^ s; };
+	BinaryExpr InvertSelection = [&](int a, int s) -> int { return a << selectionId ^ s; };
+	BinaryExpr DiscardSelection = [&](int a, int s) -> int { return a << selectionId; };
 
 	BinaryExpr* Apply;
-	if(selectionMode == SelectionMode::Add)
-		Apply = &AddSelection;
-	else if(selectionMode == SelectionMode::Subtract)
-		Apply = &SubtractSelection;
-	else if(selectionMode == SelectionMode::Toggle)
-		Apply = &ToggleSelection;
-	else
-	{
-		LOGERR("Invalid selection mode: " << selectionMode);
-		return;
+	if(discard)
+		Apply = &DiscardSelection;
+	else {
+		if (selectionMode == SelectionMode::Add) {
+			Apply = &AddSelection;
+		} else if (selectionMode == SelectionMode::Subtract)
+			Apply = &SubtractSelection;
+		else if (selectionMode == SelectionMode::Invert)
+			Apply = &InvertSelection;
+		else {
+			LOGERR("Invalid selection mode: " << selectionMode);
+			return;
+		}
 	}
 
 	*state->S = ((state->V->rowwise() - posEigen).array().square().matrix().rowwise().sum().array() < radiusSqr)
