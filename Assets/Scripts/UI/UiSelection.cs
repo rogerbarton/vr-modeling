@@ -52,26 +52,12 @@ namespace UI
             visibleBtn.onClick.AddListener(ToggleVisible);
             editBtn.onClick.AddListener(SetAsActive);
             clearBtn.onClick.AddListener(Clear);
+            
+            // Tooltips
+            UiInputHints.AddTooltip(visibleBtn.gameObject, "Toggle visibility");
+            UiInputHints.AddTooltip(editBtn.gameObject, () => _selectionId == _behaviour.Input.ActiveSelectionId ? "Active selection" : "Edit selection");
+            UiInputHints.AddTooltip(clearBtn.gameObject, "Clear selection, delete if empty & last selection");
 
-            // Hover Tooltip
-            var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
-            onHoverStart.callback.AddListener(_ =>
-            {
-                Debug.Log("Hover: visibleBtn");
-                InputManager.get.LeftHandHints.SetTooltip("Change selection visibility");
-            });
-            
-            var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
-            onHoverEnd.callback.AddListener(_ =>
-            {
-                InputManager.get.LeftHandHints.ClearTooltip();
-            });
-            
-            var trigger = visibleBtn.gameObject.AddComponent<EventTrigger>();
-            trigger.triggers.Add(onHoverStart);
-            trigger.triggers.Add(onHoverEnd);
-            
-            
             // Apply current values
             ToggleVisibleSprite((behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
             

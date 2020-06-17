@@ -1,5 +1,7 @@
-using TMPro;
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using XrInput;
 
 namespace UI
 {
@@ -34,6 +36,46 @@ namespace UI
         public void ClearTooltip()
         {
             help.gameObject.SetActive(false);
+        }
+
+        public static void AddTooltip(GameObject uiElement, string msg)
+        {
+            // Hover Tooltip
+            var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
+            onHoverStart.callback.AddListener(_ =>
+            {
+                InputManager.get.LeftHandHints.SetTooltip(msg);
+            });
+            
+            var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
+            onHoverEnd.callback.AddListener(_ =>
+            {
+                InputManager.get.LeftHandHints.ClearTooltip();
+            });
+            
+            var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Add(onHoverStart);
+            trigger.triggers.Add(onHoverEnd);
+        }
+        
+        public static void AddTooltip(GameObject uiElement, Func<string> msg)
+        {
+            // Hover Tooltip
+            var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
+            onHoverStart.callback.AddListener(_ =>
+            {
+                InputManager.get.LeftHandHints.SetTooltip(msg());
+            });
+            
+            var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
+            onHoverEnd.callback.AddListener(_ =>
+            {
+                InputManager.get.LeftHandHints.ClearTooltip();
+            });
+            
+            var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
+            trigger.triggers.Add(onHoverStart);
+            trigger.triggers.Add(onHoverEnd);
         }
     }
 }

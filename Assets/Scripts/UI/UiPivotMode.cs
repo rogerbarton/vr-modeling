@@ -23,6 +23,11 @@ namespace UI
                 icons[i].GetComponent<Button>().onClick.AddListener(() => { SetMode((PivotMode) i1); });
                 icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
             }
+            
+            // Tooltips
+            UiInputHints.AddTooltip(icons[0].gameObject, "Pivot around mesh center");
+            UiInputHints.AddTooltip(icons[1].gameObject, "Pivot around hand");
+            UiInputHints.AddTooltip(icons[2].gameObject, "Pivot around active selection mean");
         }
 
         public void SetMode(PivotMode mode)

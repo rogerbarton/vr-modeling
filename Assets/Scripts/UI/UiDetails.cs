@@ -86,6 +86,8 @@ namespace UI
             _harmonicToggle.text.text = "Harmonic";
             _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input.DoHarmonic = true; });
             _harmonicToggle.toggle.isOn = behaviour.Input.DoHarmonicRepeat;
+            UiInputHints.AddTooltip(_harmonicToggle.button.gameObject, "Run harmonic once");
+            UiInputHints.AddTooltip(_harmonicToggle.toggle.gameObject, "Run harmonic continuously");
             _harmonicToggle.toggle.onValueChanged.AddListener(value =>
             {
                 behaviour.Input.DoHarmonic = value;
@@ -109,6 +111,8 @@ namespace UI
             _arapToggle.text.text = "ARAP";
             _arapToggle.button.onClick.AddListener(() => { behaviour.Input.DoArap = true; });
             _arapToggle.toggle.isOn = behaviour.Input.DoArapRepeat;
+            UiInputHints.AddTooltip(_arapToggle.button.gameObject, "Run As-Rigid-As-Possible once");
+            UiInputHints.AddTooltip(_arapToggle.toggle.gameObject, "Run As-Rigid-As-Possible continuously");
             _arapToggle.toggle.onValueChanged.AddListener(value =>
             {
                 behaviour.Input.DoArap = value;
@@ -175,7 +179,6 @@ namespace UI
             // Misc
             var objectGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             objectGroup.title.text = "Object";
-            objectGroup.SetVisibility(false);
 
             var deleteBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             objectGroup.AddItem(deleteBtn.gameObject);

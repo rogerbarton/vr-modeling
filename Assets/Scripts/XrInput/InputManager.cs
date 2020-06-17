@@ -31,7 +31,7 @@ namespace XrInput
 
         [SerializeField] private XRController leftHandRig = default;
         [NonSerialized] public InputDevice LeftHand;
-        [NonSerialized] public UiInputHints LeftHandHints;
+        [NonSerialized] public UiInputHints LeftHandHints; // TODO: move to UiManager
 
         // Right Hand
         public InputDeviceCharacteristics rightHandChar =
