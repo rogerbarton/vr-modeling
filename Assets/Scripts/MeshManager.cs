@@ -22,7 +22,9 @@ public class MeshManager : MonoBehaviour
 
     public static event Action ActiveMeshSet = delegate {};
     public Material wireframeMaterial;
-
+    private static int _defaultLayer;
+    private static int _holographicLayer;
+    
     public GameObject boundingBoxPrefab;
 
     private void Awake()
@@ -40,6 +42,9 @@ public class MeshManager : MonoBehaviour
     {
         if(meshPrefabs.Length > 0)
             SetActiveMesh(LoadMesh(meshPrefabs[0]));
+        
+        _defaultLayer = LayerMask.NameToLayer("Default");
+        _holographicLayer = LayerMask.NameToLayer("HolographicHighlight");
     }
 
     #region Mesh Creation
@@ -132,6 +137,9 @@ public class MeshManager : MonoBehaviour
     public static void SetActiveMesh(LibiglMesh libiglMesh)
     {
         if(ActiveMesh == libiglMesh) return;
+
+        if(ActiveMesh) ActiveMesh.gameObject.layer = _defaultLayer;
+        libiglMesh.gameObject.layer = _holographicLayer;
         
         ActiveMesh = libiglMesh;
         ActiveMeshSet();

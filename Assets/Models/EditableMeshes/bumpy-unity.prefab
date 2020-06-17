@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5321938744799397802}
   - component: {fileID: 2367591517706681380}
   - component: {fileID: 1786660327045381893}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: bumpy-unity
   m_TagString: Untagged
   m_Icon: {fileID: 0}

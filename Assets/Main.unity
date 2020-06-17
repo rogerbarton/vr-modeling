@@ -190,11 +190,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6639996736880469515, guid: d46b50af8be5587489b94d964055c7aa,
         type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: d46b50af8be5587489b94d964055c7aa,
-        type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -277,11 +272,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: bumpy-unity
-      objectReference: {fileID: 0}
-    - target: {fileID: 2411799025839727657, guid: d2a21a023f9c2e24ab872c2358302d0d,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5321938744799397802, guid: d2a21a023f9c2e24ab872c2358302d0d,
         type: 3}
@@ -820,11 +810,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: bumpy-libigl (2)
       objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: 749eb9bb51e951b40bdf9c434714b1bf,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1024,11 +1009,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: bumpy-libigl (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: 749eb9bb51e951b40bdf9c434714b1bf,
         type: 3}
@@ -2329,11 +2309,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: cow
       objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: af7084999efae654082ef77ea963b381,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 6507119248310564417, guid: af7084999efae654082ef77ea963b381,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2403,11 +2378,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: bumpy-libigl (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: 749eb9bb51e951b40bdf9c434714b1bf,
         type: 3}
@@ -2743,11 +2713,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: bumpy-libigl (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: 749eb9bb51e951b40bdf9c434714b1bf,
         type: 3}
@@ -3159,11 +3124,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 412ea41b9f801a04fb3242cd0d70c1e8,
         type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 412ea41b9f801a04fb3242cd0d70c1e8,
-        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -3320,11 +3280,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: bumpy-libigl
-      objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: 749eb9bb51e951b40bdf9c434714b1bf,
         type: 3}
@@ -3751,11 +3706,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: bumpy-libigl (5)
-      objectReference: {fileID: 0}
-    - target: {fileID: -6639996736880469515, guid: 749eb9bb51e951b40bdf9c434714b1bf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 406178398203839086, guid: 749eb9bb51e951b40bdf9c434714b1bf,
         type: 3}
