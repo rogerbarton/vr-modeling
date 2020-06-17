@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR;
 using XrInput;
 
 namespace Libigl

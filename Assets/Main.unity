@@ -1979,6 +1979,7 @@ MonoBehaviour:
   handyman: {fileID: 21300000, guid: 687113760b0344d40870d4c2437445e1, type: 3}
   close: {fileID: 21300000, guid: af48906e5f578e0498df5dba120f4d5f, type: 3}
   warn: {fileID: 21300000, guid: 063819cc71cad814fa20cf1a796e9843, type: 3}
+  info: {fileID: 21300000, guid: d27aa347a4f0bab4db3287618722519b, type: 3}
   help: {fileID: 21300000, guid: 1a54f08e37d267e48bde65b3d47ca39e, type: 3}
 --- !u!23 &726841470 stripped
 MeshRenderer:

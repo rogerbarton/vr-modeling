@@ -53,6 +53,7 @@ namespace UI
 
         public Sprite close;
         public Sprite warn;
+        public Sprite info;
         public Sprite help;
         
         private void Awake()
