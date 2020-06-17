@@ -37,7 +37,7 @@ namespace UI
             UiInputHints.AddTooltip(icons[1].gameObject, "Remove from selection");
             UiInputHints.AddTooltip(icons[2].gameObject, "Invert selection");
             UiInputHints.AddTooltip(newSelectionOnDrawBtn.gameObject, "Add each stroke into a new selection");
-            UiInputHints.AddTooltip(newSelectionOnDrawBtn.gameObject, "Clear the selection before each stroke");
+            UiInputHints.AddTooltip(discardSelectionOnDrawBtn.gameObject, "Clear the selection before each stroke");
         }
 
         public void SetMode(SelectionMode mode)

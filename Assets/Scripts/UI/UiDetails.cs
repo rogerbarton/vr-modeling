@@ -43,7 +43,7 @@ namespace UI
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
-            UiInputHints.AddTooltip(activeImage.gameObject, () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
+            UiInputHints.AddTooltip(activeImage.transform.parent.gameObject, () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
 
             
             _listParent = GetComponentInChildren<VerticalLayoutGroup>().transform;

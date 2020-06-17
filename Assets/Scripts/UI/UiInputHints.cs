@@ -47,6 +47,12 @@ namespace UI
             SetData(_currentData);
         }
         
+        /// <summary>
+        /// Display the message when hovering over this UI element.
+        /// Note: Must be attached to the gameObject with the button/toggle component, otherwise clicking may be blocked
+        /// </summary>
+        /// <param name="uiElement">GameObject with the Button/Toggle UI component</param>
+        /// <param name="msg">Message to display when hovering</param>
         public static void AddTooltip(GameObject uiElement, string msg)
         {
             // Hover Tooltip
