@@ -33,6 +33,7 @@ namespace XrInput
         // Selection
         public SelectionMode ActiveSelectionMode;
         public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
+        public bool DiscardSelectionOnDraw; // Clear the selection when starting a stroke
 
         public static SharedInputState GetInstance()
         {
@@ -62,7 +63,8 @@ namespace XrInput
     {
         Add,
         Subtract,
-        Toggle
+        Invert,
+        Discard
     }
 
     public enum PivotMode

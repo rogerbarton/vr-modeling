@@ -41,7 +41,7 @@ namespace Libigl
 
             if (InputManager.Input.primaryBtnR)
             {
-                if (InputManager.Input.ActiveSelectionMode != SelectionMode.Toggle || !InputManager.InputPrev.primaryBtnR)
+                if (InputManager.Input.ActiveSelectionMode != SelectionMode.Invert || !InputManager.InputPrev.primaryBtnR)
                 {
                     Input.DoSelect = true;
                     Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);

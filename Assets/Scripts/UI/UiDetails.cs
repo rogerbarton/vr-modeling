@@ -222,10 +222,15 @@ namespace UI
             progressIcon.PreExecute();
 
             // Add a selection in case of the NewSelectionOnDraw
-            if (InputManager.Input.NewSelectionOnDraw &&
-                _behaviour.Input.DoSelect && !_behaviour.Input.DoSelectPrev && // Just started stroke 
-                _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty
-                AddSelection();
+            if(_behaviour.Input.DoSelect && !_behaviour.Input.DoSelectPrev) // Just started stroke 
+            {
+                if (InputManager.Input.NewSelectionOnDraw &&
+                    _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty
+                    AddSelection();
+
+                if (InputManager.Input.DiscardSelectionOnDraw)
+                    _behaviour.Input.DoClearSelection |= 1U << _behaviour.Input.ActiveSelectionId;
+            }
 
             // Copy UI selection count to the state (as it is shared with C++)
             _behaviour.State->SCount = _behaviour.Input.SCountUi;
