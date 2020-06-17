@@ -41,26 +41,17 @@ namespace Libigl
         /// </summary>
         private void UpdateInputSelect()
         {
-            // Change the selection with the left hand primary2DAxis.y
-            if (InputManager.get.LeftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisL))
-            {
-                if (Mathf.Abs(_lastPrimaryAxisValueL.y) < 0.05f && Mathf.Abs(primaryAxisL.y) > 0.05f)
-                    Input.ChangeActiveSelection((int) Mathf.Sign(primaryAxisL.y));
+            // Change the selection with the right hand primary2DAxis.x
+            if (Mathf.Abs(InputManager.Input.primaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.InputPrev.primaryAxisR.x) < 0.05f)
+                Input.ChangeActiveSelection((int) Mathf.Sign(InputManager.Input.primaryAxisR.x));
 
-                _lastPrimaryAxisValueL = primaryAxisL;
-            }
-
-            if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out var primaryBtnValue) &&
-                primaryBtnValue)
+            if (InputManager.Input.primaryBtnR)
             {
-                Input.DoSelect = true;
-                if (InputManager.get.RightHand.TryGetFeatureValue(CommonUsages.devicePosition,
-                    out var rightHandPos))
+                if (InputManager.Input.ActiveSelectionMode != SelectionMode.Toggle || !InputManager.InputPrev.primaryBtnR)
                 {
+                    Input.DoSelect = true;
                     Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
                 }
-                else
-                    Debug.LogWarning("Could not get Right Hand Position");
             }
         }
 

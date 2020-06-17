@@ -9,6 +9,14 @@ namespace XrInput
         {
             InputPrev = Input;
 
+            LeftHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnL);
+            LeftHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnL);
+            LeftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisL);
+            
+            RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnR);
+            RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnR);
+            RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisR);
+
             var xrRigRotation = XRRig.rotation;
             
             // Read values and then convert to world space
@@ -25,20 +33,20 @@ namespace XrInput
             Input.HandRotL *= Quaternion.Inverse(xrRigRotation);
             Input.HandPosR = XRRig.TransformPoint(Input.HandPosR);
             Input.HandRotR *= Quaternion.Inverse(xrRigRotation);
-            
-            // Brush Resizing
-            if (RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out var primaryAxisValue))
-            {
-                if (Mathf.Abs(primaryAxisValue.y) > 0.01f)
-                {
-                    Input.BrushRadius = Mathf.Clamp(
-                        Input.BrushRadius + XrBrush.ResizeSpeed * primaryAxisValue.y * Time.deltaTime,
-                        XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
 
-                    BrushL.SetRadius(Input.BrushRadius);
-                    BrushR.SetRadius(Input.BrushRadius);
-                }
+
+            // Brush Resizing
+            if (Mathf.Abs(Input.primaryAxisR.y) > 0.01f)
+            {
+                Input.BrushRadius = Mathf.Clamp(
+                    Input.BrushRadius + XrBrush.ResizeSpeed * Input.primaryAxisR.y * Time.deltaTime,
+                    XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
+
+                BrushL.SetRadius(Input.BrushRadius);
+                BrushR.SetRadius(Input.BrushRadius);
             }
+
+            
         }
     }
 }
