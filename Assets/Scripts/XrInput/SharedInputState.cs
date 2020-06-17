@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace XrInput
 {
@@ -6,7 +6,69 @@ namespace XrInput
     {
         // Tools & Input State
         public ToolType ActiveTool;
-        
+
+        public ToolTransformMode ToolTransformMode
+        {
+            get => _toolTransformMode;
+            set
+            {
+                if (_toolTransformMode == value) return;
+                _toolTransformMode = value;
+                
+                switch (value)
+                {
+                    case ToolTransformMode.Idle:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformIdle);
+                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformIdle);
+                        break;
+                    case ToolTransformMode.TransformingL:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformTransformingL);
+                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformTransformingL);
+                        break;
+                    case ToolTransformMode.TransformingR:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformTransformingR);
+                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformTransformingR);
+                        break;
+                    case ToolTransformMode.TransformingLR:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformTransformingLR);
+                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformTransformingLR);
+                        break;
+                }
+            }
+        }
+        private ToolTransformMode _toolTransformMode;
+
+        public ToolSelectMode ToolSelectMode
+        {
+            get => _toolSelectMode;
+            set
+            {
+                if (_toolSelectMode == value) return;
+                _toolSelectMode = value;
+                
+                switch (value)
+                {
+                    case ToolSelectMode.Idle:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectIdle);
+                        break;
+                    case ToolSelectMode.Selecting:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectSelecting);
+                        break;
+                    case ToolSelectMode.TransformingL:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectTransformL);
+                        break;
+                    case ToolSelectMode.TransformingR:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectTransformR);
+                        break;
+                    case ToolSelectMode.TransformingLR:
+                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectTransformLR);
+                        break;
+                }
+
+            }
+        }
+        private ToolSelectMode _toolSelectMode;
+
         // Generic Input
         public float GripL;
         public float GripR;
@@ -48,6 +110,23 @@ namespace XrInput
                 TransformWithRotate = true
             };
         }
+    }
+
+    public enum ToolSelectMode
+    {
+        Idle,
+        Selecting,
+        TransformingL,
+        TransformingR,
+        TransformingLR
+    }
+
+    public enum ToolTransformMode
+    {
+        Idle,
+        TransformingL,
+        TransformingR,
+        TransformingLR,
     }
 
     public enum ToolType

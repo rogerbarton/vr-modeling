@@ -26,6 +26,13 @@ namespace Libigl
         /// </summary>
         private void UpdateInputTransform()
         {
+            // Change the transform tool mode
+            if (_doTransformL)
+                InputManager.State.ToolTransformMode = _doTransformR ? ToolTransformMode.TransformingLR : ToolTransformMode.TransformingL;
+            else if (_doTransformR)
+                InputManager.State.ToolTransformMode = ToolTransformMode.TransformingR;
+            else
+                InputManager.State.ToolTransformMode = ToolTransformMode.Idle;
         }
 
         /// <summary>
@@ -33,6 +40,20 @@ namespace Libigl
         /// </summary>
         private void UpdateInputSelect()
         {
+            switch (InputManager.State.ToolSelectMode)
+            {
+                case ToolSelectMode.Idle:
+                    break;
+                case ToolSelectMode.Selecting:
+                    break;
+                case ToolSelectMode.TransformingL:
+                    break;
+                case ToolSelectMode.TransformingR:
+                    break;
+                case ToolSelectMode.TransformingLR:
+                    break;
+            }
+            
             // Change the selection with the right hand primary2DAxis.x
             if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
                 ChangeActiveSelection((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));

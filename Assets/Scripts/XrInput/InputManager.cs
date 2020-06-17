@@ -60,6 +60,21 @@ namespace XrInput
 
         public UiInputHintsData[] toolInputHintsL;
         public UiInputHintsData[] toolInputHintsR;
+        
+        public UiInputHintsData inputHintsLTransformIdle;
+        public UiInputHintsData inputHintsLTransformTransformingL;
+        public UiInputHintsData inputHintsLTransformTransformingR;
+        public UiInputHintsData inputHintsLTransformTransformingLR;
+        public UiInputHintsData inputHintsRTransformIdle;
+        public UiInputHintsData inputHintsRTransformTransformingL;
+        public UiInputHintsData inputHintsRTransformTransformingR;
+        public UiInputHintsData inputHintsRTransformTransformingLR;
+        
+        public UiInputHintsData inputHintsSelectIdle;
+        public UiInputHintsData inputHintsSelectSelecting;
+        public UiInputHintsData inputHintsSelectTransformL;
+        public UiInputHintsData inputHintsSelectTransformR;
+        public UiInputHintsData inputHintsSelectTransformLR;
     
         [NonSerialized] public XrBrush BrushL;
         [NonSerialized] public XrBrush BrushR;

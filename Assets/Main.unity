@@ -1839,6 +1839,27 @@ MonoBehaviour:
   toolInputHintsR:
   - {fileID: 11400000, guid: 34ece0a978a5bb04b883a3d60b335082, type: 2}
   - {fileID: 11400000, guid: e477aab04f350ea42ae91b68bbcf9f7f, type: 2}
+  inputHintsLTransformIdle: {fileID: 11400000, guid: 7dc2ca8f65633424381d48f8928090de,
+    type: 2}
+  inputHintsLTransformTransformingL: {fileID: 11400000, guid: 2423c9e16707d0e49b05e3fef0791add,
+    type: 2}
+  inputHintsLTransformTransformingR: {fileID: 11400000, guid: 298493ef4b7fd2441ae9635ae246cd67,
+    type: 2}
+  inputHintsLTransformTransformingLR: {fileID: 11400000, guid: 1811fa4f423a0ce4f91162461f1c0ae4,
+    type: 2}
+  inputHintsRTransformIdle: {fileID: 11400000, guid: 9c160f350db8d594da975076553ce48a,
+    type: 2}
+  inputHintsRTransformTransformingL: {fileID: 11400000, guid: 9b2b3bd58c48fc2488d646a51b0dda91,
+    type: 2}
+  inputHintsRTransformTransformingR: {fileID: 11400000, guid: 7cc41d2997038a641b5503b8349d3e73,
+    type: 2}
+  inputHintsRTransformTransformingLR: {fileID: 11400000, guid: 2d592767777562c428f4f6b8507adee8,
+    type: 2}
+  inputHintsSelectIdle: {fileID: 0}
+  inputHintsSelectSelecting: {fileID: 0}
+  inputHintsSelectTransformL: {fileID: 0}
+  inputHintsSelectTransformR: {fileID: 0}
+  inputHintsSelectTransformLR: {fileID: 0}
 --- !u!1 &708273530
 GameObject:
   m_ObjectHideFlags: 0
