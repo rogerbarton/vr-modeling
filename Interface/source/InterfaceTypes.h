@@ -111,6 +111,10 @@ struct Color{
 	static Color_t Green;
 	static Color_t Blue;
 	static Color_t Orange;
+	static Color_t Purple;
+	static Color_t GreenLight;
+	static Color_t BlueLight;
+	static Color_t Yellow;
 	static const Color_t& GetColorById(int selectionId);
 };
 
