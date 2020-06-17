@@ -48,8 +48,8 @@ namespace Libigl
             {
                 VisibleSelectionMask = uint.MaxValue, 
                 HarmonicShowDisplacement = true,
-                Shared = InputManager.Input,
-                SharedPrev = InputManager.InputPrev,
+                Shared = InputManager.State,
+                SharedPrev = InputManager.StatePrev,
                 TransformDelta = TransformDelta.Identity()
             };
         }

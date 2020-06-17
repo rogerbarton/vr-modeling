@@ -5,45 +5,48 @@ namespace XrInput
 {
     public partial class InputManager
     {
+        /// <summary>
+        /// Updates the <see cref="SharedInputState"/> <see cref="State"/>
+        /// </summary>
         private void UpdateSharedState()
         {
-            InputPrev = Input;
+            StatePrev = State;
 
-            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnL);
-            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnL);
-            HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisL);
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.primaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.secondaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.primaryAxisL);
             
-            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnR);
-            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnR);
-            HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisR);
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.primaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.secondaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.primaryAxisR);
 
             var xrRigRotation = XRRig.rotation;
             
             // Read values and then convert to world space
-            HandL.TryGetFeatureValue(CommonUsages.grip, out Input.GripL);
-            HandL.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
-            HandL.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotL);
+            HandL.TryGetFeatureValue(CommonUsages.grip, out State.GripL);
+            HandL.TryGetFeatureValue(CommonUsages.devicePosition, out State.HandPosL);
+            HandL.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotL);
             
-            HandR.TryGetFeatureValue(CommonUsages.grip, out Input.GripR);
-            HandR.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosR);
-            HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotR);
+            HandR.TryGetFeatureValue(CommonUsages.grip, out State.GripR);
+            HandR.TryGetFeatureValue(CommonUsages.devicePosition, out State.HandPosR);
+            HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotR);
 
             // Convert to world space
-            Input.HandPosL = XRRig.TransformPoint(Input.HandPosL);
-            Input.HandRotL *= Quaternion.Inverse(xrRigRotation);
-            Input.HandPosR = XRRig.TransformPoint(Input.HandPosR);
-            Input.HandRotR *= Quaternion.Inverse(xrRigRotation);
+            State.HandPosL = XRRig.TransformPoint(State.HandPosL);
+            State.HandRotL *= Quaternion.Inverse(xrRigRotation);
+            State.HandPosR = XRRig.TransformPoint(State.HandPosR);
+            State.HandRotR *= Quaternion.Inverse(xrRigRotation);
 
 
             // Brush Resizing
-            if (Mathf.Abs(Input.primaryAxisR.y) > 0.01f)
+            if (Mathf.Abs(State.primaryAxisR.y) > 0.01f)
             {
-                Input.BrushRadius = Mathf.Clamp(
-                    Input.BrushRadius + XrBrush.ResizeSpeed * Input.primaryAxisR.y * Time.deltaTime,
+                State.BrushRadius = Mathf.Clamp(
+                    State.BrushRadius + XrBrush.ResizeSpeed * State.primaryAxisR.y * Time.deltaTime,
                     XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
 
-                BrushL.SetRadius(Input.BrushRadius);
-                BrushR.SetRadius(Input.BrushRadius);
+                BrushL.SetRadius(State.BrushRadius);
+                BrushR.SetRadius(State.BrushRadius);
             }
 
             

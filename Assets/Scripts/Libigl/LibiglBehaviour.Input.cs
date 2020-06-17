@@ -12,7 +12,7 @@ namespace Libigl
         {
             if (!LibiglMesh.IsActiveMesh()) return;
 
-            switch (InputManager.Input.ActiveTool)
+            switch (InputManager.State.ActiveTool)
             {
                 case ToolType.Default:
                     UpdateInputDefault();
@@ -36,12 +36,12 @@ namespace Libigl
         private void UpdateInputSelect()
         {
             // Change the selection with the right hand primary2DAxis.x
-            if (Mathf.Abs(InputManager.Input.primaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.InputPrev.primaryAxisR.x) < 0.05f)
-                ChangeActiveSelection((int) Mathf.Sign(InputManager.Input.primaryAxisR.x));
+            if (Mathf.Abs(InputManager.State.primaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.primaryAxisR.x) < 0.05f)
+                ChangeActiveSelection((int) Mathf.Sign(InputManager.State.primaryAxisR.x));
 
-            if (InputManager.Input.primaryBtnR)
+            if (InputManager.State.primaryBtnR)
             {
-                if (InputManager.Input.ActiveSelectionMode != SelectionMode.Invert || !InputManager.InputPrev.primaryBtnR)
+                if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || !InputManager.StatePrev.primaryBtnR)
                 {
                     Input.DoSelect = true;
                     Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
@@ -57,7 +57,7 @@ namespace Libigl
         private void PreExecuteInput()
         {
             Input.SharedPrev = Input.Shared;
-            Input.Shared = InputManager.Input;
+            Input.Shared = InputManager.State;
             
             Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
             Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);

@@ -21,7 +21,7 @@ namespace UI
 
         public void Initialize()
         {
-            _mode = InputManager.Input.ActiveSelectionMode;
+            _mode = InputManager.State.ActiveSelectionMode;
             for (var i = 0; i < icons.Length; i++)
             {
                 var i1 = i;
@@ -46,13 +46,13 @@ namespace UI
 
             icons[_mode.GetHashCode()].color = Color.white;
             _mode = mode;
-            InputManager.Input.ActiveSelectionMode = _mode;
+            InputManager.State.ActiveSelectionMode = _mode;
             icons[_mode.GetHashCode()].color = activeColor;
 
             if (_mode != (int) SelectionMode.Add)
             {
-                InputManager.Input.NewSelectionOnDraw = false;
-                InputManager.Input.DiscardSelectionOnDraw = false;
+                InputManager.State.NewSelectionOnDraw = false;
+                InputManager.State.DiscardSelectionOnDraw = false;
                 RepaintNewSelectionOnDrawBtn();
                 RepaintDiscardSelectionOnDrawBtn();
             }
@@ -60,34 +60,34 @@ namespace UI
 
         public void ToggleNewSelectionOnDraw()
         {
-            if (!InputManager.Input.NewSelectionOnDraw)
+            if (!InputManager.State.NewSelectionOnDraw)
                 SetMode((int) SelectionMode.Add);
 
-            InputManager.Input.NewSelectionOnDraw = !InputManager.Input.NewSelectionOnDraw;
-            InputManager.Input.DiscardSelectionOnDraw = false;
+            InputManager.State.NewSelectionOnDraw = !InputManager.State.NewSelectionOnDraw;
+            InputManager.State.DiscardSelectionOnDraw = false;
             RepaintNewSelectionOnDrawBtn();
             RepaintDiscardSelectionOnDrawBtn();
         }
 
         private void RepaintNewSelectionOnDrawBtn()
         {
-            newSelectionOnDrawBtn.image.color = InputManager.Input.NewSelectionOnDraw ? activeColor : Color.white;
+            newSelectionOnDrawBtn.image.color = InputManager.State.NewSelectionOnDraw ? activeColor : Color.white;
         }
         
         public void ToggleDiscardSelectionOnDraw()
         {
-            if (!InputManager.Input.DiscardSelectionOnDraw)
+            if (!InputManager.State.DiscardSelectionOnDraw)
                 SetMode((int) SelectionMode.Add);
 
-            InputManager.Input.DiscardSelectionOnDraw = !InputManager.Input.DiscardSelectionOnDraw;
-            InputManager.Input.NewSelectionOnDraw = false;
+            InputManager.State.DiscardSelectionOnDraw = !InputManager.State.DiscardSelectionOnDraw;
+            InputManager.State.NewSelectionOnDraw = false;
             RepaintNewSelectionOnDrawBtn();
             RepaintDiscardSelectionOnDrawBtn();
         }
 
         private void RepaintDiscardSelectionOnDrawBtn()
         {
-            discardSelectionOnDrawBtn.image.color = InputManager.Input.DiscardSelectionOnDraw ? activeColor : Color.white;
+            discardSelectionOnDrawBtn.image.color = InputManager.State.DiscardSelectionOnDraw ? activeColor : Color.white;
         }
     }
 }

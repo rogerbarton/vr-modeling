@@ -29,7 +29,7 @@ namespace XrInput
 
         public void OnActiveToolChanged()
         {
-            switch (InputManager.Input.ActiveTool)
+            switch (InputManager.State.ActiveTool)
             {
                 case ToolType.Default:
                     gameObject.SetActive(false);

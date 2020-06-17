@@ -16,7 +16,7 @@ namespace UI
         
         public void Initialize()
         {
-            _mode = InputManager.Input.ActivePivotMode;
+            _mode = InputManager.State.ActivePivotMode;
             for (var i = 0; i < icons.Length; i++)
             {
                 var i1 = i;
@@ -36,7 +36,7 @@ namespace UI
 
             icons[_mode.GetHashCode()].color = Color.white;
             _mode = mode;
-            InputManager.Input.ActivePivotMode = _mode;
+            InputManager.State.ActivePivotMode = _mode;
             icons[_mode.GetHashCode()].color = activeColor;
         }
     }

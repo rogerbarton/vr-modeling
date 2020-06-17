@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -11,9 +10,9 @@ namespace XrInput
     public partial class InputManager : MonoBehaviour
     {
         public static InputManager get;
-        public static SharedInputState Input;
+        public static SharedInputState State;
         // Input at the last frame (main thread)
-        public static SharedInputState InputPrev;
+        public static SharedInputState StatePrev;
 
         /// <summary>
         /// Get the XR Rig Transform, to determine world positions
@@ -90,8 +89,8 @@ namespace XrInput
             _handLineRendererL.material = filledLineMat;
             _handLineRendererR.material = filledLineMat;
 
-            Input = SharedInputState.GetInstance();
-            InputPrev = Input;
+            State = SharedInputState.GetInstance();
+            StatePrev = State;
 
             SetActiveTool(ToolType.Select);
         }
@@ -132,8 +131,8 @@ namespace XrInput
                     handAnimator = go.GetComponent<Animator>();
 
                 inputHints = go.GetComponentInChildren<UiInputHints>();
-                if (inputHints && Input.ActiveTool < toolInputHints.Count)
-                    inputHints.SetData(toolInputHints[Input.ActiveTool]);
+                if (inputHints && State.ActiveTool < toolInputHints.Count)
+                    inputHints.SetData(toolInputHints[State.ActiveTool]);
 
                 brush = go.GetComponentInChildren<XrBrush>();
                 if (brush) brush.Initialize(isRight);
@@ -171,7 +170,7 @@ namespace XrInput
                 // Changing Active Tool
                 handRigL.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out var secondaryBtnPressed, 0.2f);
                 if (secondaryBtnPressed && !_prevSecondaryBtnPressedL)
-                    SetActiveTool((Input.ActiveTool + 1) % ToolType.Size);
+                    SetActiveTool((State.ActiveTool + 1) % ToolType.Size);
                 _prevSecondaryBtnPressedL = secondaryBtnPressed;
 
                 // Toggling UI hints
@@ -228,7 +227,7 @@ namespace XrInput
         /// </summary>
         public void SetActiveTool(int value)
         {
-            Input.ActiveTool = value;
+            State.ActiveTool = value;
 
             if(HandL.isValid)
             {

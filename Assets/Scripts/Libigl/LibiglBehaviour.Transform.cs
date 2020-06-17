@@ -16,7 +16,7 @@ namespace Libigl
 
         public static TransformDelta Identity()
         {
-            return new TransformDelta {Rotate = Quaternion.identity, Scale = 1f, PivotMode = InputManager.Input.ActivePivotMode};
+            return new TransformDelta {Rotate = Quaternion.identity, Scale = 1f, PivotMode = InputManager.State.ActivePivotMode};
         }
 
         public void Add(TransformDelta other)
@@ -51,9 +51,9 @@ namespace Libigl
             
             // Map inputs to actions
             _doTransformPrevL = _doTransformL;
-            _doTransformL = InputManager.Input.GripL > PressThres;
+            _doTransformL = InputManager.State.GripL > PressThres;
             _doTransformPrevR = _doTransformR;
-            _doTransformR = InputManager.Input.GripR > PressThres;
+            _doTransformR = InputManager.State.GripR > PressThres;
             _isTwoHanded = _doTransformL && _doTransformR;
             _isTwoHandedPrev = _doTransformPrevL && _doTransformPrevR;
 
@@ -61,8 +61,8 @@ namespace Libigl
             if (_doTransformL && !_doTransformPrevL)
             {
                 // Set start pos/rot for appropriate hand
-                _transformStartHandPosL = InputManager.Input.HandPosL;
-                _transformStartHandRotL = InputManager.Input.HandRotL;
+                _transformStartHandPosL = InputManager.State.HandPosL;
+                _transformStartHandRotL = InputManager.State.HandRotL;
 
                 if (!_doTransformR)
                     _primaryTransformHand = false;
@@ -72,7 +72,7 @@ namespace Libigl
             if (!_doTransformL && _doTransformPrevL)
             {
                 // Add transformation to selection
-                if (InputManager.Input.ActiveTool == ToolType.Select)
+                if (InputManager.State.ActiveTool == ToolType.Select)
                     ApplyTransformToSelection();
                 
                 _primaryTransformHand = true;
@@ -83,8 +83,8 @@ namespace Libigl
             if (_doTransformR && !_doTransformPrevR)
             {
                 // Set start pos/rot for appropriate hand
-                _transformStartHandPosR = InputManager.Input.HandPosR;
-                _transformStartHandRotR = InputManager.Input.HandRotR;
+                _transformStartHandPosR = InputManager.State.HandPosR;
+                _transformStartHandRotR = InputManager.State.HandRotR;
 
                 if (!_doTransformL)
                     _primaryTransformHand = true;
@@ -94,13 +94,13 @@ namespace Libigl
             if (!_doTransformR && _doTransformPrevR)
             {
                 // Add transformation to selection
-                if (InputManager.Input.ActiveTool == ToolType.Select)
+                if (InputManager.State.ActiveTool == ToolType.Select)
                     ApplyTransformToSelection();
                 
                 _primaryTransformHand = false;
             }
             
-            if(InputManager.Input.ActiveTool == ToolType.Default)
+            if(InputManager.State.ActiveTool == ToolType.Default)
                 ApplyTransformToMesh();
         }
         
@@ -146,7 +146,7 @@ namespace Libigl
 
         private void PreExecuteTransform()
         {
-            if (InputManager.Input.ActiveTool == ToolType.Select && (_doTransformL || _doTransformR))
+            if (InputManager.State.ActiveTool == ToolType.Select && (_doTransformL || _doTransformR))
             {
                 ApplyTransformToSelection();
                 
@@ -167,10 +167,10 @@ namespace Libigl
 
         private void ResetTransformStartPositions()
         {
-            _transformStartHandPosL = InputManager.Input.HandPosL;
-            _transformStartHandRotL = InputManager.Input.HandRotL;
-            _transformStartHandPosR = InputManager.Input.HandPosR;
-            _transformStartHandRotR = InputManager.Input.HandRotR;
+            _transformStartHandPosL = InputManager.State.HandPosL;
+            _transformStartHandRotL = InputManager.State.HandRotL;
+            _transformStartHandPosR = InputManager.State.HandPosR;
+            _transformStartHandRotR = InputManager.State.HandRotR;
         }
         
         #endregion
@@ -190,8 +190,8 @@ namespace Libigl
                 GetTranslate(_primaryTransformHand, ref transformDelta, transformMesh);
 
             // Update pivot to latest (overwrites for now)
-            if (InputManager.Input.ActivePivotMode == PivotMode.Hand)
-                transformDelta.Pivot = _primaryTransformHand ? InputManager.Input.HandPosR : InputManager.Input.HandPosL;
+            if (InputManager.State.ActivePivotMode == PivotMode.Hand)
+                transformDelta.Pivot = _primaryTransformHand ? InputManager.State.HandPosR : InputManager.State.HandPosL;
 
             ResetTransformStartPositions();
         }
@@ -201,11 +201,11 @@ namespace Libigl
         {
             Vector3 translate;
             if (isRight)
-                translate = InputManager.Input.HandPosR - _transformStartHandPosR;
+                translate = InputManager.State.HandPosR - _transformStartHandPosR;
             else
-                translate = InputManager.Input.HandPosL - _transformStartHandPosL;
+                translate = InputManager.State.HandPosL - _transformStartHandPosL;
             
-            var softFactor = isRight ? InputManager.Input.GripR : InputManager.Input.GripL;
+            var softFactor = isRight ? InputManager.State.GripR : InputManager.State.GripL;
             transformDelta.Translate += translate * softFactor;
             
             // Rotate - Optional
@@ -213,9 +213,9 @@ namespace Libigl
 
             Quaternion rotate;
             if (isRight)
-                rotate = InputManager.Input.HandRotR * Quaternion.Inverse(_transformStartHandRotR);
+                rotate = InputManager.State.HandRotR * Quaternion.Inverse(_transformStartHandRotR);
             else
-                rotate = InputManager.Input.HandRotL * Quaternion.Inverse(_transformStartHandRotL);
+                rotate = InputManager.State.HandRotL * Quaternion.Inverse(_transformStartHandRotL);
 
             transformDelta.Rotate = Quaternion.Lerp(Quaternion.identity, rotate, softFactor) * transformDelta.Rotate;
         }
@@ -223,11 +223,11 @@ namespace Libigl
         private void GetRotateScaleJoint(ref TransformDelta transformDelta, bool withRotate = true)
         {
             // Soft editing
-            var softFactor = _primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
-            var softFactorSecondary = !_primaryTransformHand ? InputManager.Input.GripR : InputManager.Input.GripL;
+            var softFactor = _primaryTransformHand ? InputManager.State.GripR : InputManager.State.GripL;
+            var softFactorSecondary = !_primaryTransformHand ? InputManager.State.GripR : InputManager.State.GripL;
 
             // Scale
-            var scale = (InputManager.Input.HandPosL - InputManager.Input.HandPosR).magnitude / 
+            var scale = (InputManager.State.HandPosL - InputManager.State.HandPosR).magnitude / 
                         (_transformStartHandPosL - _transformStartHandPosR).magnitude;
             
             if (float.IsNaN(scale)) scale = 1f;
@@ -243,12 +243,12 @@ namespace Libigl
             if(_primaryTransformHand)
             {
                 v0 = _transformStartHandPosR - _transformStartHandPosL;
-                v1 = InputManager.Input.HandPosR - InputManager.Input.HandPosL;
+                v1 = InputManager.State.HandPosR - InputManager.State.HandPosL;
             }
             else
             {
                 v0 = _transformStartHandPosL - _transformStartHandPosR;
-                v1 = InputManager.Input.HandPosL - InputManager.Input.HandPosR;
+                v1 = InputManager.State.HandPosL - InputManager.State.HandPosR;
             }
             
             // Implementation Note: could also use combination of Quaternion.FromToRotation() and Quaternion.Lerp()

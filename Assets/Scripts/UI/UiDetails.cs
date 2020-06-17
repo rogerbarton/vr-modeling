@@ -224,11 +224,11 @@ namespace UI
             // Add a selection in case of the NewSelectionOnDraw
             if(_behaviour.Input.DoSelect && !_behaviour.Input.DoSelectPrev) // Just started stroke 
             {
-                if (InputManager.Input.NewSelectionOnDraw &&
+                if (InputManager.State.NewSelectionOnDraw &&
                     _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty
                     AddSelection();
 
-                if (InputManager.Input.DiscardSelectionOnDraw)
+                if (InputManager.State.DiscardSelectionOnDraw)
                     _behaviour.Input.DoClearSelection |= 1U << _behaviour.Input.ActiveSelectionId;
             }
 
