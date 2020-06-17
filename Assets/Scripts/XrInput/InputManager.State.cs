@@ -12,13 +12,13 @@ namespace XrInput
         {
             StatePrev = State;
 
-            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.primaryBtnL);
-            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.secondaryBtnL);
-            HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.primaryAxisL);
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.PrimaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.SecondaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.PrimaryAxisL);
             
-            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.primaryBtnR);
-            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.secondaryBtnR);
-            HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.primaryAxisR);
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.PrimaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.SecondaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.PrimaryAxisR);
 
             
             // Read values and then convert to world space
@@ -31,20 +31,20 @@ namespace XrInput
             HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotR);
 
             // Convert to world space
-            var xrRigRotation = XRRig.rotation;
-            State.HandPosL = XRRig.TransformPoint(State.HandPosL);
+            var xrRigRotation = xrRig.rotation;
+            State.HandPosL = xrRig.TransformPoint(State.HandPosL);
             State.HandRotL = xrRigRotation * State.HandRotL;
-            State.HandPosR = XRRig.TransformPoint(State.HandPosR);
+            State.HandPosR = xrRig.TransformPoint(State.HandPosR);
             State.HandRotR = xrRigRotation * State.HandRotR;
 
             // Input conflict with interactables
             State.GripR *= handInteractorR.selectTarget ? 0f : 1f;
 
             // Brush Resizing
-            if (Mathf.Abs(State.primaryAxisR.y) > 0.01f)
+            if (Mathf.Abs(State.PrimaryAxisR.y) > 0.01f)
             {
                 State.BrushRadius = Mathf.Clamp(
-                    State.BrushRadius + XrBrush.ResizeSpeed * State.primaryAxisR.y * Time.deltaTime,
+                    State.BrushRadius + XrBrush.ResizeSpeed * State.PrimaryAxisR.y * Time.deltaTime,
                     XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
 
                 BrushL.SetRadius(State.BrushRadius);

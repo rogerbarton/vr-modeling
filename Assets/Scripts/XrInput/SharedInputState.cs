@@ -17,12 +17,12 @@ namespace XrInput
         public Quaternion HandRotL;
         public Quaternion HandRotR;
         
-        public bool primaryBtnL;
-        public bool secondaryBtnL;
-        public Vector2 primaryAxisL;
-        public bool primaryBtnR;
-        public bool secondaryBtnR;
-        public Vector2 primaryAxisR;
+        public bool PrimaryBtnL;
+        public bool SecondaryBtnL;
+        public Vector2 PrimaryAxisL;
+        public bool PrimaryBtnR;
+        public bool SecondaryBtnR;
+        public Vector2 PrimaryAxisR;
         
         public float BrushRadius;
         

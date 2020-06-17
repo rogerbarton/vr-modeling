@@ -17,7 +17,7 @@ namespace XrInput
         /// <summary>
         /// Get the XR Rig Transform, to determine world positions
         /// </summary>
-        public Transform XRRig;
+        public Transform xrRig;
 
         [Tooltip("Show animated hands or the controller? Needs to be set before the controller is detected")]
         [SerializeField] private bool useHands = false;
@@ -32,7 +32,7 @@ namespace XrInput
         [SerializeField] private XRController handRigL = default;
         [SerializeField] private XRRayInteractor handInteractorL = default;
         [NonSerialized] public InputDevice HandL;
-        [NonSerialized] public UiInputHints HandHintsL; // TODO: move to UiManager
+        [NonSerialized] public UiInputHints HandHintsL;
 
         // Right Hand
         public InputDeviceCharacteristics handCharR =
@@ -74,8 +74,8 @@ namespace XrInput
             }
 
             get = this;
-            if (!XRRig)
-                XRRig = transform;
+            if (!xrRig)
+                xrRig = transform;
 
             _handLineRendererL = handRigL.GetComponent<LineRenderer>();
             _handTeleportReticleL = handRigL.GetComponent<XRInteractorLineVisual>().reticle;
@@ -111,7 +111,7 @@ namespace XrInput
             InputDevices.GetDevicesWithCharacteristics(c, devices);
 
             foreach (var item in devices)
-                Debug.Log(item.name + ": " + item.characteristics);
+                Debug.Log($"Detected {item.name}: {item.characteristics}");
 
             handAnimator = null;
             if (devices.Count > 0)

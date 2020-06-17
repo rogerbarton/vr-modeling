@@ -14,8 +14,8 @@ namespace Libigl
 
             switch (InputManager.State.ActiveTool)
             {
-                case ToolType.Default:
-                    UpdateInputDefault();
+                case ToolType.Transform:
+                    UpdateInputTransform();
                     break;
                 case ToolType.Select:
                     UpdateInputSelect();
@@ -24,9 +24,9 @@ namespace Libigl
         }
 
         /// <summary>
-        /// Input for the default tool
+        /// Input for the transform tool
         /// </summary>
-        private void UpdateInputDefault()
+        private void UpdateInputTransform()
         {
         }
 
@@ -36,12 +36,12 @@ namespace Libigl
         private void UpdateInputSelect()
         {
             // Change the selection with the right hand primary2DAxis.x
-            if (Mathf.Abs(InputManager.State.primaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.primaryAxisR.x) < 0.05f)
-                ChangeActiveSelection((int) Mathf.Sign(InputManager.State.primaryAxisR.x));
+            if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
+                ChangeActiveSelection((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
 
-            if (!(_doTransformL || _doTransformR) && InputManager.State.primaryBtnR)
+            if (!(_doTransformL || _doTransformR) && InputManager.State.PrimaryBtnR)
             {
-                if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || !InputManager.StatePrev.primaryBtnR)
+                if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || !InputManager.StatePrev.PrimaryBtnR)
                 {
                     Input.DoSelect = true;
                     Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);

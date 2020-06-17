@@ -13,8 +13,6 @@ namespace XrInput
         public const float ResizeSpeed = 0.5f;
         
         private bool _isRight;
-    
-        //TODO: get world position from center to get center of brush
 
         public void SetRadius(float value)
         {
@@ -31,7 +29,7 @@ namespace XrInput
         {
             switch (InputManager.State.ActiveTool)
             {
-                case ToolType.Default:
+                case ToolType.Transform:
                     gameObject.SetActive(false);
                     break;
                 case ToolType.Select:

@@ -95,7 +95,7 @@ namespace Libigl
             {
                 switch (ExecuteInput.Shared.ActiveTool)
                 {
-                    case ToolType.Default:
+                    case ToolType.Transform:
                         break;
                     case ToolType.Select:
                         ActionSelect();

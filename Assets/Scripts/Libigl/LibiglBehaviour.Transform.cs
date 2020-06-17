@@ -99,11 +99,11 @@ namespace Libigl
                 _primaryTransformHand = false;
             }
             
-            if(InputManager.State.ActiveTool == ToolType.Default)
+            if(InputManager.State.ActiveTool == ToolType.Transform)
                 ApplyTransformToMesh();
 
-            if (InputManager.State.ActiveTool == ToolType.Default && (_doTransformL || _doTransformR) && 
-                InputManager.State.primaryBtnR && !InputManager.StatePrev.primaryBtnR)
+            if (InputManager.State.ActiveTool == ToolType.Transform && (_doTransformL || _doTransformR) && 
+                InputManager.State.PrimaryBtnR && !InputManager.StatePrev.PrimaryBtnR)
                 InputManager.State.TransformWithRotate = !InputManager.State.TransformWithRotate;
         }
         

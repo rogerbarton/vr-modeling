@@ -1807,7 +1807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52620e35823741698e7cdafd85e414a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XRRig: {fileID: 0}
+  xrRig: {fileID: 0}
   useHands: 0
   handPrefabL: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b,
     type: 3}

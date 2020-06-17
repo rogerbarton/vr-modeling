@@ -4,7 +4,6 @@ using UI.Components;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using XrInput;
 
 namespace UI
 {
@@ -88,8 +87,22 @@ namespace UI
         /// <summary>
         /// Generates the UI unrelated to a mesh or to manipulate the <i>active mesh</i> <see cref="MeshManager.ActiveMesh"/>
         /// </summary>
-        private unsafe void InitializeStaticUi()
+        private void InitializeStaticUi()
         {
+            // Tools
+            _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            _toolGroup.title.text = "Tools & Actions";
+            _toolGroup.SetVisibility(true);
+            
+            var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
+            _toolGroup.AddItem(selectionMode.gameObject);
+            selectionMode.Initialize();
+            
+            var pivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
+            _toolGroup.AddItem(pivotMode.gameObject);
+            pivotMode.Initialize();
+            
+            
             // Meshes
             _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _meshGroup.title.text = "Load Mesh";
@@ -112,35 +125,7 @@ namespace UI
                 iconAction.iconBtn.interactable = validMesh;
             }
             
-            
-            // Tools
-            _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
-            _toolGroup.title.text = "Tools & Actions";
-            _toolGroup.SetVisibility(true);
-            
-            var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
-            _toolGroup.AddItem(selectionMode.gameObject);
-            selectionMode.Initialize();
-            
-            var pivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
-            _toolGroup.AddItem(pivotMode.gameObject);
-            pivotMode.Initialize();
 
-            CreateActionUi("Default Tool",
-                () => { InputManager.get.SetActiveTool(ToolType.Default); }, _toolGroup);
-            CreateActionUi("Select Tool",
-                () => { InputManager.get.SetActiveTool(ToolType.Select); }, _toolGroup,
-                new[] {"select"});
-
-            CreateActionUi("Harmonic", () => { MeshManager.ActiveMesh.Behaviour.Input.DoHarmonic = true; }, _toolGroup,
-                new[] {"smooth", "harmonic", "laplacian"});
-            CreateActionUi("Arap", () => { MeshManager.ActiveMesh.Behaviour.Input.DoArap = true; }, _toolGroup,
-                new[] {"rigid"});
-            CreateActionUi("Translate", () => { MeshManager.ActiveMesh.Behaviour.Input.DoTransform = true; }, _toolGroup,
-                new[] {"translate", "move"});
-            CreateActionUi("Do Select", () => { MeshManager.ActiveMesh.Behaviour.Input.DoSelect = true; }, _toolGroup);
-
-            
             // Debug
             _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Debug";
@@ -169,7 +154,7 @@ namespace UI
         /// </summary>
         /// <param name="onClick">Code to execute when an entry point is triggered</param>
         /// <param name="collapsible">The group to add this item under</param>
-        private void CreateActionUi(string uiText, UnityAction onClick, UiCollapsible collapsible = null, string[] speechKeywords = null)
+        private void CreateActionSpeechUi(string uiText, UnityAction onClick, UiCollapsible collapsible = null, string[] speechKeywords = null)
         {
             // Parenting, layout, ui
             var go = Instantiate(buttonPrefab, actionsListParent);
