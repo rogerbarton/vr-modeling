@@ -39,7 +39,7 @@ namespace Libigl
             if (Mathf.Abs(InputManager.State.primaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.primaryAxisR.x) < 0.05f)
                 ChangeActiveSelection((int) Mathf.Sign(InputManager.State.primaryAxisR.x));
 
-            if (InputManager.State.primaryBtnR)
+            if (!(_doTransformL || _doTransformR) && InputManager.State.primaryBtnR)
             {
                 if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || !InputManager.StatePrev.primaryBtnR)
                 {

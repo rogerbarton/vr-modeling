@@ -48,8 +48,6 @@ namespace XrInput
                 BrushL.SetRadius(State.BrushRadius);
                 BrushR.SetRadius(State.BrushRadius);
             }
-
-            
         }
     }
 }

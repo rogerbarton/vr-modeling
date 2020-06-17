@@ -48,7 +48,6 @@ namespace Libigl
         // Call this in Update() every frame
         private void UpdateTransform()
         {
-            
             // Map inputs to actions
             _doTransformPrevL = _doTransformL;
             _doTransformL = InputManager.State.GripL > PressThres;
@@ -102,6 +101,10 @@ namespace Libigl
             
             if(InputManager.State.ActiveTool == ToolType.Default)
                 ApplyTransformToMesh();
+
+            if (InputManager.State.ActiveTool == ToolType.Default && (_doTransformL || _doTransformR) && 
+                InputManager.State.primaryBtnR && !InputManager.StatePrev.primaryBtnR)
+                InputManager.State.TransformWithRotate = !InputManager.State.TransformWithRotate;
         }
         
         
@@ -117,7 +120,7 @@ namespace Libigl
             
             // Get & Consume the transformation
             var transformDelta = TransformDelta.Identity();
-            GetTransformDelta(ref transformDelta, true);
+            GetTransformDelta(ref transformDelta, InputManager.State.TransformWithRotate);
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;

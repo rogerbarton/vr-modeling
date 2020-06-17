@@ -28,7 +28,8 @@ namespace XrInput
         
         // Transform
         public TransformMode ActiveTransformMode; 
-        public PivotMode ActivePivotMode; 
+        public PivotMode ActivePivotMode;
+        public bool TransformWithRotate;
         
         // Selection
         public SelectionMode ActiveSelectionMode;
@@ -43,7 +44,8 @@ namespace XrInput
                 BrushRadius = 0.1f,
                 ActiveTransformMode = TransformMode.IndividualTranslateRotate,
                 ActivePivotMode = PivotMode.Hand,
-                ActiveSelectionMode = SelectionMode.Add
+                ActiveSelectionMode = SelectionMode.Add,
+                TransformWithRotate = true
             };
         }
     }
