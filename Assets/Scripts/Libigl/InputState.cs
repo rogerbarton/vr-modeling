@@ -53,11 +53,5 @@ namespace Libigl
                 TransformDelta = TransformDelta.Identity()
             };
         }
-
-        public void ChangeActiveSelection(int increment)
-        {
-            ActiveSelectionId = (int) ((ActiveSelectionId + increment + SCountUi) % SCountUi);
-            //TODO: Doesnt update UI
-        }
     }
 }

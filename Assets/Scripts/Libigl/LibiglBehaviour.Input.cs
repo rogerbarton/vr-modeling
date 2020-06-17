@@ -43,7 +43,7 @@ namespace Libigl
         {
             // Change the selection with the right hand primary2DAxis.x
             if (Mathf.Abs(InputManager.Input.primaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.InputPrev.primaryAxisR.x) < 0.05f)
-                Input.ChangeActiveSelection((int) Mathf.Sign(InputManager.Input.primaryAxisR.x));
+                ChangeActiveSelection((int) Mathf.Sign(InputManager.Input.primaryAxisR.x));
 
             if (InputManager.Input.primaryBtnR)
             {
@@ -53,6 +53,11 @@ namespace Libigl
                     Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
                 }
             }
+        }
+        
+        public void ChangeActiveSelection(int increment)
+        {
+            _uiDetails.SetActiveSelection((int) ((Input.ActiveSelectionId + increment + Input.SCountUi) % Input.SCountUi));
         }
 
         private void PreExecuteInput()

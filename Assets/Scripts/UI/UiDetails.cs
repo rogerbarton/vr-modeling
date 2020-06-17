@@ -268,5 +268,10 @@ namespace UI
         }
 
         #endregion
+
+        public void SetActiveSelection(int value)
+        {
+            _selections[value].SetAsActive();
+        }
     }
 }
