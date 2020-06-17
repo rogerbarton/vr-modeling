@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -21,38 +22,38 @@ namespace XrInput
 
         [Tooltip("Show animated hands or the controller? Needs to be set before the controller is detected")]
         [SerializeField] private bool useHands = false;
-        [SerializeField] private GameObject leftHandPrefab = default;
-        [SerializeField] private GameObject rightHandPrefab = default;
+        [SerializeField] private GameObject handPrefabL = default;
+        [SerializeField] private GameObject handPrefabR = default;
         [SerializeField] private List<GameObject> controllerPrefabs = default;
 
         // Left Hand
-        public InputDeviceCharacteristics leftHandChar =
+        public InputDeviceCharacteristics handCharL =
             InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left;
 
-        [SerializeField] private XRController leftHandRig = default;
-        [NonSerialized] public InputDevice LeftHand;
-        [NonSerialized] public UiInputHints LeftHandHints; // TODO: move to UiManager
+        [SerializeField] private XRController handRigL = default;
+        [NonSerialized] public InputDevice HandL;
+        [NonSerialized] public UiInputHints HandHintsL; // TODO: move to UiManager
 
         // Right Hand
-        public InputDeviceCharacteristics rightHandChar =
+        public InputDeviceCharacteristics handCharR =
             InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right;
 
-        [SerializeField] private XRController rightHandRig = default;
-        [NonSerialized] public InputDevice RightHand;
-        [NonSerialized] public UiInputHints RightHandHints;
+        [SerializeField] private XRController handRigR = default;
+        [NonSerialized] public InputDevice HandR;
+        [NonSerialized] public UiInputHints HandHintsR;
 
 
         // Hand animation
-        private Animator _leftHandAnimator;
-        private Animator _rightHandAnimator;
+        private Animator _handAnimatorL;
+        private Animator _handAnimatorR;
         private static readonly int TriggerAnimId = Animator.StringToHash("Trigger");
         private static readonly int GripAnimId = Animator.StringToHash("Grip");
 
         // Teleporting
-        private LineRenderer _leftHandLineRenderer;
-        private LineRenderer _rightHandLineRenderer;
-        private GameObject _leftHandTeleportReticle;
-        private GameObject _rightHandTeleportReticle;
+        private LineRenderer _handLineRendererL;
+        private LineRenderer _handLineRendererR;
+        private GameObject _handTeleportReticleL;
+        private GameObject _handTeleportReticleR;
         public Material filledLineMat;
         public Material dottedLineMat;
 
@@ -75,19 +76,19 @@ namespace XrInput
             if (!XRRig)
                 XRRig = transform;
 
-            _leftHandLineRenderer = leftHandRig.GetComponent<LineRenderer>();
-            _leftHandTeleportReticle = leftHandRig.GetComponent<XRInteractorLineVisual>().reticle;
-            _rightHandLineRenderer = rightHandRig.GetComponent<LineRenderer>();
-            _rightHandTeleportReticle = rightHandRig.GetComponent<XRInteractorLineVisual>().reticle;
+            _handLineRendererL = handRigL.GetComponent<LineRenderer>();
+            _handTeleportReticleL = handRigL.GetComponent<XRInteractorLineVisual>().reticle;
+            _handLineRendererR = handRigR.GetComponent<LineRenderer>();
+            _handTeleportReticleR = handRigR.GetComponent<XRInteractorLineVisual>().reticle;
         }
 
         private void Start()
         {
-            _leftHandTeleportReticle.SetActive(false);
-            _rightHandTeleportReticle.SetActive(false);
+            _handTeleportReticleL.SetActive(false);
+            _handTeleportReticleR.SetActive(false);
 
-            _leftHandLineRenderer.material = filledLineMat;
-            _rightHandLineRenderer.material = filledLineMat;
+            _handLineRendererL.material = filledLineMat;
+            _handLineRendererR.material = filledLineMat;
 
             Input = SharedInputState.GetInstance();
             InputPrev = Input;
@@ -156,44 +157,44 @@ namespace XrInput
         {
             UpdateSharedState();
             
-            if (!LeftHand.isValid)
-                InitializeController(false, leftHandChar, out LeftHand, leftHandPrefab, leftHandRig, out _leftHandAnimator,
-                    out LeftHandHints, toolInputHintsL, out BrushL);
+            if (!HandL.isValid)
+                InitializeController(false, handCharL, out HandL, handPrefabL, handRigL, out _handAnimatorL,
+                    out HandHintsL, toolInputHintsL, out BrushL);
             else
             {
                 // Teleport ray
                 var success =
-                    leftHandRig.inputDevice.IsPressed(InputHelpers.Button.PrimaryAxis2DUp, out var teleportPressed, 0.2f);
-                _leftHandTeleportReticle.SetActive(teleportPressed);
-                _leftHandLineRenderer.material = teleportPressed ? filledLineMat : dottedLineMat;
+                    handRigL.inputDevice.IsPressed(InputHelpers.Button.PrimaryAxis2DUp, out var teleportPressed, 0.2f);
+                _handTeleportReticleL.SetActive(teleportPressed);
+                _handLineRendererL.material = teleportPressed ? filledLineMat : dottedLineMat;
 
                 // Changing Active Tool
-                leftHandRig.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out var secondaryBtnPressed, 0.2f);
+                handRigL.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out var secondaryBtnPressed, 0.2f);
                 if (secondaryBtnPressed && !_prevSecondaryBtnPressedL)
                     SetActiveTool((Input.ActiveTool + 1) % ToolType.Size);
                 _prevSecondaryBtnPressedL = secondaryBtnPressed;
 
                 // Toggling UI hints
-                leftHandRig.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
+                handRigL.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
                 if (axisClickPressed && !_prevAxisClickPressedL)
-                    LeftHandHints.gameObject.SetActive(!LeftHandHints.gameObject.activeSelf);
+                    HandHintsL.gameObject.SetActive(!HandHintsL.gameObject.activeSelf);
                 _prevAxisClickPressedL = axisClickPressed;
             }
 
-            if (!RightHand.isValid)
-                InitializeController(true, rightHandChar, out RightHand, rightHandPrefab, rightHandRig,
-                    out _rightHandAnimator, out RightHandHints, toolInputHintsR, out BrushR);
+            if (!HandR.isValid)
+                InitializeController(true, handCharR, out HandR, handPrefabR, handRigR,
+                    out _handAnimatorR, out HandHintsR, toolInputHintsR, out BrushR);
             else
             {
                 // Teleport ray
-                rightHandRig.inputDevice.IsPressed(InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
-                _rightHandTeleportReticle.SetActive(gripRPressed);
-                _rightHandLineRenderer.material = gripRPressed ? filledLineMat : dottedLineMat;
+                handRigR.inputDevice.IsPressed(InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
+                _handTeleportReticleR.SetActive(gripRPressed);
+                _handLineRendererR.material = gripRPressed ? filledLineMat : dottedLineMat;
 
                 // Toggling UI hints
-                rightHandRig.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
+                handRigR.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
                 if (axisClickPressed && !_prevAxisClickPressedR)
-                    RightHandHints.gameObject.SetActive(!RightHandHints.gameObject.activeSelf);
+                    HandHintsR.gameObject.SetActive(!HandHintsR.gameObject.activeSelf);
                 _prevAxisClickPressedR = axisClickPressed;
             }
 
@@ -203,20 +204,20 @@ namespace XrInput
 
         private void UpdateHandAnimators()
         {
-            if (_leftHandAnimator)
+            if (_handAnimatorL)
             {
-                if (LeftHand.TryGetFeatureValue(CommonUsages.trigger, out var triggerLVal))
-                    _leftHandAnimator.SetFloat(TriggerAnimId, triggerLVal);
-                if (LeftHand.TryGetFeatureValue(CommonUsages.grip, out var gripLVal))
-                    _leftHandAnimator.SetFloat(GripAnimId, gripLVal);
+                if (HandL.TryGetFeatureValue(CommonUsages.trigger, out var triggerLVal))
+                    _handAnimatorL.SetFloat(TriggerAnimId, triggerLVal);
+                if (HandL.TryGetFeatureValue(CommonUsages.grip, out var gripLVal))
+                    _handAnimatorL.SetFloat(GripAnimId, gripLVal);
             }
 
-            if (_rightHandAnimator)
+            if (_handAnimatorR)
             {
-                if (RightHand.TryGetFeatureValue(CommonUsages.trigger, out var triggerRVal))
-                    _rightHandAnimator.SetFloat(TriggerAnimId, triggerRVal);
-                if (RightHand.TryGetFeatureValue(CommonUsages.grip, out var gripRVal))
-                    _rightHandAnimator.SetFloat(GripAnimId, gripRVal);
+                if (HandR.TryGetFeatureValue(CommonUsages.trigger, out var triggerRVal))
+                    _handAnimatorR.SetFloat(TriggerAnimId, triggerRVal);
+                if (HandR.TryGetFeatureValue(CommonUsages.grip, out var gripRVal))
+                    _handAnimatorR.SetFloat(GripAnimId, gripRVal);
             }
         }
 
@@ -229,17 +230,17 @@ namespace XrInput
         {
             Input.ActiveTool = value;
 
-            if(LeftHand.isValid)
+            if(HandL.isValid)
             {
-                if (LeftHandHints && value < toolInputHintsL.Length)
-                    LeftHandHints.SetData(toolInputHintsL[value]);
+                if (HandHintsL && value < toolInputHintsL.Length)
+                    HandHintsL.SetData(toolInputHintsL[value]);
                 if (BrushL) BrushL.OnActiveToolChanged();
             }
 
-            if(RightHand.isValid)
+            if(HandR.isValid)
             {
-                if (RightHandHints && value < toolInputHintsR.Length)
-                    RightHandHints.SetData(toolInputHintsR[value]);
+                if (HandHintsR && value < toolInputHintsR.Length)
+                    HandHintsR.SetData(toolInputHintsR[value]);
                 if (BrushR) BrushR.OnActiveToolChanged();
             }
         }

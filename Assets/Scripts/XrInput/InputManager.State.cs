@@ -9,24 +9,24 @@ namespace XrInput
         {
             InputPrev = Input;
 
-            LeftHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnL);
-            LeftHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnL);
-            LeftHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisL);
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisL);
             
-            RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnR);
-            RightHand.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnR);
-            RightHand.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisR);
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out Input.primaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out Input.secondaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out Input.primaryAxisR);
 
             var xrRigRotation = XRRig.rotation;
             
             // Read values and then convert to world space
-            LeftHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripL);
-            LeftHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
-            LeftHand.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotL);
+            HandL.TryGetFeatureValue(CommonUsages.grip, out Input.GripL);
+            HandL.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosL);
+            HandL.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotL);
             
-            RightHand.TryGetFeatureValue(CommonUsages.grip, out Input.GripR);
-            RightHand.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosR);
-            RightHand.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotR);
+            HandR.TryGetFeatureValue(CommonUsages.grip, out Input.GripR);
+            HandR.TryGetFeatureValue(CommonUsages.devicePosition, out Input.HandPosR);
+            HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out Input.HandRotR);
 
             // Convert to world space
             Input.HandPosL = XRRig.TransformPoint(Input.HandPosL);

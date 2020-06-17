@@ -1809,9 +1809,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   XRRig: {fileID: 0}
   useHands: 0
-  leftHandPrefab: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b,
+  handPrefabL: {fileID: 109434732395284509, guid: 65847589f926b734d9eaed6e25f0046b,
     type: 3}
-  rightHandPrefab: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364,
+  handPrefabR: {fileID: 5686134208185362930, guid: 1fd3a7c43c8190f4d8c167ebde694364,
     type: 3}
   controllerPrefabs:
   - {fileID: 7634514334346526944, guid: 0540e32b498ef284f8e1dcf80dfccd58, type: 3}
@@ -1825,10 +1825,10 @@ MonoBehaviour:
   - {fileID: 357722411443781339, guid: aafefdd564a300c4d93806fdc271c41f, type: 3}
   - {fileID: 5928091942230486030, guid: c4b9c875ed967534eb12cd57aeeb1183, type: 3}
   - {fileID: 6654152787936889342, guid: 61e60013ce1d7d942b8975c98fdf8154, type: 3}
-  leftHandChar: 320
-  leftHandRig: {fileID: 324874809}
-  rightHandChar: 576
-  rightHandRig: {fileID: 506401552}
+  handCharL: 320
+  handRigL: {fileID: 324874809}
+  handCharR: 576
+  handRigR: {fileID: 506401552}
   filledLineMat: {fileID: 2100000, guid: ba67c6d3d291b894ca28cbcda37fecf0, type: 2}
   dottedLineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   toolInputHintsL:
