@@ -5,15 +5,15 @@ namespace Testing
 {
     public class DebugMesh : MonoBehaviour
     {
-        private Mesh mesh;
+        private Mesh _mesh;
         public VertexAttributeDescriptor[] layout;
         private void Start()
         {
-            mesh = GetComponent<MeshFilter>().mesh;
-            var ptr = mesh.GetNativeIndexBufferPtr();
-            Debug.Log("isreadable " + mesh.isReadable);
-            mesh.MarkDynamic();
-            layout = mesh.GetVertexAttributes();
+            _mesh = GetComponent<MeshFilter>().mesh;
+            var ptr = _mesh.GetNativeIndexBufferPtr();
+            Debug.Log("IsReadable " + _mesh.isReadable);
+            _mesh.MarkDynamic();
+            layout = _mesh.GetVertexAttributes();
             var length = layout.Length;
         
         }

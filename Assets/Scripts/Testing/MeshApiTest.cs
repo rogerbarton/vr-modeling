@@ -6,14 +6,28 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 namespace Testing
 {
+    /// <summary>
+    /// This script was used for initial testing, also with the C++ interface and has not been used for a long time.
+    /// May be useful for reference.
+    /// 
+    /// Experimentation script for how to apply changes to the mesh from libigl to the Unity mesh.
+    /// This mainly focuses on the newer mesh API.
+    /// There are three ways of applying our vertex matrix V:
+    /// 1. Use C# wrappers mesh.SetVertices(), possibly quite inefficient
+    /// 2. Use the newer mesh API to write to the buffer via C#
+    /// 3. Use the GPU pointer to write to the buffer directly via C++ (quite advanced and complicated but may be very fast)
+    ///
+    /// It is important to consider the VertexBufferLayout <see cref="Libigl.Native.VertexBufferLayout"/>
+    /// </summary>
     [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
     public class MeshApiTest : MonoBehaviour
     {
-        public bool useCustomUploadToGPU;
+        public bool useCustomUploadToGpu;
 
         [StructLayout(LayoutKind.Sequential)]
         public unsafe class VertexUploadData
@@ -24,32 +38,32 @@ namespace Testing
             public int VSize;
         }
 
-        private MeshFilter meshFilter;
-        Mesh mesh;
+        private MeshFilter _meshFilter;
+        private Mesh _mesh;
         private NativeArray<float> V;
-        int VSize;
+        private int VSize;
 
-        public static VertexUploadData vertexUploadData;
-        static GCHandle vertexUploadHandle;
-        CommandBuffer command; // A list of stuff to do on the render thread at a specific point in time,
-        private IntPtr gfxVertexBufferPtr;
+        private static VertexUploadData _vertexUploadData;
+        private static GCHandle _vertexUploadHandle;
+        private CommandBuffer _commandBuffer; // A list of stuff to do on the render thread at a specific point in time,
+        private IntPtr _gfxVertexBufferPtr;
 
 
         void Start()
         {
-            meshFilter = GetComponent<MeshFilter>();
-            mesh = meshFilter.mesh;
-            VSize = mesh.vertexCount;
+            _meshFilter = GetComponent<MeshFilter>();
+            _mesh = _meshFilter.mesh;
+            VSize = _mesh.vertexCount;
             V = new NativeArray<float>(3 * VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
 #endif
-            var layout = mesh.GetVertexAttributes();
-            mesh.MarkDynamic(); //GPU buffer should be dynamic so we can modify it easily with D3D11Buffer::Map()
+            var layout = _mesh.GetVertexAttributes();
+            _mesh.MarkDynamic(); //GPU buffer should be dynamic so we can modify it easily with D3D11Buffer::Map()
             unsafe
             {
                 NativeArray<float> tmp;
-                fixed (Vector3* managedVPtr = mesh.vertices)
+                fixed (Vector3* managedVPtr = _mesh.vertices)
                     tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*) managedVPtr, 3 * VSize,
                         Allocator.Temp);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
@@ -64,17 +78,17 @@ namespace Testing
             // Do not use this as it makes the GPU buffer no longer dynamic for us
             // mesh.UploadMeshData(true); //delete managed copy and make no longer readable via Unity
 
-            if (useCustomUploadToGPU)
+            if (useCustomUploadToGpu)
             {
                 //Setup custom uploading mesh data
-                vertexUploadData = new VertexUploadData();
-                vertexUploadHandle = GCHandle.Alloc(vertexUploadData, GCHandleType.Pinned);
-                gfxVertexBufferPtr = mesh.GetNativeVertexBufferPtr(0);
+                _vertexUploadData = new VertexUploadData();
+                _vertexUploadHandle = GCHandle.Alloc(_vertexUploadData, GCHandleType.Pinned);
+                _gfxVertexBufferPtr = _mesh.GetNativeVertexBufferPtr(0);
 
                 // command is called every frame until it's removed (can leave it if updating every frame)
-                command = new CommandBuffer();
-                command.name = "UploadMeshCmd"; // for profiling
-                IntPtr dataPtr = vertexUploadHandle.AddrOfPinnedObject();
+                _commandBuffer = new CommandBuffer();
+                _commandBuffer.name = "UploadMeshCmd"; // for profiling
+                IntPtr dataPtr = _vertexUploadHandle.AddrOfPinnedObject();
                 // command.IssuePluginEventAndData(Native.GetUploadMeshPtr(), 1, dataPtr);
                 // Camera.main.AddCommandBufferAsync(CameraEvent.AfterEverything, command, ComputeQueueType.Default);
                 // Graphics.ExecuteCommandBufferAsync(command, ComputeQueueType.Default);
@@ -90,7 +104,7 @@ namespace Testing
                 translateJobHandle = null;
                 timer.Reset();
                 timer.Start();
-                if (useCustomUploadToGPU)
+                if (useCustomUploadToGpu)
                 {
                     // TODO
                     // Upload to GPU is done on the render thread at the end of a frame render, this is done via CommandBuffer
@@ -102,12 +116,12 @@ namespace Testing
                     // Alternatively call a function now passing the pointers, like SetTimeFromUnity in the sample
                     unsafe
                     {
-                        vertexUploadData.changed = 1;
-                        vertexUploadData.gfxVertexBufferPtr = (float*) gfxVertexBufferPtr.ToPointer();
-                        if (gfxVertexBufferPtr != mesh.GetNativeVertexBufferPtr(0))
+                        _vertexUploadData.changed = 1;
+                        _vertexUploadData.gfxVertexBufferPtr = (float*) _gfxVertexBufferPtr.ToPointer();
+                        if (_gfxVertexBufferPtr != _mesh.GetNativeVertexBufferPtr(0))
                             Debug.LogError("gfx vert buffer ptr changed!");
-                        vertexUploadData.VPtr = (float*) V.GetUnsafePtr();
-                        vertexUploadData.VSize = VSize;
+                        _vertexUploadData.VPtr = (float*) V.GetUnsafePtr();
+                        _vertexUploadData.VSize = VSize;
                         // Camera.main.AddCommandBuffer(CameraEvent.AfterEverything, command);
                         // mesh.MarkModified();
                         // TODO: remove when no longer updating mesh every frame, or store in the VertexUploadData if the data has changed or not.
@@ -124,12 +138,12 @@ namespace Testing
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                         NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());
 #endif
-                        mesh.SetVertices(V3);
+                        _mesh.SetVertices(V3);
                     }
 
                     //Set vertexbufferdata?
-                    mesh.MarkModified(); //recalculate bounding boxes etc
-                    mesh.UploadMeshData(false);
+                    _mesh.MarkModified(); //recalculate bounding boxes etc
+                    _mesh.UploadMeshData(false);
                 }
 
                 timer.Stop();
@@ -176,7 +190,7 @@ namespace Testing
         {
             var mesh = new Mesh();
             mesh.name = "generated-mesh";
-            meshFilter.mesh = mesh;
+            _meshFilter.mesh = mesh;
             //mesh.MarkDynamic(); //if we want to repeatedly modify the mesh
 
             var VLayout = new[]
@@ -238,8 +252,8 @@ namespace Testing
         {
             if (V.IsCreated)
                 V.Dispose();
-            if (vertexUploadHandle.IsAllocated)
-                vertexUploadHandle.Free();
+            if (_vertexUploadHandle.IsAllocated)
+                _vertexUploadHandle.Free();
         }
     }
 }
