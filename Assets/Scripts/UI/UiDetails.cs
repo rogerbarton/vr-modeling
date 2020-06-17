@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UnityEngine;
@@ -9,62 +7,64 @@ using XrInput;
 
 namespace UI
 {
+    /// <summary>
+    /// Contains all functionality related to the mesh UI panel.
+    /// There is one of these per LibiglMesh.
+    /// Contains most UI generation.
+    /// </summary>
     public unsafe class UiDetails : MonoBehaviour
     {
         private LibiglBehaviour _behaviour;
         private Transform _listParent;
-        public UiProgressIcon progressIcon;
 
+        public UiProgressIcon progressIcon;
         public Button activeBtn;
         [SerializeField] private Image activeImage = null;
         [SerializeField] private Sprite editSprite = null;
         [SerializeField] private Sprite activeSprite = null;
 
-        // UI Components
-        private TMP_Text _meshName;
+        // UI Component Instances
         private TMP_Text _vertexCount;
-
-        private Button _toggleWireframe;
-
         private UiCollapsible _selectionGroup;
-        private Button _addSelectionBtn;
         private readonly List<UiSelection> _selections = new List<UiSelection>();
-        private UiCollapsible _operationsGroup;
-        private UiCollapsible _shaderGroup;
         private UiCollapsible _debugGroup;
         private UiToggleAction _harmonicToggle;
         private UiToggleAction _arapToggle;
 
+        /// <summary>
+        /// Main function where UI is generated.
+        /// </summary>
+        /// <param name="behaviour">The behaviour we are generating the UI panel for.</param>
         public void Initialize(LibiglBehaviour behaviour)
         {
             _behaviour = behaviour;
-            MeshManager.ActiveMeshSet += ActiveMeshSet;
+            MeshManager.ActiveMeshSet += OnActiveMeshSet;
 
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
-            UiInputHints.AddTooltip(activeImage.transform.parent.gameObject, () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
+            UiInputHints.AddTooltip(activeBtn.gameObject, () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
 
             
             _listParent = GetComponentInChildren<VerticalLayoutGroup>().transform;
 
-            // Start UI Generation
-            _meshName = Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
-            _meshName.text = _behaviour.LibiglMesh.name;
+            // -- Start UI Generation
+            var meshName = Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
+            meshName.text = _behaviour.LibiglMesh.name;
 
             _vertexCount = Instantiate(UiManager.get.textPrefab, _listParent).GetComponent<TMP_Text>();
             UpdateVertexCountText();
 
             
-            // Selection
+            // -- Selection
             _selectionGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _selectionGroup.title.text = "Selections";
             _selectionGroup.SetVisibility(true);
 
-            _addSelectionBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _addSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
-            _selectionGroup.AddItem(_addSelectionBtn.gameObject);
-            _addSelectionBtn.onClick.AddListener(() => AddSelection());
+            var addSelectionBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            addSelectionBtn.GetComponentInChildren<TMP_Text>().text = "Add Selection";
+            _selectionGroup.AddItem(addSelectionBtn.gameObject);
+            addSelectionBtn.onClick.AddListener(() => AddSelection());
 
             // Setup first selection
             AddSelection();
@@ -78,13 +78,13 @@ namespace UI
             });
             
             
-            // Operations
-            _operationsGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
-            _operationsGroup.title.text = "Operations";
-            _operationsGroup.SetVisibility(true);
+            // -- Operations
+            var operationsGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            operationsGroup.title.text = "Operations";
+            operationsGroup.SetVisibility(true);
             
             _harmonicToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
-            _operationsGroup.AddItem(_harmonicToggle.gameObject);
+            operationsGroup.AddItem(_harmonicToggle.gameObject);
             _harmonicToggle.text.text = "Harmonic";
             _harmonicToggle.button.onClick.AddListener(() => { behaviour.Input.DoHarmonic = true; });
             _harmonicToggle.toggle.isOn = behaviour.Input.DoHarmonicRepeat;
@@ -103,13 +103,13 @@ namespace UI
             });
             
             var harmonicShowDisplacements = Instantiate(UiManager.get.togglePrefab, _listParent).GetComponent<Toggle>();
-            _operationsGroup.AddItem(harmonicShowDisplacements.gameObject);
+            operationsGroup.AddItem(harmonicShowDisplacements.gameObject);
             harmonicShowDisplacements.GetComponentInChildren<TMP_Text>().text = "Toggle deform field";
             harmonicShowDisplacements.isOn = behaviour.Input.HarmonicShowDisplacement;
             harmonicShowDisplacements.onValueChanged.AddListener((value) => { behaviour.Input.HarmonicShowDisplacement = value; });
             
             _arapToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
-            _operationsGroup.AddItem(_arapToggle.gameObject);
+            operationsGroup.AddItem(_arapToggle.gameObject);
             _arapToggle.text.text = "ARAP";
             _arapToggle.button.onClick.AddListener(() => { behaviour.Input.DoArap = true; });
             _arapToggle.toggle.isOn = behaviour.Input.DoArapRepeat;
@@ -128,7 +128,7 @@ namespace UI
             });
             
             var resetMeshBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _operationsGroup.AddItem(resetMeshBtn.gameObject);
+            operationsGroup.AddItem(resetMeshBtn.gameObject);
             resetMeshBtn.GetComponentInChildren<TMP_Text>().text = "Reset Mesh Vertices";
             resetMeshBtn.onClick.AddListener(() =>
             {
@@ -136,41 +136,31 @@ namespace UI
             });
 
             var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _operationsGroup.AddItem(resetTransformBtn.gameObject);
+            operationsGroup.AddItem(resetTransformBtn.gameObject);
             resetTransformBtn.GetComponentInChildren<TMP_Text>().text = "Reset Transform";
             resetTransformBtn.onClick.AddListener(() => { behaviour.LibiglMesh.ResetTransformToSpawn(); });
             
             
-            // Shaders
-            _shaderGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
-            _shaderGroup.title.text = "Selections";
-            _shaderGroup.SetVisibility(true);
+            // -- Shaders
+            var shaderGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            shaderGroup.title.text = "Selections";
+            shaderGroup.SetVisibility(true);
 
-            _toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _shaderGroup.AddItem(_toggleWireframe.gameObject);
-            _toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
-            _toggleWireframe.onClick.AddListener(() => { _behaviour.LibiglMesh.ToggleWireframe(); });
+            var toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            shaderGroup.AddItem(toggleWireframe.gameObject);
+            toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
+            toggleWireframe.onClick.AddListener(() => { _behaviour.LibiglMesh.ToggleWireframe(); });
             
             var toggleBounds = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _shaderGroup.AddItem(toggleBounds.gameObject);
+            shaderGroup.AddItem(toggleBounds.gameObject);
             toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
             toggleBounds.onClick.AddListener(() =>
             {
                 behaviour.LibiglMesh.ToggleBounds();
             });
+            
 
-            
-            // Debug
-            _debugGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
-            _debugGroup.title.text = "Show Debug";
-            _debugGroup.SetVisibility(false);
-            
-            var doSelectBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _debugGroup.AddItem(doSelectBtn.gameObject);
-            doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
-            doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
-            
-            // Misc
+            // -- Misc
             var objectGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             objectGroup.title.text = "Object";
 
@@ -181,29 +171,24 @@ namespace UI
             {
                 MeshManager.get.DestroyMesh(behaviour.LibiglMesh);
             });
-        }
-        
-        /// <returns>true if selection was successfully added, max 32 selections</returns>
-        public bool AddSelection()
-        {
-            // Get the id and set it as the active one
-            var selectionId = (int) _behaviour.Input.SCountUi;
-            if (selectionId > 31) return false;
             
-            _behaviour.Input.SCountUi++;
-
-            // Add UI for the selection
-            var uiSelection = Instantiate(UiManager.get.selectionPrefab, _listParent).GetComponent<UiSelection>();
-            uiSelection.Initialize(selectionId, _selectionGroup, _behaviour, _selections);
-
-            return true;
+            
+            // -- Debug
+            _debugGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
+            _debugGroup.title.text = "Show Debug";
+            _debugGroup.SetVisibility(false);
+            
+            var doSelectBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            _debugGroup.AddItem(doSelectBtn.gameObject);
+            doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
+            doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
         }
 
         #region Callbacks
 
         public void OnDestroy()
         {
-            MeshManager.ActiveMeshSet -= ActiveMeshSet;
+            MeshManager.ActiveMeshSet -= OnActiveMeshSet;
         }
 
         /// <summary>
@@ -250,7 +235,7 @@ namespace UI
         /// <summary>
         /// Called when the active mesh changes
         /// </summary>
-        private void ActiveMeshSet()
+        private void OnActiveMeshSet()
         {
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
@@ -260,17 +245,33 @@ namespace UI
 
         #region Helper Functions
 
+        /// <returns>true if selection was successfully added, max 32 selections</returns>
+        public bool AddSelection()
+        {
+            // Get the id and set it as the active one
+            var selectionId = (int) _behaviour.Input.SCountUi;
+            if (selectionId > 31) return false;
+            
+            _behaviour.Input.SCountUi++;
+
+            // Add UI for the selection
+            var uiSelection = Instantiate(UiManager.get.selectionPrefab, _listParent).GetComponent<UiSelection>();
+            uiSelection.Initialize(selectionId, _selectionGroup, _behaviour, _selections);
+
+            return true;
+        }
+        
         private void UpdateVertexCountText()
         {
             _vertexCount.text =
                 $"<b>V</b>: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} <b>F</b>: {_behaviour.State->FSize}";
         }
-
-        #endregion
-
+        
         public void SetActiveSelection(int value)
         {
             _selections[value].SetAsActive();
         }
+        
+        #endregion
     }
 }
