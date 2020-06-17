@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.Components
 {
     public class UiToggleAction : MonoBehaviour
     {

@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using XrInput;
 
-namespace UI
+namespace UI.Components
 {
     /// <summary>
     /// Similar to UiSelectionMode, effectively an enum field
