@@ -43,8 +43,7 @@ extern "C" {
      */
     State* InitializeMesh(const UMeshDataNative data, const char* name)
 	{
-		// TODO: Pre-compute here
-		LOG("InitializeMesh(): " << name)
+		// LOG("InitializeMesh(): " << name)
 
 		return new State(data);
 	}
