@@ -133,7 +133,7 @@ namespace Libigl
             if (transformDelta.PivotMode != PivotMode.Mesh)
                 uTransform.position -= uTransform.rotation * pivotLocal;
             
-            Debug.DrawRay(transformDelta.Pivot, uTransform.rotation * -pivotLocal, Color.magenta);
+            // Debug.DrawRay(transformDelta.Pivot, uTransform.rotation * -pivotLocal, Color.magenta);
         }
 
         private void ApplyTransformToSelection()
