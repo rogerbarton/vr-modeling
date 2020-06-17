@@ -30,6 +30,7 @@ namespace XrInput
             InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left;
 
         [SerializeField] private XRController handRigL = default;
+        [SerializeField] private XRRayInteractor handInteractorL = default;
         [NonSerialized] public InputDevice HandL;
         [NonSerialized] public UiInputHints HandHintsL; // TODO: move to UiManager
 
@@ -38,6 +39,7 @@ namespace XrInput
             InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right;
 
         [SerializeField] private XRController handRigR = default;
+        [SerializeField] private XRRayInteractor handInteractorR = default;
         [NonSerialized] public InputDevice HandR;
         [NonSerialized] public UiInputHints HandHintsR;
 

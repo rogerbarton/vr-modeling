@@ -37,6 +37,8 @@ namespace XrInput
             State.HandPosR = XRRig.TransformPoint(State.HandPosR);
             State.HandRotR = xrRigRotation * State.HandRotR;
 
+            // Input conflict with interactables
+            State.GripR *= handInteractorR.selectTarget ? 0f : 1f;
 
             // Brush Resizing
             if (Mathf.Abs(State.primaryAxisR.y) > 0.01f)
