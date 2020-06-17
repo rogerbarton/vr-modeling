@@ -30,7 +30,7 @@ extern "C" {
     		Vector3 translation, float scale, Quaternion rotation);
     UNITY_INTERFACE_EXPORT void Harmonic(State* state, unsigned int boundaryMask = -1, bool showDeformationField = true);
     UNITY_INTERFACE_EXPORT void Arap(State* state, unsigned int boundaryMask = -1);
-    UNITY_INTERFACE_EXPORT 	void ResetV(State* state);
+    UNITY_INTERFACE_EXPORT void ResetV(State* state);
 
     // Selection.cpp
     UNITY_INTERFACE_EXPORT void SelectSphere(State* state, Vector3 position, float radius, int selectionId = 0, unsigned int selectionMode = SelectionMode::Add);

@@ -130,6 +130,7 @@ extern "C" {
 
 	void ResetV(State* state) {
 		*state->V = *state->Native->V0;
+		state->DirtyState |= DirtyFlag::VDirty;
 	}
 
 }
