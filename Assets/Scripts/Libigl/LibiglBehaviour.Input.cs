@@ -10,8 +10,6 @@ namespace Libigl
         
         private void UpdateInput()
         {
-            if (!LibiglMesh.IsActiveMesh()) return;
-
             switch (InputManager.State.ActiveTool)
             {
                 case ToolType.Transform:
@@ -44,7 +42,7 @@ namespace Libigl
                 if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || !InputManager.StatePrev.PrimaryBtnR)
                 {
                     Input.DoSelect = true;
-                    Input.SelectPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
+                    Input.BrushPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
                 }
             }
         }

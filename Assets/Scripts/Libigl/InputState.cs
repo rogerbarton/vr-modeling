@@ -28,10 +28,11 @@ namespace Libigl
 
         public bool DoSelect;
         public bool DoSelectPrev;
-        public Vector3 SelectPos;
         // A Mask of the selections that should be cleared
         public uint DoClearSelection; 
-        
+
+        public Vector3 BrushPos;
+
         // Deformations
         public bool DoHarmonic; // Trigger execution once
         public bool DoHarmonicRepeat; // Trigger execution every frame

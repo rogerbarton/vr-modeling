@@ -55,9 +55,10 @@ namespace Libigl
         /// </summary>
         public void Update()
         {
+            if (!LibiglMesh.IsActiveMesh()) return;
+            
+            UpdateTransform();
             UpdateInput();
-            if (LibiglMesh.IsActiveMesh())
-                UpdateTransform();
         }
         
         /// <summary>

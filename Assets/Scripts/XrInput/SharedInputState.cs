@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace XrInput
 {
@@ -52,7 +52,7 @@ namespace XrInput
 
     public enum ToolType
     {
-        Default,
+        Transform,
         Select
     }
 
