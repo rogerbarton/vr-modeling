@@ -39,7 +39,7 @@ public class MeshManager : MonoBehaviour
     private void Start()
     {
         if(meshPrefabs.Length > 0)
-            ActiveMesh = LoadMesh(meshPrefabs[0]);
+            SetActiveMesh(LoadMesh(meshPrefabs[0]));
     }
 
     #region Mesh Creation
