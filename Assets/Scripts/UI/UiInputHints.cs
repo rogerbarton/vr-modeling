@@ -16,8 +16,11 @@ namespace UI
         public UiInputLabel primaryAxisX;
         public UiInputLabel primaryAxisY;
 
+        private UiInputHintsData _currentData;
+
         public void SetData(UiInputHintsData data)
         {
+            _currentData = data;
             title.SetData(data.title);
             help.SetData(data.help);
             trigger.SetData(data.trigger);
@@ -28,16 +31,22 @@ namespace UI
             primaryAxisY.SetData(data.primaryAxisY);
         }
 
-        public void SetTooltip(string data)
+        public void SetTooltip(string data, bool overrideExisting = false)
         {
-            help.SetText(data);
+            if(!_currentData.help.isActive || overrideExisting)
+                help.SetData(new UiInputLabelData{isActive = true, text = data, icon = Icons.get.help});
         }
 
         public void ClearTooltip()
         {
-            help.gameObject.SetActive(false);
+            help.SetData(_currentData.help);
         }
 
+        public void ResetData()
+        {
+            SetData(_currentData);
+        }
+        
         public static void AddTooltip(GameObject uiElement, string msg)
         {
             // Hover Tooltip
