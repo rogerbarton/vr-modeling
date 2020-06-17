@@ -117,6 +117,5 @@ struct Color{
 struct SelectionMode{
 	static const unsigned int Add = 0;
 	static const unsigned int Subtract = 1;
-	static const unsigned int Invert = 2;
-	static const unsigned int Discard = 2;
+	static const unsigned int Toggle = 2;
 };

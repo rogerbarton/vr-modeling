@@ -103,7 +103,7 @@ namespace Libigl
         // Selection.cpp
         [DllImport(DllName)]
         public static extern unsafe void SelectSphere(State* state, Vector3 position, float radius,
-            int selectionId, uint selectionMode, bool discard);
+            int selectionId, uint selectionMode);
         
         [DllImport(DllName)]
         public static extern unsafe uint GetSelectionMaskSphere(State* state, Vector3 position, float radius);
