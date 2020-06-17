@@ -20,7 +20,6 @@ namespace XrInput
             HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.secondaryBtnR);
             HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.primaryAxisR);
 
-            var xrRigRotation = XRRig.rotation;
             
             // Read values and then convert to world space
             HandL.TryGetFeatureValue(CommonUsages.grip, out State.GripL);
@@ -32,10 +31,11 @@ namespace XrInput
             HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotR);
 
             // Convert to world space
+            var xrRigRotation = XRRig.rotation;
             State.HandPosL = XRRig.TransformPoint(State.HandPosL);
-            State.HandRotL *= Quaternion.Inverse(xrRigRotation);
+            State.HandRotL = xrRigRotation * State.HandRotL;
             State.HandPosR = XRRig.TransformPoint(State.HandPosR);
-            State.HandRotR *= Quaternion.Inverse(xrRigRotation);
+            State.HandRotR = xrRigRotation * State.HandRotR;
 
 
             // Brush Resizing
