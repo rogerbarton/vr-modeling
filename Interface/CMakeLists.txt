@@ -43,3 +43,6 @@ option(UNITY_BUILD_STUB_PLUGIN "Create a target for building the stubLluiPlugin 
 if(${UNITY_BUILD_STUB_PLUGIN})
 	add_subdirectory("external/UnityNativeTool") # stub plugin for ensuring UniyLoadPlugin is called when mocking
 endif()
+
+# Documentation
+add_subdirectory("docs")
