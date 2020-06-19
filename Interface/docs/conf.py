@@ -20,6 +20,31 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import subprocess, os
+
+# --- Manual Configuration for ReadTheDocs server
+def configureDoxyfile(input_dir, output_dir):
+    with open('Doxyfile.in', 'r') as file :
+        filedata = file.read()
+
+    filedata = filedata.replace('@DOXYGEN_INPUT_DIRECTORY@', input_dir)
+    filedata = filedata.replace('@DOXYGEN_OUTPUT_DIRECTORY@', output_dir)
+
+    with open('Doxyfile', 'w') as file:
+        file.write(filedata)
+
+# Check if we're running on Read the Docs' servers
+read_the_docs_build = #os.environ.get('READTHEDOCS', None) == 'True'
+
+breathe_projects = {}
+
+if read_the_docs_build:
+    input_dir = '../source \ ../../Assets/Scripts'
+    output_dir = 'doxygen'
+    configureDoxyfile(input_dir, output_dir)
+    subprocess.call('doxygen', shell=True)
+    breathe_projects['vr-modeling'] = output_dir + '/xml'
+# --- End of manual configuration for ReadTheDocs server
 
 # -- General configuration ------------------------------------------------
 
@@ -33,7 +58,7 @@
 extensions = [  'sphinx.ext.mathjax',
                 'breathe']
 
-breathe_default_project = 'vrmodeling'
+breathe_default_project = 'vr-modeling'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -80,3 +80,9 @@ vr-modeling-build*
 Assets/Scripts/Editor/UnityBuildPipeline/
 
 Assets/Scripts/Editor/UnityBuildPipeline.meta
+
+Interface/docs/_build/
+
+Interface/docs/doxygen/
+
+Interface/docs/Doxyfile
