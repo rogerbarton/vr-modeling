@@ -45,17 +45,18 @@ file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIRECTORY})
 
 set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIRECTORY}/xml/index.xml)
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
-                   DEPENDS ${CS_FILES} ${CXX_FILES}
                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                   MAIN_DEPENDENCY ${DOXYFILE_IN}
+                   DEPENDS ${DOXYFILE_IN} ${CS_FILES} ${CXX_FILES}
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                    COMMENT "Generating Doyxgen xml documentation")
 
 # This is the target we can execute                   
+# Implementation note: we cannot use add_custom_target directly but need to defer it to the
+#    DOXYGEN_INDEX_FILE, so that we dont always recompile
 add_custom_target(Doxygen DEPENDS ${DOXYGEN_INDEX_FILE})
 
-# --- Sphinx
 
+# --- Sphinx
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
@@ -64,8 +65,10 @@ file(GLOB_RECURSE DOC_RST_FILES *.rst)
 add_custom_target(Sphinx
                   COMMAND
                     ${SPHINX_EXECUTABLE} -b html
+                    # Tell breathe where to find the doxygen output
                     -Dbreathe_projects.vrmodeling="${DOXYGEN_OUTPUT_DIRECTORY}/xml"
                     ${SPHINX_SOURCE} ${SPHINX_BUILD}
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                    
                   DEPENDS Doxygen "${SPHINX_SOURCE}/conf.py" ${DOC_RST_FILES}
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                   COMMENT "Generating documentation with Sphinx")
