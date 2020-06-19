@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(INTERFACE_PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
-
-# Add project files
-file(GLOB SRCFILES "Interface.cpp" "*.cpp")
-file(GLOB HFILES "Interface.h" "*.h")
-
 source_group("Header Files" FILES ${HFILES})
 source_group("Debug Misc" FILES ${EIGEN_DEBUG_FILES})
 source_group("Unity\\Plugin API" FILES ${UNITY_PLUGIN_API_FILES})

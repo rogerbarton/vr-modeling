@@ -29,6 +29,11 @@ set(UNITY_DLL_OUTPUT_DIRECTORY "Assets/Plugins" CACHE STRING
 set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}${UNITY_DLL_OUTPUT_DIRECTORY}")
 
 
+# Find project files
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
+file(GLOB SRCFILES "${SOURCE_DIR}/Interface.cpp" "${SOURCE_DIR}/*.cpp")
+file(GLOB HFILES   "${SOURCE_DIR}/Interface.h"   "${SOURCE_DIR}/*.h")
+
 # Add the dll projects
 add_subdirectory("source")
 
