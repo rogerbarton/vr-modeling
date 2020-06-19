@@ -6,12 +6,6 @@ option(CMAKE_VERBOSE "Print extra information" OFF)
 # Note: As this project is aimed at the Oculus Rift platform on Windows,
 #       this cmake file is tailored to a Visual Studio solution.
 
-# libigl - turn off 2D UI
-option(LIBIGL_WITH_OPENGL            "Use OpenGL"         OFF)
-option(LIBIGL_WITH_OPENGL_GLFW       "Use GLFW"           OFF)
-find_package(LIBIGL REQUIRED QUIET)
-find_package(OpenGL REQUIRED)
-
 # Add Unity header files
 include_directories(${PROJECT_NAME} "external" "external/Unity")
 file(GLOB UNITY_PLUGIN_API_FILES "external/Unity/PluginAPI/*.c*" "external/Unity/PluginAPI/*.h*")

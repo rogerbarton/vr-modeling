@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
+set(INTERFACE_PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
+
 # Add project files
 file(GLOB SRCFILES "Interface.cpp" "*.cpp")
 file(GLOB HFILES "Interface.h" "*.h")
@@ -21,6 +23,12 @@ endif()
 
 # Create out DLL output file and link libigl to it
 add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES} ${UNITY_PLUGIN_API_FILES} ${UNITY_RENDER_API_FILES} ${EIGEN_DEBUG_FILES})
+
+# libigl - turn off 2D UI
+option(LIBIGL_WITH_OPENGL            "Use OpenGL"         OFF)
+option(LIBIGL_WITH_OPENGL_GLFW       "Use GLFW"           OFF)
+find_package(LIBIGL REQUIRED QUIET)
+find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} igl::core OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
