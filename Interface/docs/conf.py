@@ -33,7 +33,7 @@
 extensions = [  'sphinx.ext.mathjax',
                 'breathe']
 
-breathe_default_project = "vr-modeling"
+breathe_default_project = 'vrmodeling'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -57,7 +57,7 @@ author = u'Roger Barton'
 # built documents.
 #
 # The short X.Y version.
-version = u'1.0.0'
+version = u'1.0'
 # The full version, including alpha/beta/rc tags.
 release = u'1.0.0'
 

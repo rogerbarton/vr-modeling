@@ -1,7 +1,12 @@
 cmake_minimum_required (VERSION 3.8)
 project("vr-modeling-docs")
-
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+# This generates our documentation.
+# First we run Doxygen to generate xml based understanding of the structure of our code
+# Then we run python-based Sphinx to convert the .rst files to html
+# Breathe is a Sphinx extension used to connect Doxygen and Sphinx
+# See tutorial used: https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/
 
 find_package(Doxygen REQUIRED)
 find_package(Sphinx REQUIRED)
@@ -11,42 +16,56 @@ if(NOT DOXYGEN_FOUND OR NOT SPHINX_FOUND)
 endif()
 
 # --- Doxygen
-# Find all source files for efficient recompile
-set(CS_SCRIPTS_DIR "${UNITY_PROJECT_ROOT}Assets/Scripts")
-set(CXX_SCRIPTS_DIR "${INTERFACE_PROJECT_ROOT}")
-file(GLOB_RECURSE CS_SCRIPTS "${CS_SCRIPTS_DIR}/*.cs")
-set(CXX_SCRIPTS ${HFILES} ${SRCFILES})
+# Find all source files for efficient recompilation
+set(CS_FILES_DIR "${UNITY_PROJECT_ROOT}Assets/Scripts")
+set(CXX_FILES_DIR "${SOURCE_DIR}")
+file(GLOB_RECURSE CS_FILES "${CS_FILES_DIR}/*.cs")
+set(CXX_FILES ${HFILES} ${SRCFILES})
+if(CMAKE_VERBOSE)
+    message(STATUS "Doc C#  files: ${CS_FILES}")
+    message(STATUS "Doc C++ files: ${CXX_FILES}")
+endif()
+
 
 # Set input/output directories
-set(DOXYGEN_INPUT_DIRECTORY "${CXX_SCRIPTS_DIR} ${CS_SCRIPTS_DIR}")
+set(DOXYGEN_INPUT_DIRECTORY "${CXX_FILES_DIR} \\ \n${CS_FILES_DIR}")
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
-set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
-set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
 # Replace variables inside @@ with the current values
-configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+set(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+configure_file(${DOXYFILE_IN} ${DOXYFILE} @ONLY)
+if(CMAKE_VERBOSE)
+    message(STATUS "Using Doxyfile.in: ${DOXYFILE_IN}")
+    message(STATUS "Doxygen outout at: ${DOXYGEN_OUTPUT_DIRECTORY}")
+endif()
 
 # Create output directory (not done by doxygen)
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIRECTORY})
 
-set(DOXYGEN_INDEX_FILE ${CMAKE_CURRENT_SOURCE_DIR}/xml/index.xml)
+set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIRECTORY}/xml/index.xml)
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
-                   DEPENDS ${CS_SCRIPTS} ${CXX_SCRIPTS}
-                   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+                   DEPENDS ${CS_FILES} ${CXX_FILES}
+                   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                   MAIN_DEPENDENCY Doxyfile.in
-                   COMMENT "Generating doyxgen xml docs")
+                   MAIN_DEPENDENCY ${DOXYFILE_IN}
+                   COMMENT "Generating Doyxgen xml documentation")
 
-add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+# This is the target we can execute                   
+add_custom_target(Doxygen DEPENDS ${DOXYGEN_INDEX_FILE})
 
 # --- Sphinx
 
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
-set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/docs/sphinx)
+set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
+set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
+file(GLOB_RECURSE DOC_RST_FILES *.rst)
 
-add_custom_target(Sphinx ALL
+add_custom_target(Sphinx
                   COMMAND
-                  ${SPHINX_EXECUTABLE} -b html
-                  -Dbreathe_projects.vr-modeling=_doxygen/xml/
-                  ${SPHINX_SOURCE} ${SPHINX_BUILD}
+                    ${SPHINX_EXECUTABLE} -b html
+                    -Dbreathe_projects.vrmodeling="${DOXYGEN_OUTPUT_DIRECTORY}/xml"
+                    ${SPHINX_SOURCE} ${SPHINX_BUILD}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                  DEPENDS Doxygen "${SPHINX_SOURCE}/conf.py" ${DOC_RST_FILES}
                   COMMENT "Generating documentation with Sphinx")

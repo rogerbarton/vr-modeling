@@ -19,4 +19,7 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. autodoxygenindex::
+.. doxygenclass:: Libigl::Native
+   :members:
+
+.. doxygenfile:: Interface.h
