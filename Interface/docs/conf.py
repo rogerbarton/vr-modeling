@@ -34,7 +34,7 @@ def configureDoxyfile(input_dir, output_dir):
         file.write(filedata)
 
 # Check if we're running on Read the Docs' servers
-read_the_docs_build = #os.environ.get('READTHEDOCS', None) == 'True'
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
 
