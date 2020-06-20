@@ -11,4 +11,4 @@ The project is split into two subprojects, a Unity C# project and a C++ library.
    :numbered:
 
    source-link
-   external-link
+   external-index
