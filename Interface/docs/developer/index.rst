@@ -8,7 +8,6 @@ The project is split into two subprojects, a Unity C# project and a C++ library.
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   :numbered:
 
-   source-link
+   source-index
    external-index
