@@ -11,28 +11,8 @@ Welcome to vr-modeling's documentation!
    :caption: Contents:
    :numbered:
 
-
    self
    user/index
    developer/index
-   developer/source-link
 
 * See whole :ref:`genindex`
-
-Libigl::Native
-^^^^^^^^^^^^^^
-
-.. doxygenclass:: Libigl::Native
-   :members:
-
-UMeshData.cs
-^^^^^^^^^^^^
-
-.. doxygenfile:: UMeshData.cs
-
-ModifyMesh.cpp
-^^^^^^^^^^^^^^
-
-.. doxygenfile:: ModifyMesh.cpp
-
-.. doxygenfile:: State.h

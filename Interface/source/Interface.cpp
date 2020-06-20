@@ -2,11 +2,7 @@
 #include <igl/readOBJ.h>
 #include <igl/jet.h>
 
-// Declare variables made extern in Interface.h
-/**
- * Print to the Unity Debug.Log. Check that the function pointer is not null before using
- * @example @code if (DebugLog) DebugLog("Hello");
- */
+// Declare variables made extern in InterfaceTypes.h
 StringCallback DebugLog = nullptr;
 StringCallback DebugLogWarning = nullptr;
 StringCallback DebugLogError = nullptr;

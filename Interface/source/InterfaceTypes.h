@@ -8,6 +8,11 @@ typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 
 // A global variable should be extern, so it can be seen in several cpp's.
 // It is then defined in the Interface.cpp once
+/**
+ * Print to the Unity Debug.Log. Check that the function pointer is not null before using
+ * <example><code>if (DebugLog) DebugLog("Hello");</code></example>
+ * This is what the LOG macro does, use that instead.
+ */
 extern StringCallback DebugLog;
 extern StringCallback DebugLogWarning;
 extern StringCallback DebugLogError;
@@ -16,7 +21,7 @@ extern IUnityInterfaces* s_UnityInterfaces;
 
 /**
  * Macro to easily concatenate strings using stringstream, use the operator&lt;&lt;<br/>
- * <example><code> STR("My value: " &lt;&lt; 123)</code></example>
+ * <example><code>STR("My value: " &lt;&lt; 123)</code></example>
  */
 #define STR(message) static_cast<std::ostringstream &&>((std::ostringstream() << message)).str().data()
 #ifndef NDEBUG

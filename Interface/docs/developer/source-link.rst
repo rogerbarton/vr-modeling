@@ -1,3 +1,1 @@
-
-
 .. include :: ../../source/index.rst
