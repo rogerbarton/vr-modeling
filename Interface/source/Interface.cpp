@@ -7,7 +7,7 @@ StringCallback DebugLog = nullptr;
 StringCallback DebugLogWarning = nullptr;
 StringCallback DebugLogError = nullptr;
 
-IUnityInterfaces* s_UnityInterfaces = nullptr;
+IUnityInterfaces* s_IUnityInterfaces = nullptr;
 
 extern "C" {
 	void Initialize(const StringCallback debugCallback, StringCallback debugWarningCallback, StringCallback debugErrorCallback) {
@@ -36,13 +36,13 @@ extern "C" {
 
 	void UNITY_INTERFACE_API UnityPluginLoad(IUnityInterfaces* unityInterfaces)
 	{
-		s_UnityInterfaces = unityInterfaces;
+		s_IUnityInterfaces = unityInterfaces;
 		LOG("UnityPluginLoad()")
 	}
 
 	void UNITY_INTERFACE_API UnityPluginUnload()
 	{
-		s_UnityInterfaces = nullptr;
+		s_IUnityInterfaces = nullptr;
 
 		LOG("UnityPluginUnload()")
 		DebugLog = nullptr;

@@ -17,7 +17,7 @@ extern StringCallback DebugLog;
 extern StringCallback DebugLogWarning;
 extern StringCallback DebugLogError;
 
-extern IUnityInterfaces* s_UnityInterfaces;
+extern IUnityInterfaces* s_IUnityInterfaces;
 
 /**
  * Macro to easily concatenate strings using stringstream, use the operator&lt;&lt;<br/>
