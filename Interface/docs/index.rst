@@ -9,13 +9,15 @@ Welcome to vr-modeling's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :numbered:
+
 
    self
    user/index
    developer/index
+   developer/source-link
 
-* :ref:`genindex`
-
+* See whole :ref:`genindex`
 
 Libigl::Native
 ^^^^^^^^^^^^^^

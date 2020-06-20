@@ -117,6 +117,7 @@ html_theme_options = {
     'canonical_url': 'https://vr-modeling.readthedocs.io/en/latest/',
     'analytics_id': 'UA-130427376-2',  #  Provided by Google in your dashboard
     'style_external_links': True,
+    'prev_next_buttons_location': 'both',
 
     # Toc options
     'collapse_navigation': True,
