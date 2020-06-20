@@ -9,3 +9,5 @@ The project is split into two subprojects, a Unity C# project and a C++ library.
    :maxdepth: 2
    :caption: Contents:
 
+   vr
+   unity-mesh-api

@@ -8,5 +8,6 @@ This is aimed at people wanting to view or edit the code.
    :maxdepth: 2
    :caption: Contents:
 
+   cpp-interface
    source-index
    external-index

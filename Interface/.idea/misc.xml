@@ -7,6 +7,8 @@
     </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/cmake-build-vs" />
+      <file path="$PROJECT_DIR$/docs/_build" />
+      <file path="$PROJECT_DIR$/docs/doxygen" />
     </excludeRoots>
   </component>
 </project>

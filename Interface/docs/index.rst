@@ -1,7 +1,7 @@
 Welcome to vr-modeling's documentation!
 =======================================
 
-*Deform meshes in virtual reality with libigl using Unity.*
+*Deform meshes in Virtual Reality with libigl using Unity.*
 
 .. toctree::
    :maxdepth: 2
