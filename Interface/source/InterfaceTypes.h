@@ -3,7 +3,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-// Function pointer to a C# void MyFct(string message)
+/** Function pointer to a C# delegate: <code>void MyFct(string message)</code> */
 typedef void(UNITY_INTERFACE_API* StringCallback) (const char* message);
 
 // A global variable should be extern, so it can be seen in several cpp's.
@@ -14,12 +14,24 @@ extern StringCallback DebugLogError;
 
 extern IUnityInterfaces* s_UnityInterfaces;
 
-// Macro to easily concat strings using stringstream, use the operator<<
+/**
+ * Macro to easily concatenate strings using stringstream, use the operator&lt;&lt;<br/>
+ * <example><code> STR("My value: " &lt;&lt; 123)</code></example>
+ */
 #define STR(message) static_cast<std::ostringstream &&>((std::ostringstream() << message)).str().data()
-// Macro to easily print to the Unity Debug.Log
 #ifndef NDEBUG
+/**
+ * Macro to easily and safely print to the Unity Debug.Log, disabled in release. Uses STR.<br/>
+ * <example><code> LOG("My value: " &lt;&lt; 123)</code></example>
+ */
 #define LOG(message) if(DebugLog) { DebugLog(STR(message)); }
+/**
+ * Call Unity Debug.LogWarning safely. Uses STR.
+ */
 #define LOGWARN(message) if(DebugLogWarning) { DebugLogWarning(STR(message)); }
+/**
+ * Call Unity Debug.LogError safely. Uses STR.
+ */
 #define LOGERR(message) if(DebugLogError) { DebugLogError(STR(message)); }
 #else
 #define LOG(m)
@@ -27,6 +39,9 @@ extern IUnityInterfaces* s_UnityInterfaces;
 #define LOGERR(m)
 #endif
 
+/**
+ * The Unity Vector3 with functonality for converting to/from Eigen::Vector3f (float).
+ */
 struct Vector3 {
 	float x;
 	float y;
@@ -45,6 +60,10 @@ struct Vector3 {
 	inline static Vector3 Zero() { return Vector3(0.f, 0.f, 0.f); }
 };
 
+/**
+ * The Unity Quaternion with functonality for converting to/from Eigen::Quaternionf (float).<p>
+ * <b>Beware:</b> Unity and Eigen have different conventions for ordering the values.
+ */
 struct Quaternion {
 	float x;
 	float y;
@@ -89,7 +108,7 @@ struct DirtyFlag {
 
 /**
  * Stores all pointers to the MeshData arrays.<p>
- * Usually this should be as a <code>const</code> parameter
+ * Usually this should be as a <code>const</code> parameter.
  */
 struct UMeshDataNative
 {
@@ -103,7 +122,10 @@ struct UMeshDataNative
 	int FSize;
 };
 
-struct SelectionMode{
+/**
+ * Constants related to how a select operation modifies the current selection.
+ */
+struct SelectionMode {
 	static const unsigned int Add = 0;
 	static const unsigned int Subtract = 1;
 	static const unsigned int Toggle = 2;
