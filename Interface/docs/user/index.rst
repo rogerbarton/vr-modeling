@@ -1,7 +1,0 @@
-User Guide
-==========
-
-
-
-Overview
---------
