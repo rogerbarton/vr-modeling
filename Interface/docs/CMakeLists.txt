@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
-project("vr-modeling-docs")
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+#project("vr-modeling-docs")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # This generates our documentation.
 # First we run Doxygen to generate xml based understanding of the structure of our code
@@ -19,6 +19,8 @@ endif()
 # Find all source files for efficient recompilation
 set(CS_FILES_DIR "${UNITY_PROJECT_ROOT}Assets/Scripts")
 set(CXX_FILES_DIR "${SOURCE_DIR}")
+set(UNITY_HFILES_DIR "${PROJECT_SOURCE_DIR}/external/Unity")
+set(STUB_PLUGIN_DIR "${PROJECT_SOURCE_DIR}/external/UnityNativeTool")
 file(GLOB_RECURSE CS_FILES "${CS_FILES_DIR}/*.cs")
 set(CXX_FILES ${HFILES} ${SRCFILES})
 if(CMAKE_VERBOSE)
@@ -28,7 +30,7 @@ endif()
 
 
 # Set input/output directories
-set(DOXYGEN_INPUT_DIRECTORY "${CXX_FILES_DIR} \\ \n${CS_FILES_DIR}")
+set(DOXYGEN_INPUT_DIRECTORY "${CXX_FILES_DIR} \\ \n${CS_FILES_DIR} \\ \n${STUB_PLUGIN_DIR} \\ \n${UNITY_HFILES_DIR}")
 set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
 
 # Replace variables inside @@ with the current values
@@ -60,7 +62,7 @@ add_custom_target(Doxygen DEPENDS ${DOXYGEN_INDEX_FILE})
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
-file(GLOB_RECURSE DOC_RST_FILES *.rst)
+file(GLOB_RECURSE DOC_RST_FILES ${PROJECT_SOURCE_DIR}/*.rst)
 
 add_custom_target(Sphinx
                   COMMAND

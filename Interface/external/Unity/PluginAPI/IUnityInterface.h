@@ -8,7 +8,6 @@
 
 // Unity native plugin API
 // Compatible with C99
-
 #if defined(__CYGWIN32__)
     #define UNITY_INTERFACE_API __stdcall
     #define UNITY_INTERFACE_EXPORT __declspec(dllexport)
@@ -19,7 +18,14 @@
     #define UNITY_INTERFACE_API
     #define UNITY_INTERFACE_EXPORT __attribute__ ((visibility ("default")))
 #else
+/**
+ * Contains appropriate calling convention that C# uses. Use this for C# delegates.
+ * https://en.wikipedia.org/wiki/X86_calling_conventions#stdcall
+ */
     #define UNITY_INTERFACE_API
+/**
+ * Prepend this to an extern "C" function to make it callable from C#.
+ */
     #define UNITY_INTERFACE_EXPORT
 #endif
 
