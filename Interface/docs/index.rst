@@ -10,16 +10,27 @@ Welcome to vr-modeling's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
-==================
+   self
+   user/index
+   developer/index
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
+
+Libigl::Native
+^^^^^^^^^^^^^^
 
 .. doxygenclass:: Libigl::Native
    :members:
 
-.. doxygenfile:: Interface.h
+UMeshData.cs
+^^^^^^^^^^^^
+
+.. doxygenfile:: UMeshData.cs
+
+ModifyMesh.cpp
+^^^^^^^^^^^^^^
+
+.. doxygenfile:: ModifyMesh.cpp
+
+.. doxygenfile:: State.h

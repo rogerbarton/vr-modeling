@@ -66,7 +66,7 @@ add_custom_target(Sphinx
                   COMMAND
                     ${SPHINX_EXECUTABLE} -b html
                     # Tell breathe where to find the doxygen output
-                    -Dbreathe_projects.vrmodeling="${DOXYGEN_OUTPUT_DIRECTORY}/xml"
+                    -Dbreathe_projects.vr-modeling="${DOXYGEN_OUTPUT_DIRECTORY}/xml"
                     ${SPHINX_SOURCE} ${SPHINX_BUILD}
                     
                   DEPENDS Doxygen "${SPHINX_SOURCE}/conf.py" ${DOC_RST_FILES}

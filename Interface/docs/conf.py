@@ -91,7 +91,8 @@ release = u'1.0.0'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'c++'
+highlight_language = 'c++'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -112,16 +113,28 @@ todo_include_todos = False
 #
 html_theme = 'sphinx_rtd_theme'
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-#
-# html_theme_options = {}
+html_theme_options = {
+    'canonical_url': 'https://vr-modeling.readthedocs.io/en/latest/',
+    'analytics_id': 'UA-130427376-2',  #  Provided by Google in your dashboard
+    'style_external_links': True,
+
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
+github_url = 'https://github.com/rogerbarton/vr-modeling'
+gitlab_url = 'https://gilab.ethz.ch/rbarton/vr-modeling'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_css_files = [
+    'css/common.css'
+]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
