@@ -87,16 +87,16 @@ UNITY_INTERFACE_EXPORT void TranslateAllVertices(State* state, Vector3 value);
 /**
  * Translate vertices in specific selections.
  * @param value displacement in local space
- * @param selectionId Which selections to transform as a bitmask
+ * @param maskId Which selections to transform as a bitmask
  */
 UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, unsigned int maskId = -1);
 
 /**
  * Transform the selected vertices in place (translate + scale + rotate).
- * @param selectionId Which selection to transform, -1 for all selections
+ * @param maskId Which selections to transform
  */
 UNITY_INTERFACE_EXPORT void
-TransformSelection(State* state, unsigned int maskId, Vector3 translation, float scale, Quaternion rotation);
+TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, unsigned int maskId = -1);
 
 /**
  * Run the igl::harmonic biharmonic deformation on the mesh with provided fixed boundary conditions.
@@ -138,14 +138,14 @@ UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(State* state, Vector3
 
 /**
  * Resets a particular selections, can clear multiple selections at once.
- * @param selectionId Which selections to clear as a bitmask
+ * @param maskId Which selections to clear as a bitmask
  */
 UNITY_INTERFACE_EXPORT void ClearSelectionMask(State* state, unsigned int maskId = -1);
 
 /**
  * Naive SetColorByMask.
  * Show all selections in the mask in the same color.
- * @param selectionId Which selections to show in the color
+ * @param maskId Which selections to show in the color
  * @param colorId Which color to use, see Color::GetColorById
  */
 UNITY_INTERFACE_EXPORT void SetColorSingleByMask(State* state, unsigned int maskId = -1, int colorId = 0);

@@ -17,8 +17,9 @@ namespace Libigl
             else
             {
                 // Do full transformation
-                Native.TransformSelection(State, 1U << ExecuteInput.ActiveSelectionId, ExecuteInput.TransformDelta.Translate,
-                    ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate);
+                Native.TransformSelection(State, ExecuteInput.TransformDelta.Translate,
+                    ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate,
+                    1U << ExecuteInput.ActiveSelectionId);
             }
         }
 

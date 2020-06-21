@@ -22,7 +22,7 @@ void TranslateSelection(State* state, Vector3 value, unsigned int maskId)
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void TransformSelection(State* state, unsigned int maskId, Vector3 translation, float scale, Quaternion rotation)
+void TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, unsigned int maskId)
 {
 	auto& V = *state->V;
 	const auto& S = *state->S;
