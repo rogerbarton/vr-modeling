@@ -8,6 +8,7 @@ namespace Interface
 	 * Dimensions are inferred from the Matrix
 	 * @tparam Matrix An Eigen Matrix
 	 * @tparam Scalar Type on one element
+	 * @param to Pointer to the first element of a matrix or an array
  	*/
 	template<typename Matrix, typename Scalar>
 	void TransposeToMap(Matrix* from, Scalar* to)
@@ -20,6 +21,7 @@ namespace Interface
 	 * Transpose an Eigen::Map to an Eigen::Matrix
 	 * @tparam Scalar Type on one element
 	 * @tparam Matrix An Eigen Matrix
+	 * @param from Pointer to the first element of a matrix or an array
 	 */
 	template<typename Scalar, typename Matrix>
 	void TransposeFromMap(Scalar* from, Matrix* to)

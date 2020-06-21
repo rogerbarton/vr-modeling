@@ -43,11 +43,35 @@ namespace Interface
 	UNITY_INTERFACE_EXPORT void UnityPluginUnload();
 
 	// --- IO.cpp
-	UNITY_INTERFACE_EXPORT void
-	LoadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale, void*& VPtr,
-	        int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize);
+	/**
+	 * Propagates changes from the libigl mesh (Eigen matrices) to the Unity NativeArrays so we can apply it to the mesh in C#.
+	 * This functions also recalculated selection sizes, colors based on the selection.
+	 * This should be called once after apply all wanted changes to the libigl mesh.
+	 * This function itself does not modify the Unity mesh, see UMeshData.cs
+	 * @param data Pointers to the Unity Mesh Data, where to apply changes to.
+	 * @param visibleSelectionMask Selections which are currently visible, will ignore changes to invisible selections.
+	 */
 	UNITY_INTERFACE_EXPORT void
 	ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleSelectionMask);
+	/**
+	 * Reads an .off file into **row major** Eigen matrices, these can then be mapped by a NativeArray in C#.
+	 * Matrices are allocated with <code>new</code> and must be deleted manually
+	 * (e.g. by <code>NativeArray<T>.Dispose()</code> or converting with <code>Allocator.Temp</code>).
+	 * @param path The asset path, absolute or relative to the project root e.g. AssetImportContext.assetPath or "Assets/model.off"
+	 * @param setCenter Set the center as the mean vertex, see ApplyScale
+	 * @param normalizeScale Whether to normalize the y-scale to 1
+	 * @param scale Scale the mesh by this factor *after normalization*
+	 * @param VPtr Pointer to the first element of the Vertex matrix
+	 * @param VSize Number of vertices, rows of V
+	 * @param NPtr Pointer to the first element of the Normals matrix
+	 * @param NSize Number of normals, usually equal to VSize
+	 * @param calculateNormalsIfEmpty Calculate per vertex normals, if no normals are present in the .off file
+	 * @param FPtr Pointer to the first element of the Face/Indices matrix, one row is a triangle
+	 * @param FSize Number of faces, rows of F
+	 */
+	UNITY_INTERFACE_EXPORT void
+	ReadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale, void*& VPtr,
+	        int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize, bool calculateNormalsIfEmpty = false);
 
 	// --- ModifyMesh.cpp
 	UNITY_INTERFACE_EXPORT void TranslateMesh(State* state, Vector3 value);

@@ -68,15 +68,16 @@ namespace Libigl
 
 
         // IO.cpp
-        [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
-        public static extern unsafe void LoadOFF([In] string path, [In] bool setCenter, [In] bool normalizeScale,
-            [In] float scale,
-            [Out] out float* VPtr, [Out] out int VSize,
-            [Out] out float* NPtr, [Out] out int NSize,
-            [Out] out uint* FPtr, [Out] out int FSize);
-
         [DllImport(DllName)]
         public static extern unsafe void ApplyDirty(State* state, UMeshDataNative data, uint visibleSelectionMask);
+        
+        [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
+        public static extern unsafe void ReadOFF(string path, bool setCenter, bool normalizeScale,
+            float scale,
+            out float* VPtr, out int VSize,
+            out float* NPtr, out int NSize,
+            out uint* FPtr, out int FSize, 
+            bool calculateNormalsIfEmpty);
 
 
         // ModifyMesh.cpp

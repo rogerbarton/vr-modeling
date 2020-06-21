@@ -73,8 +73,8 @@ namespace Libigl.Editor
             unsafe
             {
                 //Load OFF into Eigen Matrices and get the pointers here
-                Native.LoadOFF(ctx.assetPath, centerToMean, normalizeScale, scale, out var VPtr, out VSize, out var NPtr, out NSize,
-                    out var FPtr, out FSize);
+                Native.ReadOFF(ctx.assetPath, centerToMean, normalizeScale, scale, out var VPtr, out VSize, out var NPtr, out NSize,
+                    out var FPtr, out FSize, false);
 
                 //Convert the pointers to NativeArrays which we can create a mesh with
                 V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(VPtr, VSize, Allocator.Temp);
