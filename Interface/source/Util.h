@@ -80,7 +80,6 @@ namespace Interface
 		V.array() *= targetScale;
 	}
 
-
 	using Color_t = Eigen::RowVector4f;
 
 	struct Color
@@ -96,6 +95,9 @@ namespace Interface
 		static Color_t BlueLight;
 		static Color_t Yellow;
 
+		/**
+		 * Gets color based on the selectionId, matched C#
+		 */
 		static const Color_t& GetColorById(int selectionId);
 	};
 }

@@ -13,7 +13,7 @@ The two important functions for the lifecycle of a mesh are :cpp:func:`Initializ
 These are called whenever a :cpp:class:`LibiglMesh` is instaniated or destroyed in Unity. This is where the C++ owned
 memory is allocated and deleted.
 
-To make these functions callable from C# we must put them (and the .cpp definitions) inside an ``extern "C"`` scope,
+To make these functions callable from C# we must put the declarations inside an ``extern "C"`` scope,
 as well as prepending the :c:macro:`UNITY_INTERFACE_EXPORT` to the declaration. This is because C# and C++ use different
 default calling conventions, see `x86 Calling Conventions <https://en.wikipedia.org/wiki/X86_calling_conventions#stdcall>`_
 specifically ``__stdcall``. *This also is different for every platform, but luckily the IUnityInterface header handles
