@@ -17,6 +17,7 @@ namespace Interface
 	 */
 	UNITY_INTERFACE_EXPORT void
 	Initialize(StringCallback debugCallback, StringCallback debugWarningCallback, StringCallback debugErrorCallback);
+
 	/**
 	 * Called when a new mesh is loaded. Initialize global variables, do pre-calculations for a mesh
 	 * @param data The Unity MeshData
@@ -24,10 +25,12 @@ namespace Interface
 	 * @return A pointer to the C++ state for this mesh
 	 */
 	UNITY_INTERFACE_EXPORT State* InitializeMesh(const UMeshDataNative data, const char* name);
+
 	/**
 	 * Disposes all C++ state tied to a mesh properly
 	 */
 	UNITY_INTERFACE_EXPORT void DisposeMesh(State* state);
+
 
 	// --- Unity Callbacks from IUnityInterface.h
 	/**
@@ -36,11 +39,13 @@ namespace Interface
 	 * @param unityInterfaces Unity class for accessing minimal Unity functionality exposed to C++ Plugins
 	 */
 	UNITY_INTERFACE_EXPORT void UnityPluginLoad(IUnityInterfaces* unityInterfaces);
+
 	/**
 	 * Called when the plugin is unloaded, clean up here
 	 * Declared in IUnityInterface.h
 	 */
 	UNITY_INTERFACE_EXPORT void UnityPluginUnload();
+
 
 	// --- IO.cpp
 	/**
@@ -53,6 +58,7 @@ namespace Interface
 	 */
 	UNITY_INTERFACE_EXPORT void
 	ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleSelectionMask);
+
 	/**
 	 * Reads an .off file into **row major** Eigen matrices, these can then be mapped by a NativeArray in C#.
 	 * Matrices are allocated with <code>new</code> and must be deleted manually
@@ -73,23 +79,82 @@ namespace Interface
 	ReadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale, void*& VPtr,
 	        int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize, bool calculateNormalsIfEmpty = false);
 
+
 	// --- ModifyMesh.cpp
-	UNITY_INTERFACE_EXPORT void TranslateMesh(State* state, Vector3 value);
+	/**
+	 * Debug function to simply translate all vertices by the value
+	 */
+	UNITY_INTERFACE_EXPORT void TranslateAllVertices(State* state, Vector3 value);
+
+	/**
+	 *
+	 * @param state
+	 * @param value
+	 * @param selectionId
+	 */
 	UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, int selectionId = -1);
+
+	/**
+	 * Transform the selected vertices in place (translate + scale + rotate)
+	 * @param selectionId Which selection to transform, -1 for all selections
+	 */
 	UNITY_INTERFACE_EXPORT void
 	TransformSelection(State* state, int selectionId, Vector3 translation, float scale, Quaternion rotation);
+
+	/**
+	 * Run the igl::harmonic biharmonic deformation on the mesh with provided fixed boundary conditions
+	 * From libigl Tutorial 401, https://libigl.github.io/tutorial/#biharmonic-deformation
+	 * @param boundaryMask Which selections to use as the boundary
+	 * @param showDeformationField Whether to show the deformation field, see libigl tutorial
+	 */
 	UNITY_INTERFACE_EXPORT void
 	Harmonic(State* state, unsigned int boundaryMask = -1, bool showDeformationField = true);
+
+	/**
+	 * Run the igl::arap As-Rigid-As-Possible deformation on the mesh with the provided fixed boundary conditions
+	 * @param boundaryMask Which selections to use as the boundary
+	 */
 	UNITY_INTERFACE_EXPORT void Arap(State* state, unsigned int boundaryMask = -1);
+
+	/**
+	 * Reset the vertices to their initial position V0 (set when loading the mesh)
+	 */
 	UNITY_INTERFACE_EXPORT void ResetV(State* state);
 
+
 	// --- Selection.cpp
+	/**
+	 * Modify the selection inside a sphere.
+	 * @param position Center of the sphere in local space
+	 * @param radius Radius of the sphere in local space (without scale applied)
+	 * @param selectionId Which selection to modify
+	 * @param selectionMode How to change the selection, use SelectionMode constants.
+	 */
 	UNITY_INTERFACE_EXPORT void SelectSphere(State* state, Vector3 position, float radius, int selectionId = 0,
 	                                         unsigned int selectionMode = SelectionMode::Add);
+	/**
+	 * @return A mask of all selections partially inside the sphere (based on if a vertex is inside)
+	 * @param position Center of the sphere in local space
+	 * @param radius Radius of the sphere in local space (without scale applied)
+	 */
 	UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius);
-	UNITY_INTERFACE_EXPORT void ClearSelection(State* state, int selectionId = -1);
+
+	/**
+	 * Resets a particular selections, can clear multiple selections at once
+	 * @param selectionId Which selections to clear as a bitmask
+	 */
 	UNITY_INTERFACE_EXPORT void ClearSelectionMask(State* state, unsigned int maskId);
+
+	/**
+	 * Set the vertex colors to show a *single* selection
+	 * @param selectionId Which single selection to show
+	 */
 	UNITY_INTERFACE_EXPORT void SetColorBySelection(State* state, int selectionId = -1);
+
+	/**
+	 * Set the vertex colors based on a bitmask of visible selections
+	 * @param maskId Which selections to show
+	 */
 	UNITY_INTERFACE_EXPORT void SetColorByMask(State* state, unsigned int maskId = -1);
 
 	// --- sample/CustomUploadMesh.cpp

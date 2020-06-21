@@ -82,7 +82,7 @@ namespace Libigl
 
         // ModifyMesh.cpp
         [DllImport(DllName)]
-        public static extern unsafe void TranslateMesh(State* state, Vector3 value);
+        public static extern unsafe void TranslateAllVertices(State* state, Vector3 value);
 
         [DllImport(DllName)]
         public static extern unsafe void TranslateSelection(State* state, Vector3 value, int selectionId);
@@ -108,9 +108,6 @@ namespace Libigl
         
         [DllImport(DllName)]
         public static extern unsafe uint GetSelectionMaskSphere(State* state, Vector3 position, float radius);
-
-        [DllImport(DllName)]
-        public static extern unsafe void ClearSelection(State* state, int selectionId);
 
         [DllImport(DllName)]
         public static extern unsafe void ClearSelectionMask(State* state, uint maskId);

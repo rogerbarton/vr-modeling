@@ -39,9 +39,6 @@ namespace Interface
 		state->DirtySelections |= maskId;
 	}
 
-	/**
-	 * @return A mask of all selections with a vertex inside the sphere
-	 */
 	unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius)
 	{
 		const Eigen::RowVector3f posEigen = position.AsEigenRow();
@@ -61,25 +58,12 @@ namespace Interface
 		return mask;
 	}
 
-	/**
-	 * Resets a particular selection
-	 * @param selectionId  Which selection to clear, -1 to clear all selections
-	 */
-	void ClearSelection(State* state, int selectionId)
-	{
-		ClearSelectionMask(state, Selection::GetMask(selectionId));
-	}
-
 	void ClearSelectionMask(State* state, unsigned int maskId)
 	{
 		*state->S = state->S->unaryExpr([&](int s) -> int { return ~maskId & s; });
 		state->DirtySelections |= maskId;
 	}
 
-	/**
-	 * Set the vertex colors to show a single selection
-	 * @param selectionId Which selection to show
-	 */
 	void SetColorBySelection(State* state, int selectionId)
 	{
 		const unsigned int maskId = Selection::GetMask(selectionId);
@@ -91,14 +75,9 @@ namespace Interface
 		state->DirtyState |= DirtyFlag::CDirty;
 	}
 
-	/**
-	 * Set the color based on a mask of visible selections
-	 * @param maskId Which selections to show
-	 */
 	void SetColorByMask(State* state, unsigned int maskId)
 	{
 		state->C->setZero();
-
 
 		for (unsigned int selectionId = 0; selectionId < state->SCount; ++selectionId)
 		{

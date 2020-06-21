@@ -4,7 +4,7 @@
 
 namespace Interface
 {
-	void TranslateMesh(State* state, Vector3 value)
+	void TranslateAllVertices(State* state, Vector3 value)
 	{
 		state->V->rowwise() += value.AsEigenRow();
 		state->DirtyState |= DirtyFlag::VDirty;
@@ -28,10 +28,6 @@ namespace Interface
 		state->DirtyState |= DirtyFlag::VDirty;
 	}
 
-	/**
-	 * Transform the selected vertices in place (translate + scale + rotate)
-	 * @param selectionId Which selection to transform, -1 for all selections
-	 */
 	void TransformSelection(State* state, int selectionId, Vector3 translation, float scale, Quaternion rotation)
 	{
 		auto& V = *state->V;
@@ -90,7 +86,6 @@ namespace Interface
 		return true;
 	}
 
-	// From Tutorial 401
 	void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField)
 	{
 
