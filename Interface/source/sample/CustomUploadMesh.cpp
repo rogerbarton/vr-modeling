@@ -3,7 +3,7 @@
 #include <RenderAPI/PlatformBase.h>
 #include <RenderAPI/RenderAPI.h>
 
-namespace Interface::Sample
+namespace Sample
 {
 	IUnityGraphics* s_Graphics = nullptr;
 

@@ -1,12 +1,9 @@
 #pragma once
 
-namespace Interface
+struct Selection
 {
-	struct Selection
-	{
-		/**
-		 * @return Returns the bit-shifted mask, if selectionId is -1 mask is zero
-		 */
-		static unsigned int GetMask(int selectionId);
-	};
-}
+	/**
+	 * @return Returns the bit-shifted mask, if selectionId is -1 mask is zero
+	 */
+	static unsigned int GetMask(int selectionId);
+};
