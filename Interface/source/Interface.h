@@ -92,7 +92,9 @@ UNITY_INTERFACE_EXPORT void TranslateAllVertices(State* state, Vector3 value);
 UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, unsigned int maskId = -1);
 
 /**
- * Transform the selected vertices in place (translate + scale + rotate).
+ * Transform the selected vertices in place.
+ * Translate + Rotate + Scale in this order.
+ * Rotation is currently only around the origin of the mesh
  * @param maskId Which selections to transform
  */
 UNITY_INTERFACE_EXPORT void
