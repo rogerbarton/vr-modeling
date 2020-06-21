@@ -1,6 +1,8 @@
+#include "ModifyMesh.h"
 #include "Interface.h"
 #include <igl/harmonic.h>
 
+// --- Transformations
 void TranslateAllVertices(State* state, Vector3 value)
 {
 	state->V->rowwise() += value.AsEigenRow();
@@ -43,10 +45,7 @@ void TransformSelection(State* state, Vector3 translation, float scale, Quaterni
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-/**
- * Recalculates the boundary based on if the relevant selections have changed
- * @return True if boundary has changed
- */
+// --- Deformations
 bool UpdateBoundary(State* state, unsigned int boundaryMask)
 {
 	if (state->Native->BoundaryMask == boundaryMask &&
@@ -64,11 +63,7 @@ bool UpdateBoundary(State* state, unsigned int boundaryMask)
 	return true;
 }
 
-/**
- * Recalculates the boundary conditions for Harmonic and Arap
- * @return True if the boundary conditions have changed
- */
-bool UpdateBoundaryConditions(State* state, unsigned int boundaryMask)
+bool UpdateBoundaryConditions(State* state)
 {
 	if (!state->Native->DirtyBoundaryConditions)
 		return false;
@@ -84,7 +79,7 @@ void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField
 
 	// Create boundary conditions
 	bool boundaryChanged = UpdateBoundary(state, boundaryMask);
-	bool solveHarmonic = UpdateBoundaryConditions(state, boundaryMask) || boundaryChanged;
+	bool solveHarmonic = UpdateBoundaryConditions(state) || boundaryChanged;
 
 	if (!solveHarmonic) return;
 
@@ -109,7 +104,7 @@ void Arap(State* state, unsigned int boundaryMask)
 {
 
 	bool recomputeArapData = UpdateBoundary(state, boundaryMask);
-	bool solveArap = UpdateBoundaryConditions(state, boundaryMask) || recomputeArapData;
+	bool solveArap = UpdateBoundaryConditions(state) || recomputeArapData;
 
 	if (state->Native->ArapData == nullptr)
 	{
