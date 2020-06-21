@@ -32,6 +32,8 @@ namespace RogerBarton
         
         private static void RunCMakeRelease(BuildConfig config, string path, StreamWriter log)
         {
+            return; // Skip this experimental feature
+            
             #if !UNITY_EDITOR_WIN
             log.WriteLine("Automatic CMake release building is not yet implemented. Please make sure you build a release" +
                           "version of the library manually.");
