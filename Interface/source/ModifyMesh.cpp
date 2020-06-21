@@ -1,5 +1,4 @@
 #include "Interface.h"
-#include "NumericTypes.h"
 #include "Selection.h"
 #include <igl/harmonic.h>
 

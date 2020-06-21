@@ -55,6 +55,9 @@ namespace Interface
 	void ReadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale,
 	             void*& VPtr, int& VSize, void*& NPtr, int& NSize, void*& FPtr, int& FSize, bool calculateNormalsIfEmpty)
 	{
+		using V_RowMajor_t = Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor>;
+		using F_RowMajor_t = Eigen::Matrix<int, Eigen::Dynamic, 3, Eigen::RowMajor>;
+
 		auto* V = new V_RowMajor_t(); // Must use new as we delete in C#
 		auto* N = new V_RowMajor_t();
 		auto* F = new F_RowMajor_t();

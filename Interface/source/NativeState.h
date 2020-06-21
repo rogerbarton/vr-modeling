@@ -1,5 +1,4 @@
 #pragma once
-#include "NumericTypes.h"
 #include<igl/arap.h>
 
 namespace Interface
