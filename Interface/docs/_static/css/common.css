@@ -3,6 +3,10 @@ code.sig-name.descname {
     white-space: pre-wrap;
 }
 
+a.reference.external {
+  overflow-wrap: break-word;
+}
+
 /* Center aligned text */
 .center {
   text-align: center;

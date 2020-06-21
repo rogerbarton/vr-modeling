@@ -30,8 +30,8 @@ TODO: Add gifs
 #. Easy import process of new models
 #. Easy UI generation
 
-**Compatible VR Headsets:** Theoretically everything compatible with the Unity [XR Plugin](https://docs.unity3d.com/Manual/XR.html)
-system and [XR Interaction Toolkit](https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html).
+**Compatible VR Headsets:** Theoretically everything compatible with the Unity `XR Plugin <https://docs.unity3d.com/Manual/XR.html>`_
+system and `XR Interaction Toolkit <https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html>`_.
 Tested on Oculus Rift S, likely to be compatible are Oculus Rift, Oculus Quest, Valve Index, potentially HTC Vive.
 
 Technical Features
