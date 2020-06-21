@@ -125,7 +125,7 @@ UNITY_INTERFACE_EXPORT void ResetV(State* state);
 /**
  * Modify the selection inside a sphere.
  * @param position Center of the sphere in local space
- * @param radius Radius of the sphere in local space (without scale applied)
+ * @param radius Radius of the sphere in local space
  * @param selectionId Which selection to modify
  * @param selectionMode How to change the selection, use SelectionMode constants.
  */
@@ -134,7 +134,7 @@ UNITY_INTERFACE_EXPORT void SelectSphere(State* state, Vector3 position, float r
 /**
  * @return A mask of all selections partially inside the sphere (based on if a vertex is inside).
  * @param position Center of the sphere in local space
- * @param radius Radius of the sphere in local space (without scale applied)
+ * @param radius Radius of the sphere in local space
  */
 UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius);
 
