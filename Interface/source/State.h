@@ -70,11 +70,18 @@ struct State
 	unsigned int SCount{1};
 
 	/**
-	 * Native only state, not visible from C#
+	 * Native only state, a void* in C#
 	 */
 	NativeState* Native;
 
+	/**
+	 * Initialise the shared state from a Unity mesh
+	 * @param udata All data required to create the state
+	 */
 	explicit State(UMeshDataNative udata);
 
+	/**
+	 * This is where all C++ allocated memory for a mesh is deleted.
+	 */
 	~State();
 };

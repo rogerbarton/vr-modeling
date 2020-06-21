@@ -2,7 +2,12 @@
 #include <PluginAPI/IUnityInterface.h>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-/** Function pointer to a C# delegate: <code>void MyFct(string message)</code> */
+
+/**
+ * Function pointer to a C# delegate: <code>void MyFct(string message)</code><p>
+ * @note C# delegates are <code>fixed</code> by default, so we do not have to worry about these pointers becoming invalid
+ * due to the Garbage Collector.
+ */
 typedef void(UNITY_INTERFACE_API* StringCallback)(const char* message);
 
 // A global variable should be extern, so it can be seen in several cpp's.
@@ -90,7 +95,10 @@ struct Quaternion
 	explicit Quaternion(Eigen::Quaternionf& q) : x(q.x()), y(q.y()), z(q.z()), w(q.w())
 	{}
 
-	// Note! Eigen has a different ordering of the values.
+	/**
+	 * @warning Eigen has a different ordering of the values, handled safely by this function.
+	 * We cannot simply reinterpret the bits.
+	 */
 	inline Eigen::Quaternionf AsEigen() const
 	{ return Eigen::Quaternionf(w, x, y, z); }
 

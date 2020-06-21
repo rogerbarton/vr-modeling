@@ -29,7 +29,42 @@ These are declared once in both languages and if one if modified the other must 
 In C# this corresponds to the classes with the attribute ``[StructLayout(LayoutKind.Sequential)]``.
 The :ref:`State` is also an interface type but has its own file.
 
-Note that :c:macro:`UNITY_INTERFACE_EXPORT` is a macro provided by Unity in ``external/Unity/IUnityInterface.h``,
-which allows the function to be callable from C# (given it is within an ``extern "C"`` clause)
+.. note::
+
+   :c:macro:`UNITY_INTERFACE_EXPORT` is a macro provided by Unity in ``external/Unity/IUnityInterface.h``,
+   which allows the function to be callable from C# (given it is within an ``extern "C"`` clause)
 
 .. doxygenfile:: InterfaceTypes.h
+
+
+ModifyMesh.h
+^^^^^^^^^^^^
+
+This is where the deformations are as well as other functions which manipulate the vertices.
+This is a good place to start for how to implement your own deformation.
+
+.. doxygenfile:: ModifyMesh.h
+
+State.h
+^^^^^^^
+
+This is the shared state between C++/C# and changes in one **must** be applied to the other.
+If the two structs do not match *exactly* problems arise with reading/writing to the wrong memory.
+
+.. doxygenfile:: State.h
+
+NativeState.h
+^^^^^^^^^^^^^
+
+This contains data, specific to a mesh, for storing data only used in C++.
+
+.. doxygenfile:: NativeState.h
+
+Util.h
+^^^^^^
+
+Contains various helper functions, classes and constants.
+
+.. doxygenfile:: Util.h
+
+

@@ -11,18 +11,18 @@ struct NativeState
 	// --- Harmonic & ARAP
 	/**
 	 * Vertices part of the boundary. Has a variable length.
-	 * Note: Evaluated in a lazy manner.
+	 * @note Evaluated in a lazy manner.
 	 */
 	Eigen::VectorXi Boundary{Eigen::VectorXi::Zero(0)};
 	/**
 	 * Positions of vertices in the Boundary (rows correspond). Has a variable length, the same as Boundary.
-	 * Note: Evaluated in a lazy manner.
+	 * @note Evaluated in a lazy manner.
 	 */
 	Eigen::MatrixXf BoundaryConditions{Eigen::VectorXf::Zero(0)};
 
 	/**
 	 * The selections currently used for the Boundary.
-	 * Note: Evaluated in a lazy manner.
+	 * @note Evaluated in a lazy manner.
 	 */
 	unsigned int BoundaryMask{0};
 	/**

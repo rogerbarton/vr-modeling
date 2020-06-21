@@ -45,8 +45,8 @@ void CenterToMean(float* VPtr, int VSize)
 /**
  * Applies the scale of a mesh to the vertices, i.e. cwise multiply.
  * If <code>targetScale</code> is set to zero, the model scale is normalized so it has unit height.
+ * @note y-axis center will be the center of the bounding box for easier positioning
  * @param centerToMean If true sets the center to the mean vertex.
- * Note: y-axis center will be the center of the bounding box for easier positioning
  * @param normalize If set to true the absolute y-height of the model will be <code>targetScale</code> otherwise only
  * the targetScale factor is applied.
  * @tparam V_T Type of the vertex matrix to support both Col and RowMajor
@@ -78,8 +78,12 @@ void ApplyScale(float* VPtr, int VSize, bool centerToMean = true, bool normalize
 	V.array() *= targetScale;
 }
 
+/** RGBA color */
 using Color_t = Eigen::RowVector4f;
 
+/**
+ * Contains color constants
+ */
 struct Color
 {
 	static Color_t White;
