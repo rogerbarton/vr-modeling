@@ -65,13 +65,13 @@ ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleS
  * @param setCenter Set the center as the mean vertex, see ApplyScale
  * @param normalizeScale Whether to normalize the y-scale to 1
  * @param scale Scale the mesh by this factor *after normalization*
- * @param VPtr Pointer to the first element of the Vertex matrix
- * @param VSize Number of vertices, rows of V
- * @param NPtr Pointer to the first element of the Normals matrix
- * @param NSize Number of normals, usually equal to VSize
+ * @param [out] VPtr Pointer to the first element of the Vertex matrix
+ * @param [out] VSize Number of vertices, rows of V
+ * @param [out] NPtr Pointer to the first element of the Normals matrix
+ * @param [out] NSize Number of normals, usually equal to VSize
+ * @param [out] FPtr Pointer to the first element of the Face/Indices matrix, one row is a triangle
+ * @param [out] FSize Number of faces, rows of F
  * @param calculateNormalsIfEmpty Calculate per vertex normals, if no normals are present in the .off file
- * @param FPtr Pointer to the first element of the Face/Indices matrix, one row is a triangle
- * @param FSize Number of faces, rows of F
  */
 UNITY_INTERFACE_EXPORT void
 ReadOFF(const char* path, const bool setCenter, const bool normalizeScale, const float scale, void*& VPtr,
