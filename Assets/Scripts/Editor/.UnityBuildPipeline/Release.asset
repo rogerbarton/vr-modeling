@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e840af50e5915ef47b535c6f85d9fd6e, type: 3}
+  m_Name: Release
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 0
+    SerializedBytes: 2b010b00000069006e0069007400690061006c0069007a0065006400012701090000006200750069006c00640052006f006f007400014c00000043003a002f00550073006500720073002f00690067006c002f0044006f00630075006d0065006e00740073002f00690067006c002f00760072002d006d006f00640065006c0069006e0067002f004200750069006c00640073002f00520065006c0065006100730065002f00760072002d006d006f00640065006c0069006e00670020002800310037002d0036002d003200300029002f00
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  appName: vr-modeling
+  pipelineRootRel: Builds/Release
+  scenes:
+  - enabled: 1
+    scene: {fileID: 102900000, guid: 5e1bc8737debc9f41b2018b1a46405ac, type: 3}
+  developmentBuild: 0
+  autoconnectProfiler: 0
+  strictMode: 1
+  overrideOptions: 2097152
+  buildConfigs:
+  - enabled: 1
+    name: StandaloneWindows64
+    fileExt: .exe
+    targetGroup: 1
+    target: 19
+    options: 0
+    done: 0
+  returnToActiveTarget: 1
+  openExplorerAfter: 1
+  pipelineGroup: 4

@@ -140,6 +140,7 @@ namespace Interface
 		}
 
 		if (!solveArap) return;
+	    LOG("Arap solve...")
 
 		igl::arap_solve(state->Native->BoundaryConditions, *state->Native->ArapData, *state->V);
 

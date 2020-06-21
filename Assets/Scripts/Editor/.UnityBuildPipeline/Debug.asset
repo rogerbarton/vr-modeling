@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e840af50e5915ef47b535c6f85d9fd6e, type: 3}
+  m_Name: Debug
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: initialized
+      Entry: 5
+      Data: true
+    - Name: buildRoot
+      Entry: 1
+      Data: C:/Users/igl/Documents/igl/vr-modeling/Builds/vr-modeling (12-6-20)/
+  appName: vr-modeling
+  pipelineRootRel: Builds/Debug
+  scenes:
+  - enabled: 1
+    scene: {fileID: 102900000, guid: 5e1bc8737debc9f41b2018b1a46405ac, type: 3}
+  developmentBuild: 1
+  autoconnectProfiler: 0
+  strictMode: 1
+  overrideOptions: 2097153
+  buildConfigs:
+  - enabled: 1
+    name: StandaloneWindows64
+    fileExt: .exe
+    targetGroup: 1
+    target: 19
+    options: 0
+    done: 0
+  returnToActiveTarget: 1
+  openExplorerAfter: 1
+  pipelineGroup: 2
