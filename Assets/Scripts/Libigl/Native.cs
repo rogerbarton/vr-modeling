@@ -85,10 +85,10 @@ namespace Libigl
         public static extern unsafe void TranslateAllVertices(State* state, Vector3 value);
 
         [DllImport(DllName)]
-        public static extern unsafe void TranslateSelection(State* state, Vector3 value, int selectionId);
+        public static extern unsafe void TranslateSelection(State* state, Vector3 value, uint maskId);
 
         [DllImport(DllName)]
-        public static extern unsafe void TransformSelection(State* state, int selectionId,
+        public static extern unsafe void TransformSelection(State* state, uint maskId,
             Vector3 translation, float scale, Quaternion rotation);
 
         [DllImport(DllName)]
@@ -113,7 +113,7 @@ namespace Libigl
         public static extern unsafe void ClearSelectionMask(State* state, uint maskId);
 
         [DllImport(DllName)]
-        public static extern unsafe void SetColorBySelection(State* state, int selectionId);
+        public static extern unsafe void SetColorSingleByMask(State* state, uint maskId, int colorId);
 
         [DllImport(DllName)]
         public static extern unsafe void SetColorByMask(State* state, uint maskId);

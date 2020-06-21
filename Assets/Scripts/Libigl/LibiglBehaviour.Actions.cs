@@ -12,12 +12,12 @@ namespace Libigl
             if (ExecuteInput.TransformDelta.Rotate == Quaternion.identity && ExecuteInput.TransformDelta.Scale == 1f)
             {
                 // Only translate selection
-                Native.TranslateSelection(State, ExecuteInput.TransformDelta.Translate, ExecuteInput.ActiveSelectionId);
+                Native.TranslateSelection(State, ExecuteInput.TransformDelta.Translate, 1U << ExecuteInput.ActiveSelectionId);
             }
             else
             {
                 // Do full transformation
-                Native.TransformSelection(State, ExecuteInput.ActiveSelectionId, ExecuteInput.TransformDelta.Translate,
+                Native.TransformSelection(State, 1U << ExecuteInput.ActiveSelectionId, ExecuteInput.TransformDelta.Translate,
                     ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate);
             }
         }

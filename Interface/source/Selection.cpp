@@ -1,4 +1,3 @@
-#include "Selection.h"
 #include "Interface.h"
 #include "Util.h"
 
@@ -61,10 +60,9 @@ void ClearSelectionMask(State* state, unsigned int maskId)
 	state->DirtySelections |= maskId;
 }
 
-void SetColorBySelection(State* state, int selectionId)
+void SetColorSingleByMask(State* state, unsigned int maskId, int colorId)
 {
-	const unsigned int maskId = Selection::GetMask(selectionId);
-	const auto& color = Color::GetColorById(selectionId);
+	const auto& color = Color::GetColorById(colorId);
 
 	const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
 	*state->C = mask * color + (1.f - mask.array()).matrix() * Color::White;
@@ -90,9 +88,4 @@ void SetColorByMask(State* state, unsigned int maskId)
 	}
 
 	state->DirtyState |= DirtyFlag::CDirty;
-}
-
-unsigned int Selection::GetMask(int selectionId)
-{
-	return selectionId == -1 ? -1 : 1u << selectionId;
 }

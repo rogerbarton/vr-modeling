@@ -1,5 +1,4 @@
 #include "Interface.h"
-#include "Selection.h"
 #include <igl/harmonic.h>
 
 void TranslateAllVertices(State* state, Vector3 value)
@@ -8,29 +7,25 @@ void TranslateAllVertices(State* state, Vector3 value)
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void TranslateSelection(State* state, Vector3 value, int selectionId)
+void TranslateSelection(State* state, Vector3 value, unsigned int maskId)
 {
 	auto& V = *state->V;
 	const auto& S = *state->S;
-	const unsigned int maskId = Selection::GetMask(selectionId);
 	const Eigen::RowVector3f valueEigen = value.AsEigenRow();
 
 	for (int i = 0; i < V.rows(); ++i)
 	{
 		if ((S(i) & maskId) > 0)
-		{
 			V.row(i) += valueEigen;
-		}
 	}
 
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void TransformSelection(State* state, int selectionId, Vector3 translation, float scale, Quaternion rotation)
+void TransformSelection(State* state, unsigned int maskId, Vector3 translation, float scale, Quaternion rotation)
 {
 	auto& V = *state->V;
 	const auto& S = *state->S;
-	const unsigned int maskId = Selection::GetMask(selectionId);
 
 	using namespace Eigen;
 	Transform<float, 3, Affine> transform =
