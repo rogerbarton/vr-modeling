@@ -8,8 +8,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # Breathe is a Sphinx extension used to connect Doxygen and Sphinx
 # See tutorial used: https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/
 
-find_package(Doxygen REQUIRED)
-find_package(Sphinx REQUIRED)
+find_package(Doxygen)
+find_package(Sphinx)
 if(NOT DOXYGEN_FOUND OR NOT SPHINX_FOUND)
     message(STATUS "Skipping documentation generation, make sure your have installed doxygen and done 'pip install -r docs/requirements.txt'")
     return()
