@@ -7,6 +7,10 @@ a.reference.external {
   overflow-wrap: break-word;
 }
 
+.rst-content code.literal {
+  color: #a1655e;
+}
+
 /* Center aligned text */
 .center {
   text-align: center;
