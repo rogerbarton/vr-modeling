@@ -1,5 +1,4 @@
-User Guide
-==========
+# User Guide
 
 Most things you can do are indicated by the controller hints, these adapt based on the tool being used.
 The rays/lasers are only for UI and teleportation currently.

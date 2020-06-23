@@ -1,5 +1,4 @@
-C++ API Reference
-=================
+# C++ API Reference
 
 This is aimed at people wanting to view or edit the code.
 
