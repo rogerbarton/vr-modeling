@@ -59,13 +59,13 @@ namespace UI
             var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             onHoverStart.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL.SetTooltip(msg);
+                InputManager.get.HandHintsL?.SetTooltip(msg);
             });
             
             var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
             onHoverEnd.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL.ClearTooltip();
+                InputManager.get.HandHintsL?.ClearTooltip();
             });
             
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
@@ -79,13 +79,13 @@ namespace UI
             var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             onHoverStart.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL.SetTooltip(msg());
+                InputManager.get.HandHintsL?.SetTooltip(msg());
             });
             
             var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
             onHoverEnd.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL.ClearTooltip();
+                InputManager.get.HandHintsL?.ClearTooltip();
             });
             
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();

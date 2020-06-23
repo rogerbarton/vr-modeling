@@ -15,6 +15,7 @@ namespace XrInput
                 if (_toolTransformMode == value) return;
                 _toolTransformMode = value;
                 
+                if(InputManager.get.HandHintsL == null) return;
                 switch (value)
                 {
                     case ToolTransformMode.Idle:
