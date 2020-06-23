@@ -1,6 +1,6 @@
 [submodule "Interface/external/libigl"]
 	path = Interface/external/libigl
-	url = git@github.com:libigl/libigl.git
+	url = https://github.com/rogerbarton/libigl.git
 [submodule "Packages/UnityNativeTool"]
 	path = Packages/UnityNativeTool
-	url = git@github.com:rogerbarton/UnityNativeTool.git
+	url = https://github.com/rogerbarton/UnityNativeTool.git
