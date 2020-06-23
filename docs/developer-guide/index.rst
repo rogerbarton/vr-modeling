@@ -23,11 +23,28 @@ Setup
 
 Checkout submodules: ``git submodule init && git submodule update``
 
-Before opening Unity, setup the C++ interface to libigl with CMake in the `Interface` folder:
+Setup the C++ interface to libigl with CMake in the `Interface` folder:
 
 1. Run CMake inside the ``Interface`` C++ project, open the solution in **Visual Studio** and build
 2. Or setup the CMake project in **CLion** and build, (ensure that the architecture is correct, e.g. ``x64``, in the Toolchain settings or you may have errors that the dll was not found).
 
-Open the project in Unity. If you opened the project before building the library, you will need to Reimport the ``Assets/Models/EditableMeshes`` folder from the Right-Click menu in the project browser.
+Open the project in Unity.
+
+1. Open the ``Main`` scene from the `Project` window.
+2. `Reimport` the ``Assets/Models/EditableMeshes`` folder using the Right-Click menu.
+3. (Optional) Go to the lighting window ``Window > Rendering > Lighting Setting`` and press `Generate Lighting` at the bottom.
 
 Press play in Unity and it should work.
+
+Generating Documentation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+To regenerate this documentation as well as the Doxygen documentation follow these steps. *Optional*
+
+1. Install Doxygen
+2. Run ``pip install -r docs/requirements.txt`` from the root directory in a terminal (cmd on windows)
+3. Re-run CMake, this will create two new targets, build these like the library
+
+   - Doxygen: Creates standard doxygen html/xml files. View this at ``<cmake build folder>/docs/doxygen/index.html``
+   - Sphinx: Creates the documentation as hosted on ReadTheDocs, using parts from the doxygen xml output.
+     View locally at ``<cmake build folder>/docs/sphinx/index.html`` or push to master and then view online.
