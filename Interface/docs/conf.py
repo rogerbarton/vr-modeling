@@ -56,7 +56,8 @@ if read_the_docs_build:
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [  'sphinx.ext.mathjax',
-                'breathe']
+                'breathe',
+                'm2r']
 
 breathe_default_project = 'vr-modeling'
 
@@ -65,9 +66,8 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'

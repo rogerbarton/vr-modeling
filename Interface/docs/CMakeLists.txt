@@ -61,9 +61,16 @@ add_custom_target(Doxygen DEPENDS ${DOXYGEN_INDEX_FILE})
 # --- Sphinx
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
-set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
 file(GLOB_RECURSE DOC_RST_FILES ${UNITY_PROJECT_ROOT}/*.rst)
+file(GLOB_RECURSE DOC_MD_FILES ${UNITY_PROJECT_ROOT}/*.md)
 file(GLOB_RECURSE STATIC_FILES ${SPHINX_SOURCE}/_static/*)
+
+
+if(CMAKE_VERBOSE)
+    message(STATUS "rst files: ${DOC_RST_FILES}")
+    message(STATUS "md  files: ${DOC_MD_FILES}")
+    message(STATUS "static files: ${STATIC_FILES}")
+endif()
 
 add_custom_target(Sphinx
                   COMMAND
@@ -72,6 +79,6 @@ add_custom_target(Sphinx
                     -Dbreathe_projects.vr-modeling="${DOXYGEN_OUTPUT_DIRECTORY}/xml"
                     ${SPHINX_SOURCE} ${SPHINX_BUILD}
                     
-                  DEPENDS Doxygen "${SPHINX_SOURCE}/conf.py" ${DOC_RST_FILES} ${STATIC_FILES}
+                  DEPENDS Doxygen "${SPHINX_SOURCE}/conf.py" ${DOC_RST_FILES} ${DOC_MD_FILES} ${STATIC_FILES}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                   COMMENT "Generating documentation with Sphinx")
