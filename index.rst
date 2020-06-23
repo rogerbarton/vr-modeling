@@ -47,8 +47,8 @@ Development Timeline
 
    <iframe allowfullscreen src='https://timelines.gitkraken.com/timeline/c1c573c02b5749eca69a3107f3b57999?showControlPanel=true&showMinimap=true&allowPresentationMode=true' style='width:100%;height:500px;border:none;'></iframe>
 
-Project Overview
-^^^^^^^^^^^^^^^^
+Project Structure
+^^^^^^^^^^^^^^^^^
 
 Important folders:
 

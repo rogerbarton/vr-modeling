@@ -89,13 +89,13 @@ and clean up the native library nicely.
 What you need to know:
 ^^^^^^^^^^^^^^^^^^^^^^
 
-- The library is **loaded whenever a function is called**, ``Alt``+``Shift``+``D`` is pressed
+- The library is **loaded whenever a function is called**, ``Alt`` + ``Shift`` + ``D`` is pressed
 - It is **unloaded** when play mode ends, the ``DllManipulatorScript`` is disabled (``OnDisable``) or
-  when manually unloading via the component inspector or the shortcut ``Alt``+``D``
+  when manually unloading via the component inspector or the shortcut ``Alt`` + ``D``
 - You can use ``[DllImport]`` as usual
 - There are certain `limitations <https://github.com/mcpiroman/UnityNativeTool>`_ to marshalling and similar
 - **When you want to rebuild your library, unload it first in Unity via the shortcut**
-- The ``DllCallbacks.cs`` file can be customized with ```OnDllLoaded``, ``OnBeforeDllUnload`` and ``OnAfterDllUnload``
+- The ``DllCallbacks.cs`` file can be customized with ``OnDllLoaded``, ``OnBeforeDllUnload`` and ``OnAfterDllUnload``
 - Use ``[MockNativeDeclarations]`` on a class or native function to enable this unloading
 - The shortcuts un/load *all* mocked libraries, if there are several
 
