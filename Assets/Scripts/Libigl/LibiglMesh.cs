@@ -10,7 +10,7 @@ namespace Libigl
 {
     /// <summary>
     /// Handles the interface between Unity meshes and libigl.<br/>
-    /// This component needs to be attached in the Editor to any GameObject that you want to modify with libigl.<br/>
+    /// This component needs to be attached to any GameObject that you want to modify with libigl.<br/>
     /// Any libigl related code is defined in the <see cref="LibiglBehaviour"/> class.
     /// This class only handles the threading and connection with the Unity Mesh components.
     /// </summary>
