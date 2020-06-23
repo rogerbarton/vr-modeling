@@ -24,13 +24,13 @@ import subprocess, os
 
 # --- Manual Configuration for ReadTheDocs server
 def configureDoxyfile(input_dir, output_dir):
-    with open('Doxyfile.in', 'r') as file :
+    with open('docs/Doxyfile.in', 'r') as file :
         filedata = file.read()
 
     filedata = filedata.replace('@DOXYGEN_INPUT_DIRECTORY@', input_dir)
     filedata = filedata.replace('@DOXYGEN_OUTPUT_DIRECTORY@', output_dir)
 
-    with open('Doxyfile', 'w') as file:
+    with open('docs/Doxyfile', 'w') as file:
         file.write(filedata)
 
 # Check if we're running on Read the Docs' servers
@@ -62,7 +62,7 @@ extensions = [  'sphinx.ext.mathjax',
 breathe_default_project = 'vr-modeling'
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['docs/_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -132,7 +132,7 @@ gitlab_url = 'https://gilab.ethz.ch/rbarton/vr-modeling'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['docs/_static']
 html_css_files = [
     'css/common.css'
 ]

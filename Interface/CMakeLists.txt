@@ -18,19 +18,7 @@ else()
 endif()
 
 
-# Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
-set(UNITY_PROJECT_ROOT "${PROJECT_SOURCE_DIR}/../" CACHE STRING 
-	"Path to Unity project root where Assets and ProjectSettings resides")
-
-set(UNITY_DLL_OUTPUT_DIRECTORY "Assets/Plugins" CACHE STRING 
-	"Where the DLL will be after building, this should be inside the Assets/Plugins folder. 
-	Note: this should be and empty directory as everything is cleared on build")
-
-set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}${UNITY_DLL_OUTPUT_DIRECTORY}")
-
-
 # Find project files
-set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
 file(GLOB SRCFILES "${SOURCE_DIR}/Interface.cpp" "${SOURCE_DIR}/*.cpp")
 file(GLOB HFILES   "${SOURCE_DIR}/Interface.h"   "${SOURCE_DIR}/*.h")
 
@@ -48,6 +36,3 @@ option(UNITY_BUILD_STUB_PLUGIN "Create a target for building the stubLluiPlugin 
 if(${UNITY_BUILD_STUB_PLUGIN})
 	add_subdirectory("external/UnityNativeTool") # stub plugin for ensuring UniyLoadPlugin is called when mocking
 endif()
-
-# Documentation
-add_subdirectory("docs")

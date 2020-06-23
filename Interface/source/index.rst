@@ -71,3 +71,6 @@ Contains various helper functions, classes and constants.
 .. doxygenfile:: Util.h
 
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:

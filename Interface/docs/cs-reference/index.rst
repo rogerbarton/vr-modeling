@@ -1,1 +1,0 @@
-.. mdinclude:: ../../../Assets/index.md

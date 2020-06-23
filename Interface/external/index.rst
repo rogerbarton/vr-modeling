@@ -11,3 +11,9 @@ Libigl among other third party libraries are in the ``external`` folder.
 * ``Unity/PluginAPI``, this has functions related calling Unity related functions from C++. Mostly unused.
 * ``Unity/RenderAPI``, this includes headers related to sample usage of the render API (e.g. DirectX) from C++.
   It is currently not used.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   external-content

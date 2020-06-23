@@ -17,12 +17,12 @@ endif()
 
 # --- Doxygen
 # Find all source files for efficient recompilation
-set(CS_FILES_DIR "${UNITY_PROJECT_ROOT}Assets/Scripts")
+set(CS_FILES_DIR "${UNITY_PROJECT_ROOT}/Assets/Scripts")
 set(CXX_FILES_DIR "${SOURCE_DIR}")
-set(UNITY_HFILES_DIR "${PROJECT_SOURCE_DIR}/external/Unity")
-set(STUB_PLUGIN_DIR "${PROJECT_SOURCE_DIR}/external/UnityNativeTool")
+set(UNITY_HFILES_DIR "${UNITY_PROJECT_ROOT}/Interface/external/Unity")
+set(STUB_PLUGIN_DIR "${UNITY_PROJECT_ROOT}/Interface/external/UnityNativeTool")
 file(GLOB_RECURSE CS_FILES "${CS_FILES_DIR}/*.cs")
-set(CXX_FILES ${HFILES} ${SRCFILES})
+file(GLOB_RECURSE CXX_FILES ${CXX_FILES_DIR}/*.h ${CXX_FILES_DIR}/*.cpp)
 if(CMAKE_VERBOSE)
     message(STATUS "Doc C#  files: ${CS_FILES}")
     message(STATUS "Doc C++ files: ${CXX_FILES}")
@@ -59,7 +59,7 @@ add_custom_target(Doxygen DEPENDS ${DOXYGEN_INDEX_FILE})
 
 
 # --- Sphinx
-set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
+set(SPHINX_SOURCE ${UNITY_PROJECT_ROOT})
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 file(GLOB_RECURSE DOC_RST_FILES ${UNITY_PROJECT_ROOT}/*.rst)
 file(GLOB_RECURSE DOC_MD_FILES ${UNITY_PROJECT_ROOT}/*.md)

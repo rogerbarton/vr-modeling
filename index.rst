@@ -9,10 +9,10 @@ Welcome to vr-modeling's documentation!
    :numbered:
 
    self
-   user-guide/index
-   developer-guide/index
-   cs-reference/index
-   cpp-reference/index
+   docs/user-guide/index
+   docs/developer-guide/index
+   Assets/index
+   Interface/index
 
 * See whole :ref:`genindex`
 
