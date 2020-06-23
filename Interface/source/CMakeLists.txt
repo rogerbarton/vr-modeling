@@ -25,6 +25,7 @@ find_package(LIBIGL REQUIRED QUIET)
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} igl::core OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PRIVATE .)
+message(STATUS "Using libigl at: ${LIBIGL_INCLUDE_DIR}")
 
 
 # Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
