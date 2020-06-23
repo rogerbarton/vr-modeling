@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Interface/external/libigl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Interface/external/libigl/external/eigen" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Packages/UnityNativeTool" vcs="Git" />
+  </component>
+</project>
