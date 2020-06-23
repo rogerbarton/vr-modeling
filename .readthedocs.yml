@@ -6,4 +6,4 @@ submodules:
 python:
    version: 3.7
    install:
-      - requirements: Interface/docs/requirements.txt
+      - requirements: docs/requirements.txt
