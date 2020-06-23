@@ -90,3 +90,11 @@ Interface/docs/Doxyfile
 .idea/.idea.vr-modeling/.idea/contentModel.xml
 
 Assets/Main.meta
+
+Report.md
+
+docs/doxygen/
+
+_build/
+
+Doxyfile

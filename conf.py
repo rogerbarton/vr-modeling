@@ -39,10 +39,10 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 breathe_projects = {}
 
 if read_the_docs_build:
-    input_dir = '../source \ ../../Assets/Scripts \ ../external/Unity \ ../external/UnityNativeTool'
-    output_dir = 'doxygen'
+    input_dir = 'Interface/source \ Assets/Scripts \ Interface/external/Unity \ Interface/external/UnityNativeTool'
+    output_dir = 'docs/doxygen'
     configureDoxyfile(input_dir, output_dir)
-    subprocess.call('doxygen', shell=True)
+    subprocess.call('doxygen docs/Doxyfile', shell=True)
     breathe_projects['vr-modeling'] = output_dir + '/xml'
 # --- End of manual configuration for ReadTheDocs server
 
@@ -97,7 +97,7 @@ highlight_language = 'c++'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'Library/*', 'obj/*', 'Packages/*', 'cmake-build*', 'Interface/external/libigl/*']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
