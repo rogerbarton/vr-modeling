@@ -173,7 +173,7 @@ namespace XrInput
         {
             UpdateSharedState();
             
-            if (!HandL.isValid)
+            if (!HandL.isValid && !HandHintsL)
                 InitializeController(false, handCharL, out HandL, handPrefabL, handRigL, out _handAnimatorL,
                     out HandHintsL, toolInputHintsL, out BrushL);
             else
@@ -197,7 +197,7 @@ namespace XrInput
                 _prevAxisClickPressedL = axisClickPressed;
             }
 
-            if (!HandR.isValid)
+            if (!HandR.isValid && !HandHintsR)
                 InitializeController(true, handCharR, out HandR, handPrefabR, handRigR,
                     out _handAnimatorR, out HandHintsR, toolInputHintsR, out BrushR);
             else
