@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -15,11 +16,11 @@ namespace XrInput
             StatePrev = State;
 
             HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.PrimaryBtnL);
-            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.SecondaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.secondaryButton, out State.SecondaryBtnL);
             HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.PrimaryAxisL);
             
             HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.PrimaryBtnR);
-            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.SecondaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.secondaryButton, out State.SecondaryBtnR);
             HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.PrimaryAxisR);
 
             
@@ -50,6 +51,10 @@ namespace XrInput
             handInteractorR.GetHoverTargets(hoverTargets);
             State.TriggerR *= hoverTargets.Count == 0 ? 1f : 0f;
 
+            // Changing Active Tool
+            if (State.SecondaryBtnL && !StatePrev.SecondaryBtnL)
+                SetActiveTool((ToolType) ((State.ActiveTool.GetHashCode() + 1) % Enum.GetNames(typeof(ToolType)).Length));
+            
             // Brush Resizing
             if (Mathf.Abs(State.PrimaryAxisR.y) > 0.01f)
             {
@@ -61,6 +66,7 @@ namespace XrInput
                 BrushR.SetRadius(State.BrushRadius);
             }
 
+            // Changing the Active Mesh
             if (State.ActiveTool == ToolType.Transform &&
                 State.TriggerR > 0.1f && StatePrev.TriggerR < 0.1f)
             {

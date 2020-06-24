@@ -26,7 +26,7 @@ namespace UI.Components
             InputManager.OnActiveToolChanged += Repaint;
         }
 
-        private void Repaint()
+        public void Repaint()
         {
             _mode = InputManager.State.ActivePivotMode;
             for (var i = 0; i < icons.Length; i++)
@@ -46,13 +46,8 @@ namespace UI.Components
 
             icons[_mode.GetHashCode()].color = Color.white;
             _mode = mode;
+            InputManager.State.ActivePivotMode = _mode;
             icons[_mode.GetHashCode()].color = activeColor;
-            
-            // Apply to the state
-            if (InputManager.State.ActiveTool == ToolType.Transform)
-                InputManager.State.ActivePivotModeTransform = _mode;
-            else
-                InputManager.State.ActivePivotModeSelect = _mode;
         }
     }
 }

@@ -145,7 +145,6 @@ namespace XrInput
         }
 
 
-        private bool _prevSecondaryBtnPressedL;
         private bool _prevAxisClickPressedL;
         private bool _prevAxisClickPressedR;
         public static event Action OnActiveToolChanged = delegate { };
@@ -164,13 +163,7 @@ namespace XrInput
                     handRigL.inputDevice.IsPressed(InputHelpers.Button.PrimaryAxis2DUp, out var teleportPressed, 0.2f);
                 _handTeleportReticleL.SetActive(teleportPressed);
                 _handLineRendererL.material = teleportPressed ? filledLineMat : dottedLineMat;
-
-                // Changing Active Tool
-                handRigL.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out var secondaryBtnPressed, 0.2f);
-                if (secondaryBtnPressed && !_prevSecondaryBtnPressedL)
-                    SetActiveTool((ToolType) ((State.ActiveTool.GetHashCode() + 1) % Enum.GetNames(typeof(ToolType)).Length));
-                _prevSecondaryBtnPressedL = secondaryBtnPressed;
-
+                
                 // Toggling UI hints
                 handRigL.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
                 if (axisClickPressed && !_prevAxisClickPressedL)

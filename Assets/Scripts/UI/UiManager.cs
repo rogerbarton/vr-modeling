@@ -1,3 +1,4 @@
+using System;
 using Libigl;
 using TMPro;
 using UI.Components;
@@ -46,6 +47,9 @@ namespace UI
         private Material[] _uvGridInitialMaterials;
 
         private LayerMask _uiLayerMask;
+        
+        // UI instances
+        [NonSerialized] public UiPivotMode PivotMode;
 
         private void Awake()
         {
@@ -99,9 +103,9 @@ namespace UI
             _toolGroup.AddItem(selectionMode.gameObject);
             selectionMode.Initialize();
             
-            var pivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
-            _toolGroup.AddItem(pivotMode.gameObject);
-            pivotMode.Initialize();
+            PivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
+            _toolGroup.AddItem(PivotMode.gameObject);
+            PivotMode.Initialize();
             
             
             // Meshes

@@ -58,8 +58,21 @@ namespace XrInput
         public float BrushRadius;
         
         // Transform
-        public PivotMode ActivePivotMode =>
-            ActiveTool == ToolType.Transform ? ActivePivotModeTransform : ActivePivotModeSelect;
+        public PivotMode ActivePivotMode
+        {
+            get => ActiveTool == ToolType.Transform ? ActivePivotModeTransform : ActivePivotModeSelect;
+            set
+            {
+                if(ActivePivotMode == value) return;
+                
+                if (InputManager.State.ActiveTool == ToolType.Transform)
+                    InputManager.State.ActivePivotModeTransform = value;
+                else
+                    InputManager.State.ActivePivotModeSelect = value;
+                
+                UiManager.get.PivotMode.Repaint();
+            }
+        }
 
         public PivotMode ActivePivotModeTransform;
         public PivotMode ActivePivotModeSelect;
@@ -84,6 +97,12 @@ namespace XrInput
                 ActiveSelectionMode = SelectionMode.Add,
                 TransformWithRotate = true
             };
+        }
+
+        public void TogglePivotMode()
+        {
+            ActivePivotMode = (PivotMode) ((ActivePivotMode.GetHashCode() + 1) % 
+                                           (ActiveTool == ToolType.Transform ? 2 : 3));
         }
     }
 

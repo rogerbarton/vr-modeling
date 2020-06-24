@@ -106,9 +106,14 @@ namespace Libigl
             if (InputManager.State.ActiveTool == ToolType.Transform)
                 ApplyTransformToMesh();
 
-            if ((_doTransformL || _doTransformR) && InputManager.State.PrimaryBtnR &&
-                !InputManager.StatePrev.PrimaryBtnR)
-                InputManager.State.TransformWithRotate = !InputManager.State.TransformWithRotate;
+            if (_doTransformL || _doTransformR)
+            {
+                if (InputManager.State.PrimaryBtnR && !InputManager.StatePrev.PrimaryBtnR)
+                    InputManager.State.TransformWithRotate = !InputManager.State.TransformWithRotate;
+
+                if (InputManager.State.SecondaryBtnR && !InputManager.StatePrev.SecondaryBtnR)
+                    InputManager.State.TogglePivotMode();
+            }
         }
 
 
@@ -210,7 +215,10 @@ namespace Libigl
 
             // Update pivot to latest (overwrites for now)
             if (InputManager.State.ActivePivotMode == PivotMode.Hand)
-                transformDelta.Pivot = _primaryTransformHand ? InputManager.State.HandPosR : InputManager.State.HandPosL;
+                transformDelta.Pivot =
+                    _primaryTransformHand ? InputManager.State.HandPosR : InputManager.State.HandPosL;
+            else
+                transformDelta.Pivot = LibiglMesh.transform.position;
 
             ResetTransformStartPositions();
         }
