@@ -165,6 +165,7 @@ namespace Libigl
             if(Input.DoTransform)
                 Input.TransformDelta = TransformDelta.Identity();
 
+            Input.DoTransformPrev = Input.DoTransform;
             Input.DoTransform = false;
         }
 

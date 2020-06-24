@@ -18,6 +18,7 @@ namespace Libigl
 
         // Transform
         public bool DoTransform;
+        public bool DoTransformPrev;
         public TransformDelta TransformDelta;
 
         // Select
@@ -31,7 +32,7 @@ namespace Libigl
         // A Mask of the selections that should be cleared
         public uint DoClearSelection; 
 
-        public Vector3 BrushPos;
+        public Vector3 BrushPosR;
 
         // Deformations
         public bool DoHarmonic; // Trigger execution once

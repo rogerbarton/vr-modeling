@@ -19,6 +19,8 @@ namespace Libigl
                     UpdateInputSelect();
                     break;
             }
+            
+            Input.BrushPosR = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
         }
 
         /// <summary>
@@ -58,7 +60,6 @@ namespace Libigl
                 if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.ToolSelectMode != ToolSelectMode.Selecting)
                 {
                     Input.DoSelect = true;
-                    Input.BrushPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
                 }
             }
         }
@@ -72,9 +73,6 @@ namespace Libigl
         {
             Input.SharedPrev = Input.Shared;
             Input.Shared = InputManager.State;
-            
-            Input.DoTransform |= UnityEngine.Input.GetKeyDown(KeyCode.W);
-            Input.DoSelect |= UnityEngine.Input.GetMouseButtonDown(0);
         }
         
         /// <summary>

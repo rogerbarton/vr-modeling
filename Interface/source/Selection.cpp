@@ -41,14 +41,15 @@ unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius
 	const float radiusSqr = radius * radius;
 	unsigned int mask = 0;
 
-	(((state->V->rowwise() - posEigen).array().square().matrix().rowwise().sum().array() < radiusSqr)
+	mask = ((state->V->rowwise() - posEigen).array().square().matrix().rowwise().sum().array() < radiusSqr)
 			 .cast<int>().matrix() // to VectorXi
-	 * *state->S)
+			 .cwiseProduct(*state->S)
 			// element = 0 or its mask if it is inside the sphere or not
-			// For each vertex we call this lambda to aggregate the mask
-			.unaryExpr([&mask](const int a) -> int {
-				mask |= a;
-				return a;
+			// We use a reduction to aggregate the mask
+			// Sidenote: The lambda defines how to aggregate two integers and must be associative
+			.redux([](const int a, const int b) -> int {
+				auto c = a | b;
+				return c;
 			});
 
 	return mask;
