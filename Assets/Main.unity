@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18160844, g: 0.22725946, b: 0.30741447, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -491,16 +491,16 @@ MonoBehaviour:
     m_NumAlphaKeys: 4
   m_InvalidColorGradient:
     serializedVersion: 2
-    key0: {r: 0.81960785, g: 0.38431376, b: 0.73041993, a: 0}
-    key1: {r: 0.8207547, g: 0.38327694, b: 0.38327694, a: 1}
-    key2: {r: 0.8113208, g: 0.54787624, b: 0.4094874, a: 1}
+    key0: {r: 1, g: 0.08614111, b: 0, a: 0}
+    key1: {r: 1, g: 0.08614111, b: 0, a: 0}
+    key2: {r: 0.8113208, g: 0.54787624, b: 0.4094874, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 26214
+    ctime1: 65535
     ctime2: 65535
     ctime3: 0
     ctime4: 0
@@ -508,16 +508,16 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 1966
-    atime2: 58982
+    atime1: 65535
+    atime2: 65535
     atime3: 65535
     atime4: 0
     atime5: 0
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 3
-    m_NumAlphaKeys: 4
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   m_SmoothMovement: 0
   m_FollowTightness: 1
   m_SnapThresholdDistance: 10
@@ -1303,8 +1303,8 @@ MonoBehaviour:
     m_NumAlphaKeys: 4
   m_InvalidColorGradient:
     serializedVersion: 2
-    key0: {r: 0.81960785, g: 0.38431376, b: 0.73041993, a: 0}
-    key1: {r: 0.8207547, g: 0.38327694, b: 0.38327694, a: 1}
+    key0: {r: 1, g: 0.08614111, b: 0, a: 0}
+    key1: {r: 1, g: 0.08614111, b: 0, a: 0}
     key2: {r: 0.8113208, g: 0.54787624, b: 0.4094874, a: 1}
     key3: {r: 0.8113208, g: 0.54787624, b: 0.4094874, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1312,7 +1312,7 @@ MonoBehaviour:
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 26214
+    ctime1: 65535
     ctime2: 65535
     ctime3: 65535
     ctime4: 0
@@ -1320,7 +1320,7 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 1966
+    atime1: 65535
     atime2: 58982
     atime3: 65535
     atime4: 0
@@ -1328,8 +1328,8 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 3
-    m_NumAlphaKeys: 4
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   m_SmoothMovement: 0
   m_FollowTightness: 1
   m_SnapThresholdDistance: 10
