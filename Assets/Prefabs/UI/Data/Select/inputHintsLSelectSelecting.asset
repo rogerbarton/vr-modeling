@@ -33,10 +33,10 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 7789612234e09f4478f333f2fc143d99, type: 3}
     text: Grab Selection
   primaryBtn:
-    isOverride: 0
-    isActive: 0
-    icon: {fileID: 0}
-    text: 
+    isOverride: 1
+    isActive: 1
+    icon: {fileID: 21300000, guid: 28c9a4a61020df2428d08910f3eb30e8, type: 3}
+    text: Hold to Invert
   secondaryBtn:
     isOverride: 0
     isActive: 0

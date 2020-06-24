@@ -57,13 +57,25 @@ namespace Libigl
 
         private void ActionSelect()
         {
-            if (ExecuteInput.DoSelectL)
-                Native.SelectSphere(State, ExecuteInput.BrushPosL, ExecuteInput.Shared.BrushRadius,
-                    ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.Shared.ActiveSelectionMode);
+            ActionSelectGeneric(ExecuteInput.DoSelectL, ExecuteInput.BrushPosL, ExecuteInput.AlternateSelectModeL);
+            ActionSelectGeneric(ExecuteInput.DoSelectR, ExecuteInput.BrushPosR, ExecuteInput.AlternateSelectModeR);
+        }
+
+        private void ActionSelectGeneric(bool doSelect, Vector3 brushPos, bool alternateSelectMode)
+        {
+            var mode = ExecuteInput.Shared.ActiveSelectionMode;
+
+            if(alternateSelectMode)
+            {
+                if (mode == SelectionMode.Add)
+                    mode = SelectionMode.Subtract;
+                else if (mode == SelectionMode.Subtract)
+                    mode = SelectionMode.Add;
+            }
             
-            if (ExecuteInput.DoSelectR)
-                Native.SelectSphere(State, ExecuteInput.BrushPosR, ExecuteInput.Shared.BrushRadius,
-                    ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.Shared.ActiveSelectionMode);
+            if (doSelect)
+                Native.SelectSphere(State, brushPos, ExecuteInput.Shared.BrushRadius,
+                    ExecuteInput.ActiveSelectionId, (uint) mode);
         }
 
         private void ActionHarmonic()

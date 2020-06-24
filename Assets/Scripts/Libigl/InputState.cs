@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using XrInput;
 
 namespace Libigl
@@ -31,9 +31,15 @@ namespace Libigl
         public bool DoSelectLPrev;
         public bool DoSelectR;
         public bool DoSelectRPrev;
-        // A Mask of the selections that should be cleared
-        public uint DoClearSelection; 
 
+        /// <summary>
+        /// Inverts the selection mode between <see cref="SelectionMode.Add"/> and <see cref="SelectionMode.Subtract"/>
+        /// </summary>
+        public bool AlternateSelectModeL;
+        public bool AlternateSelectModeR;
+        // A Mask of the selections that should be cleared
+        public uint DoClearSelection;
+        
         public Vector3 BrushPosL;
         public Vector3 BrushPosR;
 

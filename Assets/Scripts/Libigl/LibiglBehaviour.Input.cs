@@ -59,6 +59,9 @@ namespace Libigl
                 if (InputManager.State.TriggerR > PressThres && 
                     (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerR < PressThres))
                     Input.DoSelectR = true;
+
+                Input.AlternateSelectModeL = InputManager.State.PrimaryBtnL;
+                Input.AlternateSelectModeR = InputManager.State.PrimaryBtnR;
             }
             else
                 InputManager.State.ToolSelectMode = ToolSelectMode.Idle;

@@ -133,8 +133,7 @@ namespace XrInput
     {
         Add,
         Subtract,
-        Invert,
-        Discard
+        Invert
     }
 
     public enum PivotMode
