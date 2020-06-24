@@ -201,12 +201,9 @@ namespace Libigl
             Mesh.MarkDynamic();
         }
 
-        public void UpdateBoundingBoxSize()
-        {
-            BoundingBox.localPosition = Mesh.bounds.center;
-            BoundingBox.localScale = 2 * Mesh.bounds.extents;
-        }
-
+        /// <summary>
+        /// Toggles the wireframe shader for the mesh (not the bounding box).
+        /// </summary>
         public void ToggleWireframe()
         {
             IEnumerable<Material> materials = MeshRenderer.sharedMaterials;
@@ -218,6 +215,20 @@ namespace Libigl
             MeshRenderer.sharedMaterials = materials.ToArray();
         }
 
+        /// <summary>
+        /// Adjust the bounding box visual to fit the true bounds of the mesh.
+        /// </summary>
+        public void UpdateBoundingBoxSize()
+        {
+            BoundingBox.localPosition = Mesh.bounds.center;
+            BoundingBox.localScale = 2 * Mesh.bounds.extents;
+        }
+
+        /// <summary>
+        /// Shows or hides the wireframe bounding box. Also changes the material accordingly.
+        /// </summary>
+        /// <param name="overrideVisible">Override default visibility set in the <see cref="SharedInputState"/></param>
+        /// <param name="primary">If overriding visibility, should we highlight this as the primary bounding box</param>
         public void RepaintBounds(bool overrideVisible = false, bool primary = false)
         {
             _boundingBoxRenderer.enabled = InputManager.State.BoundsVisible || overrideVisible;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Libigl;
 using UnityEngine;
@@ -19,7 +18,7 @@ namespace XrInput
 
         private List<LibiglMesh> _currentLibiglMeshes = new List<LibiglMesh>();
         private bool _insideActiveMeshBounds;
-
+        
         public void SetRadius(float value)
         {
             transform.localScale = new Vector3(value, value, value);
@@ -47,6 +46,11 @@ namespace XrInput
 
         #region Active mesh selection & bounding box visuals
 
+        /// <summary>
+        /// Will set the active mesh as the first hovered, if we are not hovering over the active mesh.
+        /// Hovering is detected and visualized by the bounding boxes.
+        /// </summary>
+        /// <returns>True if the active mesh has been set</returns>
         public bool SetActiveMesh()
         {
             if (_insideActiveMeshBounds || _currentLibiglMeshes.Count == 0) return false;
@@ -56,6 +60,10 @@ namespace XrInput
             return true;
         }
 
+        /// <summary>
+        /// Called when the brush bubble enters a trigger collider. Standard Unity callback.
+        /// We use this to set the hovering status of the individual meshes.
+        /// </summary>
         private void OnTriggerEnter(Collider other)
         {
             var libiglMesh = other.transform.parent.GetComponent<LibiglMesh>();
@@ -77,6 +85,10 @@ namespace XrInput
                 libiglMesh.RepaintBounds(!_insideActiveMeshBounds, _currentLibiglMeshes.Count == 1);
         }
 
+        /// <summary>
+        /// Called when the mesh leaves the trigger and updates the hovering status of a mesh.
+        /// Implementation note: split into separate function so when deactivating we leave all triggers.
+        /// </summary>
         private void MeshLeftTrigger(LibiglMesh libiglMesh)
         {
             _currentLibiglMeshes.Remove(libiglMesh);
@@ -102,7 +114,12 @@ namespace XrInput
             MeshLeftTrigger(libiglMesh);
         }
 
-        public void RepaintBoundingBoxes()
+        /// <summary>
+        /// Repaint bounding boxes based on the hovering status.
+        /// Bounds are hidden if we are hovering over the active mesh.
+        /// The first hovered mesh is set as the primary one.
+        /// </summary>
+        private void RepaintBoundingBoxes()
         {
             for (var i = 0; i < _currentLibiglMeshes.Count; i++)
                 _currentLibiglMeshes[i].RepaintBounds(!_insideActiveMeshBounds, i == 0);
