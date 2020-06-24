@@ -208,6 +208,8 @@ MonoBehaviour:
   activeImage: {fileID: 4886636169597747562}
   editSprite: {fileID: 21300000, guid: 44725158c4803004b9e1547180e18c1b, type: 3}
   activeSprite: {fileID: 21300000, guid: fcf33128b768f744a8f9486e4f827007, type: 3}
+  background: {fileID: 6915708080094252695}
+  activeBackgroundColor: {r: 0.752, g: 1, b: 0.86325234, a: 0.4509804}
 --- !u!1 &5996544399146819120
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,8 +600,25 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 88
       objectReference: {fileID: 0}
+    - target: {fileID: 9219880407285419434, guid: 94476ca65644b9b44b59e4332136c1fd,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.29803923
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94476ca65644b9b44b59e4332136c1fd, type: 3}
+--- !u!114 &6915708080094252695 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9219880407285419434, guid: 94476ca65644b9b44b59e4332136c1fd,
+    type: 3}
+  m_PrefabInstance: {fileID: 2308692643770909501}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3670596381485802842
 PrefabInstance:
   m_ObjectHideFlags: 0

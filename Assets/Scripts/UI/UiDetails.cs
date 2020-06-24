@@ -23,6 +23,9 @@ namespace UI
         [SerializeField] private Image activeImage = null;
         [SerializeField] private Sprite editSprite = null;
         [SerializeField] private Sprite activeSprite = null;
+        [SerializeField] private Image background = null;
+        public Color activeBackgroundColor;
+        private Color _defaultBackgroundColor;
 
         // UI Component Instances
         private TMP_Text _vertexCount;
@@ -46,6 +49,7 @@ namespace UI
             activeImage.sprite = isActive ? activeSprite : editSprite;
             UiInputHints.AddTooltip(activeBtn.gameObject, () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
 
+            _defaultBackgroundColor = background.color;
             
             _listParent = GetComponentInChildren<VerticalLayoutGroup>().transform;
 
@@ -183,6 +187,9 @@ namespace UI
             _debugGroup.AddItem(doSelectBtn.gameObject);
             doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
             doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
+
+            // Call when constructed as we likely just missed this
+            OnActiveMeshSet();
         }
 
         #region Callbacks
@@ -236,10 +243,12 @@ namespace UI
         /// <summary>
         /// Called when the active mesh changes
         /// </summary>
+        /// <remarks>Also called when the object is created as this happens just after a mesh was set</remarks>
         private void OnActiveMeshSet()
         {
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
+            background.color = isActive ? activeBackgroundColor : _defaultBackgroundColor;
         }
 
         #endregion
