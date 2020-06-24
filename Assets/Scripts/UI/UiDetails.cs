@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UI.Components;
@@ -173,11 +173,6 @@ namespace UI
             _debugGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Show Debug";
             _debugGroup.SetVisibility(false);
-            
-            var doSelectBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            _debugGroup.AddItem(doSelectBtn.gameObject);
-            doSelectBtn.GetComponentInChildren<TMP_Text>().text = "Do Select";
-            doSelectBtn.onClick.AddListener(() => { behaviour.Input.DoSelect = true; });
 
             // Call when constructed as we likely just missed this
             OnActiveMeshSet();

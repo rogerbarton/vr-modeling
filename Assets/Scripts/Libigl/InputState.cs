@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using XrInput;
 
 namespace Libigl
@@ -32,6 +32,7 @@ namespace Libigl
         // A Mask of the selections that should be cleared
         public uint DoClearSelection; 
 
+        public Vector3 BrushPosL;
         public Vector3 BrushPosR;
 
         // Deformations
