@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UI.Components;
@@ -193,7 +193,8 @@ namespace UI
             progressIcon.PreExecute();
 
             // Add a selection in case of the NewSelectionOnDraw
-            if(_behaviour.Input.DoSelect && !_behaviour.Input.DoSelectPrev) // Just started stroke 
+            if((_behaviour.Input.DoSelectL || _behaviour.Input.DoSelectR) && 
+               !(_behaviour.Input.DoSelectLPrev || _behaviour.Input.DoSelectRPrev)) // Just started stroke 
             {
                 if (InputManager.State.NewSelectionOnDraw &&
                     _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty

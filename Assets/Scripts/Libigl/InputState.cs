@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using XrInput;
 
 namespace Libigl
@@ -27,8 +27,10 @@ namespace Libigl
         public bool VisibleSelectionMaskChanged;
         public uint SCountUi; // For UI, will be copied to the state in PreExecute
 
-        public bool DoSelect;
-        public bool DoSelectPrev;
+        public bool DoSelectL;
+        public bool DoSelectLPrev;
+        public bool DoSelectR;
+        public bool DoSelectRPrev;
         // A Mask of the selections that should be cleared
         public uint DoClearSelection; 
 

@@ -38,10 +38,13 @@ namespace Libigl
 
         private void ActionSelect()
         {
-            if (!ExecuteInput.DoSelect) return;
+            if (ExecuteInput.DoSelectL)
+                Native.SelectSphere(State, ExecuteInput.BrushPosL, ExecuteInput.Shared.BrushRadius,
+                    ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.Shared.ActiveSelectionMode);
             
-            Native.SelectSphere(State, ExecuteInput.BrushPosR, ExecuteInput.Shared.BrushRadius, 
-                ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.Shared.ActiveSelectionMode);
+            if (ExecuteInput.DoSelectR)
+                Native.SelectSphere(State, ExecuteInput.BrushPosR, ExecuteInput.Shared.BrushRadius,
+                    ExecuteInput.ActiveSelectionId, (uint) ExecuteInput.Shared.ActiveSelectionMode);
         }
 
         private void ActionHarmonic()

@@ -39,7 +39,7 @@ namespace XrInput
                     gameObject.SetActive(_isRight);
                     break;
                 case ToolType.Select:
-                    gameObject.SetActive(_isRight);
+                    gameObject.SetActive(true);
                     break;
             }
         }

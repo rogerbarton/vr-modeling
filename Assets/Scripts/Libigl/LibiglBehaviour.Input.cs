@@ -43,26 +43,29 @@ namespace Libigl
         /// </summary>
         private void UpdateInputSelect()
         {
+            // Update the tool sub state/mode
             if (_doTransformL)
                 InputManager.State.ToolSelectMode = _doTransformR ? ToolSelectMode.TransformingLR : ToolSelectMode.TransformingL;
             else if (_doTransformR)
                 InputManager.State.ToolSelectMode = ToolSelectMode.TransformingR;
-            else if (InputManager.StatePrev.TriggerR > PressThres)
+            else if (InputManager.State.TriggerL > PressThres || InputManager.State.TriggerR > PressThres)
+            {
                 InputManager.State.ToolSelectMode = ToolSelectMode.Selecting;
+                
+                if (InputManager.State.TriggerL > PressThres && 
+                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerL < PressThres))
+                    Input.DoSelectL = true;
+                
+                if (InputManager.State.TriggerR > PressThres && 
+                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerR < PressThres))
+                    Input.DoSelectR = true;
+            }
             else
                 InputManager.State.ToolSelectMode = ToolSelectMode.Idle;
             
             // Change the selection with the right hand primary2DAxis.x
             if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
                 ChangeActiveSelection((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
-
-            if (InputManager.State.ToolSelectMode == ToolSelectMode.Selecting)
-            {
-                if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.ToolSelectMode != ToolSelectMode.Selecting)
-                {
-                    Input.DoSelect = true;
-                }
-            }
         }
         
         public void ChangeActiveSelection(int increment)
@@ -82,8 +85,10 @@ namespace Libigl
         private void ConsumeInput()
         {
             // Consume inputs here
-            Input.DoSelectPrev = Input.DoSelect;
-            Input.DoSelect = false;
+            Input.DoSelectLPrev = Input.DoSelectL;
+            Input.DoSelectL = false;
+            Input.DoSelectRPrev = Input.DoSelectR;
+            Input.DoSelectR = false;
             Input.DoClearSelection = 0;
             Input.VisibleSelectionMaskChanged = false;
             if(!Input.DoHarmonicRepeat)
