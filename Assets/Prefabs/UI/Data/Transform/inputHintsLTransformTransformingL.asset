@@ -16,7 +16,7 @@ MonoBehaviour:
     isOverride: 0
     isActive: 0
     icon: {fileID: 0}
-    text: Transform
+    text: 
   help:
     isOverride: 0
     isActive: 0

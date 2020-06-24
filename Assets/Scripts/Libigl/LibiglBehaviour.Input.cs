@@ -53,9 +53,9 @@ namespace Libigl
             if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
                 ChangeActiveSelection((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
 
-            if (!(_doTransformL || _doTransformR) && InputManager.State.TriggerR > PressThres)
+            if (InputManager.State.ToolSelectMode == ToolSelectMode.Selecting)
             {
-                if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerR < PressThres)
+                if (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.ToolSelectMode != ToolSelectMode.Selecting)
                 {
                     Input.DoSelect = true;
                     Input.BrushPos = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);

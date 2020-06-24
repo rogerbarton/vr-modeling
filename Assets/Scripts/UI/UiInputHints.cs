@@ -16,7 +16,7 @@ namespace UI
         public UiInputLabel primaryAxisX;
         public UiInputLabel primaryAxisY;
 
-        [SerializeField] private UiInputHintsDataCollection collection;
+        [SerializeField] private UiInputHintsDataCollection collection = null;
         private UiInputHintsData _currentData;
 
 
@@ -36,17 +36,12 @@ namespace UI
         public void SetTooltip(string data, bool overrideExisting = false)
         {
             if(!_currentData.help.isActive || overrideExisting)
-                help.SetData(new UiInputLabelData{isActive = true, text = data, icon = Icons.get.help});
+                help.SetData(new UiInputLabelData{isOverride = true, isActive = true, text = data, icon = Icons.get.help});
         }
 
         public void ClearTooltip()
         {
-            help.SetData(_currentData.help);
-        }
-
-        public void ResetData()
-        {
-            SetData(_currentData);
+            help.SetData(new UiInputLabelData{isOverride = true, isActive = false});
         }
         
         /// <summary>
@@ -61,13 +56,15 @@ namespace UI
             var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             onHoverStart.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL?.SetTooltip(msg);
+                if(InputManager.get.HandHintsL)
+                    InputManager.get.HandHintsL.SetTooltip(msg, true);
             });
             
             var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
             onHoverEnd.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL?.ClearTooltip();
+                if(InputManager.get.HandHintsL)
+                    InputManager.get.HandHintsL.ClearTooltip();
             });
             
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
@@ -81,13 +78,15 @@ namespace UI
             var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             onHoverStart.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL?.SetTooltip(msg());
+                if(InputManager.get.HandHintsL)
+                    InputManager.get.HandHintsL.SetTooltip(msg(), true);
             });
             
             var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
             onHoverEnd.callback.AddListener(_ =>
             {
-                InputManager.get.HandHintsL?.ClearTooltip();
+                if(InputManager.get.HandHintsL)
+                    InputManager.get.HandHintsL.ClearTooltip();
             });
             
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();

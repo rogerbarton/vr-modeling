@@ -29,7 +29,7 @@ MonoBehaviour:
     text: Drawing
   grip:
     isOverride: 1
-    isActive: 1
+    isActive: 0
     icon: {fileID: 21300000, guid: cd79c1f762ccb2341b3d77169f21fefa, type: 3}
     text: Grab Selection
   primaryBtn:

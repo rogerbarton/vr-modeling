@@ -19,9 +19,9 @@ MonoBehaviour:
     text: 
   help:
     isOverride: 1
-    isActive: 0
-    icon: {fileID: 0}
-    text: 
+    isActive: 1
+    icon: {fileID: 21300000, guid: 1a54f08e37d267e48bde65b3d47ca39e, type: 3}
+    text: Hover over an item
   trigger:
     isOverride: 1
     isActive: 0
