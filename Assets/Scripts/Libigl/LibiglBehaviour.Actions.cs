@@ -24,10 +24,10 @@ namespace Libigl
                     _currentTranslateMask = brushMask;
             }
 
-            if (ExecuteInput.TransformDelta.Rotate == Quaternion.identity && ExecuteInput.TransformDelta.Scale == 1f)
+            if (ExecuteInput.TransformDeltaJoint.Rotate == Quaternion.identity && ExecuteInput.TransformDeltaJoint.Scale == 1f)
             {
                 // Only translate selection
-                Native.TranslateSelection(State, ExecuteInput.TransformDelta.Translate, _currentTranslateMask);
+                Native.TranslateSelection(State, ExecuteInput.TransformDeltaJoint.Translate, _currentTranslateMaskP);
             }
             else
             {
@@ -37,20 +37,20 @@ namespace Libigl
                 //               ExecuteInput.Shared.ToolTransformMode != ToolTransformMode.TransformingLR;
                 var pivot = Vector3.zero;
                 
-                switch (ExecuteInput.TransformDelta.PivotMode)
+                switch (ExecuteInput.TransformDeltaJoint.PivotMode)
                 {
                     case PivotMode.Mesh:
                         // Fall through, use hands as pivot
                     case PivotMode.Hand:
-                        pivot = ExecuteInput.TransformDelta.Pivot;
+                        pivot = ExecuteInput.TransformDeltaJoint.Pivot;
                         break;
                     case PivotMode.Selection:
                         pivot = Native.GetSelectionCenter(State, _currentTranslateMask);
                         break;
                 }
 
-                Native.TransformSelection(State, ExecuteInput.TransformDelta.Translate,
-                    ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate, pivot,
+                Native.TransformSelection(State, ExecuteInput.TransformDeltaJoint.Translate,
+                    ExecuteInput.TransformDeltaJoint.Scale, ExecuteInput.TransformDeltaJoint.Rotate, pivot,
                     _currentTranslateMask);
             }
         }

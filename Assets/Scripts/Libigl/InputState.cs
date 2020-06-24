@@ -20,6 +20,9 @@ namespace Libigl
         public bool DoTransform;
         public bool DoTransformPrev;
         public TransformDelta TransformDelta;
+        public TransformDelta TransformDeltaJoint;
+        public TransformDelta TransformDeltaL;
+        public TransformDelta TransformDeltaR;
 
         // Select
         public int ActiveSelectionId;
@@ -61,7 +64,7 @@ namespace Libigl
                 HarmonicShowDisplacement = true,
                 Shared = InputManager.State,
                 SharedPrev = InputManager.StatePrev,
-                TransformDelta = TransformDelta.Identity()
+                TransformDeltaJoint = TransformDelta.Identity()
             };
         }
     }
