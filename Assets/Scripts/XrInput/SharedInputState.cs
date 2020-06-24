@@ -72,7 +72,9 @@ namespace XrInput
 
         // Generic Input
         public float GripL;
+        public float TriggerL;
         public float GripR;
+        public float TriggerR;
         // World Space Hand Position
         public Vector3 HandPosL;
         public Vector3 HandPosR;

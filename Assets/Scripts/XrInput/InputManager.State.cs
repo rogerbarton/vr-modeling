@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XrInput
 {
@@ -23,10 +25,12 @@ namespace XrInput
             
             // Read values and then convert to world space
             HandL.TryGetFeatureValue(CommonUsages.grip, out State.GripL);
+            HandL.TryGetFeatureValue(CommonUsages.trigger, out State.TriggerL);
             HandL.TryGetFeatureValue(CommonUsages.devicePosition, out State.HandPosL);
             HandL.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotL);
             
             HandR.TryGetFeatureValue(CommonUsages.grip, out State.GripR);
+            HandR.TryGetFeatureValue(CommonUsages.trigger, out State.TriggerR);
             HandR.TryGetFeatureValue(CommonUsages.devicePosition, out State.HandPosR);
             HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotR);
 
@@ -40,6 +44,12 @@ namespace XrInput
             // Input conflict with interactables
             State.GripR *= handInteractorR.selectTarget ? 0f : 1f;
 
+            var hoverTargets = new List<XRBaseInteractable>();
+            handInteractorL.GetHoverTargets(hoverTargets);
+            State.TriggerL *= hoverTargets.Count == 0 ? 1f : 0f;
+            handInteractorR.GetHoverTargets(hoverTargets);
+            State.TriggerR *= hoverTargets.Count == 0 ? 1f : 0f;
+
             // Brush Resizing
             if (Mathf.Abs(State.PrimaryAxisR.y) > 0.01f)
             {
@@ -49,6 +59,12 @@ namespace XrInput
 
                 BrushL.SetRadius(State.BrushRadius);
                 BrushR.SetRadius(State.BrushRadius);
+            }
+
+            if (State.ActiveTool == ToolType.Transform &&
+                State.TriggerR > 0.1f && StatePrev.TriggerR < 0.1f)
+            {
+                BrushR.SetActiveMesh();
             }
         }
     }

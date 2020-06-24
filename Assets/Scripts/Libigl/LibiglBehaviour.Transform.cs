@@ -103,7 +103,7 @@ namespace Libigl
                 ApplyTransformToMesh();
 
             if (InputManager.State.ActiveTool == ToolType.Transform && (_doTransformL || _doTransformR) && 
-                InputManager.State.PrimaryBtnR && !InputManager.StatePrev.PrimaryBtnR)
+                InputManager.State.TriggerR > PressThres && InputManager.StatePrev.TriggerR < PressThres)
                 InputManager.State.TransformWithRotate = !InputManager.State.TransformWithRotate;
         }
         

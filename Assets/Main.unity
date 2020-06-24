@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 12001cd5646025a47b0daa23bbb9f9ce,
+  m_LightingDataAsset: {fileID: 112000000, guid: 153be77bea303bc41bbcb57e84e14a70,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -642,7 +642,7 @@ MonoBehaviour:
   m_InteractionManager: {fileID: 12135439}
   m_InteractionLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1591
   m_AttachTransform: {fileID: 0}
   m_StartingSelectedInteractable: {fileID: 0}
   m_OnHoverEnter:
@@ -694,7 +694,7 @@ MonoBehaviour:
   m_SphereCastRadius: 0
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1591
   m_RaycastTriggerInteraction: 0
   m_HoverToSelect: 0
   m_HoverTimeToSelect: 0.5
@@ -1454,7 +1454,7 @@ MonoBehaviour:
   m_InteractionManager: {fileID: 12135439}
   m_InteractionLayerMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 55
   m_AttachTransform: {fileID: 0}
   m_StartingSelectedInteractable: {fileID: 0}
   m_OnHoverEnter:
@@ -1506,7 +1506,7 @@ MonoBehaviour:
   m_SphereCastRadius: 0
   m_RaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1591
   m_RaycastTriggerInteraction: 0
   m_HoverToSelect: 0
   m_HoverTimeToSelect: 0.5

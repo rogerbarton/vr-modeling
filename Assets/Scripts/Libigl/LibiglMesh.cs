@@ -41,6 +41,7 @@ namespace Libigl
         public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
 
         [NonSerialized] public Transform BoundingBox;
+        private bool _boundsVisible;
         
         private void Awake()
         {
@@ -61,11 +62,21 @@ namespace Libigl
             DataRowMajor.LinkBehaviourState(Behaviour);
 
             BoundingBox = Instantiate(MeshManager.get.boundingBoxPrefab, Vector3.zero, Quaternion.identity, transform).transform;
-            UpdateBoundingBox();
+            UpdateBoundingBoxSize();
+            RepaintBounds();
 
+            MeshManager.ActiveMeshSet += OnActiveMeshSet;
+            
 #if UNITY_EDITOR
             DisposeBeforeUnload += Dispose;
 #endif
+        }
+
+        private void OnActiveMeshSet()
+        {
+            if(!IsActiveMesh()) return;
+            
+            RepaintBounds();
         }
 
         private void Update()
@@ -114,6 +125,8 @@ namespace Libigl
         private void OnDestroy()
         {
             Dispose();
+            
+            MeshManager.ActiveMeshSet -= OnActiveMeshSet;
         }
 
         private void Dispose()
@@ -188,7 +201,7 @@ namespace Libigl
             Mesh.MarkDynamic();
         }
 
-        public void UpdateBoundingBox()
+        public void UpdateBoundingBoxSize()
         {
             BoundingBox.localPosition = Mesh.bounds.center;
             BoundingBox.localScale = 2 * Mesh.bounds.extents;
@@ -207,7 +220,13 @@ namespace Libigl
 
         public void ToggleBounds()
         {
-            BoundingBox.gameObject.SetActive(!BoundingBox.gameObject.activeSelf);
+            _boundsVisible = !_boundsVisible;
+            RepaintBounds();
+        }
+
+        public void RepaintBounds()
+        {
+            BoundingBox.GetComponent<MeshRenderer>().enabled = _boundsVisible;
         }
     }
 }
