@@ -98,7 +98,7 @@ UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, unsi
  * @param maskId Which selections to transform
  */
 UNITY_INTERFACE_EXPORT void
-TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, unsigned int maskId = -1);
+TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, Vector3 pivot, unsigned int maskId = -1);
 
 /**
  * Run the igl::harmonic biharmonic deformation on the mesh with provided fixed boundary conditions.

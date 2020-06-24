@@ -145,6 +145,10 @@ namespace Libigl
 
             Input.DoTransform = true;
             GetTransformDelta(ref Input.TransformDelta, false);
+            
+            // Convert Pivot to local space
+            var uTransform = LibiglMesh.transform;
+            Input.TransformDelta.Pivot = uTransform.InverseTransformPoint(Input.TransformDelta.Pivot);
         }
 
         private void PreExecuteTransform()
@@ -189,9 +193,9 @@ namespace Libigl
         private void GetTransformDelta(ref TransformDelta transformDelta, bool transformMesh)
         {
             if(_isTwoHanded)
-                GetRotateScaleJoint(ref transformDelta, transformMesh);
+                GetRotateScaleJoint(ref transformDelta);
             else if(_primaryTransformHand ? _doTransformR : _doTransformL)
-                GetTranslate(_primaryTransformHand, ref transformDelta, transformMesh);
+                GetTranslate(_primaryTransformHand, ref transformDelta);
 
             // Update pivot to latest (overwrites for now)
             if (InputManager.State.ActivePivotMode == PivotMode.Hand)

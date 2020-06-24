@@ -22,14 +22,16 @@ void TranslateSelection(State* state, Vector3 value, unsigned int maskId)
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, unsigned int maskId)
+void TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, Vector3 pivot, unsigned int maskId)
 {
 	auto& V = *state->V;
 	const auto& S = *state->S;
 
 	using namespace Eigen;
 	Transform<float, 3, Affine> transform =
-			Translation3f(translation.AsEigen()) * rotation.AsEigen() * Scaling(scale);
+			Translation3f(translation.AsEigen()) *
+			Scaling(scale) *
+			Translation3f(pivot.AsEigen()) * rotation.AsEigen() * Translation3f(-pivot.AsEigen());
 
 	for (int i = 0; i < V.rows(); ++i)
 	{

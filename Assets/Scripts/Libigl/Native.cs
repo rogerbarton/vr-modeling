@@ -89,7 +89,7 @@ namespace Libigl
 
         [DllImport(DllName)]
         public static extern unsafe void TransformSelection(State* state, Vector3 translation, float scale,
-            Quaternion rotation, uint maskId);
+            Quaternion rotation, Vector3 pivot, uint maskId);
 
         [DllImport(DllName)]
         public static extern unsafe void Harmonic(State* state, uint boundaryMask, bool showDeformationField);

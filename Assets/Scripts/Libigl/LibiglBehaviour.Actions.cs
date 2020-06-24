@@ -32,7 +32,8 @@ namespace Libigl
             {
                 // Do full transformation
                 Native.TransformSelection(State, ExecuteInput.TransformDelta.Translate,
-                    ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate, _currentTranslateMask);
+                    ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate, pivot,
+                    _currentTranslateMask);
             }
         }
 
