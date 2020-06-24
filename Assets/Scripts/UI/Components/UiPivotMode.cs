@@ -16,18 +16,28 @@ namespace UI.Components
         
         public void Initialize()
         {
-            _mode = InputManager.State.ActivePivotMode;
-            for (var i = 0; i < icons.Length; i++)
-            {
-                var i1 = i;
-                icons[i].GetComponent<Button>().onClick.AddListener(() => { SetMode((PivotMode) i1); });
-                icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
-            }
+            Repaint();
             
             // Tooltips
             UiInputHints.AddTooltip(icons[0].gameObject, "Pivot around mesh center");
             UiInputHints.AddTooltip(icons[1].gameObject, "Pivot around hand");
             UiInputHints.AddTooltip(icons[2].gameObject, "Pivot around active selection mean");
+            
+            InputManager.OnActiveToolChanged += Repaint;
+        }
+
+        private void Repaint()
+        {
+            _mode = InputManager.State.ActivePivotMode;
+            for (var i = 0; i < icons.Length; i++)
+            {
+                var i1 = i;
+                var btn = icons[i].GetComponent<Button>();
+                btn.onClick.AddListener(() => { SetMode((PivotMode) i1); });
+                if (i == PivotMode.Selection.GetHashCode())
+                    btn.interactable = InputManager.State.ActiveTool != ToolType.Transform; 
+                icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
+            }
         }
 
         public void SetMode(PivotMode mode)
@@ -36,8 +46,13 @@ namespace UI.Components
 
             icons[_mode.GetHashCode()].color = Color.white;
             _mode = mode;
-            InputManager.State.ActivePivotMode = _mode;
             icons[_mode.GetHashCode()].color = activeColor;
+            
+            // Apply to the state
+            if (InputManager.State.ActiveTool == ToolType.Transform)
+                InputManager.State.ActivePivotModeTransform = _mode;
+            else
+                InputManager.State.ActivePivotModeSelect = _mode;
         }
     }
 }

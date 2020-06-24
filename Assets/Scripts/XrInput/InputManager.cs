@@ -148,6 +148,7 @@ namespace XrInput
         private bool _prevSecondaryBtnPressedL;
         private bool _prevAxisClickPressedL;
         private bool _prevAxisClickPressedR;
+        public static event Action OnActiveToolChanged = delegate { };
 
         private void Update()
         {
@@ -231,6 +232,8 @@ namespace XrInput
             if(BrushL) BrushL.OnActiveToolChanged();
 
             if(BrushR) BrushR.OnActiveToolChanged();
+
+            OnActiveToolChanged();
         }
 
         public void RepaintInputHints(bool left = true, bool right = true)

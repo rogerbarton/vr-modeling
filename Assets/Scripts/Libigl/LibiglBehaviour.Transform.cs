@@ -16,7 +16,11 @@ namespace Libigl
 
         public static TransformDelta Identity()
         {
-            return new TransformDelta {Rotate = Quaternion.identity, Scale = 1f, PivotMode = InputManager.State.ActivePivotMode};
+            return new TransformDelta {
+                Rotate = Quaternion.identity, 
+                Scale = 1f, 
+                PivotMode = InputManager.State.ActivePivotMode
+                };
         }
 
         public void Add(TransformDelta other)
@@ -66,17 +70,17 @@ namespace Libigl
                 if (!_doTransformR)
                     _primaryTransformHand = false;
             }
-            
+
             // on depressed
             if (!_doTransformL && _doTransformPrevL)
             {
                 // Add transformation to selection
                 if (InputManager.State.ActiveTool == ToolType.Select)
                     ApplyTransformToSelection();
-                
+
                 _primaryTransformHand = true;
             }
-            
+
             // - Right
             // on pressed
             if (_doTransformR && !_doTransformPrevR)
@@ -88,29 +92,29 @@ namespace Libigl
                 if (!_doTransformL)
                     _primaryTransformHand = true;
             }
-            
+
             // on depressed
             if (!_doTransformR && _doTransformPrevR)
             {
                 // Add transformation to selection
                 if (InputManager.State.ActiveTool == ToolType.Select)
                     ApplyTransformToSelection();
-                
+
                 _primaryTransformHand = false;
             }
-            
-            if(InputManager.State.ActiveTool == ToolType.Transform)
+
+            if (InputManager.State.ActiveTool == ToolType.Transform)
                 ApplyTransformToMesh();
 
-            if (InputManager.State.ActiveTool == ToolType.Transform && (_doTransformL || _doTransformR) && 
-                InputManager.State.TriggerR > PressThres && InputManager.StatePrev.TriggerR < PressThres)
+            if ((_doTransformL || _doTransformR) && InputManager.State.PrimaryBtnR &&
+                !InputManager.StatePrev.PrimaryBtnR)
                 InputManager.State.TransformWithRotate = !InputManager.State.TransformWithRotate;
         }
-        
-        
-        
-        
-        
+
+
+
+
+
 
         #region --- Applying TransformDelta
 
@@ -118,8 +122,14 @@ namespace Libigl
         {
             if (!_doTransformL && !_doTransformR) return;
             
-            // Get & Consume the transformation
             var transformDelta = TransformDelta.Identity();
+            if (transformDelta.PivotMode == PivotMode.Selection)
+            {
+                Debug.LogWarning("Invalid pivot mode PivotMode.Selection for transforming the mesh, using PivotMode.Hand.");
+                transformDelta.PivotMode = PivotMode.Hand;
+            }
+
+            // Get & Consume the transformation
             GetTransformDelta(ref transformDelta, InputManager.State.TransformWithRotate);
 
             // Apply it to the mesh
@@ -144,7 +154,7 @@ namespace Libigl
             if (!_doTransformL && !_doTransformR) return;
 
             Input.DoTransform = true;
-            GetTransformDelta(ref Input.TransformDelta, false);
+            GetTransformDelta(ref Input.TransformDelta, InputManager.State.TransformWithRotate);
             
             // Convert Pivot to local space
             var uTransform = LibiglMesh.transform;
@@ -166,6 +176,7 @@ namespace Libigl
         
         private void ConsumeTransform()
         {
+            // Consume transform if we are in the Select tool
             if(Input.DoTransform)
                 Input.TransformDelta = TransformDelta.Identity();
 
@@ -190,12 +201,12 @@ namespace Libigl
         #region --- Calculating TransformDelta
 
         // Only for selections, transforming the mesh is done directly
-        private void GetTransformDelta(ref TransformDelta transformDelta, bool transformMesh)
+        private void GetTransformDelta(ref TransformDelta transformDelta, bool withRotate)
         {
             if(_isTwoHanded)
-                GetRotateScaleJoint(ref transformDelta);
+                GetRotateScaleJoint(ref transformDelta, withRotate);
             else if(_primaryTransformHand ? _doTransformR : _doTransformL)
-                GetTranslate(_primaryTransformHand, ref transformDelta);
+                GetTranslate(_primaryTransformHand, ref transformDelta, withRotate);
 
             // Update pivot to latest (overwrites for now)
             if (InputManager.State.ActivePivotMode == PivotMode.Hand)

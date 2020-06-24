@@ -21,7 +21,7 @@ namespace Libigl
 
         [NonSerialized] public readonly List<LibiglMesh> AllMeshes = new List<LibiglMesh>();
 
-        public static event Action ActiveMeshSet = delegate {};
+        public static event Action ActiveMeshSet = delegate { };
         public Material wireframeMaterial;
         public Material wireframeMaterialPrimary;
         public Material wireframeMaterialActive;

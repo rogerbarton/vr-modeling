@@ -30,8 +30,7 @@ void TransformSelection(State* state, Vector3 translation, float scale, Quaterni
 	using namespace Eigen;
 	Transform<float, 3, Affine> transform =
 			Translation3f(translation.AsEigen()) *
-			Scaling(scale) *
-			Translation3f(pivot.AsEigen()) * rotation.AsEigen() * Translation3f(-pivot.AsEigen());
+			Translation3f(pivot.AsEigen()) * Scaling(scale) * rotation.AsEigen() * Translation3f(-pivot.AsEigen());
 
 	for (int i = 0; i < V.rows(); ++i)
 	{

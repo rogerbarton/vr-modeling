@@ -58,8 +58,11 @@ namespace XrInput
         public float BrushRadius;
         
         // Transform
-        public TransformMode ActiveTransformMode; 
-        public PivotMode ActivePivotMode;
+        public PivotMode ActivePivotMode =>
+            ActiveTool == ToolType.Transform ? ActivePivotModeTransform : ActivePivotModeSelect;
+
+        public PivotMode ActivePivotModeTransform;
+        public PivotMode ActivePivotModeSelect;
         public bool TransformWithRotate;
         
         // Selection
@@ -76,8 +79,8 @@ namespace XrInput
             {
                 ActiveTool = ToolType.Select, 
                 BrushRadius = 0.1f,
-                ActiveTransformMode = TransformMode.IndividualTranslateRotate,
-                ActivePivotMode = PivotMode.Hand,
+                ActivePivotModeTransform = PivotMode.Hand,
+                ActivePivotModeSelect = PivotMode.Hand,
                 ActiveSelectionMode = SelectionMode.Add,
                 TransformWithRotate = true
             };
@@ -121,28 +124,4 @@ namespace XrInput
         Hand,
         Selection
     }
-
-    public enum TransformMode
-    {
-        /// <summary>
-        /// Individual Translate 
-        /// </summary>
-        IndividualTranslate,
-
-        /// <summary>
-        /// Individual Translate+Rotate 
-        /// </summary>
-        IndividualTranslateRotate,
-
-        /// <summary>
-        /// Joint Translate+Rotate 
-        /// </summary>
-        Joint,
-
-        /// <summary>
-        /// Joint Translate+Rotate+Scale 
-        /// </summary>
-        JointScale,
-    }
-
 }
