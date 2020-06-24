@@ -57,25 +57,7 @@ namespace XrInput
         private GameObject _handTeleportReticleR;
         public Material filledLineMat;
         public Material dottedLineMat;
-
-        public UiInputHintsData[] toolInputHintsL;
-        public UiInputHintsData[] toolInputHintsR;
         
-        public UiInputHintsData inputHintsLTransformIdle;
-        public UiInputHintsData inputHintsLTransformTransformingL;
-        public UiInputHintsData inputHintsLTransformTransformingR;
-        public UiInputHintsData inputHintsLTransformTransformingLR;
-        public UiInputHintsData inputHintsRTransformIdle;
-        public UiInputHintsData inputHintsRTransformTransformingL;
-        public UiInputHintsData inputHintsRTransformTransformingR;
-        public UiInputHintsData inputHintsRTransformTransformingLR;
-        
-        public UiInputHintsData inputHintsSelectIdle;
-        public UiInputHintsData inputHintsSelectSelecting;
-        public UiInputHintsData inputHintsSelectTransformL;
-        public UiInputHintsData inputHintsSelectTransformR;
-        public UiInputHintsData inputHintsSelectTransformLR;
-    
         [NonSerialized] public XrBrush BrushL;
         [NonSerialized] public XrBrush BrushR;
 
@@ -119,7 +101,6 @@ namespace XrInput
         private bool InitializeController(bool isRight, InputDeviceCharacteristics c, out InputDevice inputDevice,
             GameObject handPrefab,
             XRController modelParent, out Animator handAnimator, out UiInputHints inputHints,
-            IReadOnlyList<UiInputHintsData> toolInputHints,
             out XrBrush brush)
         {
             var devices = new List<InputDevice>();
@@ -148,8 +129,7 @@ namespace XrInput
                     handAnimator = go.GetComponent<Animator>();
 
                 inputHints = go.GetComponentInChildren<UiInputHints>();
-                if (inputHints && State.ActiveTool.GetHashCode() < toolInputHints.Count)
-                    inputHints.SetData(toolInputHints[State.ActiveTool.GetHashCode()]);
+                if (inputHints) RepaintInputHints(!isRight, isRight);
 
                 brush = go.GetComponentInChildren<XrBrush>();
                 if (brush) brush.Initialize(isRight);
@@ -175,7 +155,7 @@ namespace XrInput
             
             if (!HandL.isValid && !HandHintsL)
                 InitializeController(false, handCharL, out HandL, handPrefabL, handRigL, out _handAnimatorL,
-                    out HandHintsL, toolInputHintsL, out BrushL);
+                    out HandHintsL, out BrushL);
             else
             {
                 // Teleport ray
@@ -199,7 +179,7 @@ namespace XrInput
 
             if (!HandR.isValid && !HandHintsR)
                 InitializeController(true, handCharR, out HandR, handPrefabR, handRigR,
-                    out _handAnimatorR, out HandHintsR, toolInputHintsR, out BrushR);
+                    out _handAnimatorR, out HandHintsR, out BrushR);
             else
             {
                 // Teleport ray
@@ -246,21 +226,21 @@ namespace XrInput
         {
             State.ActiveTool = value;
 
-            if(HandL.isValid)
-            {
-                if (HandHintsL && value.GetHashCode() < toolInputHintsL.Length)
-                    HandHintsL.SetData(toolInputHintsL[value.GetHashCode()]);
-                if (BrushL) BrushL.OnActiveToolChanged();
-            }
+            RepaintInputHints();
+            
+            if(BrushL) BrushL.OnActiveToolChanged();
 
-            if(HandR.isValid)
-            {
-                if (HandHintsR && value.GetHashCode() < toolInputHintsR.Length)
-                    HandHintsR.SetData(toolInputHintsR[value.GetHashCode()]);
-                if (BrushR) BrushR.OnActiveToolChanged();
-            }
+            if(BrushR) BrushR.OnActiveToolChanged();
         }
 
+        public void RepaintInputHints(bool left = true, bool right = true)
+        {
+            if(left && HandHintsL)
+                HandHintsL.Repaint();
+            if (right && HandHintsR)
+                HandHintsR.Repaint();
+        }
+        
         #endregion
     }
 }

@@ -87,6 +87,7 @@ MonoBehaviour:
   secondaryBtn: {fileID: 4210845700610206208}
   primaryAxisX: {fileID: 4512102781246387425}
   primaryAxisY: {fileID: 5530095122425430282}
+  collection: {fileID: 11400000, guid: da73698b6d4a8ea4ab7176d346160858, type: 2}
 --- !u!1 &7902218312059742666
 GameObject:
   m_ObjectHideFlags: 0

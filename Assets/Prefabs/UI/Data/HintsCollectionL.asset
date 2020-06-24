@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4530e08a2c71482aaada91f6ac3633b1, type: 3}
+  m_Name: HintsCollectionL
+  m_EditorClassIdentifier: 
+  defaultHints: {fileID: 11400000, guid: c0f0b3a831962594d87526e68027bbdb, type: 2}
+  transform: {fileID: 11400000, guid: 104c5391684493f44b3ba419edc32451, type: 2}
+  transformIdle: {fileID: 11400000, guid: 7dc2ca8f65633424381d48f8928090de, type: 2}
+  transformTransformingL: {fileID: 11400000, guid: 2423c9e16707d0e49b05e3fef0791add,
+    type: 2}
+  transformTransformingR: {fileID: 11400000, guid: 298493ef4b7fd2441ae9635ae246cd67,
+    type: 2}
+  transformTransformingLr: {fileID: 11400000, guid: 1811fa4f423a0ce4f91162461f1c0ae4,
+    type: 2}
+  select: {fileID: 11400000, guid: 620ef1202a525b845886e7de3ca96cfe, type: 2}
+  selectIdle: {fileID: 11400000, guid: 62cdd47d18cdb0245a5a85786738aa39, type: 2}
+  selectSelecting: {fileID: 11400000, guid: 02b3d861a45cca649806f81ea63b62d6, type: 2}
+  selectTransformL: {fileID: 11400000, guid: 43791895682e580439b96e0a545db056, type: 2}
+  selectTransformR: {fileID: 11400000, guid: f4cec89567bb6144ebecc6207e99c303, type: 2}
+  selectTransformLr: {fileID: 11400000, guid: c9c43f0f6a5787045a97871e55afbed0, type: 2}

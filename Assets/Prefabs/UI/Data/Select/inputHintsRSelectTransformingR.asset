@@ -10,37 +10,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4f28b455084a6eb3a33be14c382823, type: 3}
-  m_Name: inputHintsRTransformTransformingL
+  m_Name: inputHintsRSelectTransformingR
   m_EditorClassIdentifier: 
   title:
-    isActive: 0
+    isOverride: 0
+    isActive: 1
     icon: {fileID: 0}
     text: 
   help:
+    isOverride: 0
     isActive: 0
     icon: {fileID: 0}
     text: 
   trigger:
+    isOverride: 0
     isActive: 0
     icon: {fileID: 0}
     text: 
   grip:
+    isOverride: 0
     isActive: 1
-    icon: {fileID: 21300000, guid: e4b1c3639803cd64eb9a9d0288e02405, type: 3}
-    text: Scale Mesh
+    icon: {fileID: 21300000, guid: 7789612234e09f4478f333f2fc143d99, type: 3}
+    text: Grabbing Mesh
   primaryBtn:
+    isOverride: 0
     isActive: 1
     icon: {fileID: 21300000, guid: bb99ea73adb310343b0aec0cb5865a4c, type: 3}
     text: Toggle Rotate
   secondaryBtn:
+    isOverride: 0
     isActive: 0
     icon: {fileID: 0}
     text: 
   primaryAxisX:
+    isOverride: 0
     isActive: 0
     icon: {fileID: 0}
     text: 
   primaryAxisY:
+    isOverride: 0
     isActive: 0
     icon: {fileID: 0}
     text: 

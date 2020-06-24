@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UI;
+using UnityEngine;
 
 namespace XrInput
 {
@@ -15,28 +17,10 @@ namespace XrInput
                 if (_toolTransformMode == value) return;
                 _toolTransformMode = value;
                 
-                if(InputManager.get.HandHintsL == null) return;
-                switch (value)
-                {
-                    case ToolTransformMode.Idle:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformIdle);
-                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformIdle);
-                        break;
-                    case ToolTransformMode.TransformingL:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformTransformingL);
-                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformTransformingL);
-                        break;
-                    case ToolTransformMode.TransformingR:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformTransformingR);
-                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformTransformingR);
-                        break;
-                    case ToolTransformMode.TransformingLR:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsLTransformTransformingLR);
-                        InputManager.get.HandHintsR.SetData(InputManager.get.inputHintsRTransformTransformingLR);
-                        break;
-                }
+                InputManager.get.RepaintInputHints();
             }
         }
+
         private ToolTransformMode _toolTransformMode;
 
         public ToolSelectMode ToolSelectMode
@@ -47,29 +31,11 @@ namespace XrInput
                 if (_toolSelectMode == value) return;
                 _toolSelectMode = value;
                 
-                switch (value)
-                {
-                    case ToolSelectMode.Idle:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectIdle);
-                        break;
-                    case ToolSelectMode.Selecting:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectSelecting);
-                        break;
-                    case ToolSelectMode.TransformingL:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectTransformL);
-                        break;
-                    case ToolSelectMode.TransformingR:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectTransformR);
-                        break;
-                    case ToolSelectMode.TransformingLR:
-                        InputManager.get.HandHintsL.SetData(InputManager.get.inputHintsSelectTransformLR);
-                        break;
-                }
-
+                InputManager.get.RepaintInputHints();        
             }
         }
         private ToolSelectMode _toolSelectMode;
-
+        
         // Generic Input
         public float GripL;
         public float TriggerL;

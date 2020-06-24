@@ -1258,6 +1258,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.001
       objectReference: {fileID: 0}
+    - target: {fileID: 1295700610354993451, guid: 17b9c282a5e03bf46bac1d4fa34befed,
+        type: 3}
+      propertyPath: collection
+      value: 
+      objectReference: {fileID: 11400000, guid: 24e175b35e2ef3a47bce6c3c6fb3d5b6,
+        type: 2}
     - target: {fileID: 1663003033829478521, guid: 17b9c282a5e03bf46bac1d4fa34befed,
         type: 3}
       propertyPath: m_textInfo.characterCount

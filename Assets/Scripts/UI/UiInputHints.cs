@@ -16,7 +16,9 @@ namespace UI
         public UiInputLabel primaryAxisX;
         public UiInputLabel primaryAxisY;
 
+        [SerializeField] private UiInputHintsDataCollection collection;
         private UiInputHintsData _currentData;
+
 
         public void SetData(UiInputHintsData data)
         {
@@ -91,6 +93,59 @@ namespace UI
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
             trigger.triggers.Add(onHoverStart);
             trigger.triggers.Add(onHoverEnd);
+        }
+        
+        
+        
+        /// <summary>
+        /// Refreshes the Input hints based on the <see cref="ActiveTool"/> and the sub state like <see cref="ToolTransformMode"/>
+        /// </summary>
+        public void Repaint()
+        {
+            SetData(collection.defaultHints);
+            switch (InputManager.State.ActiveTool)
+            {
+                case ToolType.Transform:
+                    SetData(collection.transform);
+                    switch (InputManager.State.ToolTransformMode)
+                    {
+                        case ToolTransformMode.Idle:
+                            SetData(collection.transformIdle);
+                            break;
+                        case ToolTransformMode.TransformingL:
+                            SetData(collection.transformTransformingL);
+                            break;
+                        case ToolTransformMode.TransformingR:
+                            SetData(collection.transformTransformingR);
+                            break;
+                        case ToolTransformMode.TransformingLR:
+                            SetData(collection.transformTransformingLr);
+                            break;
+                    }
+
+                    break;
+                case ToolType.Select:
+                    SetData(collection.select);
+                    switch (InputManager.State.ToolSelectMode)
+                    {
+                        case ToolSelectMode.Idle:
+                            SetData(collection.selectIdle);
+                            break;
+                        case ToolSelectMode.Selecting:
+                            SetData(collection.selectSelecting);
+                            break;
+                        case ToolSelectMode.TransformingL:
+                            SetData(collection.selectTransformL);
+                            break;
+                        case ToolSelectMode.TransformingR:
+                            SetData(collection.selectTransformR);
+                            break;
+                        case ToolSelectMode.TransformingLR:
+                            SetData(collection.selectTransformLr);
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

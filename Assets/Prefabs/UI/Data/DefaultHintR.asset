@@ -10,37 +10,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4f28b455084a6eb3a33be14c382823, type: 3}
-  m_Name: inputHintsRTransformTransformingR
+  m_Name: DefaultHintR
   m_EditorClassIdentifier: 
   title:
+    isOverride: 1
     isActive: 0
     icon: {fileID: 0}
     text: 
   help:
+    isOverride: 1
     isActive: 0
     icon: {fileID: 0}
     text: 
   trigger:
+    isOverride: 1
     isActive: 0
     icon: {fileID: 0}
     text: 
   grip:
-    isActive: 1
-    icon: {fileID: 21300000, guid: 7789612234e09f4478f333f2fc143d99, type: 3}
-    text: Grabbing Mesh
+    isOverride: 1
+    isActive: 0
+    icon: {fileID: 0}
+    text: 
   primaryBtn:
-    isActive: 1
-    icon: {fileID: 21300000, guid: bb99ea73adb310343b0aec0cb5865a4c, type: 3}
-    text: Toggle Rotate
+    isOverride: 1
+    isActive: 0
+    icon: {fileID: 0}
+    text: 
   secondaryBtn:
+    isOverride: 1
     isActive: 0
     icon: {fileID: 0}
     text: 
   primaryAxisX:
+    isOverride: 1
     isActive: 0
     icon: {fileID: 0}
     text: 
   primaryAxisY:
-    isActive: 0
-    icon: {fileID: 0}
-    text: 
+    isOverride: 1
+    isActive: 1
+    icon: {fileID: 21300000, guid: 774f87476d4afb84a8c62adbb24ee16c, type: 3}
+    text: Resize Brush

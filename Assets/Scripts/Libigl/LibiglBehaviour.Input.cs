@@ -40,19 +40,14 @@ namespace Libigl
         /// </summary>
         private void UpdateInputSelect()
         {
-            switch (InputManager.State.ToolSelectMode)
-            {
-                case ToolSelectMode.Idle:
-                    break;
-                case ToolSelectMode.Selecting:
-                    break;
-                case ToolSelectMode.TransformingL:
-                    break;
-                case ToolSelectMode.TransformingR:
-                    break;
-                case ToolSelectMode.TransformingLR:
-                    break;
-            }
+            if (_doTransformL)
+                InputManager.State.ToolSelectMode = _doTransformR ? ToolSelectMode.TransformingLR : ToolSelectMode.TransformingL;
+            else if (_doTransformR)
+                InputManager.State.ToolSelectMode = ToolSelectMode.TransformingR;
+            else if (InputManager.StatePrev.TriggerR > PressThres)
+                InputManager.State.ToolSelectMode = ToolSelectMode.Selecting;
+            else
+                InputManager.State.ToolSelectMode = ToolSelectMode.Idle;
             
             // Change the selection with the right hand primary2DAxis.x
             if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)

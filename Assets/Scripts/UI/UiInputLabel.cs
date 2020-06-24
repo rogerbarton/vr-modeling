@@ -7,6 +7,7 @@ namespace UI
     [System.Serializable]
     public struct UiInputLabelData
     {
+        public bool isOverride;
         public bool isActive;
         public Sprite icon;
         public string text;
@@ -20,6 +21,8 @@ namespace UI
 
         public void SetData(UiInputLabelData data)
         {
+            if(!data.isOverride) return;
+            
             gameObject.SetActive(data.isActive);
             if (!data.isActive) return;
             

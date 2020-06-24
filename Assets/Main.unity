@@ -367,7 +367,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285171625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.01, z: -3.5}
+  m_LocalPosition: {x: 0, y: 1.001, z: -3.5}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1244380012}
@@ -1833,33 +1833,6 @@ MonoBehaviour:
   handInteractorR: {fileID: 506401551}
   filledLineMat: {fileID: 2100000, guid: ba67c6d3d291b894ca28cbcda37fecf0, type: 2}
   dottedLineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-  toolInputHintsL:
-  - {fileID: 11400000, guid: 99db3a173aa460c4ba3f2771fa97a2d7, type: 2}
-  - {fileID: 11400000, guid: 3584c7cdefa28d2478b462ecd46119bf, type: 2}
-  toolInputHintsR:
-  - {fileID: 11400000, guid: 34ece0a978a5bb04b883a3d60b335082, type: 2}
-  - {fileID: 11400000, guid: e477aab04f350ea42ae91b68bbcf9f7f, type: 2}
-  inputHintsLTransformIdle: {fileID: 11400000, guid: 7dc2ca8f65633424381d48f8928090de,
-    type: 2}
-  inputHintsLTransformTransformingL: {fileID: 11400000, guid: 2423c9e16707d0e49b05e3fef0791add,
-    type: 2}
-  inputHintsLTransformTransformingR: {fileID: 11400000, guid: 298493ef4b7fd2441ae9635ae246cd67,
-    type: 2}
-  inputHintsLTransformTransformingLR: {fileID: 11400000, guid: 1811fa4f423a0ce4f91162461f1c0ae4,
-    type: 2}
-  inputHintsRTransformIdle: {fileID: 11400000, guid: 9c160f350db8d594da975076553ce48a,
-    type: 2}
-  inputHintsRTransformTransformingL: {fileID: 11400000, guid: 9b2b3bd58c48fc2488d646a51b0dda91,
-    type: 2}
-  inputHintsRTransformTransformingR: {fileID: 11400000, guid: 7cc41d2997038a641b5503b8349d3e73,
-    type: 2}
-  inputHintsRTransformTransformingLR: {fileID: 11400000, guid: 2d592767777562c428f4f6b8507adee8,
-    type: 2}
-  inputHintsSelectIdle: {fileID: 0}
-  inputHintsSelectSelecting: {fileID: 0}
-  inputHintsSelectTransformL: {fileID: 0}
-  inputHintsSelectTransformR: {fileID: 0}
-  inputHintsSelectTransformLR: {fileID: 0}
 --- !u!1 &708273530
 GameObject:
   m_ObjectHideFlags: 0
