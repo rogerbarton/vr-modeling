@@ -101,6 +101,9 @@ namespace XrInput
         public bool NewSelectionOnDraw; // Draw into a new selection with each stroke
         public bool DiscardSelectionOnDraw; // Clear the selection when starting a stroke
 
+        // Visual
+        public bool BoundsVisible;
+
         public static SharedInputState GetInstance()
         {
             return new SharedInputState

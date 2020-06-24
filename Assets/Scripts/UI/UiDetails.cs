@@ -155,15 +155,6 @@ namespace UI
             shaderGroup.AddItem(toggleWireframe.gameObject);
             toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
             toggleWireframe.onClick.AddListener(() => { _behaviour.LibiglMesh.ToggleWireframe(); });
-            
-            var toggleBounds = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            shaderGroup.AddItem(toggleBounds.gameObject);
-            toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
-            toggleBounds.onClick.AddListener(() =>
-            {
-                behaviour.LibiglMesh.ToggleBounds();
-            });
-            
 
             // -- Misc
             var objectGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();

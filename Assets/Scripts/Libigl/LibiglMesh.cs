@@ -5,6 +5,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityNativeTool;
+using XrInput;
 
 namespace Libigl
 {
@@ -42,7 +43,6 @@ namespace Libigl
 
         [NonSerialized] public Transform BoundingBox;
         private MeshRenderer _boundingBoxRenderer;
-        private bool _boundsVisible;
         
         private void Awake()
         {
@@ -218,18 +218,12 @@ namespace Libigl
             MeshRenderer.sharedMaterials = materials.ToArray();
         }
 
-        public void ToggleBounds()
-        {
-            _boundsVisible = !_boundsVisible;
-            RepaintBounds();
-        }
-
         public void RepaintBounds(bool overrideVisible = false, bool primary = false)
         {
-            _boundingBoxRenderer.enabled = _boundsVisible || overrideVisible;
+            _boundingBoxRenderer.enabled = InputManager.State.BoundsVisible || overrideVisible;
             _boundingBoxRenderer.sharedMaterial = 
                 IsActiveMesh() ? MeshManager.get.wireframeMaterialActive : 
-                primary ? MeshManager.get.wireframeMaterialPrimary : MeshManager.get.wireframeMaterial;
+                overrideVisible && primary ? MeshManager.get.wireframeMaterialPrimary : MeshManager.get.wireframeMaterial;
         }
     }
 }

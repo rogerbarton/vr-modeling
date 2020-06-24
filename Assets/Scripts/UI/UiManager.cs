@@ -4,6 +4,7 @@ using UI.Components;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using XrInput;
 
 namespace UI
 {
@@ -130,6 +131,16 @@ namespace UI
             _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Debug";
             _debugGroup.SetVisibility(true);
+            
+            var toggleBounds = Instantiate(UiManager.get.buttonPrefab, actionsListParent).GetComponent<Button>();
+            _debugGroup.AddItem(toggleBounds.gameObject);
+            toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
+            toggleBounds.onClick.AddListener(() =>
+            {
+                InputManager.State.BoundsVisible = !InputManager.State.BoundsVisible;
+                foreach (var mesh in MeshManager.get.AllMeshes)
+                    mesh.RepaintBounds();
+            });
             
             var toggleUvGridAction = Instantiate(buttonPrefab, actionsListParent).GetComponent<Button>();
             _debugGroup.AddItem(toggleUvGridAction.gameObject);

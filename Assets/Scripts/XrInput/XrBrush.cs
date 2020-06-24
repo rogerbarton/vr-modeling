@@ -71,7 +71,7 @@ namespace XrInput
             if (libiglMesh == MeshManager.ActiveMesh)
             {
                 _insideActiveMeshBounds = true;
-                ShowCurrentMeshes(!_insideActiveMeshBounds);
+                RepaintBoundingBoxes();
             }
             else
                 libiglMesh.RepaintBounds(!_insideActiveMeshBounds, _currentLibiglMeshes.Count == 1);
@@ -83,7 +83,7 @@ namespace XrInput
             if (libiglMesh == MeshManager.ActiveMesh)
             {
                 _insideActiveMeshBounds = false;
-                ShowCurrentMeshes(!_insideActiveMeshBounds);
+                RepaintBoundingBoxes();
             }
             else
             {
@@ -102,17 +102,16 @@ namespace XrInput
             MeshLeftTrigger(libiglMesh);
         }
 
-        private void ShowCurrentMeshes(bool visible)
+        public void RepaintBoundingBoxes()
         {
             for (var i = 0; i < _currentLibiglMeshes.Count; i++)
-                _currentLibiglMeshes[i].RepaintBounds(visible, i == 0);
+                _currentLibiglMeshes[i].RepaintBounds(!_insideActiveMeshBounds, i == 0);
         }
 
         private void OnActiveMeshSet()
         {
             _insideActiveMeshBounds = _currentLibiglMeshes.Contains(MeshManager.ActiveMesh);
-            ShowCurrentMeshes(!_insideActiveMeshBounds);
-
+            RepaintBoundingBoxes();
         }
         
         private void OnDisable()
