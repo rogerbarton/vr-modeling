@@ -41,6 +41,7 @@ namespace Libigl
         public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
 
         [NonSerialized] public Transform BoundingBox;
+        private MeshRenderer _boundingBoxRenderer;
         private bool _boundsVisible;
         
         private void Awake()
@@ -62,6 +63,7 @@ namespace Libigl
             DataRowMajor.LinkBehaviourState(Behaviour);
 
             BoundingBox = Instantiate(MeshManager.get.boundingBoxPrefab, Vector3.zero, Quaternion.identity, transform).transform;
+            _boundingBoxRenderer = BoundingBox.GetComponent<MeshRenderer>();
             UpdateBoundingBoxSize();
             RepaintBounds();
 
@@ -74,8 +76,6 @@ namespace Libigl
 
         private void OnActiveMeshSet()
         {
-            if(!IsActiveMesh()) return;
-            
             RepaintBounds();
         }
 
@@ -224,9 +224,12 @@ namespace Libigl
             RepaintBounds();
         }
 
-        public void RepaintBounds()
+        public void RepaintBounds(bool overrideVisible = false, bool primary = false)
         {
-            BoundingBox.GetComponent<MeshRenderer>().enabled = _boundsVisible;
+            _boundingBoxRenderer.enabled = _boundsVisible || overrideVisible;
+            _boundingBoxRenderer.sharedMaterial = 
+                IsActiveMesh() ? MeshManager.get.wireframeMaterialActive : 
+                primary ? MeshManager.get.wireframeMaterialPrimary : MeshManager.get.wireframeMaterial;
         }
     }
 }

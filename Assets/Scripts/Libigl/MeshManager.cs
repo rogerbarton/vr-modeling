@@ -23,6 +23,8 @@ namespace Libigl
 
         public static event Action ActiveMeshSet = delegate {};
         public Material wireframeMaterial;
+        public Material wireframeMaterialPrimary;
+        public Material wireframeMaterialActive;
         private static int _defaultLayer;
         private static int _holographicLayer;
     

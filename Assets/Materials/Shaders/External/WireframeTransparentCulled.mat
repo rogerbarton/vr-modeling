@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WireframeTransparent
-  m_Shader: {fileID: 4800000, guid: 90cadb91a7902754f9fe5b4563306677, type: 3}
+  m_Name: WireframeTransparentCulled
+  m_Shader: {fileID: 4800000, guid: a64caad055200da45b6df1c7c80839ed, type: 3}
   m_ShaderKeywords: USEDISCARD_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -28,4 +28,4 @@ Material:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 0}
     - _FillColor: {r: 0, g: 0, b: 0, a: 0}
     - _LineColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
-    - _WireColor: {r: 0.7647059, g: 0.7647059, b: 0.7647059, a: 1}
+    - _WireColor: {r: 0.764151, g: 0.5561134, b: 0.17661981, a: 1}
