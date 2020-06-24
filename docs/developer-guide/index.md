@@ -43,6 +43,8 @@ To regenerate this documentation as well as the Doxygen documentation follow the
 
 2. Run `pip install -r docs/requirements.txt` from the root directory in a terminal (cmd on windows)
 
+    - You might have to restart for Sphinx to be found
+
 3. Re-run CMake, this will create two new targets, build these like the library
 
    - **Doxygen**: Creates standard doxygen html/xml files. View this at `<cmake build folder>/docs/doxygen/index.html`
