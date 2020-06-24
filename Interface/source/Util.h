@@ -87,6 +87,7 @@ using Color_t = Eigen::RowVector4f;
 struct Color
 {
 	static Color_t White;
+	static Color_t Gray;
 	static Color_t Black;
 	static Color_t Red;
 	static Color_t Green;

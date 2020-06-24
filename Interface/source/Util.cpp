@@ -2,6 +2,7 @@
 #include <array>
 
 Color_t Color::White({1, 1, 1, 1});
+Color_t Color::Gray({0.1f, 0.1f, 0.1f, 0.1f});
 Color_t Color::Black({0, 0, 0, 1});
 Color_t Color::Red({0.67f, 0.24f, 0.19f, 1});
 Color_t Color::Green({0.5f, 0.71f, 0.29f, 1});

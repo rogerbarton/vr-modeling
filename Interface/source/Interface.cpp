@@ -27,8 +27,13 @@ void Initialize(const StringCallback debugCallback, StringCallback debugWarningC
 State* InitializeMesh(const UMeshDataNative data, const char* name)
 {
 	// LOG("InitializeMesh(): " << name)
+	auto* state = new State(data);
 
-	return new State(data);
+	// Reset color immediately
+	SetColorByMask(state, 0);
+	state->DirtyState |= DirtyFlag::CDirty;
+
+	return state;
 }
 
 void DisposeMesh(State* state)

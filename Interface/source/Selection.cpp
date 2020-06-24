@@ -87,5 +87,9 @@ void SetColorByMask(State* state, unsigned int maskId)
 		*state->C += mask * color;
 	}
 
+	// Deselected Color
+	const Eigen::MatrixXf deselectedMask = state->S->unaryExpr([&](int a) -> int { return a == 0; }).cast<float>();
+	*state->C += deselectedMask * Color::Gray;
+
 	state->DirtyState |= DirtyFlag::CDirty;
 }
