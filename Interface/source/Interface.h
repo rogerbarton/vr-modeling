@@ -139,6 +139,11 @@ UNITY_INTERFACE_EXPORT void SelectSphere(State* state, Vector3 position, float r
 UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius);
 
 /**
+ * @return The mean vertex of the specified selections
+ */
+UNITY_INTERFACE_EXPORT Vector3 GetSelectionCenter(State* state, unsigned int maskId);
+
+/**
  * Resets a particular selections, can clear multiple selections at once.
  * @param maskId Which selections to clear as a bitmask
  */

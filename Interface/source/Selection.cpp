@@ -55,6 +55,26 @@ unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius
 	return mask;
 }
 
+Vector3 GetSelectionCenter(State* state, unsigned int maskId)
+{
+	using namespace Eigen;
+	VectorXi rowMask;
+	MatrixXf VSlice;
+	igl::colon<int>(0, state->VSize, rowMask);
+	rowMask.conservativeResize(
+			std::stable_partition(rowMask.data(), rowMask.data() + state->VSize,
+			                      [&](int i) -> bool { return (*state->S)(i) & maskId; })
+			- rowMask.data());
+
+	if(rowMask.rows() == 0)
+		return Vector3::Zero();
+
+	igl::slice(*state->V, rowMask, igl::colon<int>(0, 2), VSlice);
+
+	Vector3f center = VSlice.colwise().mean();
+	return (Vector3)center;
+}
+
 void ClearSelectionMask(State* state, unsigned int maskId)
 {
 	*state->S = state->S->unaryExpr([&](int s) -> int { return ~maskId & s; });

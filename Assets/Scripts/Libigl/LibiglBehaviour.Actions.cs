@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using XrInput;
 
@@ -31,6 +32,23 @@ namespace Libigl
             else
             {
                 // Do full transformation
+                // Ignore pivot mode and use hands as pivot
+                // var doPivot = ExecuteInput.TransformDelta.PivotMode != PivotMode.Mesh && 
+                //               ExecuteInput.Shared.ToolTransformMode != ToolTransformMode.TransformingLR;
+                var pivot = Vector3.zero;
+                
+                switch (ExecuteInput.TransformDelta.PivotMode)
+                {
+                    case PivotMode.Mesh:
+                        // Fall through, use hands as pivot
+                    case PivotMode.Hand:
+                        pivot = ExecuteInput.TransformDelta.Pivot;
+                        break;
+                    case PivotMode.Selection:
+                        pivot = Native.GetSelectionCenter(State, _currentTranslateMask);
+                        break;
+                }
+
                 Native.TransformSelection(State, ExecuteInput.TransformDelta.Translate,
                     ExecuteInput.TransformDelta.Scale, ExecuteInput.TransformDelta.Rotate, pivot,
                     _currentTranslateMask);

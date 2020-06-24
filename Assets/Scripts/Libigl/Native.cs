@@ -108,6 +108,9 @@ namespace Libigl
         
         [DllImport(DllName)]
         public static extern unsafe uint GetSelectionMaskSphere(State* state, Vector3 position, float radius);
+        
+        [DllImport(DllName)]
+        public static extern unsafe Vector3 GetSelectionCenter(State* state, uint maskId);
 
         [DllImport(DllName)]
         public static extern unsafe void ClearSelectionMask(State* state, uint maskId);
