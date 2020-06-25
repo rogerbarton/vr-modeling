@@ -158,45 +158,55 @@ namespace Libigl
         {
             if (!_doTransformL && !_doTransformR) return;
 
-            Input.DoTransform = true;
-            
+            Input.DoTransformL |= _doTransformL;
+            Input.DoTransformR |= _doTransformR;
+            Input.PrimaryTransformHand = _primaryTransformHand;
+
             // Also calculate the individual transforms
-            if(_doTransformL && _doTransformR)
+            // Implementation note: were accessing _currentTranslateMaskL from both threads (!)
+            if (Input.DoTransformL && Input.DoTransformR &&
+                // if we newly started two handed mode or the masks are different
+                (!Input.DoTransformLPrev || !Input.DoTransformLPrev ||
+                 _currentTranslateMaskL != _currentTranslateMaskR))
             {
                 GetTransformDelta(false, ref Input.TransformDeltaL, InputManager.State.TransformWithRotate, false,
                     false);
-                GetTransformDelta(false, ref Input.TransformDeltaL, InputManager.State.TransformWithRotate, false,
+                GetTransformDelta(false, ref Input.TransformDeltaR, InputManager.State.TransformWithRotate, false,
                     true);
-            }            
+            }
+
             // Consume on last get
-            GetTransformDelta(true, ref Input.TransformDeltaJoint, InputManager.State.TransformWithRotate, true, _primaryTransformHand);
-            
-            // Convert Pivot to local space
+            GetTransformDelta(true, ref Input.TransformDeltaJoint, InputManager.State.TransformWithRotate, true,
+                _primaryTransformHand);
+
+            // Conversions to local space
             var uTransform = LibiglMesh.transform;
+            Input.TransformDeltaJoint.Translate = uTransform.InverseTransformVector(Input.TransformDeltaJoint.Translate);
             Input.TransformDeltaJoint.Pivot = uTransform.InverseTransformPoint(Input.TransformDeltaJoint.Pivot);
         }
 
         private void PreExecuteTransform()
         {
-            if (InputManager.State.ActiveTool == ToolType.Select && (_doTransformL || _doTransformR))
+            if (InputManager.State.ActiveTool == ToolType.Select && (Input.DoTransformL || Input.DoTransformR))
             {
                 ApplyTransformToSelection();
-                
-                // Convert to local space
-                var uTransform = LibiglMesh.transform;
-                Input.TransformDeltaJoint.Translate = uTransform.InverseTransformVector(Input.TransformDeltaJoint.Translate);
-                // Input.TransformDelta.Rotate *= Quaternion.Inverse(uTransform.rotation);
             }
         }
         
         private void ConsumeTransform()
         {
             // Consume transform if we are in the Select tool
-            if(Input.DoTransform)
+            if(InputManager.State.ActiveTool == ToolType.Select)
+            {
                 Input.TransformDeltaJoint = TransformDelta.Identity();
+                Input.TransformDeltaL = TransformDelta.Identity();
+                Input.TransformDeltaR = TransformDelta.Identity();
+            }
 
-            Input.DoTransformPrev = Input.DoTransform;
-            Input.DoTransform = false;
+            Input.DoTransformLPrev = Input.DoTransformL;
+            Input.DoTransformL = false;
+            Input.DoTransformRPrev = Input.DoTransformR;
+            Input.DoTransformR = false;
         }
 
         private void ResetTransformStartPositions()

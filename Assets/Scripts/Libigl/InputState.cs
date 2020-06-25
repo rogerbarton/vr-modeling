@@ -17,9 +17,12 @@ namespace Libigl
         public SharedInputState SharedPrev;
 
         // Transform
-        public bool DoTransform;
-        public bool DoTransformPrev;
-        public TransformDelta TransformDelta;
+        public bool DoTransformL;
+        public bool DoTransformR;
+        public bool DoTransformLPrev;
+        public bool DoTransformRPrev;
+        public bool PrimaryTransformHand;
+        
         public TransformDelta TransformDeltaJoint;
         public TransformDelta TransformDeltaL;
         public TransformDelta TransformDeltaR;
