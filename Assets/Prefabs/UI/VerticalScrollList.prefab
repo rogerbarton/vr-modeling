@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1, y: 0}
-  m_SizeDelta: {x: -12, y: -6}
+  m_AnchoredPosition: {x: -3.5, y: 0}
+  m_SizeDelta: {x: -17, y: -6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6686273310398887790
 CanvasRenderer:
@@ -160,7 +160,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -464}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &5617297509609643059
 MonoBehaviour:
@@ -335,7 +335,7 @@ RectTransform:
   m_GameObject: {fileID: 5870766432901509487}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5095560823807439787}
   m_Father: {fileID: 6599643269803999636}
@@ -424,7 +424,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3862797399087948517}
   m_HandleRect: {fileID: 7506431026896369850}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -614,6 +614,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758814693716519144, guid: a8591ce6d48820243ba6322501dc154c,
+        type: 3}
+      propertyPath: m_isTextTruncated
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758814693716519144, guid: a8591ce6d48820243ba6322501dc154c,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7891394014557223998, guid: a8591ce6d48820243ba6322501dc154c,
         type: 3}
