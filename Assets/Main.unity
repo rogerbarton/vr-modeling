@@ -1922,7 +1922,7 @@ MonoBehaviour:
   m_MaxTrackedDeviceRaycastDistance: 1000
   m_EnableXRInput: 1
   m_EnableMouseInput: 1
-  m_EnableTouchInput: 1
+  m_EnableTouchInput: 0
 --- !u!114 &1266339785
 MonoBehaviour:
   m_ObjectHideFlags: 0
