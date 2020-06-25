@@ -231,6 +231,8 @@ namespace Libigl
         /// <param name="primary">If overriding visibility, should we highlight this as the primary bounding box</param>
         public void RepaintBounds(bool overrideVisible = false, bool primary = false)
         {
+            if(!enabled) return;
+            
             _boundingBoxRenderer.enabled = InputManager.State.BoundsVisible || overrideVisible;
             _boundingBoxRenderer.sharedMaterial = 
                 IsActiveMesh() ? MeshManager.get.wireframeMaterialActive : 

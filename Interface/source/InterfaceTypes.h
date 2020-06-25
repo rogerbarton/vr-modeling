@@ -118,7 +118,7 @@ struct DirtyFlag
 	static const unsigned int UVDirty = 8;
 	static const unsigned int FDirty = 16;
 	/**
-	 * Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
+	 * Don't recaluclate normals when VDirty is set. NDirty overrides this.
 	 */
 	static const unsigned int DontComputeNormals = 32;
 	/**
@@ -129,6 +129,12 @@ struct DirtyFlag
 	 * Don't recompute colors if a visible selection has changed.
 	 */
 	static const unsigned int DontComputeColorsBySelection = 128;
+
+	/**
+	 * Use this when the vertex positions have changed, but the boundary conditions are unaffected.
+     * VDirty overrides this.
+	 */
+	static const unsigned int VDirtyExclBoundary = 256;
 
 	static const unsigned int All =
 			(unsigned int) -1 - DontComputeNormals - DontComputeBounds - DontComputeColorsBySelection;

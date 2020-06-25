@@ -4,8 +4,7 @@
 // --- Deformations
 bool UpdateBoundary(State* state, unsigned int boundaryMask)
 {
-	if (state->Native->BoundaryMask == boundaryMask &&
-	    (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0)
+	if (state->Native->BoundaryMask == boundaryMask && (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0)
 		return false;
 
 	igl::colon<int>(0, state->VSize, state->Native->Boundary);
@@ -14,6 +13,7 @@ bool UpdateBoundary(State* state, unsigned int boundaryMask)
 			                      [&](int i) -> bool { return (*state->S)(i) & boundaryMask; })
 			- state->Native->Boundary.data());
 
+	state->Native->BoundaryMask = boundaryMask;
 	state->Native->DirtySelectionsForBoundary &= ~boundaryMask;
 	state->Native->DirtyBoundaryConditions = true;
 	return true;
@@ -53,7 +53,7 @@ void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField
 		igl::harmonic(*state->Native->V0, *state->F, state->Native->Boundary, state->Native->BoundaryConditions, 2,
 		              *state->V);
 
-	state->DirtyState |= DirtyFlag::VDirty;
+	state->DirtyState |= DirtyFlag::VDirtyExclBoundary;
 }
 
 void Arap(State* state, unsigned int boundaryMask)
@@ -64,9 +64,11 @@ void Arap(State* state, unsigned int boundaryMask)
 
 	if (state->Native->ArapData == nullptr)
 	{
+		// Initialize
 		state->Native->ArapData = new igl::ARAPData<float>();
 		state->Native->ArapData->max_iter = 100;
 		recomputeArapData = true;
+		solveArap = true;
 	}
 
 	if (recomputeArapData)
@@ -81,6 +83,7 @@ void Arap(State* state, unsigned int boundaryMask)
     LOG("Arap solve...")
 
 	igl::arap_solve(state->Native->BoundaryConditions, *state->Native->ArapData, *state->V);
+	LOG("Arap solve done.")
 
-	state->DirtyState |= DirtyFlag::VDirty;
+	state->DirtyState |= DirtyFlag::VDirtyExclBoundary;
 }

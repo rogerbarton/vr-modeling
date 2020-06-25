@@ -35,10 +35,12 @@ void ApplyDirty(State* state, const UMeshDataNative data, const unsigned int vis
 	}
 
 	if ((dirty & DirtyFlag::VDirty) > 0)
-	{
-		TransposeToMap(state->V, data.VPtr);
 		state->Native->DirtyBoundaryConditions = true;
-	}
+	else if((dirty & DirtyFlag::VDirtyExclBoundary) > 0)
+		dirty |= DirtyFlag::VDirty;
+
+	if ((dirty & DirtyFlag::VDirty) > 0)
+		TransposeToMap(state->V, data.VPtr);
 	if ((dirty & DirtyFlag::NDirty) > 0)
 		TransposeToMap(state->N, data.NPtr);
 	if ((dirty & DirtyFlag::CDirty) > 0)

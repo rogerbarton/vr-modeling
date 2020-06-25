@@ -21,12 +21,12 @@ namespace Libigl
         public const uint FDirty = 16;
 
         /// <summary>
-        /// Don't recaluclate normals when VDirty is set, <see cref="NDirty"/> overrides this.
+        /// Don't recaluclate normals when <see cref="VDirty"/> is set, <see cref="NDirty"/> overrides this.
         /// </summary>
         public const uint DontComputeNormals = 32;
 
         /// <summary>
-        /// Don't recalculate bounds when VDirty is set. Bounds are used for occlusion culling.
+        /// Don't recalculate bounds when <see cref="VDirty"/> is set. Bounds are used for occlusion culling.
         /// </summary>
         public const uint DontComputeBounds = 64;
 
@@ -35,6 +35,11 @@ namespace Libigl
         /// </summary>
         public const uint DontComputeColorsBySelection = 128;
 
+        /// <summary>
+        /// Use this when the vertex positions have changed, but the boundary conditions are unaffected.
+        /// <see cref="VDirty"/> overrides this.
+        /// </summary>
+        public const uint VDirtyExclBoundary = 256;
         public const uint All = uint.MaxValue - DontComputeNormals - DontComputeBounds;
     }
 
