@@ -86,7 +86,7 @@ void SetColorSingleByMask(State* state, unsigned int maskId, int colorId)
 	const auto& color = Color::GetColorById(colorId);
 
 	const auto mask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).cast<float>().eval();
-	*state->C = mask * color + (1.f - mask.array()).matrix() * Color::White;
+	*state->C = mask * color + (1.f - mask.array()).matrix() * Color::Gray;
 
 	state->DirtyState |= DirtyFlag::CDirty;
 }
@@ -109,7 +109,7 @@ void SetColorByMask(State* state, unsigned int maskId)
 	}
 
 	// Deselected Color
-	const Eigen::MatrixXf deselectedMask = state->S->unaryExpr([&](int a) -> int { return a == 0; }).cast<float>();
+	const Eigen::MatrixXf deselectedMask = state->S->unaryExpr([&](int a) -> int { return (a & maskId) == 0; }).cast<float>();
 	*state->C += deselectedMask * Color::Gray;
 
 	state->DirtyState |= DirtyFlag::CDirty;
