@@ -192,12 +192,16 @@ namespace UI
             button.onClick.AddListener(onClick);
 
             // Setup speech keywords
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
             Speech.CreateKeywordRecognizer(speechKeywords, onClick);
+#endif
         }
 
         private void OnDestroy()
         {
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
             Speech.Dispose();
+#endif
         }
 
     }

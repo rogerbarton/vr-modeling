@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -69,3 +70,4 @@ public static class Speech
             recognizer.Dispose();
     }
 }
+#endif
