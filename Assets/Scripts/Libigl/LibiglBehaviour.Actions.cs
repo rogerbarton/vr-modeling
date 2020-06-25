@@ -11,7 +11,7 @@ namespace Libigl
 
         private void ActionTransformSelection()
         {
-            if (ExecuteInput.Shared.ActiveTool != ToolType.Select || 
+            if (ExecuteInput.Shared.ActiveTool != ToolType.Select ||
                 !ExecuteInput.DoTransformL && !ExecuteInput.DoTransformR) return;
 
             // Find out which selections we should transform (via a local function)
@@ -48,17 +48,22 @@ namespace Libigl
                 CheckL();
                 CheckR();
             }
-            
+
             // Carry out the operation, if the masks are the same then do the joint operation
-            if (ExecuteInput.DoTransformL && ExecuteInput.DoTransformR && _currentTranslateMaskL == _currentTranslateMaskR)
+            if (ExecuteInput.DoTransformL && !ExecuteInput.DoTransformR ||
+                !ExecuteInput.DoTransformL && ExecuteInput.DoTransformR ||
+                _currentTranslateMaskL == _currentTranslateMaskR)
             {
                 ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaJoint,
                     ExecuteInput.PrimaryTransformHand ? _currentTranslateMaskR : _currentTranslateMaskL);
             }
-            else if (ExecuteInput.DoTransformL)
-                ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaL, _currentTranslateMaskL);
-            else if (ExecuteInput.DoTransformR)
-                ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaR, _currentTranslateMaskR);
+            else
+            {
+                if (ExecuteInput.DoTransformL)
+                    ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaL, _currentTranslateMaskL);
+                if (ExecuteInput.DoTransformR)
+                    ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaR, _currentTranslateMaskR);
+            }
         }
 
         private void FindBrushSelectionMask(ref uint maskId, Vector3 brushPos)

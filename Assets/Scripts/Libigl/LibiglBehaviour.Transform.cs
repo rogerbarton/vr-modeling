@@ -135,7 +135,7 @@ namespace Libigl
             }
 
             // Get & Consume the transformation
-            GetTransformDelta(true, ref transformDelta, InputManager.State.TransformWithRotate, _isTwoHanded, _primaryTransformHand);
+            GetTransformDelta(true, ref transformDelta, Space.World, InputManager.State.TransformWithRotate, _isTwoHanded, _primaryTransformHand);
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
@@ -164,30 +164,25 @@ namespace Libigl
 
             // Also calculate the individual transforms
             // Implementation note: were accessing _currentTranslateMaskL from both threads (!)
-            if (Input.DoTransformL && Input.DoTransformR &&
-                // if we newly started two handed mode or the masks are different
-                (!Input.DoTransformLPrev || !Input.DoTransformLPrev ||
-                 _currentTranslateMaskL != _currentTranslateMaskR))
+            if (Input.DoTransformL && Input.DoTransformR)
+                // if we newly started two handed mode or the masks are different. Disable this efficiency gain for now for reliability
+                // &&(!Input.DoTransformLPrev || !Input.DoTransformLPrev ||
+                   // _currentTranslateMaskL != _currentTranslateMaskR))
             {
-                GetTransformDelta(false, ref Input.TransformDeltaL, InputManager.State.TransformWithRotate, false,
+                GetTransformDelta(false, ref Input.TransformDeltaL, Space.Self, InputManager.State.TransformWithRotate, false,
                     false);
-                GetTransformDelta(false, ref Input.TransformDeltaR, InputManager.State.TransformWithRotate, false,
+                GetTransformDelta(false, ref Input.TransformDeltaR, Space.Self, InputManager.State.TransformWithRotate, false,
                     true);
             }
 
             // Consume on last get
-            GetTransformDelta(true, ref Input.TransformDeltaJoint, InputManager.State.TransformWithRotate, true,
+            GetTransformDelta(true, ref Input.TransformDeltaJoint, Space.Self, InputManager.State.TransformWithRotate, _isTwoHanded,
                 _primaryTransformHand);
-
-            // Conversions to local space
-            var uTransform = LibiglMesh.transform;
-            Input.TransformDeltaJoint.Translate = uTransform.InverseTransformVector(Input.TransformDeltaJoint.Translate);
-            Input.TransformDeltaJoint.Pivot = uTransform.InverseTransformPoint(Input.TransformDeltaJoint.Pivot);
         }
 
         private void PreExecuteTransform()
         {
-            if (InputManager.State.ActiveTool == ToolType.Select && (Input.DoTransformL || Input.DoTransformR))
+            if (InputManager.State.ActiveTool == ToolType.Select)
             {
                 ApplyTransformToSelection();
             }
@@ -226,20 +221,28 @@ namespace Libigl
         #region --- Calculating TransformDelta
 
         // Only for selections, transforming the mesh is done directly
-        private void GetTransformDelta(bool consumeInput, ref TransformDelta transformDelta, bool withRotate, bool isTwoHanded, bool primaryHand)
+        private void GetTransformDelta(bool consumeInput, ref TransformDelta transformDelta, Space space, bool withRotate, bool isTwoHanded, bool primaryHand)
         {
-            if(_isTwoHanded)
+            if(isTwoHanded)
                 GetRotateScaleJoint(ref transformDelta, withRotate);
-            else if(_primaryTransformHand ? _doTransformR : _doTransformL)
-                GetTranslate(_primaryTransformHand, ref transformDelta, withRotate);
+            else if(primaryHand ? _doTransformR : _doTransformL)
+                GetTranslate(primaryHand, ref transformDelta, withRotate);
 
             // Update pivot to latest (overwrites for now)
             if (InputManager.State.ActivePivotMode == PivotMode.Hand)
-                transformDelta.Pivot =
-                    _primaryTransformHand ? InputManager.State.HandPosR : InputManager.State.HandPosL;
+                transformDelta.Pivot = primaryHand ? InputManager.State.HandPosR : InputManager.State.HandPosL;
             else
                 transformDelta.Pivot = LibiglMesh.transform.position;
 
+            if(space == Space.Self)
+            {
+                // Conversions to local space
+                var uTransform = LibiglMesh.transform;
+                transformDelta.Translate = uTransform.InverseTransformVector(transformDelta.Translate);
+                transformDelta.Rotate *= Quaternion.Inverse(uTransform.rotation);
+                transformDelta.Pivot = uTransform.InverseTransformPoint(transformDelta.Pivot);
+            }
+            
             if(consumeInput)
                 ResetTransformStartPositions();
         }
