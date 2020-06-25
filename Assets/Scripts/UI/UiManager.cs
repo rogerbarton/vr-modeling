@@ -78,12 +78,19 @@ namespace UI
             go.GetComponent<Canvas>().worldCamera = Camera.main;
 
             // Move the panel until it is not colliding
+            // Remove it from the UI layer so we don't collide with it below
+            var layer = go.layer;
+            go.layer = 0;
+
             var t = go.transform;
             var results = new Collider[1];
-            while (Physics.OverlapSphereNonAlloc(t.position, 0.4f, results, _uiLayerMask, QueryTriggerInteraction.Ignore) > 0)
+            while (Physics.OverlapSphereNonAlloc(t.position, 0.4f, results, _uiLayerMask,
+                QueryTriggerInteraction.Ignore) > 0)
             {
                 t.Translate(-Vector3.right * 0.8f);
             }
+
+            go.layer = layer;
 
             return go.GetComponent<UiDetails>();
         }
