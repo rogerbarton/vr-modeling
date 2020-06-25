@@ -239,8 +239,8 @@ namespace Libigl
                 // Conversions to local space
                 var uTransform = LibiglMesh.transform;
                 transformDelta.Translate = uTransform.InverseTransformVector(transformDelta.Translate);
-                transformDelta.Rotate *= Quaternion.Inverse(uTransform.rotation);
                 transformDelta.Pivot = uTransform.InverseTransformPoint(transformDelta.Pivot);
+                // Note: Rotation is relative so does not need to be converted
             }
             
             if(consumeInput)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Libigl;
 using UnityEngine;
@@ -29,6 +30,11 @@ namespace XrInput
             _isRight = isRight;
             OnActiveToolChanged();
             MeshManager.ActiveMeshSet += OnActiveMeshSet;
+        }
+
+        private void OnDestroy()
+        {
+            MeshManager.ActiveMeshSet -= OnActiveMeshSet;
         }
 
         public void OnActiveToolChanged()

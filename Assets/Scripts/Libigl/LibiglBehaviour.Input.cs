@@ -20,8 +20,10 @@ namespace Libigl
                     break;
             }
             
-            Input.BrushPosL = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushL.center.position);
-            Input.BrushPosR = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
+            if(InputManager.get.BrushL)
+                Input.BrushPosL = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushL.center.position);
+            if(InputManager.get.BrushR)
+                Input.BrushPosR = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
         }
 
         /// <summary>

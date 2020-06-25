@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using XrInput;
 
@@ -13,7 +14,7 @@ namespace UI.Components
         public Color activeColor;
 
         private PivotMode _mode;
-        
+
         public void Initialize()
         {
             Repaint();
@@ -24,6 +25,11 @@ namespace UI.Components
             UiInputHints.AddTooltip(icons[2].gameObject, "Pivot around active selection mean");
             
             InputManager.OnActiveToolChanged += Repaint;
+        }
+
+        private void OnDestroy()
+        {
+            InputManager.OnActiveToolChanged -= Repaint;
         }
 
         public void Repaint()
