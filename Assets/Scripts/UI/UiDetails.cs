@@ -210,9 +210,20 @@ namespace UI
             if((_behaviour.Input.DoSelectL || _behaviour.Input.DoSelectR) && 
                !(_behaviour.Input.DoSelectLPrev || _behaviour.Input.DoSelectRPrev)) // Just started stroke 
             {
-                if (InputManager.State.NewSelectionOnDraw &&
-                    _behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0) // Active selection not empty
-                    AddSelection();
+                if (InputManager.State.NewSelectionOnDraw) // Active selection not empty
+                {
+                    // Increment or add until we get an empty selection
+                    while(_behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0)
+                    {
+                        if(_behaviour.Input.ActiveSelectionId < _behaviour.Input.SCountUi -1)
+                            _behaviour.SetActiveSelectionIncrement(1);
+                        else
+                        {
+                            AddSelection();
+                            break;
+                        }
+                    }
+                }
 
                 if (InputManager.State.DiscardSelectionOnDraw)
                     _behaviour.Input.DoClearSelection |= 1U << _behaviour.Input.ActiveSelectionId;

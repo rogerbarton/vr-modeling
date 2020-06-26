@@ -95,6 +95,7 @@ namespace XrInput
                 ActivePivotModeTransform = PivotMode.Hand,
                 ActivePivotModeSelect = PivotMode.Hand,
                 ActiveSelectionMode = SelectionMode.Add,
+                NewSelectionOnDraw = true,
                 TransformWithRotate = true
             };
         }
