@@ -56,11 +56,13 @@ namespace Libigl
                 InputManager.State.ToolSelectMode = ToolSelectMode.Selecting;
                 
                 if (InputManager.State.TriggerL > PressThres && 
-                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerL < PressThres))
+                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerL < PressThres)
+                    && InputManager.get.BrushL.InsideActiveMeshBounds)
                     Input.DoSelectL = true;
                 
                 if (InputManager.State.TriggerR > PressThres && 
-                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerR < PressThres))
+                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerR < PressThres)
+                    && InputManager.get.BrushR.InsideActiveMeshBounds)
                     Input.DoSelectR = true;
 
                 Input.AlternateSelectModeL = InputManager.State.PrimaryBtnL;

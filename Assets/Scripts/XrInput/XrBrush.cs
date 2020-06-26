@@ -18,7 +18,7 @@ namespace XrInput
         private bool _isRight;
 
         private List<LibiglMesh> _currentLibiglMeshes = new List<LibiglMesh>();
-        private bool _insideActiveMeshBounds;
+        [NonSerialized] public bool InsideActiveMeshBounds;
         
         public void SetRadius(float value)
         {
@@ -59,7 +59,7 @@ namespace XrInput
         /// <returns>True if the active mesh has been set</returns>
         public bool SetActiveMesh()
         {
-            if (_insideActiveMeshBounds || _currentLibiglMeshes.Count == 0) return false;
+            if (InsideActiveMeshBounds || _currentLibiglMeshes.Count == 0) return false;
 
             MeshManager.SetActiveMesh(_currentLibiglMeshes.First());
 
@@ -84,11 +84,11 @@ namespace XrInput
             _currentLibiglMeshes.Add(libiglMesh);
             if (libiglMesh == MeshManager.ActiveMesh)
             {
-                _insideActiveMeshBounds = true;
+                InsideActiveMeshBounds = true;
                 RepaintBoundingBoxes();
             }
             else
-                libiglMesh.RepaintBounds(!_insideActiveMeshBounds, _currentLibiglMeshes.Count == 1);
+                libiglMesh.RepaintBounds(!InsideActiveMeshBounds, _currentLibiglMeshes.Count == 1);
         }
 
         /// <summary>
@@ -100,14 +100,14 @@ namespace XrInput
             _currentLibiglMeshes.Remove(libiglMesh);
             if (libiglMesh == MeshManager.ActiveMesh)
             {
-                _insideActiveMeshBounds = false;
+                InsideActiveMeshBounds = false;
                 RepaintBoundingBoxes();
             }
             else
             {
                 libiglMesh.RepaintBounds(false, false);
                 if(_currentLibiglMeshes.Count > 0)
-                    _currentLibiglMeshes[0].RepaintBounds(!_insideActiveMeshBounds, true);
+                    _currentLibiglMeshes[0].RepaintBounds(!InsideActiveMeshBounds, true);
             }
             
         }
@@ -128,12 +128,12 @@ namespace XrInput
         private void RepaintBoundingBoxes()
         {
             for (var i = 0; i < _currentLibiglMeshes.Count; i++)
-                _currentLibiglMeshes[i].RepaintBounds(!_insideActiveMeshBounds, i == 0);
+                _currentLibiglMeshes[i].RepaintBounds(!InsideActiveMeshBounds, i == 0);
         }
 
         private void OnActiveMeshChanged()
         {
-            _insideActiveMeshBounds = _currentLibiglMeshes.Contains(MeshManager.ActiveMesh);
+            InsideActiveMeshBounds = _currentLibiglMeshes.Contains(MeshManager.ActiveMesh);
             RepaintBoundingBoxes();
         }
         
