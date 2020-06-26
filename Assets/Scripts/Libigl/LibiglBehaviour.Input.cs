@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using XrInput;
 
@@ -70,12 +71,7 @@ namespace Libigl
             
             // Change the selection with the right hand primary2DAxis.x
             if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
-                ChangeActiveSelection((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
-        }
-        
-        public void ChangeActiveSelection(int increment)
-        {
-            _uiDetails.SetActiveSelection((int) ((Input.ActiveSelectionId + increment + Input.SCountUi) % Input.SCountUi));
+                SetActiveSelectionIncrement((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
         }
 
         private void PreExecuteInput()
@@ -101,6 +97,25 @@ namespace Libigl
             if(!Input.DoArapRepeat)
                 Input.DoArap = false;
             Input.ResetV = false;
+        }
+
+        public event Action OnActiveSelectionChanged = delegate { };
+        
+        public void SetActiveSelection(int value)
+        {
+            if(Input.ActiveSelectionId == value) return;
+            
+            Input.ActiveSelectionId = value;
+
+            OnActiveSelectionChanged();
+        }
+        
+        /// <summary>
+        /// Increment the active selection safely
+        /// </summary>
+        public void SetActiveSelectionIncrement(int increment)
+        {
+            SetActiveSelection((int) ((Input.ActiveSelectionId + increment + Input.SCountUi) % Input.SCountUi));
         }
     }
 }

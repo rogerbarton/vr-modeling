@@ -29,12 +29,12 @@ namespace XrInput
         {
             _isRight = isRight;
             OnActiveToolChanged();
-            MeshManager.ActiveMeshSet += OnActiveMeshSet;
+            MeshManager.OnActiveMeshChanged += OnActiveMeshChanged;
         }
 
         private void OnDestroy()
         {
-            MeshManager.ActiveMeshSet -= OnActiveMeshSet;
+            MeshManager.OnActiveMeshChanged -= OnActiveMeshChanged;
         }
 
         public void OnActiveToolChanged()
@@ -131,7 +131,7 @@ namespace XrInput
                 _currentLibiglMeshes[i].RepaintBounds(!_insideActiveMeshBounds, i == 0);
         }
 
-        private void OnActiveMeshSet()
+        private void OnActiveMeshChanged()
         {
             _insideActiveMeshBounds = _currentLibiglMeshes.Contains(MeshManager.ActiveMesh);
             RepaintBoundingBoxes();

@@ -18,10 +18,17 @@ namespace Libigl
         /// The mesh currently loaded and being modified
         /// </summary>
         public static LibiglMesh ActiveMesh;
+        /// <summary>
+        /// Invoked when the <see cref="ActiveMesh"/> is changed.
+        /// Called after initialization if the mesh is newly instantiated.
+        /// </summary>
+        public static event Action OnActiveMeshChanged = delegate { };
 
+        /// <summary>
+        /// List of all LibiglMeshes that are instantiated
+        /// </summary>
         [NonSerialized] public readonly List<LibiglMesh> AllMeshes = new List<LibiglMesh>();
 
-        public static event Action ActiveMeshSet = delegate { };
         public Material wireframeMaterial;
         public Material wireframeMaterialPrimary;
         public Material wireframeMaterialActive;
@@ -45,9 +52,12 @@ namespace Libigl
         {
             _defaultLayer = LayerMask.NameToLayer("Default");
             _holographicLayer = LayerMask.NameToLayer("HolographicHighlight");
-        
-            if(meshPrefabs.Length > 0)
-                SetActiveMesh(LoadMesh(meshPrefabs[0]));
+
+            // Instantiate the first mesh, skip invalid ones
+            var i = 0;
+            while (i < meshPrefabs.Length &&
+                   LoadMesh(meshPrefabs[i], false, true, true) == null)
+                i++;
         }
 
         #region Mesh Creation
@@ -55,10 +65,11 @@ namespace Libigl
         /// <summary>
         /// Instantiate a mesh that can be used with libigl
         /// </summary>
-        /// <param name="prefab">Prefab to be created</param>
+        /// <param name="prefab">Prefab to be created, see <see cref="meshPrefabs"/></param>
+        /// <param name="unloadActiveMesh">Delete the active mesh if it exists</param>
         /// <param name="setAsActiveMesh">Set this mesh as the active one</param>
-        /// <param name="performValidityChecks">Check that the prefab can be properly used with libigl.
-        /// Meshes from the <see cref="meshPrefabs"/> list are checked during Start and do not need to be checked again.</param>
+        /// <param name="performValidityChecks">Check that the prefab can be properly used with libigl.</param>
+        /// <remarks>Meshes from the <see cref="meshPrefabs"/> list are checked during Start and do not need to be checked again.</remarks>
         /// <returns>LibiglMesh component on the new instance, null if there was an error</returns>
         public LibiglMesh LoadMesh(GameObject prefab, bool unloadActiveMesh = true, bool setAsActiveMesh = true, bool performValidityChecks = false)
         {
@@ -67,31 +78,26 @@ namespace Libigl
             if(unloadActiveMesh)
                 UnloadActiveMesh();
 
-            // Details of spawnPoint
-        
             var go = Instantiate(prefab, transform);
             go.transform.parent = transform;
         
-            var lmesh = go.GetComponent<LibiglMesh>();
-            if (!lmesh)
-            {
-                // Debug.LogWarning($"Prefab does not have a {nameof(LibiglMesh)} component, it will be added.");
-                lmesh = go.AddComponent<LibiglMesh>();
-            }
+            var libiglMesh = go.GetComponent<LibiglMesh>();
+            if (!libiglMesh)
+                libiglMesh = go.AddComponent<LibiglMesh>();
         
-            lmesh.ResetTransformToSpawn();
-
+            libiglMesh.Initialize();
+            
             if (setAsActiveMesh)
-                SetActiveMesh(lmesh);
+                SetActiveMesh(libiglMesh);
 
-            return lmesh;
+            return libiglMesh;
         }
 
         /// <summary>
         /// Checks if a prefab can be loaded and modified with libigl. Does not modify the prefab only logs errors.
         /// </summary>
         /// <returns>True if the prefab can be used with libigl</returns>
-        public bool CheckPrefabValidity(GameObject prefab)
+        public static bool CheckPrefabValidity(GameObject prefab)
         {
             var meshFilter = prefab.GetComponent<MeshFilter>();
             if (!meshFilter)
@@ -121,7 +127,7 @@ namespace Libigl
             if (!meshRenderer)
             {
                 Debug.LogError($"Prefab {prefab.name} does not have a MeshRenderer attached. You will not be able to see your mesh. " +
-                               " \nLoading this mesh will be disabled.");
+                               " \nLoading this mesh will be disabled. The mesh renderer must be on a child (e.g. for .obj files).");
                 return false;
             }
         
@@ -145,7 +151,7 @@ namespace Libigl
             libiglMesh.gameObject.layer = _holographicLayer;
         
             ActiveMesh = libiglMesh;
-            ActiveMeshSet();
+            OnActiveMeshChanged();
         }
 
         /// <summary>
@@ -165,7 +171,7 @@ namespace Libigl
             }
 
             if (ActiveMesh == libiglMesh)
-                SetActiveMesh(LoadMesh(meshPrefabs[0]));
+                LoadMesh(meshPrefabs[0]);
         
             Destroy(libiglMesh.gameObject);
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,8 @@ namespace UI.Components
         private LibiglBehaviour _behaviour;
         private IList<UiSelection> _selections;
 
+        public event Action OnSelectionChanged = delegate { };
+
         public void Initialize(int selectionId, UiCollapsible uiCollapsible, LibiglBehaviour behaviour,
             IList<UiSelection> selections)
         {
@@ -58,12 +61,12 @@ namespace UI.Components
 
             // Apply current values
             ToggleVisibleSprite((behaviour.Input.VisibleSelectionMask & 1u << selectionId) > 0);
-            
-            SetAsActive();
-            
+
             if (_selections.Count > 0)
                 transform.SetSiblingIndex(_selections[_selections.Count - 1].transform.GetSiblingIndex() + 1);
             _selections.Add(this);
+            
+            SetAsActive();
         }
 
         #region OnClick
@@ -83,9 +86,7 @@ namespace UI.Components
             if (_selectionId == _behaviour.Input.ActiveSelectionId) return;
 
             // Disable the last active selection and set this one as active
-            _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(false);
-            _behaviour.Input.ActiveSelectionId = _selectionId;
-            ToggleEditSprite(true);
+            _behaviour.SetActiveSelection(_selectionId);
         }
 
         public unsafe void Clear()
@@ -97,7 +98,7 @@ namespace UI.Components
             {
                 if (_behaviour.Input.ActiveSelectionId == _selectionId)
                 {
-                    _behaviour.Input.ActiveSelectionId--;
+                    _behaviour.SetActiveSelection(_behaviour.Input.ActiveSelectionId -1);
                     _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
                 }
 
@@ -118,12 +119,12 @@ namespace UI.Components
             text.text = $"<b>{_selectionId}</b>: {_behaviour.State->SSize[_selectionId]} vertices";
         }
         
-        private void ToggleVisibleSprite(bool isVisible)
+        public void ToggleVisibleSprite(bool isVisible)
         {
             visibleImage.sprite = isVisible ? visibleSprite : visibleOffSprite;
         }
 
-        private void ToggleEditSprite(bool isActive)
+        public void ToggleEditSprite(bool isActive)
         {
             editImage.sprite = isActive ? activeSprite : editSprite;
         }

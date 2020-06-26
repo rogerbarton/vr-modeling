@@ -49,12 +49,16 @@ namespace Libigl
             MeshManager.get.RegisterMesh(this);
         }
 
-        private void Start()
+        public void Initialize()
         {
             name = name.Replace("(Clone)", "").Trim();
 
-            FindMeshComponents();
-
+            _meshFilter = GetComponent<MeshFilter>();
+            Mesh = _meshFilter.mesh;
+            MeshRenderer = GetComponent<MeshRenderer>();
+            Mesh.MarkDynamic();
+            ResetTransformToSpawn();
+            
             // First copy the Mesh arrays into a RowMajor UMeshData instance
             DataRowMajor = new UMeshData(Mesh);
             // Then create the LibiglBehaviour instance which will create a ColMajor instance of the data in the State
@@ -67,14 +71,14 @@ namespace Libigl
             UpdateBoundingBoxSize();
             RepaintBounds();
 
-            MeshManager.ActiveMeshSet += OnActiveMeshSet;
+            MeshManager.OnActiveMeshChanged += OnActiveMeshChanged;
             
 #if UNITY_EDITOR
             DisposeBeforeUnload += Dispose;
 #endif
         }
 
-        private void OnActiveMeshSet()
+        private void OnActiveMeshChanged()
         {
             RepaintBounds();
         }
@@ -126,7 +130,7 @@ namespace Libigl
         {
             Dispose();
             
-            MeshManager.ActiveMeshSet -= OnActiveMeshSet;
+            MeshManager.OnActiveMeshChanged -= OnActiveMeshChanged;
         }
 
         private void Dispose()
@@ -174,8 +178,6 @@ namespace Libigl
         /// <param name="mesh">Needed for bounding box</param>
         public void ResetTransformToSpawn()
         {
-            FindMeshComponents();
-
             var spawn = MeshManager.get.meshSpawnPoint;
             var scale = spawn.localScale;
 
@@ -186,19 +188,6 @@ namespace Libigl
             t.position = pos;
             t.localScale = scale;
             t.rotation = spawn.transform.rotation;
-        }
-
-        /// <summary>
-        /// Sets up references to the Mesh components
-        /// </summary>
-        private void FindMeshComponents()
-        {
-            if (Mesh) return;
-            
-            _meshFilter = GetComponent<MeshFilter>();
-            Mesh = _meshFilter.mesh;
-            MeshRenderer = GetComponent<MeshRenderer>();
-            Mesh.MarkDynamic();
         }
 
         /// <summary>

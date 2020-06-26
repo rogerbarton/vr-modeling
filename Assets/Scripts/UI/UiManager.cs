@@ -132,7 +132,7 @@ namespace UI
                 iconAction.actionBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab));
                 iconAction.iconBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab, false));
                 
-                var validMesh = MeshManager.get.CheckPrefabValidity(meshPrefab);
+                var validMesh = MeshManager.CheckPrefabValidity(meshPrefab);
                 iconAction.actionBtn.interactable = validMesh;
                 iconAction.iconBtn.interactable = validMesh;
             }

@@ -31,6 +31,8 @@ namespace UI
         private TMP_Text _vertexCount;
         private UiCollapsible _selectionGroup;
         private readonly List<UiSelection> _selections = new List<UiSelection>();
+        private int _activeSelectionId = -1;
+
         private UiCollapsible _debugGroup;
         private UiToggleAction _harmonicToggle;
         private UiToggleAction _arapToggle;
@@ -42,8 +44,8 @@ namespace UI
         public void Initialize(LibiglBehaviour behaviour)
         {
             _behaviour = behaviour;
-            MeshManager.ActiveMeshSet += OnActiveMeshSet;
-
+            MeshManager.OnActiveMeshChanged += OnActiveMeshChanged;
+            
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
@@ -72,6 +74,7 @@ namespace UI
             addSelectionBtn.onClick.AddListener(() => AddSelection());
 
             // Setup first selection
+            behaviour.OnActiveSelectionChanged += OnActiveSelectionChanged;
             AddSelection();
             
             var clearAllSelections = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
@@ -81,8 +84,8 @@ namespace UI
             {
                 _behaviour.Input.DoClearSelection = uint.MaxValue;
             });
-            
-            
+
+
             // -- Operations
             var operationsGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             operationsGroup.title.text = "Operations";
@@ -175,14 +178,25 @@ namespace UI
             _debugGroup.SetVisibility(false);
 
             // Call when constructed as we likely just missed this
-            OnActiveMeshSet();
+            OnActiveMeshChanged();
+        }
+
+        private void OnActiveSelectionChanged()
+        {
+            // Repaint the selection UI
+            if(_activeSelectionId >= 0)
+                _selections[_activeSelectionId].ToggleEditSprite(false);
+            _activeSelectionId = _behaviour.Input.ActiveSelectionId;
+            _selections[_activeSelectionId].ToggleEditSprite(true);
+
         }
 
         #region Callbacks
 
         public void OnDestroy()
         {
-            MeshManager.ActiveMeshSet -= OnActiveMeshSet;
+            _behaviour.OnActiveSelectionChanged -= OnActiveSelectionChanged;
+            MeshManager.OnActiveMeshChanged -= OnActiveMeshChanged;
         }
 
         /// <summary>
@@ -231,7 +245,7 @@ namespace UI
         /// Called when the active mesh changes
         /// </summary>
         /// <remarks>Also called when the object is created as this happens just after a mesh was set</remarks>
-        private void OnActiveMeshSet()
+        private void OnActiveMeshChanged()
         {
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
@@ -263,12 +277,12 @@ namespace UI
             _vertexCount.text =
                 $"<b>V</b>: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} <b>F</b>: {_behaviour.State->FSize}";
         }
-        
+
         public void SetActiveSelection(int value)
         {
             _selections[value].SetAsActive();
         }
-        
+
         #endregion
     }
 }
