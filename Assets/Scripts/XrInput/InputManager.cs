@@ -51,10 +51,9 @@ namespace XrInput
         private static readonly int GripAnimId = Animator.StringToHash("Grip");
 
         // Teleporting
-        private LineRenderer _handLineRendererL;
-        private LineRenderer _handLineRendererR;
-        private GameObject _handTeleportReticleL;
-        private GameObject _handTeleportReticleR;
+        [SerializeField] private XRRayInteractor teleportRayL = default;
+        private LineRenderer _teleportLineRendererL;
+        private GameObject _teleportReticleL;
         public Material filledLineMat;
         public Material dottedLineMat;
         
@@ -73,23 +72,19 @@ namespace XrInput
             get = this;
             if (!xrRig)
                 xrRig = transform;
-
-            _handLineRendererL = handRigL.GetComponent<LineRenderer>();
-            _handTeleportReticleL = handRigL.GetComponent<XRInteractorLineVisual>().reticle;
-            _handLineRendererR = handRigR.GetComponent<LineRenderer>();
-            _handTeleportReticleR = handRigR.GetComponent<XRInteractorLineVisual>().reticle;
         }
 
         private void Start()
         {
-            _handTeleportReticleL.SetActive(false);
-            _handTeleportReticleR.SetActive(false);
-
-            _handLineRendererL.material = filledLineMat;
-            _handLineRendererR.material = filledLineMat;
-
             State = SharedInputState.GetInstance();
             StatePrev = State;
+            
+            // Setup rays/teleporting
+            teleportRayL.gameObject.SetActive(false);
+            _teleportLineRendererL = teleportRayL.GetComponent<LineRenderer>();
+            _teleportLineRendererL.material = filledLineMat;
+            _teleportReticleL = teleportRayL.GetComponent<XRInteractorLineVisual>().reticle;
+            _teleportReticleL.SetActive(false);
 
             SetActiveTool(ToolType.Select);
         }
@@ -159,12 +154,6 @@ namespace XrInput
                     out HandHintsL, out BrushL);
             else
             {
-                // Teleport ray
-                var success =
-                    handRigL.inputDevice.IsPressed(InputHelpers.Button.PrimaryAxis2DUp, out var teleportPressed, 0.2f);
-                _handTeleportReticleL.SetActive(teleportPressed);
-                _handLineRendererL.material = teleportPressed ? filledLineMat : dottedLineMat;
-                
                 // Toggling UI hints
                 handRigL.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
                 if (axisClickPressed && !_prevAxisClickPressedL)
@@ -177,11 +166,6 @@ namespace XrInput
                     out _handAnimatorR, out HandHintsR, out BrushR);
             else
             {
-                // Teleport ray
-                handRigR.inputDevice.IsPressed(InputHelpers.Button.Grip, out var gripRPressed, 0.2f);
-                _handTeleportReticleR.SetActive(gripRPressed);
-                _handLineRendererR.material = gripRPressed ? filledLineMat : dottedLineMat;
-
                 // Toggling UI hints
                 handRigR.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
                 if (axisClickPressed && !_prevAxisClickPressedR)

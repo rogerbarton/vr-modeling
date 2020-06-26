@@ -46,7 +46,8 @@ namespace UI
         private bool _isShowingUvGrid;
         private Material[] _uvGridInitialMaterials;
 
-        private LayerMask _uiLayerMask;
+        [NonSerialized] public LayerMask UiLayerMask;
+        [NonSerialized] public int UiLayer = 5;
         
         // UI instances
         [NonSerialized] public UiPivotMode PivotMode;
@@ -65,7 +66,7 @@ namespace UI
         private void Start()
         {
             InitializeStaticUi();
-            _uiLayerMask = LayerMask.GetMask("UI");
+            UiLayerMask = LayerMask.GetMask("UI");
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace UI
 
             var t = go.transform;
             var results = new Collider[1];
-            while (Physics.OverlapSphereNonAlloc(t.position, 0.4f, results, _uiLayerMask,
+            while (Physics.OverlapSphereNonAlloc(t.position, 0.4f, results, UiLayerMask,
                 QueryTriggerInteraction.Ignore) > 0)
             {
                 t.Translate(-Vector3.right * 0.8f);
