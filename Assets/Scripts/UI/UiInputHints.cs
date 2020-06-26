@@ -37,21 +37,7 @@ namespace UI
             _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
             RepaintTriggerColor();
 
-            MeshManager.OnActiveMeshChanged += () =>
-            {
-                // Update the RepaintTriggerColor to only be called for the ActiveMesh
-                _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;
-                _activeBehaviour = MeshManager.ActiveMesh.Behaviour; 
-                _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
-                RepaintTriggerColor();
-            };
-        }
-
-        private void RepaintTriggerColor()
-        {
-            if (InputManager.State.ActiveTool != ToolType.Select) return;
-            var selectionId = MeshManager.ActiveMesh.Behaviour.Input.ActiveSelectionId;
-            trigger.SetColor(Util.Colors.GetColorById(selectionId));
+            MeshManager.OnActiveMeshChanged += OnActiveMeshChanged;
         }
 
         public void SetData(UiInputHintsData data)
@@ -128,8 +114,8 @@ namespace UI
             trigger.triggers.Add(onHoverEnd);
         }
         
-        
-        
+        #region Callbacks
+
         /// <summary>
         /// Refreshes the Input hints based on the <see cref="ActiveTool"/> and the sub state like <see cref="ToolTransformMode"/>
         /// </summary>
@@ -182,10 +168,29 @@ namespace UI
                     break;
             }
         }
+        
+        void OnActiveMeshChanged()
+        {
+            // Update the RepaintTriggerColor to only be called for the ActiveMesh
+            _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;
+            _activeBehaviour = MeshManager.ActiveMesh.Behaviour;
+            _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
+            RepaintTriggerColor();
+        }
+
+        private void RepaintTriggerColor()
+        {
+            if (InputManager.State.ActiveTool != ToolType.Select) return;
+            var selectionId = MeshManager.ActiveMesh.Behaviour.Input.ActiveSelectionId;
+            trigger.SetColor(Util.Colors.GetColorById(selectionId));
+        }
+
+        #endregion
 
         private void OnDestroy()
         {
             _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;
+            MeshManager.OnActiveMeshChanged -= OnActiveMeshChanged;
         }
     }
 }
