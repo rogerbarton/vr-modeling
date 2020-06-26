@@ -27,6 +27,14 @@ target_link_libraries(${PROJECT_NAME} igl::core OpenGL::GL)
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 message(STATUS "Using libigl at: ${LIBIGL_INCLUDE_DIR}")
 
+# Find OpenMP for eigen parallel
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+	message(STATUS "Eigen parallel enabled with OpenMP")
+	target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+else()
+	message(STATUS "Eigen parallel disabled, requires with OpenMP")
+endif()
 
 # Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
 set_target_properties(${PROJECT_NAME} PROPERTIES 

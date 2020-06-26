@@ -19,7 +19,8 @@ void Initialize(const StringCallback debugCallback, StringCallback debugWarningC
 #endif
 
 	Eigen::initParallel();
-	Eigen::setNbThreads(std::max(1, Eigen::nbThreads() - 2)); //remove main and render thread
+	// remove Main, Render and Oculus thread
+	Eigen::setNbThreads(std::max(1, Eigen::nbThreads() - 3));
 
 	LOG("Initialized Native.")
 }
