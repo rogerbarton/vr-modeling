@@ -1,4 +1,5 @@
 using System;
+using Libigl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using XrInput;
@@ -19,6 +20,38 @@ namespace UI
         [SerializeField] private UiInputHintsDataCollection collection = null;
         private UiInputHintsData _currentData;
 
+        private LibiglBehaviour _activeBehaviour;
+
+        public void Initialize()
+        {
+            title.Initialize();
+            help.Initialize();
+            trigger.Initialize();
+            grip.Initialize();
+            primaryBtn.Initialize();
+            secondaryBtn.Initialize();
+            primaryAxisX.Initialize();
+            primaryAxisY.Initialize();
+            
+            _activeBehaviour = MeshManager.ActiveMesh.Behaviour; 
+            _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
+            RepaintTriggerColor();
+
+            MeshManager.OnActiveMeshChanged += () =>
+            {
+                _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;
+                _activeBehaviour = MeshManager.ActiveMesh.Behaviour; 
+                _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
+                RepaintTriggerColor();
+            };
+        }
+
+        private void RepaintTriggerColor()
+        {
+            if (InputManager.State.ActiveTool != ToolType.Select) return;
+            var selectionId = MeshManager.ActiveMesh.Behaviour.Input.ActiveSelectionId;
+            trigger.SetColor(Util.Colors.GetColorById(selectionId));
+        }
 
         public void SetData(UiInputHintsData data)
         {
@@ -36,12 +69,12 @@ namespace UI
         public void SetTooltip(string data, bool overrideExisting = false)
         {
             if(!_currentData.help.isActive || overrideExisting)
-                help.SetData(new UiInputLabelData{isOverride = true, isActive = true, text = data, icon = Icons.get.help});
+                help.SetData(new UiInputLabelData{isOverride = true, isActive = true, text = data, icon = Icons.get.help}, false);
         }
 
         public void ClearTooltip()
         {
-            help.SetData(new UiInputLabelData{isOverride = true, isActive = false});
+            help.ResetToData();
         }
         
         /// <summary>
@@ -129,9 +162,11 @@ namespace UI
                     {
                         case ToolSelectMode.Idle:
                             SetData(collection.selectIdle);
+                            RepaintTriggerColor();
                             break;
                         case ToolSelectMode.Selecting:
                             SetData(collection.selectSelecting);
+                            RepaintTriggerColor();
                             break;
                         case ToolSelectMode.TransformingL:
                             SetData(collection.selectTransformL);
@@ -145,6 +180,11 @@ namespace UI
                     }
                     break;
             }
+        }
+
+        private void OnDestroy()
+        {
+            _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;
         }
     }
 }

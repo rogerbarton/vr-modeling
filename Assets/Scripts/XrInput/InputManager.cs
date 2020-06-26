@@ -129,6 +129,7 @@ namespace XrInput
                     handAnimator = go.GetComponent<Animator>();
 
                 inputHints = go.GetComponentInChildren<UiInputHints>();
+                inputHints.Initialize();
                 if (inputHints) RepaintInputHints(!isRight, isRight);
 
                 brush = go.GetComponentInChildren<XrBrush>();
