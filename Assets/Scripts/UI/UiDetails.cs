@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UI.Components;
@@ -31,6 +31,9 @@ namespace UI
         private TMP_Text _vertexCount;
         private UiCollapsible _selectionGroup;
         private readonly List<UiSelection> _selections = new List<UiSelection>();
+        /// <summary>
+        /// The active selection displayed in the UI
+        /// </summary>
         private int _activeSelectionId = -1;
 
         private UiCollapsible _debugGroup;
@@ -44,7 +47,7 @@ namespace UI
         public void Initialize(LibiglBehaviour behaviour)
         {
             _behaviour = behaviour;
-            MeshManager.OnActiveMeshChanged += OnActiveMeshChanged;
+            MeshManager.OnActiveMeshChanged += RepaintActiveMesh;
             
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
@@ -74,7 +77,7 @@ namespace UI
             addSelectionBtn.onClick.AddListener(() => AddSelection());
 
             // Setup first selection
-            behaviour.OnActiveSelectionChanged += OnActiveSelectionChanged;
+            behaviour.OnActiveSelectionChanged += RepaintActiveSelection;
             AddSelection();
             
             var clearAllSelections = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
@@ -178,25 +181,15 @@ namespace UI
             _debugGroup.SetVisibility(false);
 
             // Call when constructed as we likely just missed this
-            OnActiveMeshChanged();
-        }
-
-        private void OnActiveSelectionChanged()
-        {
-            // Repaint the selection UI
-            if(_activeSelectionId >= 0)
-                _selections[_activeSelectionId].ToggleEditSprite(false);
-            _activeSelectionId = _behaviour.Input.ActiveSelectionId;
-            _selections[_activeSelectionId].ToggleEditSprite(true);
-
+            RepaintActiveMesh();
         }
 
         #region Callbacks
 
         public void OnDestroy()
         {
-            _behaviour.OnActiveSelectionChanged -= OnActiveSelectionChanged;
-            MeshManager.OnActiveMeshChanged -= OnActiveMeshChanged;
+            _behaviour.OnActiveSelectionChanged -= RepaintActiveSelection;
+            MeshManager.OnActiveMeshChanged -= RepaintActiveMesh;
         }
 
         /// <summary>
@@ -253,16 +246,29 @@ namespace UI
         }
 
         /// <summary>
-        /// Called when the active mesh changes
+        /// Repaint based on which mesh is active. Should be called when <see cref="MeshManager.OnActiveMeshChanged"/>
         /// </summary>
         /// <remarks>Also called when the object is created as this happens just after a mesh was set</remarks>
-        private void OnActiveMeshChanged()
+        private void RepaintActiveMesh()
         {
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
             background.color = isActive ? activeBackgroundColor : _defaultBackgroundColor;
         }
 
+        /// <summary>
+        /// Repaint the active selection. Should be called when <see cref="LibiglBehaviour.OnActiveSelectionChanged"/>.
+        /// </summary>
+        private void RepaintActiveSelection()
+        {
+            // Repaint the selection UI
+            if(_activeSelectionId >= 0)
+                _selections[_activeSelectionId].ToggleEditSprite(false);
+            _activeSelectionId = _behaviour.Input.ActiveSelectionId;
+            _selections[_activeSelectionId].ToggleEditSprite(true);
+
+        }
+        
         #endregion
 
         #region Helper Functions
@@ -287,11 +293,6 @@ namespace UI
         {
             _vertexCount.text =
                 $"<b>V</b>: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} <b>F</b>: {_behaviour.State->FSize}";
-        }
-
-        public void SetActiveSelection(int value)
-        {
-            _selections[value].SetAsActive();
         }
 
         #endregion

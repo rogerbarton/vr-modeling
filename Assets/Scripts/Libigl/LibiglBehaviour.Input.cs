@@ -99,6 +99,9 @@ namespace Libigl
             Input.ResetV = false;
         }
 
+        /// <summary>
+        /// Invoked when the active selection of the mesh has changed
+        /// </summary>
         public event Action OnActiveSelectionChanged = delegate { };
         
         public void SetActiveSelection(int value)
@@ -106,12 +109,11 @@ namespace Libigl
             if(Input.ActiveSelectionId == value) return;
             
             Input.ActiveSelectionId = value;
-
             OnActiveSelectionChanged();
         }
         
         /// <summary>
-        /// Increment the active selection safely
+        /// Increment the active selection and safely loops
         /// </summary>
         public void SetActiveSelectionIncrement(int increment)
         {

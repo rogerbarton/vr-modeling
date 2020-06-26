@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UnityEngine;
@@ -34,8 +33,6 @@ namespace UI.Components
         private LibiglBehaviour _behaviour;
         private IList<UiSelection> _selections;
 
-        public event Action OnSelectionChanged = delegate { };
-
         public void Initialize(int selectionId, UiCollapsible uiCollapsible, LibiglBehaviour behaviour,
             IList<UiSelection> selections)
         {
@@ -66,6 +63,7 @@ namespace UI.Components
                 transform.SetSiblingIndex(_selections[_selections.Count - 1].transform.GetSiblingIndex() + 1);
             _selections.Add(this);
             
+            // Call once fully initialized
             SetAsActive();
         }
 
@@ -81,7 +79,7 @@ namespace UI.Components
                 _behaviour.Input.VisibleSelectionMaskChanged = true;
         }
         
-        public void SetAsActive()
+        private void SetAsActive()
         {
             if (_selectionId == _behaviour.Input.ActiveSelectionId) return;
 
@@ -89,6 +87,9 @@ namespace UI.Components
             _behaviour.SetActiveSelection(_selectionId);
         }
 
+        /// <summary>
+        /// Clears the selection and deletes it if it is already empty and the last one
+        /// </summary>
         public unsafe void Clear()
         {
             // Either clear the selection or delete it in the UI if it is the last one and is empty
@@ -118,8 +119,8 @@ namespace UI.Components
         {
             text.text = $"<b>{_selectionId}</b>: {_behaviour.State->SSize[_selectionId]} vertices";
         }
-        
-        public void ToggleVisibleSprite(bool isVisible)
+
+        private void ToggleVisibleSprite(bool isVisible)
         {
             visibleImage.sprite = isVisible ? visibleSprite : visibleOffSprite;
         }

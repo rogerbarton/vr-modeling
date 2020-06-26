@@ -39,6 +39,7 @@ namespace UI
 
             MeshManager.OnActiveMeshChanged += () =>
             {
+                // Update the RepaintTriggerColor to only be called for the ActiveMesh
                 _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;
                 _activeBehaviour = MeshManager.ActiveMesh.Behaviour; 
                 _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
