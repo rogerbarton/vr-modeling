@@ -120,8 +120,8 @@ namespace XrInput
                 if (!prefab)
                 {
                     //TODO: find correct names for Rift CV1 and Quest
-                    Debug.LogWarning($"Could not find controller model with name {deviceName}, using default controller.");
-                    prefab = controllerPrefabs[0];
+                    Debug.LogWarning($"Could not find controller model with name {deviceName}, using default controllers.");
+                    prefab = controllerPrefabs[isRight ? 1 : 0];
                 }
 
                 var go = Instantiate(prefab, modelParent.modelTransform);
