@@ -154,6 +154,7 @@ namespace UnityEngine.XR.Interaction.Toolkit
                     {
                         if(m_EnableUIInteraction)
                         {
+                            FindOrCreateXRUIInputModule(); // Ensure m_InputModule is not null because when we enabled
                             m_InputModule.RegisterInteractable(this);
                         }
                         else
