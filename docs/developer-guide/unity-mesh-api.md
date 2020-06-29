@@ -1,13 +1,17 @@
 # Unity Mesh API
 
-- Since Unity 2019.3 there have been some updates to the mesh API.
-- `mesh.MarkDynamic()` on a *readable* mesh to keep a copy of the buffers on the managed CPU memory and make `mesh.vertices` read/writable.
-- `mesh.UploadData(false)` to copy the `mesh.vertices` managed data to the GPU immediately (else done pre-render), using `true` will delete the CPU copy.
-- Get GPU (DirectX) pointer with `mesh.GetNativeVertexBufferPtr()`
-- `mesh.SetVertexBufferParams()` to specify the layout on the GPU, attributes in the same stream are interleaved.
-  - `RecalculateNormals` or `RecalculateTangents` do not seem to work when the normals/tangents are not in stream 0
+This is about how meshes are passed to Unity and updated so that they can be rendered.
 
-##Further Reading
+Since Unity 2019.3 there have been some updates to the mesh API. However, there are still various limitations and currently the older API is being used as it is much simpler and thus more reliable. In this application, native arrays allocated in the C++ dll are used.
+
+Some useful points:
+
+- `mesh.MarkDynamic()` on a *readable* mesh to keep a copy of the buffers on the managed CPU memory and make `mesh.vertices` read/writable. This is required in order to be able to modify the vertices at runtime.
+- `mesh.SetVertexBufferParams()` to specify the layout on the GPU, attributes in the same stream are interleaved. Here you can specify the precision as well.
+- `mesh.UploadData(false)` to copy the `mesh.vertices` managed data to the GPU immediately (else done pre-render), using `true` will delete the CPU copy and the mesh will no longer by dynamic/writable.
+- `mesh.GetNativeVertexBufferPtr()` gets the GPU (DirectX/OpenGL) pointer
+
+## Further Reading
 
 1. [Unity Docs - Mesh](https://docs.unity3d.com/ScriptReference/Mesh.html)
 1. [Unity Docs - Mesh.SetVertexBufferData](https://docs.unity3d.com/ScriptReference/Mesh.SetVertexBufferData.html)

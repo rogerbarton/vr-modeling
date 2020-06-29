@@ -10,3 +10,8 @@ complicated C++, then the C# interface and end with the UI/input:
     1. How this deformation is executed from C#, see `Libigl/LibiglBehaviour.Actions.cs`
     1. Handling of the controller input to determine when to execute the deformation, see `LibiglBehaviour.Input.cs`
 1. Parametrization in the 2D UI, see examples of UI generation in `UI/UiDetails.cs`
+
+This is indeed quite a long list because of the following complications:
+
+1. C#/C++ interface
+2. Threading in Unity, not being able to access any of the Unity API a worker thread.

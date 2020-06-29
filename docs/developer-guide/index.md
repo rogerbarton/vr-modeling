@@ -1,7 +1,7 @@
 # Developer Guide
 
 .. note::
-   
+
    This is aimed at people wanting to view or edit the code.
    The project is split into two subprojects, a Unity C# project and a C++ library.
 
@@ -51,3 +51,19 @@ To regenerate this documentation as well as the Doxygen documentation follow the
    - **Doxygen**: Creates standard doxygen html/xml files. View this at `<cmake build folder>/docs/doxygen/index.html`
    - **Sphinx**: Creates the documentation as hosted on ReadTheDocs, using parts from the doxygen xml output.
      View locally at `<cmake build folder>/docs/sphinx/index.html` or push to master and then view online.
+
+## Building
+
+How to produce an executable:
+
+1. Compile the C++ dll in *release* mode.
+2. `Crl` + `Shift` + `B` in Unity to open the build settings.
+3. Ensure you are on the platform you want (Windows standalone 64-bit) and set Development mode accordingly, press build.
+
+**IL2CPP**
+
+This project also works with IL2CPP, which converts C# to C++ upon compile for potential performance gains. These builds are slower.
+
+1. Go to the player settings (either from project settings or from the build window). Find the scripting backend and set it to IL2CPP from Mono
+2. Due to a Unity bug, delete the file `Packages/UnityNativeTool/stubLluiPlugin.c`
+3. Build as usual
