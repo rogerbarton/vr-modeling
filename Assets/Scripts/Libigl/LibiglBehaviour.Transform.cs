@@ -240,7 +240,8 @@ namespace Libigl
                 var uTransform = LibiglMesh.transform;
                 transformDelta.Translate = uTransform.InverseTransformVector(transformDelta.Translate);
                 transformDelta.Pivot = uTransform.InverseTransformPoint(transformDelta.Pivot);
-                // Note: Rotation is relative so does not need to be converted
+                transformDelta.Rotate =
+                    Quaternion.Inverse(uTransform.rotation) * transformDelta.Rotate * uTransform.rotation;
             }
             
             if(consumeInput)
