@@ -19,10 +19,13 @@ default calling conventions, see `x86 Calling Conventions <https://en.wikipedia.
 specifically ``__stdcall``. *This also is different for every platform, but luckily the IUnityInterface header handles
 this for us if we use this macro.*
 
+Note that the implementations of the defined functions are split across several cpp files, as indicated in the code.
+This is done so we have one central place where we have all the exported functions that are callable from C#.
+
 .. doxygenfile:: Interface.h
 
 InterfaceTypes.h
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 
 .. |StructLayout| replace:: ``[StructLayout(LayoutKind.Sequential)]``
 .. _StructLayout: https://docs.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.layoutkind?view=netcore-3.1
@@ -40,13 +43,13 @@ The :cpp:class:`MeshState` is also an interface type but has its own file.
 .. doxygenfile:: InterfaceTypes.h
 
 
-ModifyMesh.h
-^^^^^^^^^^^^
+Deform.h
+^^^^^^^^
 
 This is where the deformations are as well as other functions which manipulate the vertices.
-This is a good place to start for how to implement your own deformation.
+This (the .cpp) is a good place to start for how to implement your own deformation.
 
-.. doxygenfile:: ModifyMesh.h
+.. doxygenfile:: Deform.h
 
 MeshState.h
 ^^^^^^^
@@ -56,12 +59,12 @@ If the two structs do not match *exactly* problems arise with reading/writing to
 
 .. doxygenfile:: MeshState.h
 
-NativeState.h
-^^^^^^^^^^^^^
+MeshStateNative.h
+^^^^^^^^^^^^^^^^^
 
-This contains data, specific to a mesh, for storing data only used in C++.
+This contains mesh specific data only used in C++, e.g. pre-calculations.
 
-.. doxygenfile:: NativeState.h
+.. doxygenfile:: MeshStateNative.h
 
 Util.h
 ^^^^^^

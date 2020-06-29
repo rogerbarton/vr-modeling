@@ -1,6 +1,6 @@
 #pragma once
 #include "InterfaceTypes.h"
-#include "NativeState.h"
+#include "MeshStateNative.h"
 #include <Eigen/Core>
 
 /**
@@ -72,7 +72,7 @@ struct MeshState
 	/**
 	 * Native only state, a void* in C#
 	 */
-	NativeState* Native;
+	MeshStateNative* Native;
 
 	/**
 	 * Initialise the shared state from a Unity mesh

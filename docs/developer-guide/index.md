@@ -11,6 +11,7 @@
 
    vr
    unity-mesh-api
+   adding-functionality
 
 ## Setup
 

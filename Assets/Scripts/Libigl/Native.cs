@@ -6,7 +6,7 @@ using UnityNativeTool;
 namespace Libigl
 {
     /// <summary>
-    /// Contains all runtime C++ function declarations.
+    /// Contains all C++ function declarations.
     /// Handles initialization of the DLL and works with the UnityNativeTool for easy reloading/recompilation.
     /// </summary>
     /// <remarks>Convention: Pass the <see cref="MeshState"/> as the first argument if the function modifies a mesh.</remarks>
