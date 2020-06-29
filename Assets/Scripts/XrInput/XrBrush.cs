@@ -72,6 +72,7 @@ namespace XrInput
         /// </summary>
         private void OnTriggerEnter(Collider other)
         {
+            if (!other.transform.parent) return;
             var libiglMesh = other.transform.parent.GetComponent<LibiglMesh>();
             if (!libiglMesh) return;
 
