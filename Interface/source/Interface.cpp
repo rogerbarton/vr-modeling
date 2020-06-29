@@ -25,10 +25,10 @@ void Initialize(const StringCallback debugCallback, StringCallback debugWarningC
 	LOG("Initialized Native.")
 }
 
-State* InitializeMesh(const UMeshDataNative data, const char* name)
+MeshState* InitializeMesh(const UMeshDataNative data, const char* name)
 {
 	// LOG("InitializeMesh(): " << name)
-	auto* state = new State(data);
+	auto* state = new MeshState(data);
 
 	// Reset color immediately
 	SetColorByMask(state, 0);
@@ -37,7 +37,7 @@ State* InitializeMesh(const UMeshDataNative data, const char* name)
 	return state;
 }
 
-void DisposeMesh(State* state)
+void DisposeMesh(MeshState* state)
 {
 	delete state;
 }

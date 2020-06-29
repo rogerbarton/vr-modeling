@@ -2,7 +2,7 @@
 #include <PluginAPI/IUnityInterface.h>
 #include <RenderAPI/RenderAPI.h>
 #include <string>
-#include "State.h"
+#include "MeshState.h"
 
 extern "C"
 {
@@ -22,12 +22,12 @@ Initialize(StringCallback debugCallback, StringCallback debugWarningCallback, St
  * @param name Name of the mesh
  * @return A pointer to the C++ state for this mesh
  */
-UNITY_INTERFACE_EXPORT State* InitializeMesh(const UMeshDataNative data, const char* name);
+UNITY_INTERFACE_EXPORT MeshState* InitializeMesh(const UMeshDataNative data, const char* name);
 
 /**
  * Disposes all C++ state tied to a mesh properly
  */
-UNITY_INTERFACE_EXPORT void DisposeMesh(State* state);
+UNITY_INTERFACE_EXPORT void DisposeMesh(MeshState* state);
 
 
 // --- Unity Callbacks from IUnityInterface.h
@@ -55,7 +55,7 @@ UNITY_INTERFACE_EXPORT void UnityPluginUnload();
  * @param visibleSelectionMask Selections which are currently visible, will ignore changes to invisible selections.
  */
 UNITY_INTERFACE_EXPORT void
-ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleSelectionMask);
+ApplyDirty(MeshState* state, const UMeshDataNative data, const unsigned int visibleSelectionMask);
 
 /**
  * Reads an .off file into **row major** Eigen matrices, these can then be mapped by a NativeArray in C#.
@@ -82,14 +82,14 @@ ReadOFF(const char* path, const bool setCenter, const bool normalizeScale, const
 /**
  * Debug function to simply translate all vertices by the value.
  */
-UNITY_INTERFACE_EXPORT void TranslateAllVertices(State* state, Vector3 value);
+UNITY_INTERFACE_EXPORT void TranslateAllVertices(MeshState* state, Vector3 value);
 
 /**
  * Translate vertices in specific selections.
  * @param value displacement in local space
  * @param maskId Which selections to transform as a bitmask
  */
-UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, unsigned int maskId = -1);
+UNITY_INTERFACE_EXPORT void TranslateSelection(MeshState* state, Vector3 value, unsigned int maskId = -1);
 
 /**
  * Transform the selected vertices in place.
@@ -98,7 +98,7 @@ UNITY_INTERFACE_EXPORT void TranslateSelection(State* state, Vector3 value, unsi
  * @param maskId Which selections to transform
  */
 UNITY_INTERFACE_EXPORT void
-TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, Vector3 pivot, unsigned int maskId = -1);
+TransformSelection(MeshState* state, Vector3 translation, float scale, Quaternion rotation, Vector3 pivot, unsigned int maskId = -1);
 
 /**
  * Run the igl::harmonic biharmonic deformation on the mesh with provided fixed boundary conditions.
@@ -107,18 +107,18 @@ TransformSelection(State* state, Vector3 translation, float scale, Quaternion ro
  * @param showDeformationField Whether to show the deformation field, see libigl tutorial
  */
 UNITY_INTERFACE_EXPORT void
-Harmonic(State* state, unsigned int boundaryMask = -1, bool showDeformationField = true);
+Harmonic(MeshState* state, unsigned int boundaryMask = -1, bool showDeformationField = true);
 
 /**
  * Run the igl::arap As-Rigid-As-Possible deformation on the mesh with the provided fixed boundary conditions.
  * @param boundaryMask Which selections to use as the boundary
  */
-UNITY_INTERFACE_EXPORT void Arap(State* state, unsigned int boundaryMask = -1);
+UNITY_INTERFACE_EXPORT void Arap(MeshState* state, unsigned int boundaryMask = -1);
 
 /**
  * Reset the vertices to their initial position V0 (set when loading the mesh).
  */
-UNITY_INTERFACE_EXPORT void ResetV(State* state);
+UNITY_INTERFACE_EXPORT void ResetV(MeshState* state);
 
 
 // --- Selection.cpp
@@ -129,25 +129,25 @@ UNITY_INTERFACE_EXPORT void ResetV(State* state);
  * @param selectionId Which selection to modify
  * @param selectionMode How to change the selection, use SelectionMode constants.
  */
-UNITY_INTERFACE_EXPORT void SelectSphere(State* state, Vector3 position, float radius, int selectionId = 0,
+UNITY_INTERFACE_EXPORT void SelectSphere(MeshState* state, Vector3 position, float radius, int selectionId = 0,
                                          unsigned int selectionMode = SelectionMode::Add);
 /**
  * @return A mask of all selections partially inside the sphere (based on if a vertex is inside).
  * @param position Center of the sphere in local space
  * @param radius Radius of the sphere in local space
  */
-UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius);
+UNITY_INTERFACE_EXPORT unsigned int GetSelectionMaskSphere(MeshState* state, Vector3 position, float radius);
 
 /**
  * @return The mean vertex of the specified selections
  */
-UNITY_INTERFACE_EXPORT Vector3 GetSelectionCenter(State* state, unsigned int maskId);
+UNITY_INTERFACE_EXPORT Vector3 GetSelectionCenter(MeshState* state, unsigned int maskId);
 
 /**
  * Resets a particular selections, can clear multiple selections at once.
  * @param maskId Which selections to clear as a bitmask
  */
-UNITY_INTERFACE_EXPORT void ClearSelectionMask(State* state, unsigned int maskId = -1);
+UNITY_INTERFACE_EXPORT void ClearSelectionMask(MeshState* state, unsigned int maskId = -1);
 
 /**
  * Naive SetColorByMask.
@@ -155,13 +155,13 @@ UNITY_INTERFACE_EXPORT void ClearSelectionMask(State* state, unsigned int maskId
  * @param maskId Which selections to show in the color
  * @param colorId Which color to use, see Color::GetColorById
  */
-UNITY_INTERFACE_EXPORT void SetColorSingleByMask(State* state, unsigned int maskId = -1, int colorId = 0);
+UNITY_INTERFACE_EXPORT void SetColorSingleByMask(MeshState* state, unsigned int maskId = -1, int colorId = 0);
 
 /**
  * Set the vertex colors based on a bitmask of visible selections.
  * @param maskId Which selections to show
  */
-UNITY_INTERFACE_EXPORT void SetColorByMask(State* state, unsigned int maskId = -1);
+UNITY_INTERFACE_EXPORT void SetColorByMask(MeshState* state, unsigned int maskId = -1);
 
 // --- sample/CustomUploadMesh.cpp
 // UNITY_INTERFACE_EXPORT UnityRenderingEventAndData GetUploadMeshPtr();

@@ -1,13 +1,13 @@
 #include "Interface.h"
 
 // --- Transformations
-void TranslateAllVertices(State* state, Vector3 value)
+void TranslateAllVertices(MeshState* state, Vector3 value)
 {
 	state->V->rowwise() += value.AsEigenRow();
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void TranslateSelection(State* state, Vector3 value, unsigned int maskId)
+void TranslateSelection(MeshState* state, Vector3 value, unsigned int maskId)
 {
 	auto& V = *state->V;
 	const auto& S = *state->S;
@@ -22,7 +22,7 @@ void TranslateSelection(State* state, Vector3 value, unsigned int maskId)
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void TransformSelection(State* state, Vector3 translation, float scale, Quaternion rotation, Vector3 pivot, unsigned int maskId)
+void TransformSelection(MeshState* state, Vector3 translation, float scale, Quaternion rotation, Vector3 pivot, unsigned int maskId)
 {
 	auto& V = *state->V;
 	const auto& S = *state->S;
@@ -44,7 +44,7 @@ void TransformSelection(State* state, Vector3 translation, float scale, Quaterni
 	state->DirtyState |= DirtyFlag::VDirty;
 }
 
-void ResetV(State* state)
+void ResetV(MeshState* state)
 {
 	*state->V = *state->Native->V0;
 	state->DirtyState |= DirtyFlag::VDirty;

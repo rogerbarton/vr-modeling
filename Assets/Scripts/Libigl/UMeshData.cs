@@ -44,7 +44,7 @@ namespace Libigl
     }
 
     /// <summary>
-    /// Stores a copy of the Unity Mesh's arrays. This is purely for the interface between the Libigl Mesh <see cref="State"/>
+    /// Stores a copy of the Unity Mesh's arrays. This is purely for the interface between the Libigl Mesh <see cref="MeshState"/>
     /// and the Unity Mesh / what will be rendered.
     /// Important: Uses RowMajor as that is how it is stored by Unity and on the GPU.
     /// </summary>
@@ -148,7 +148,7 @@ namespace Libigl
         /// The DirtyState is propagated so <see cref="ApplyDirtyToMesh"/> (called on the main thread) will apply the changes.
         /// <seealso cref="Native.ApplyDirty"/>
         /// </summary>
-        public unsafe void ApplyDirty(State* state, InputState inputState)
+        public unsafe void ApplyDirty(MeshState* state, MeshInputState inputState)
         {
             Assert.IsTrue(VSize == state->VSize && FSize == state->FSize);
             

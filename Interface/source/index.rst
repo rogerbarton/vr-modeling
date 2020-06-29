@@ -30,7 +30,7 @@ InterfaceTypes.h
 This file includes all the types that are shared between C# and C++.
 These are declared once in both languages and if one if modified the other must also be updated.
 In C# this corresponds to the classes with the attribute |StructLayout|_.
-The :cpp:class:`State` is also an interface type but has its own file.
+The :cpp:class:`MeshState` is also an interface type but has its own file.
 
 .. note::
 
@@ -48,13 +48,13 @@ This is a good place to start for how to implement your own deformation.
 
 .. doxygenfile:: ModifyMesh.h
 
-State.h
+MeshState.h
 ^^^^^^^
 
 This is the shared state between C++/C# and changes in one **must** be applied to the other.
 If the two structs do not match *exactly* problems arise with reading/writing to the wrong memory.
 
-.. doxygenfile:: State.h
+.. doxygenfile:: MeshState.h
 
 NativeState.h
 ^^^^^^^^^^^^^

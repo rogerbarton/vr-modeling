@@ -15,7 +15,8 @@ namespace XrInput
         private readonly List<XRBaseInteractable> _hoverTargetsR = new List<XRBaseInteractable>();
 
         /// <summary>
-        /// Updates the <see cref="SharedInputState"/> <see cref="State"/>
+        /// Updates the <see cref="InputState"/> <see cref="State"/>.
+        /// Implementation note: The hands may not be initialized/detected yet.
         /// </summary>
         private void UpdateSharedState()
         {
@@ -97,6 +98,10 @@ namespace XrInput
 
         }
 
+        /// <summary>
+        /// Enables and disables certain rays and UI interaction for performance.
+        /// Raycasting the UI is one of the most expensive operations currently. See profile EventSystem
+        /// </summary>
         private void UpdateRayInteractors()
         {
             if (!handInteractorL) return;

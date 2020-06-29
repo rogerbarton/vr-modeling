@@ -17,7 +17,7 @@ namespace XrInput
 
         private bool _isRight;
 
-        private List<LibiglMesh> _currentLibiglMeshes = new List<LibiglMesh>();
+        private readonly List<LibiglMesh> _currentLibiglMeshes = new List<LibiglMesh>();
         [NonSerialized] public bool InsideActiveMeshBounds;
         
         public void SetRadius(float value)

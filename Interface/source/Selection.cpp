@@ -1,7 +1,7 @@
 #include "Interface.h"
 #include "Util.h"
 
-void SelectSphere(State* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode)
+void SelectSphere(MeshState* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode)
 {
 	const Eigen::RowVector3f posEigen = position.AsEigenRow();
 	const unsigned int maskId = 1 << selectionId;
@@ -35,7 +35,7 @@ void SelectSphere(State* state, Vector3 position, float radius, int selectionId,
 	state->DirtySelections |= maskId;
 }
 
-unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius)
+unsigned int GetSelectionMaskSphere(MeshState* state, Vector3 position, float radius)
 {
 	const Eigen::RowVector3f posEigen = position.AsEigenRow();
 	const float radiusSqr = radius * radius;
@@ -55,7 +55,7 @@ unsigned int GetSelectionMaskSphere(State* state, Vector3 position, float radius
 	return mask;
 }
 
-Vector3 GetSelectionCenter(State* state, unsigned int maskId)
+Vector3 GetSelectionCenter(MeshState* state, unsigned int maskId)
 {
 	using namespace Eigen;
 	VectorXi rowMask;
@@ -75,13 +75,13 @@ Vector3 GetSelectionCenter(State* state, unsigned int maskId)
 	return (Vector3)center;
 }
 
-void ClearSelectionMask(State* state, unsigned int maskId)
+void ClearSelectionMask(MeshState* state, unsigned int maskId)
 {
 	*state->S = state->S->unaryExpr([&](int s) -> int { return ~maskId & s; });
 	state->DirtySelections |= maskId;
 }
 
-void SetColorSingleByMask(State* state, unsigned int maskId, int colorId)
+void SetColorSingleByMask(MeshState* state, unsigned int maskId, int colorId)
 {
 	const auto& color = Color::GetColorById(colorId);
 
@@ -91,7 +91,7 @@ void SetColorSingleByMask(State* state, unsigned int maskId, int colorId)
 	state->DirtyState |= DirtyFlag::CDirty;
 }
 
-void SetColorByMask(State* state, unsigned int maskId)
+void SetColorByMask(MeshState* state, unsigned int maskId)
 {
 	state->C->setZero();
 

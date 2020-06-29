@@ -1,34 +1,10 @@
 ﻿using UnityEngine;
 
-public static class Util
+namespace Util
 {
-    public static Vector3[] ToVector3(this float[,] arr)
-    {
-        Vector3[] result = new Vector3[arr.GetLength(0)];
-        for (int i = 0; i < arr.GetLength(0); i++)
-        {
-            for (int j = 0; j < arr.GetLength(1); j++)
-            {
-                result[i][j] = arr[i, j];
-            }
-        }
-
-        return result;
-    }
-
-    public static Color[] ToColor(this float[,] arr)
-    {
-        Color[] result = new Color[arr.GetLength(0)];
-        for (int i = 0; i < arr.GetLength(0); i++)
-        {
-            result[i].r = arr[i, 0];
-            result[i].g = arr[i, 1];
-            result[i].b = arr[i, 2];
-        }
-
-        return result;
-    }
-        
+    /// <summary>
+    /// Contains custom color constants.
+    /// </summary>
     public static class Colors
     {
         public static readonly Color White = Color.white;
@@ -42,7 +18,10 @@ public static class Util
         public static readonly Color BlueLight = new Color(0.17f, 0.62f, 0.71f);
         public static readonly Color Yellow = new Color(0.86f, 0.86f, 0.15f);
 
-        public static Color GetColorById(int id)
+        /// <summary>
+        /// Get the color by its id.
+        /// </summary>
+        public static Color Get(int id)
         {
             switch (id % 8)
             {
@@ -66,14 +45,5 @@ public static class Util
                     return Color.magenta;
             }
         }
-    }
-
-    public static Vector3 CwiseMul(this Vector3 lhs, Vector3 rhs)
-    {
-        Vector3 res;
-        res.x = lhs.x * rhs.x;
-        res.y = lhs.y * rhs.y;
-        res.z = lhs.z * rhs.z;
-        return res;
     }
 }

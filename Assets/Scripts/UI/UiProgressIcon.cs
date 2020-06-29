@@ -7,6 +7,7 @@ namespace UI
 {
     /// <summary>
     /// Handles showing the progress icon and animating it based on the PreExecute and PostExecute.
+    /// This indicates the state of the libigl thread.
     /// </summary>
     public class UiProgressIcon : MonoBehaviour
     {

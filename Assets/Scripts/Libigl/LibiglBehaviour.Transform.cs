@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.XR;
+using Util;
 using XrInput;
 
 namespace Libigl
@@ -143,12 +144,12 @@ namespace Libigl
             uTransform.localScale *= transformDelta.Scale;
 
             var pivotLocal = uTransform.localScale.CwiseMul(uTransform.InverseTransformPoint(transformDelta.Pivot));
-            if (transformDelta.PivotMode != PivotMode.Mesh && InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLR) 
+            if (transformDelta.PivotMode != PivotMode.Mesh && InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLr) 
                 uTransform.position += uTransform.rotation * pivotLocal;
             
             uTransform.rotation = transformDelta.Rotate * uTransform.rotation;
             
-            if (transformDelta.PivotMode != PivotMode.Mesh && InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLR)
+            if (transformDelta.PivotMode != PivotMode.Mesh && InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLr)
                 uTransform.position -= uTransform.rotation * pivotLocal;
             
             // Debug.DrawRay(transformDelta.Pivot, uTransform.rotation * -pivotLocal, Color.magenta);

@@ -7,17 +7,34 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace XrInput
 {
+    /// <summary>
+    /// This script handles the controller input and is based on the Unity XR Interaction Toolkit.
+    /// An important part is that this is where the <see cref="InputState"/> can be accessed and is updated.
+    /// </summary>
     public partial class InputManager : MonoBehaviour
     {
+        /// <summary>
+        /// The singleton instance.
+        /// </summary>
         public static InputManager get;
-        public static SharedInputState State;
-        // Input at the last frame (main thread)
-        public static SharedInputState StatePrev;
+        /// <summary>
+        /// The current input state shared between all meshes.
+        /// </summary>
+        public static InputState State;
+        /// <summary>
+        /// Input at the last frame (main thread).
+        /// </summary>
+        public static InputState StatePrev;
 
         /// <summary>
-        /// Get the XR Rig Transform, to determine world positions
+        /// Get the XR Rig Transform, to determine world positions of controllers.
         /// </summary>
         public Transform xrRig;
+
+        /// <summary>
+        /// Called just after the active tool has changed
+        /// </summary>
+        public static event Action OnActiveToolChanged = delegate { };
 
         [Tooltip("Show animated hands or the controller? Needs to be set before the controller is detected")]
         [SerializeField] private bool useHands = false;
@@ -25,7 +42,7 @@ namespace XrInput
         [SerializeField] private GameObject handPrefabR = default;
         [SerializeField] private List<GameObject> controllerPrefabs = default;
 
-        // Left Hand
+        // -- Left Hand
         public InputDeviceCharacteristics handCharL =
             InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left;
 
@@ -33,8 +50,9 @@ namespace XrInput
         [SerializeField] private XRRayInteractor handInteractorL = default;
         [NonSerialized] public InputDevice HandL;
         [NonSerialized] public UiInputHints HandHintsL;
+        [NonSerialized] public XrBrush BrushL;
 
-        // Right Hand
+        // -- Right Hand
         public InputDeviceCharacteristics handCharR =
             InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right;
 
@@ -42,24 +60,21 @@ namespace XrInput
         [SerializeField] private XRRayInteractor handInteractorR = default;
         [NonSerialized] public InputDevice HandR;
         [NonSerialized] public UiInputHints HandHintsR;
+        [NonSerialized] public XrBrush BrushR;
 
-
-        // Hand animation
+        // -- Hand animation
         private Animator _handAnimatorL;
         private Animator _handAnimatorR;
         private static readonly int TriggerAnimId = Animator.StringToHash("Trigger");
         private static readonly int GripAnimId = Animator.StringToHash("Grip");
 
-        // Teleporting
+        // -- Teleporting
         [SerializeField] private XRRayInteractor teleportRayL = default;
         private LineRenderer _teleportLineRendererL;
         private GameObject _teleportReticleL;
         public Material filledLineMat;
         public Material dottedLineMat;
         
-        [NonSerialized] public XrBrush BrushL;
-        [NonSerialized] public XrBrush BrushR;
-
         private void Awake()
         {
             if (get)
@@ -76,7 +91,7 @@ namespace XrInput
 
         private void Start()
         {
-            State = SharedInputState.GetInstance();
+            State = InputState.GetInstance();
             StatePrev = State;
             
             // Setup rays/teleporting
@@ -86,20 +101,22 @@ namespace XrInput
             _teleportReticleL = teleportRayL.GetComponent<XRInteractorLineVisual>().reticle;
             _teleportReticleL.SetActive(false);
 
+            // Set active tool once everything required is initialized
             SetActiveTool(ToolType.Select);
         }
 
         /// <summary>
         /// Gets the XR InputDevice and sets the correct model to display.
+        /// This is where a controller is detected and initialized.
         /// </summary>
         /// <returns>True if successful</returns>
-        private bool InitializeController(bool isRight, InputDeviceCharacteristics c, out InputDevice inputDevice,
+        private bool InitializeController(bool isRight, InputDeviceCharacteristics characteristics, out InputDevice inputDevice,
             GameObject handPrefab,
             XRController modelParent, out Animator handAnimator, out UiInputHints inputHints,
             out XrBrush brush)
         {
             var devices = new List<InputDevice>();
-            InputDevices.GetDevicesWithCharacteristics(c, devices);
+            InputDevices.GetDevicesWithCharacteristics(characteristics, devices);
 
             foreach (var item in devices)
                 Debug.Log($"Detected {item.name}: {item.characteristics}");
@@ -143,8 +160,7 @@ namespace XrInput
 
         private bool _prevAxisClickPressedL;
         private bool _prevAxisClickPressedR;
-        public static event Action OnActiveToolChanged = delegate { };
-
+        
         private void Update()
         {
             UpdateSharedState();
@@ -208,12 +224,14 @@ namespace XrInput
             RepaintInputHints();
             
             if(BrushL) BrushL.OnActiveToolChanged();
-
             if(BrushR) BrushR.OnActiveToolChanged();
 
             OnActiveToolChanged();
         }
 
+        /// <summary>
+        /// Safely repaint the input hints on the controllers, specify which hands should be repainted.
+        /// </summary>
         public void RepaintInputHints(bool left = true, bool right = true)
         {
             if(left && HandHintsL)

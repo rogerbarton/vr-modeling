@@ -3,6 +3,7 @@ using Libigl;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Util;
 
 namespace UI.Components
 {
@@ -44,7 +45,7 @@ namespace UI.Components
             uiCollapsible.AddItem(gameObject);
 
             UpdateText();
-            visibleBtn.image.color = Util.Colors.GetColorById(selectionId);
+            visibleBtn.image.color = Colors.Get(selectionId);
 
             // Behaviour when clicking buttons
             visibleBtn.onClick.AddListener(ToggleVisible);

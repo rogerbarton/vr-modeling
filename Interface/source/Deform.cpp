@@ -2,7 +2,7 @@
 #include <igl/harmonic.h>
 
 // --- Deformations
-bool UpdateBoundary(State* state, unsigned int boundaryMask)
+bool UpdateBoundary(MeshState* state, unsigned int boundaryMask)
 {
 	if (state->Native->BoundaryMask == boundaryMask && (state->Native->DirtySelectionsForBoundary & boundaryMask) == 0)
 		return false;
@@ -19,7 +19,7 @@ bool UpdateBoundary(State* state, unsigned int boundaryMask)
 	return true;
 }
 
-bool UpdateBoundaryConditions(State* state)
+bool UpdateBoundaryConditions(MeshState* state)
 {
 	if (!state->Native->DirtyBoundaryConditions)
 		return false;
@@ -30,7 +30,7 @@ bool UpdateBoundaryConditions(State* state)
 	return true;
 }
 
-void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField)
+void Harmonic(MeshState* state, unsigned int boundaryMask, bool showDeformationField)
 {
 
 	// Create boundary conditions
@@ -56,7 +56,7 @@ void Harmonic(State* state, unsigned int boundaryMask, bool showDeformationField
 	state->DirtyState |= DirtyFlag::VDirtyExclBoundary;
 }
 
-void Arap(State* state, unsigned int boundaryMask)
+void Arap(MeshState* state, unsigned int boundaryMask)
 {
 
 	bool recomputeArapData = UpdateBoundary(state, boundaryMask);

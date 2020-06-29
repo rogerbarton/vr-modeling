@@ -9,23 +9,23 @@ namespace Libigl
     /// <summary>
     /// This is where the behaviour that interfaces with libigl is. It follows a Pre/Post/Execute threading pattern.
     /// This is a <c>partial</c> class, meaning it is split between several files.
-    /// <remarks>See also <see cref="Libigl.LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks</remarks>
     /// </summary>
+    /// <remarks>See also <see cref="Libigl.LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks.</remarks>
     public unsafe partial class LibiglBehaviour : IDisposable
     {
         /// <summary>
         /// A <b>pointer</b> to the C++ state.
         /// This is allocated and deleted in C++ within <see cref="Native.InitializeMesh"/> and <see cref="Native.DisposeMesh"/>.
         /// </summary>
-        public State* State;
+        public MeshState* State;
 
 
         /// <summary>
         /// The input state on the main thread. This is copied to the thread input state <c>State.Input</c> at the end of PreExecute
         /// and is then immediately consumed by <see cref="ConsumeInput"/>.
         /// </summary>
-        public InputState Input;
-        public InputState ExecuteInput;
+        public MeshInputState Input;
+        public MeshInputState ExecuteInput;
 
         /// <summary>
         /// Reference to the <see cref="Libigl.LibiglMesh"/> used to apply changes to the <see cref="Libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="Mesh"/>
@@ -40,7 +40,7 @@ namespace Libigl
             
             // Initialize C++ and create the State from the DataRowMajor
             State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
-            Input = InputState.GetInstance();
+            Input = MeshInputState.GetInstance();
             
             _uiDetails = UiManager.get.CreateDetailsPanel();
             _uiDetails.Initialize(this);

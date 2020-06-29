@@ -3,7 +3,7 @@
 #include <igl/readOFF.h>
 #include <igl/per_vertex_normals.h>
 
-void ApplyDirty(State* state, const UMeshDataNative data, const unsigned int visibleSelectionMask)
+void ApplyDirty(MeshState* state, const UMeshDataNative data, const unsigned int visibleSelectionMask)
 {
 	auto& dirty = state->DirtyState;
 

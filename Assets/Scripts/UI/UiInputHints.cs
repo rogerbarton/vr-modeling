@@ -2,6 +2,7 @@ using System;
 using Libigl;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Util;
 using XrInput;
 
 namespace UI
@@ -137,7 +138,7 @@ namespace UI
                         case ToolTransformMode.TransformingR:
                             SetData(collection.transformTransformingR);
                             break;
-                        case ToolTransformMode.TransformingLR:
+                        case ToolTransformMode.TransformingLr:
                             SetData(collection.transformTransformingLr);
                             break;
                     }
@@ -161,7 +162,7 @@ namespace UI
                         case ToolSelectMode.TransformingR:
                             SetData(collection.selectTransformR);
                             break;
-                        case ToolSelectMode.TransformingLR:
+                        case ToolSelectMode.TransformingLr:
                             SetData(collection.selectTransformLr);
                             break;
                     }
@@ -182,7 +183,7 @@ namespace UI
         {
             if (InputManager.State.ActiveTool != ToolType.Select) return;
             var selectionId = MeshManager.ActiveMesh.Behaviour.Input.ActiveSelectionId;
-            trigger.SetColor(Util.Colors.GetColorById(selectionId));
+            trigger.SetColor(Colors.Get(selectionId));
         }
 
         #endregion

@@ -34,7 +34,7 @@ namespace Libigl
         {
             // Change the transform tool mode
             if (_doTransformL)
-                InputManager.State.ToolTransformMode = _doTransformR ? ToolTransformMode.TransformingLR : ToolTransformMode.TransformingL;
+                InputManager.State.ToolTransformMode = _doTransformR ? ToolTransformMode.TransformingLr : ToolTransformMode.TransformingL;
             else if (_doTransformR)
                 InputManager.State.ToolTransformMode = ToolTransformMode.TransformingR;
             else
@@ -48,7 +48,7 @@ namespace Libigl
         {
             // Update the tool sub state/mode
             if (_doTransformL)
-                InputManager.State.ToolSelectMode = _doTransformR ? ToolSelectMode.TransformingLR : ToolSelectMode.TransformingL;
+                InputManager.State.ToolSelectMode = _doTransformR ? ToolSelectMode.TransformingLr : ToolSelectMode.TransformingL;
             else if (_doTransformR)
                 InputManager.State.ToolSelectMode = ToolSelectMode.TransformingR;
             else if (InputManager.State.TriggerL > PressThres || InputManager.State.TriggerR > PressThres)

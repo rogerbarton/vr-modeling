@@ -10,7 +10,6 @@ using XrInput;
 namespace Libigl
 {
     /// <summary>
-    /// Handles the interface between Unity meshes and libigl.<br/>
     /// This component needs to be attached to any GameObject that you want to modify with libigl.<br/>
     /// Any libigl related code is defined in the <see cref="LibiglBehaviour"/> class.
     /// This class only handles the threading and connection with the Unity Mesh components.
@@ -43,14 +42,11 @@ namespace Libigl
 
         [NonSerialized] public Transform BoundingBox;
         private MeshRenderer _boundingBoxRenderer;
-        
-        private void Awake()
-        {
-            MeshManager.get.RegisterMesh(this);
-        }
 
         public void Initialize()
         {
+            MeshManager.get.RegisterMesh(this);
+
             name = name.Replace("(Clone)", "").Trim();
 
             _meshFilter = GetComponent<MeshFilter>();
@@ -216,7 +212,7 @@ namespace Libigl
         /// <summary>
         /// Shows or hides the wireframe bounding box. Also changes the material accordingly.
         /// </summary>
-        /// <param name="overrideVisible">Override default visibility set in the <see cref="SharedInputState"/></param>
+        /// <param name="overrideVisible">Override default visibility set in the <see cref="InputState"/></param>
         /// <param name="primary">If overriding visibility, should we highlight this as the primary bounding box</param>
         public void RepaintBounds(bool overrideVisible = false, bool primary = false)
         {

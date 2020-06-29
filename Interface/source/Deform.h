@@ -6,10 +6,10 @@
  * @param boundaryMask The current mask of selections part of the boundary
  * @return True if boundary has changed
  */
-bool UpdateBoundary(State* state, unsigned int boundaryMask);
+bool UpdateBoundary(MeshState* state, unsigned int boundaryMask);
 
 /**
  * Recalculates the boundary conditions <code>state->Native->BoundaryConditions</code> for Harmonic and Arap
  * @return True if the boundary conditions have changed
  */
-bool UpdateBoundaryConditions(State* state);
+bool UpdateBoundaryConditions(MeshState* state);
