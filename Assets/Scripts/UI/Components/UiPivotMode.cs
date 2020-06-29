@@ -1,4 +1,4 @@
-﻿using System;
+﻿using UI.Hints;
 using UnityEngine;
 using UnityEngine.UI;
 using XrInput;
@@ -6,7 +6,7 @@ using XrInput;
 namespace UI.Components
 {
     /// <summary>
-    /// Similar to UiSelectionMode, effectively an enum field
+    /// Similar to <see cref="UiSelectionMode"/>, effectively an enum field.
     /// </summary>
     public class UiPivotMode : MonoBehaviour
     {
@@ -17,6 +17,13 @@ namespace UI.Components
 
         public void Initialize()
         {
+            // Setup onClick callbacks
+            for (var i = 0; i < icons.Length; i++)
+            {
+                var i1 = i;
+                icons[i].GetComponent<Button>().onClick.AddListener(() => { SetMode((PivotMode) i1); });
+            }
+
             Repaint();
             
             // Tooltips
@@ -37,16 +44,15 @@ namespace UI.Components
             _mode = InputManager.State.ActivePivotMode;
             for (var i = 0; i < icons.Length; i++)
             {
-                var i1 = i;
-                var btn = icons[i].GetComponent<Button>();
-                btn.onClick.AddListener(() => { SetMode((PivotMode) i1); });
-                if (i == PivotMode.Selection.GetHashCode())
-                    btn.interactable = InputManager.State.ActiveTool != ToolType.Transform; 
                 icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
+                
+                // Set mesh PivotMode.Selection interactability
+                if (i == PivotMode.Selection.GetHashCode())
+                    icons[i].GetComponent<Button>().interactable = InputManager.State.ActiveTool != ToolType.Transform; 
             }
         }
 
-        public void SetMode(PivotMode mode)
+        private void SetMode(PivotMode mode)
         {
             if (_mode == mode) return;
 

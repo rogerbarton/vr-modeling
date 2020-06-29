@@ -1,5 +1,4 @@
-﻿using System;
-using UI;
+﻿using UI;
 using UnityEngine;
 
 namespace XrInput

@@ -74,7 +74,7 @@ namespace UI
         /// Creates a new Details panel and initializes it
         /// </summary>
         /// <returns>The Vertical Scroll List parent to which items can be added as a child</returns>
-        public UiDetails CreateDetailsPanel()
+        public UiMeshDetails CreateDetailsPanel()
         {
             var go = Instantiate(listCanvasPrefab, panelSpawnPoint.position, panelSpawnPoint.rotation, transform);
             go.GetComponent<Canvas>().worldCamera = Camera.main;
@@ -94,7 +94,7 @@ namespace UI
 
             go.layer = layer;
 
-            return go.GetComponent<UiDetails>();
+            return go.GetComponent<UiMeshDetails>();
         }
 
 

@@ -32,7 +32,7 @@ namespace Libigl
         /// </summary>
         public readonly LibiglMesh LibiglMesh;
 
-        private readonly UiDetails _uiDetails;
+        private readonly UiMeshDetails _uiDetails;
 
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {

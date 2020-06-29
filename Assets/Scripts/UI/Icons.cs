@@ -3,6 +3,9 @@ using UnityEngine.Serialization;
 
 namespace UI
 {
+    /// <summary>
+    /// Stores references to icon sprites. Names are mostly the same as the asset names.
+    /// </summary>
     public class Icons : MonoBehaviour
     {
         public static Icons get;
@@ -11,7 +14,6 @@ namespace UI
         public Sprite addLocation;
         public Sprite myLocation;
 
-        // 
         public Sprite brush;
         public Sprite edit;
         

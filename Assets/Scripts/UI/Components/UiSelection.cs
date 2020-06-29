@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Libigl;
 using TMPro;
+using UI.Hints;
 using UnityEngine;
 using UnityEngine.UI;
 using Util;
@@ -8,7 +9,7 @@ using Util;
 namespace UI.Components
 {
     /// <summary>
-    /// UI for one selection (one row)
+    /// UI for one selection of a mesh (one row)
     /// </summary>
     public class UiSelection : MonoBehaviour
     {

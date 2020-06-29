@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Libigl;
 using TMPro;
 using UI.Components;
+using UI.Hints;
 using UnityEngine;
 using UnityEngine.UI;
 using XrInput;
@@ -13,7 +14,7 @@ namespace UI
     /// There is one of these per LibiglMesh.
     /// Contains most UI generation.
     /// </summary>
-    public unsafe class UiDetails : MonoBehaviour
+    public unsafe class UiMeshDetails : MonoBehaviour
     {
         private LibiglBehaviour _behaviour;
         private Transform _listParent;

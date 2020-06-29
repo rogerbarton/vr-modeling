@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
-using XrInput;
 
-namespace UI
+namespace UI.Hints
 {
+    /// <summary>
+    /// Stores the hints for all possible states of the ActiveTool and sub-states.
+    /// These are stored as a hierarchy. <see cref="UiInputHints.Repaint"/> defines how this data is applied.
+    /// There will be one instance for the left and one for the right hand.
+    /// </summary>
     [CreateAssetMenu(menuName = "Data/Input Hint Data Collection")]
     public class UiInputHintsDataCollection : ScriptableObject
     {

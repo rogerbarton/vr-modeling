@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UI.Components
 {
     /// <summary>
-    /// Hides items when clicked/toggled
+    /// UI Component header that hides items when clicked/toggled.
     /// </summary>
     public class UiCollapsible : MonoBehaviour
     {
@@ -24,26 +24,29 @@ namespace UI.Components
         /// <summary>
         /// Add an item to the group, visibility is immediately set
         /// </summary>
-        public void AddItem(GameObject item)
+        /// <param name="setAsLastSibling">Add the item to the end of the group. Set this to false to have an item
+        /// collapse/hide with this group but leave it in the place/sibling that it is.</param>
+        public void AddItem(GameObject item, bool setAsLastSibling = true)
         {
             _items.Add(item);
             item.SetActive(_visible);
-            item.transform.SetSiblingIndex(_lastSiblingIndex + 1);
-            _lastSiblingIndex = item.transform.GetSiblingIndex();
+            if(setAsLastSibling)
+            {
+                item.transform.SetSiblingIndex(_lastSiblingIndex + 1);
+                _lastSiblingIndex = item.transform.GetSiblingIndex();
+            }
         }
 
-        public void RemoveLast()
-        {
-            _lastSiblingIndex--;
-        }
-
+        /// <summary>
+        /// Called from UI to change the visibility of the group's items
+        /// </summary>
         public void ToggleVisibility()
         {
             SetVisibility(!_visible);
         }
 
         /// <summary>
-        /// Change the visibility, callable from UI Event OnClick
+        /// Change the visibility of the group's items.
         /// </summary>
         public void SetVisibility(bool value)
         {
@@ -58,9 +61,20 @@ namespace UI.Components
             _visible = value;
         }
 
-        public void Remove(GameObject go)
+        /// <summary>
+        /// Remove an item from the collapsible. Will not delete the item.
+        /// </summary>
+        public void Remove(GameObject item)
         {
-            _items.Remove(go);
+            _items.Remove(item);
+            _lastSiblingIndex--;
+        }
+
+        /// <summary>
+        /// Remove the last item from the group.
+        /// </summary>
+        public void RemoveLast()
+        {
             _lastSiblingIndex--;
         }
     }

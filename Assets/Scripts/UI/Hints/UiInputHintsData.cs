@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 
-namespace UI
+namespace UI.Hints
 {
+    /// <summary>
+    /// Data for one hand and one state of the ActiveTool. Used by the <see cref="UiInputHints"/>.
+    /// We have one <see cref="UiInputLabelData"/> per button/axis.
+    /// </summary>
     [CreateAssetMenu(menuName = "Data/Input Hint Data")]
     public class UiInputHintsData : ScriptableObject
     {

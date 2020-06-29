@@ -2,17 +2,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.Hints
 {
-    [System.Serializable]
-    public struct UiInputLabelData
-    {
-        public bool isOverride;
-        public bool isActive;
-        public Sprite icon;
-        public string text;
-    }
-    
+    /// <summary>
+    /// A label for a physical input button/axis to give a hint to what it does.
+    /// </summary>
     public class UiInputLabel : MonoBehaviour
     {
         public Image background;

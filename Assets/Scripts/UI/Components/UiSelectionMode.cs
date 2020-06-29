@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using UI.Hints;
+using UnityEngine;
 using UnityEngine.UI;
 using XrInput;
 
 namespace UI.Components
 {
     /// <summary>
-    /// Handles the selection mode UI, onclick behaviour
+    /// Handles the selection mode UI, onclick behaviour.
     /// There are several modes from <see cref="SelectionMode"/> as well as the <see cref="newSelectionOnDrawBtn"/>
     /// where a new selection is added on each stroke.
     /// </summary>
@@ -21,16 +22,17 @@ namespace UI.Components
 
         public void Initialize()
         {
-            _mode = InputManager.State.ActiveSelectionMode;
+            // Setup onClick callbacks
             for (var i = 0; i < icons.Length; i++)
             {
                 var i1 = i;
                 icons[i].GetComponent<Button>().onClick.AddListener(() => { SetMode((SelectionMode) i1); });
-                icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
             }
-            
+
             newSelectionOnDrawBtn.onClick.AddListener(ToggleNewSelectionOnDraw);
             discardSelectionOnDrawBtn.onClick.AddListener(ToggleDiscardSelectionOnDraw);
+         
+            Repaint();
             
             // Tooltips
             UiInputHints.AddTooltip(icons[0].gameObject, "Add to selection");
@@ -40,7 +42,17 @@ namespace UI.Components
             UiInputHints.AddTooltip(discardSelectionOnDrawBtn.gameObject, "Clear the selection before each stroke");
         }
 
-        public void SetMode(SelectionMode mode)
+        public void Repaint()
+        {
+            _mode = InputManager.State.ActiveSelectionMode;
+            for (var i = 0; i < icons.Length; i++)
+                icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
+
+            RepaintNewSelectionOnDrawBtn();
+            RepaintDiscardSelectionOnDrawBtn();
+        }
+
+        private void SetMode(SelectionMode mode)
         {
             if (_mode == mode) return;
 
@@ -58,7 +70,7 @@ namespace UI.Components
             }
         }
 
-        public void ToggleNewSelectionOnDraw()
+        private void ToggleNewSelectionOnDraw()
         {
             if (!InputManager.State.NewSelectionOnDraw)
                 SetMode((int) SelectionMode.Add);
@@ -73,8 +85,8 @@ namespace UI.Components
         {
             newSelectionOnDrawBtn.image.color = InputManager.State.NewSelectionOnDraw ? activeColor : Color.white;
         }
-        
-        public void ToggleDiscardSelectionOnDraw()
+
+        private void ToggleDiscardSelectionOnDraw()
         {
             if (!InputManager.State.DiscardSelectionOnDraw)
                 SetMode((int) SelectionMode.Add);

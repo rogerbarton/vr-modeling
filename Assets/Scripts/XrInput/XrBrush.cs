@@ -6,6 +6,11 @@ using UnityEngine;
 
 namespace XrInput
 {
+    /// <summary>
+    /// Functionality related to the sphere 'bubble' brush.
+    /// Currently handles resizing the brush, getting the center and
+    /// finding overlapping bounding boxes via trigger colliders.
+    /// </summary>
     public class XrBrush : MonoBehaviour
     {
         public Transform center;
