@@ -23,13 +23,13 @@ namespace Libigl
         {
             Debug.Log("[c++] " + message);
         }
-        
+
         [MonoPInvokeCallback(typeof(StringCallback))]
         public static void DebugLogWarning(string message)
         {
             Debug.LogWarning("[c++] " + message);
         }
-        
+
         [MonoPInvokeCallback(typeof(StringCallback))]
         public static void DebugLogError(string message)
         {

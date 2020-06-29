@@ -5,12 +5,16 @@ using UnityEngine;
 
 namespace Libigl
 {
+    /// <summary>
+    /// Handles loading EditableMeshes and stores references, notably the <see cref="ActiveMesh"/>
+    /// </summary>
     public class MeshManager : MonoBehaviour
     {
         public static MeshManager get;
-    
+
         [Tooltip("List of all meshes that can be loaded and edited with libigl")]
         public GameObject[] meshPrefabs;
+
         [Tooltip("Where to place newly loaded meshes and how to scale them. Bottom of bounding box is placed here.")]
         public Transform meshSpawnPoint;
 
@@ -18,6 +22,7 @@ namespace Libigl
         /// The mesh currently loaded and being modified
         /// </summary>
         public static LibiglMesh ActiveMesh;
+
         /// <summary>
         /// Invoked when the <see cref="ActiveMesh"/> is changed.
         /// Called after initialization if the mesh is newly instantiated.
@@ -34,7 +39,7 @@ namespace Libigl
         public Material wireframeMaterialActive;
         private static int _defaultLayer;
         private static int _holographicLayer;
-    
+
         public GameObject boundingBoxPrefab;
 
         private void Awake()
@@ -45,6 +50,7 @@ namespace Libigl
                 enabled = false;
                 return;
             }
+
             get = this;
         }
 
@@ -71,22 +77,23 @@ namespace Libigl
         /// <param name="performValidityChecks">Check that the prefab can be properly used with libigl.</param>
         /// <remarks>Meshes from the <see cref="meshPrefabs"/> list are checked during Start and do not need to be checked again.</remarks>
         /// <returns>LibiglMesh component on the new instance, null if there was an error</returns>
-        public LibiglMesh LoadMesh(GameObject prefab, bool unloadActiveMesh = true, bool setAsActiveMesh = true, bool performValidityChecks = false)
+        public LibiglMesh LoadMesh(GameObject prefab, bool unloadActiveMesh = true, bool setAsActiveMesh = true,
+            bool performValidityChecks = false)
         {
-            if(performValidityChecks && !CheckPrefabValidity(prefab)) return null;
+            if (performValidityChecks && !CheckPrefabValidity(prefab)) return null;
 
-            if(unloadActiveMesh)
+            if (unloadActiveMesh)
                 UnloadActiveMesh();
 
             var go = Instantiate(prefab, transform);
             go.transform.parent = transform;
-        
+
             var libiglMesh = go.GetComponent<LibiglMesh>();
             if (!libiglMesh)
                 libiglMesh = go.AddComponent<LibiglMesh>();
-        
+
             libiglMesh.Initialize();
-            
+
             if (setAsActiveMesh)
                 SetActiveMesh(libiglMesh);
 
@@ -114,42 +121,45 @@ namespace Libigl
                                " \nLoading this mesh will be disabled.");
                 return false;
             }
-        
+
 
             if (!mesh.isReadable)
             {
-                Debug.LogError($"Prefab {prefab.name} mesh is not read/writeable. You must check 'Read/Write Enabled' in the model import settings. " +
-                               " \nLoading this mesh will be disabled.");
+                Debug.LogError(
+                    $"Prefab {prefab.name} mesh is not read/writeable. You must check 'Read/Write Enabled' in the model import settings. " +
+                    " \nLoading this mesh will be disabled.");
                 return false;
             }
-        
+
             var meshRenderer = prefab.GetComponent<MeshRenderer>();
             if (!meshRenderer)
             {
-                Debug.LogError($"Prefab {prefab.name} does not have a MeshRenderer attached. You will not be able to see your mesh. " +
-                               " \nLoading this mesh will be disabled. The mesh renderer must be on a child (e.g. for .obj files).");
+                Debug.LogError(
+                    $"Prefab {prefab.name} does not have a MeshRenderer attached. You will not be able to see your mesh. " +
+                    " \nLoading this mesh will be disabled. The mesh renderer must be on a child (e.g. for .obj files).");
                 return false;
             }
-        
+
             return true;
         }
 
         private void UnloadActiveMesh()
         {
             if (!ActiveMesh) return;
-        
+
             Destroy(ActiveMesh.gameObject);
             ActiveMesh = null;
         }
+
         #endregion
 
         public static void SetActiveMesh(LibiglMesh libiglMesh)
         {
-            if(ActiveMesh == libiglMesh) return;
+            if (ActiveMesh == libiglMesh) return;
 
-            if(ActiveMesh) ActiveMesh.gameObject.layer = _defaultLayer;
+            if (ActiveMesh) ActiveMesh.gameObject.layer = _defaultLayer;
             libiglMesh.gameObject.layer = _holographicLayer;
-        
+
             ActiveMesh = libiglMesh;
             OnActiveMeshChanged();
         }
@@ -172,7 +182,7 @@ namespace Libigl
 
             if (ActiveMesh == libiglMesh)
                 LoadMesh(meshPrefabs[0]);
-        
+
             Destroy(libiglMesh.gameObject);
         }
 
@@ -183,7 +193,7 @@ namespace Libigl
 
         public void UnregisterMesh(LibiglMesh libiglMesh)
         {
-            if(AllMeshes.Contains(libiglMesh))
+            if (AllMeshes.Contains(libiglMesh))
                 AllMeshes.Remove(libiglMesh);
         }
     }

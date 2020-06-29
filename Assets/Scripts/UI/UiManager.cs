@@ -32,7 +32,7 @@ namespace UI
         public GameObject pivotModePrefab;
 
         public Transform panelSpawnPoint;
-        
+
         [Tooltip("The Content of the Actions Canvas scroll list.")]
         public Transform actionsListParent;
 
@@ -42,14 +42,16 @@ namespace UI
 
         [Tooltip("Debug material placed on objects when enabled.")]
         public Material uvGridMaterial;
+
         [Tooltip("Replaces the first material of the renderer with the UV grid when enabled.")]
         public MeshRenderer[] toggleUvGridRenderers;
+
         private bool _isShowingUvGrid;
         private Material[] _uvGridInitialMaterials;
 
         [NonSerialized] public LayerMask UiLayerMask;
         [NonSerialized] public int UiLayer = 5;
-        
+
         // UI instances
         [NonSerialized] public UiPivotMode PivotMode;
 
@@ -61,6 +63,7 @@ namespace UI
                 enabled = false;
                 return;
             }
+
             get = this;
         }
 
@@ -107,16 +110,16 @@ namespace UI
             _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _toolGroup.title.text = "Tools & Actions";
             _toolGroup.SetVisibility(true);
-            
+
             var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
             _toolGroup.AddItem(selectionMode.gameObject);
             selectionMode.Initialize();
-            
+
             PivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
             _toolGroup.AddItem(PivotMode.gameObject);
             PivotMode.Initialize();
-            
-            
+
+
             // Meshes
             _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _meshGroup.title.text = "Load Mesh";
@@ -133,18 +136,18 @@ namespace UI
                 // setup callbacks/events
                 iconAction.actionBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab));
                 iconAction.iconBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab, false));
-                
+
                 var validMesh = MeshManager.CheckPrefabValidity(meshPrefab);
                 iconAction.actionBtn.interactable = validMesh;
                 iconAction.iconBtn.interactable = validMesh;
             }
-            
+
 
             // Debug
             _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Debug";
             _debugGroup.SetVisibility(true);
-            
+
             var toggleBounds = Instantiate(UiManager.get.buttonPrefab, actionsListParent).GetComponent<Button>();
             _debugGroup.AddItem(toggleBounds.gameObject);
             toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
@@ -154,7 +157,7 @@ namespace UI
                 foreach (var mesh in MeshManager.get.AllMeshes)
                     mesh.RepaintBounds();
             });
-            
+
             var toggleUvGridAction = Instantiate(buttonPrefab, actionsListParent).GetComponent<Button>();
             _debugGroup.AddItem(toggleUvGridAction.gameObject);
             toggleUvGridAction.GetComponentInChildren<TMP_Text>().text = "Toggle UV Grid";
@@ -169,7 +172,7 @@ namespace UI
                 // Toggle uv debug material
                 _isShowingUvGrid = !_isShowingUvGrid;
                 for (var i = 0; i < toggleUvGridRenderers.Length; i++)
-                    toggleUvGridRenderers[i].material =  _isShowingUvGrid ? uvGridMaterial : _uvGridInitialMaterials[i];
+                    toggleUvGridRenderers[i].material = _isShowingUvGrid ? uvGridMaterial : _uvGridInitialMaterials[i];
             });
         }
 
@@ -178,11 +181,12 @@ namespace UI
         /// </summary>
         /// <param name="onClick">Code to execute when an entry point is triggered</param>
         /// <param name="collapsible">The group to add this item under</param>
-        private void CreateActionSpeechUi(string uiText, UnityAction onClick, UiCollapsible collapsible = null, string[] speechKeywords = null)
+        private void CreateActionSpeechUi(string uiText, UnityAction onClick, UiCollapsible collapsible = null,
+            string[] speechKeywords = null)
         {
             // Parenting, layout, ui
             var go = Instantiate(buttonPrefab, actionsListParent);
-            if(collapsible != null)
+            if (collapsible != null)
                 collapsible.AddItem(go);
             else
                 go.SetActive(true);

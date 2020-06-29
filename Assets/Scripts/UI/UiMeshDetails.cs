@@ -32,6 +32,7 @@ namespace UI
         private TMP_Text _vertexCount;
         private UiCollapsible _selectionGroup;
         private readonly List<UiSelection> _selections = new List<UiSelection>();
+
         /// <summary>
         /// The active selection displayed in the UI
         /// </summary>
@@ -49,14 +50,15 @@ namespace UI
         {
             _behaviour = behaviour;
             MeshManager.OnActiveMeshChanged += RepaintActiveMesh;
-            
+
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
             var isActive = _behaviour.LibiglMesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
-            UiInputHints.AddTooltip(activeBtn.gameObject, () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
+            UiInputHints.AddTooltip(activeBtn.gameObject,
+                () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
 
             _defaultBackgroundColor = background.color;
-            
+
             _listParent = GetComponentInChildren<VerticalLayoutGroup>().transform;
 
             // -- Start UI Generation
@@ -66,7 +68,7 @@ namespace UI
             _vertexCount = Instantiate(UiManager.get.textPrefab, _listParent).GetComponent<TMP_Text>();
             UpdateVertexCountText();
 
-            
+
             // -- Selection
             _selectionGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _selectionGroup.title.text = "Selections";
@@ -80,21 +82,18 @@ namespace UI
             // Setup first selection
             behaviour.OnActiveSelectionChanged += RepaintActiveSelection;
             AddSelection();
-            
+
             var clearAllSelections = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _selectionGroup.AddItem(clearAllSelections.gameObject);
             clearAllSelections.GetComponentInChildren<TMP_Text>().text = "Clear All";
-            clearAllSelections.onClick.AddListener(() =>
-            {
-                _behaviour.Input.DoClearSelection = uint.MaxValue;
-            });
+            clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection = uint.MaxValue; });
 
 
             // -- Operations
             var operationsGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             operationsGroup.title.text = "Operations";
             operationsGroup.SetVisibility(true);
-            
+
             _harmonicToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             operationsGroup.AddItem(_harmonicToggle.gameObject);
             _harmonicToggle.text.text = "Harmonic";
@@ -113,13 +112,16 @@ namespace UI
                     _arapToggle.toggle.isOn = false;
                 }
             });
-            
+
             var harmonicShowDisplacements = Instantiate(UiManager.get.togglePrefab, _listParent).GetComponent<Toggle>();
             operationsGroup.AddItem(harmonicShowDisplacements.gameObject);
             harmonicShowDisplacements.GetComponentInChildren<TMP_Text>().text = "Toggle deform field";
             harmonicShowDisplacements.isOn = behaviour.Input.HarmonicShowDisplacement;
-            harmonicShowDisplacements.onValueChanged.AddListener((value) => { behaviour.Input.HarmonicShowDisplacement = value; });
-            
+            harmonicShowDisplacements.onValueChanged.AddListener((value) =>
+            {
+                behaviour.Input.HarmonicShowDisplacement = value;
+            });
+
             _arapToggle = Instantiate(UiManager.get.toggleActionPrefab, _listParent).GetComponent<UiToggleAction>();
             operationsGroup.AddItem(_arapToggle.gameObject);
             _arapToggle.text.text = "ARAP";
@@ -138,21 +140,18 @@ namespace UI
                     _harmonicToggle.toggle.isOn = false;
                 }
             });
-            
+
             var resetMeshBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             operationsGroup.AddItem(resetMeshBtn.gameObject);
             resetMeshBtn.GetComponentInChildren<TMP_Text>().text = "Reset Mesh Vertices";
-            resetMeshBtn.onClick.AddListener(() =>
-            {
-                behaviour.Input.ResetV = true;
-            });
+            resetMeshBtn.onClick.AddListener(() => { behaviour.Input.ResetV = true; });
 
             var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             operationsGroup.AddItem(resetTransformBtn.gameObject);
             resetTransformBtn.GetComponentInChildren<TMP_Text>().text = "Reset Transform";
             resetTransformBtn.onClick.AddListener(() => { behaviour.LibiglMesh.ResetTransformToSpawn(); });
-            
-            
+
+
             // -- Shaders
             var shaderGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             shaderGroup.title.text = "Selections";
@@ -170,12 +169,9 @@ namespace UI
             var deleteBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             objectGroup.AddItem(deleteBtn.gameObject);
             deleteBtn.GetComponentInChildren<TMP_Text>().text = "Delete Mesh";
-            deleteBtn.onClick.AddListener(() =>
-            {
-                MeshManager.get.DestroyMesh(behaviour.LibiglMesh);
-            });
-            
-            
+            deleteBtn.onClick.AddListener(() => { MeshManager.get.DestroyMesh(behaviour.LibiglMesh); });
+
+
             // -- Debug
             _debugGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Show Debug";
@@ -201,15 +197,15 @@ namespace UI
             progressIcon.PreExecute();
 
             // Add a selection in case of the NewSelectionOnDraw
-            if((_behaviour.Input.DoSelectL || _behaviour.Input.DoSelectR) && 
-               !(_behaviour.Input.DoSelectLPrev || _behaviour.Input.DoSelectRPrev)) // Just started stroke 
+            if ((_behaviour.Input.DoSelectL || _behaviour.Input.DoSelectR) &&
+                !(_behaviour.Input.DoSelectLPrev || _behaviour.Input.DoSelectRPrev)) // Just started stroke 
             {
                 if (InputManager.State.NewSelectionOnDraw) // Active selection not empty
                 {
                     // Increment or add until we get an empty selection
-                    while(_behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0)
+                    while (_behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0)
                     {
-                        if(_behaviour.Input.ActiveSelectionId < _behaviour.Input.SCountUi -1)
+                        if (_behaviour.Input.ActiveSelectionId < _behaviour.Input.SCountUi - 1)
                             _behaviour.SetActiveSelectionIncrement(1);
                         else
                         {
@@ -263,13 +259,13 @@ namespace UI
         private void RepaintActiveSelection()
         {
             // Repaint the selection UI
-            if(_activeSelectionId >= 0)
+            if (_activeSelectionId >= 0)
                 _selections[_activeSelectionId].ToggleEditSprite(false);
             _activeSelectionId = _behaviour.Input.ActiveSelectionId;
             _selections[_activeSelectionId].ToggleEditSprite(true);
 
         }
-        
+
         #endregion
 
         #region Helper Functions
@@ -280,7 +276,7 @@ namespace UI
             // Get the id and set it as the active one
             var selectionId = (int) _behaviour.Input.SCountUi;
             if (selectionId > 31) return false;
-            
+
             _behaviour.Input.SCountUi++;
 
             // Add UI for the selection
@@ -289,7 +285,7 @@ namespace UI
 
             return true;
         }
-        
+
         private void UpdateVertexCountText()
         {
             _vertexCount.text =

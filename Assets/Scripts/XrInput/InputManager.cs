@@ -18,10 +18,12 @@ namespace XrInput
         /// The singleton instance.
         /// </summary>
         public static InputManager get;
+
         /// <summary>
         /// The current input state shared between all meshes.
         /// </summary>
         public static InputState State;
+
         /// <summary>
         /// Input at the last frame (main thread).
         /// </summary>
@@ -38,7 +40,9 @@ namespace XrInput
         public static event Action OnActiveToolChanged = delegate { };
 
         [Tooltip("Show animated hands or the controller? Needs to be set before the controller is detected")]
-        [SerializeField] private bool useHands = false;
+        [SerializeField]
+        private bool useHands = false;
+
         [SerializeField] private GameObject handPrefabL = default;
         [SerializeField] private GameObject handPrefabR = default;
         [SerializeField] private List<GameObject> controllerPrefabs = default;
@@ -75,7 +79,7 @@ namespace XrInput
         private GameObject _teleportReticleL;
         public Material filledLineMat;
         public Material dottedLineMat;
-        
+
         private void Awake()
         {
             if (get)
@@ -94,7 +98,7 @@ namespace XrInput
         {
             State = InputState.GetInstance();
             StatePrev = State;
-            
+
             // Setup rays/teleporting
             teleportRayL.gameObject.SetActive(false);
             _teleportLineRendererL = teleportRayL.GetComponent<LineRenderer>();
@@ -111,7 +115,8 @@ namespace XrInput
         /// This is where a controller is detected and initialized.
         /// </summary>
         /// <returns>True if successful</returns>
-        private bool InitializeController(bool isRight, InputDeviceCharacteristics characteristics, out InputDevice inputDevice,
+        private bool InitializeController(bool isRight, InputDeviceCharacteristics characteristics,
+            out InputDevice inputDevice,
             GameObject handPrefab,
             XRController modelParent, out Animator handAnimator, out UiInputHints inputHints,
             out XrBrush brush)
@@ -133,7 +138,8 @@ namespace XrInput
                 if (!prefab)
                 {
                     //TODO: find correct names for Rift CV1 and Quest
-                    Debug.LogWarning($"Could not find controller model with name {deviceName}, using default controllers.");
+                    Debug.LogWarning(
+                        $"Could not find controller model with name {deviceName}, using default controllers.");
                     prefab = controllerPrefabs[isRight ? 1 : 0];
                 }
 
@@ -161,11 +167,11 @@ namespace XrInput
 
         private bool _prevAxisClickPressedL;
         private bool _prevAxisClickPressedR;
-        
+
         private void Update()
         {
             UpdateSharedState();
-            
+
             if (!HandL.isValid && !HandHintsL)
                 InitializeController(false, handCharL, out HandL, handPrefabL, handRigL, out _handAnimatorL,
                     out HandHintsL, out BrushL);
@@ -223,9 +229,9 @@ namespace XrInput
             State.ActiveTool = value;
 
             RepaintInputHints();
-            
-            if(BrushL) BrushL.OnActiveToolChanged();
-            if(BrushR) BrushR.OnActiveToolChanged();
+
+            if (BrushL) BrushL.OnActiveToolChanged();
+            if (BrushR) BrushR.OnActiveToolChanged();
 
             OnActiveToolChanged();
         }
@@ -235,12 +241,12 @@ namespace XrInput
         /// </summary>
         public void RepaintInputHints(bool left = true, bool right = true)
         {
-            if(left && HandHintsL)
+            if (left && HandHintsL)
                 HandHintsL.Repaint();
             if (right && HandHintsR)
                 HandHintsR.Repaint();
         }
-        
+
         #endregion
     }
 }

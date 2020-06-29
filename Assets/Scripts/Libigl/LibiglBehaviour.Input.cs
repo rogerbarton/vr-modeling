@@ -8,7 +8,7 @@ namespace Libigl
     {
         // C# only input variables
         private Vector2 _lastPrimaryAxisValueL;
-        
+
         private void UpdateInput()
         {
             switch (InputManager.State.ActiveTool)
@@ -20,10 +20,10 @@ namespace Libigl
                     UpdateInputSelect();
                     break;
             }
-            
-            if(InputManager.get.BrushL)
+
+            if (InputManager.get.BrushL)
                 Input.BrushPosL = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushL.center.position);
-            if(InputManager.get.BrushR)
+            if (InputManager.get.BrushR)
                 Input.BrushPosR = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
         }
 
@@ -34,7 +34,8 @@ namespace Libigl
         {
             // Change the transform tool mode
             if (_doTransformL)
-                InputManager.State.ToolTransformMode = _doTransformR ? ToolTransformMode.TransformingLr : ToolTransformMode.TransformingL;
+                InputManager.State.ToolTransformMode =
+                    _doTransformR ? ToolTransformMode.TransformingLr : ToolTransformMode.TransformingL;
             else if (_doTransformR)
                 InputManager.State.ToolTransformMode = ToolTransformMode.TransformingR;
             else
@@ -48,20 +49,23 @@ namespace Libigl
         {
             // Update the tool sub state/mode
             if (_doTransformL)
-                InputManager.State.ToolSelectMode = _doTransformR ? ToolSelectMode.TransformingLr : ToolSelectMode.TransformingL;
+                InputManager.State.ToolSelectMode =
+                    _doTransformR ? ToolSelectMode.TransformingLr : ToolSelectMode.TransformingL;
             else if (_doTransformR)
                 InputManager.State.ToolSelectMode = ToolSelectMode.TransformingR;
             else if (InputManager.State.TriggerL > PressThres || InputManager.State.TriggerR > PressThres)
             {
                 InputManager.State.ToolSelectMode = ToolSelectMode.Selecting;
-                
-                if (InputManager.State.TriggerL > PressThres && 
-                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerL < PressThres)
+
+                if (InputManager.State.TriggerL > PressThres &&
+                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert ||
+                     InputManager.StatePrev.TriggerL < PressThres)
                     && InputManager.get.BrushL.InsideActiveMeshBounds)
                     Input.DoSelectL = true;
-                
-                if (InputManager.State.TriggerR > PressThres && 
-                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert || InputManager.StatePrev.TriggerR < PressThres)
+
+                if (InputManager.State.TriggerR > PressThres &&
+                    (InputManager.State.ActiveSelectionMode != SelectionMode.Invert ||
+                     InputManager.StatePrev.TriggerR < PressThres)
                     && InputManager.get.BrushR.InsideActiveMeshBounds)
                     Input.DoSelectR = true;
 
@@ -70,9 +74,10 @@ namespace Libigl
             }
             else
                 InputManager.State.ToolSelectMode = ToolSelectMode.Idle;
-            
+
             // Change the selection with the right hand primary2DAxis.x
-            if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f && Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
+            if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f &&
+                Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
                 SetActiveSelectionIncrement((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
         }
 
@@ -81,7 +86,7 @@ namespace Libigl
             Input.SharedPrev = Input.Shared;
             Input.Shared = InputManager.State;
         }
-        
+
         /// <summary>
         /// Consumes and resets flags raised. Should be called in PreExecute after copying to the State.
         /// </summary>
@@ -94,9 +99,9 @@ namespace Libigl
             Input.DoSelectR = false;
             Input.DoClearSelection = 0;
             Input.VisibleSelectionMaskChanged = false;
-            if(!Input.DoHarmonicRepeat)
+            if (!Input.DoHarmonicRepeat)
                 Input.DoHarmonic = false;
-            if(!Input.DoArapRepeat)
+            if (!Input.DoArapRepeat)
                 Input.DoArap = false;
             Input.ResetV = false;
         }
@@ -105,15 +110,15 @@ namespace Libigl
         /// Invoked when the active selection of the mesh has changed
         /// </summary>
         public event Action OnActiveSelectionChanged = delegate { };
-        
+
         public void SetActiveSelection(int value)
         {
-            if(Input.ActiveSelectionId == value) return;
-            
+            if (Input.ActiveSelectionId == value) return;
+
             Input.ActiveSelectionId = value;
             OnActiveSelectionChanged();
         }
-        
+
         /// <summary>
         /// Increment the active selection and safely loops
         /// </summary>

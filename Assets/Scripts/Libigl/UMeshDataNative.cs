@@ -16,7 +16,7 @@ namespace Libigl
         public readonly float* CPtr;
         public readonly float* UVPtr;
         public readonly int* FPtr;
-        
+
         public readonly int VSize;
         public readonly int FSize;
 

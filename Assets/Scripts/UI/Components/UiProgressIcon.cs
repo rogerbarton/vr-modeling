@@ -12,8 +12,10 @@ namespace UI
     public class UiProgressIcon : MonoBehaviour
     {
         public Gradient progressGradient;
+
         [Tooltip("Only show the progress icon after a certain time.")]
         public float progressDelayTime = 1f;
+
         [Tooltip("Once the icon is showing, how long to wait until a timeout occurs.")]
         public float timeoutTime = 9f;
 
@@ -21,7 +23,7 @@ namespace UI
         private Image _iconImage;
         private Sprite _defaultSprite;
         public Sprite progressErrorSprite;
-    
+
         private Coroutine _progressCoroutine;
 
         private void Start()
@@ -43,7 +45,7 @@ namespace UI
             _iconImage.enabled = false;
             _iconImage.sprite = _defaultSprite;
         }
-    
+
         /// <summary>
         /// Coroutine that animates progress icon over time. Can be stopped
         /// </summary>
@@ -52,7 +54,7 @@ namespace UI
             yield return new WaitForSeconds(progressDelayTime);
             _backgroundImage.enabled = true;
             _iconImage.enabled = true;
-            
+
             var startTime = Time.time;
             while (Time.time - startTime <= timeoutTime)
             {

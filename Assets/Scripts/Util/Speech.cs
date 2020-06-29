@@ -12,7 +12,7 @@ namespace Util
         private static readonly List<string> AllKeywords = new List<string>();
         private static readonly List<KeywordRecognizer> KeywordRecognizers = new List<KeywordRecognizer>();
         private static bool _enabled;
-    
+
         /// <summary>
         /// Creates a new KeywordRecognizer that calls <paramref name="onRecognized"/> when any keyword in <paramref name="speechKeywords"/> is heard and recognized.
         /// Keywords that are already used will be ignored.
@@ -25,26 +25,27 @@ namespace Util
 
             CheckSpeechKeywords(ref speechKeywords);
             if (speechKeywords.Length <= 0) return;
-        
+
             var recognizer = new KeywordRecognizer(speechKeywords);
             recognizer.OnPhraseRecognized += _ => { onRecognized(); };
-            if(_enabled)
+            if (_enabled)
                 recognizer.Start();
             KeywordRecognizers.Add(recognizer);
         }
-    
+
         /// <summary>
         /// Checks if the keywords are valid and that there aren't any conflicts. Conflicts are removed with a warning.
         /// </summary>
         private static void CheckSpeechKeywords(ref string[] speechKeywords)
         {
             if (speechKeywords.Intersect(AllKeywords).Any())
-                Debug.LogWarning("Speech keyword/s duplicated: " + string.Join(",", speechKeywords.Intersect(AllKeywords)));
+                Debug.LogWarning("Speech keyword/s duplicated: " +
+                                 string.Join(",", speechKeywords.Intersect(AllKeywords)));
 
             speechKeywords = speechKeywords.Except(AllKeywords).ToArray();
             AllKeywords.AddRange(speechKeywords);
         }
-    
+
         /// <summary>
         /// Turn speech recognition on and off dynamically
         /// </summary>
@@ -55,7 +56,7 @@ namespace Util
                 foreach (var recognizer in KeywordRecognizers.Where(recognizer => !recognizer.IsRunning))
                     recognizer.Start();
             }
-        
+
             if (_enabled && !value)
             {
                 foreach (var recognizer in KeywordRecognizers.Where(recognizer => recognizer.IsRunning))
@@ -64,7 +65,7 @@ namespace Util
 
             _enabled = value;
         }
-    
+
         public static void Dispose()
         {
             AllKeywords.Clear();

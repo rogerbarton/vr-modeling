@@ -23,16 +23,16 @@ namespace UI.Hints
 
         public void SetData(UiInputLabelData data, bool overwriteData = true)
         {
-            if(!data.isOverride) return;
-            if(overwriteData) _data = data;
-            
+            if (!data.isOverride) return;
+            if (overwriteData) _data = data;
+
             gameObject.SetActive(data.isActive);
             if (!data.isActive) return;
-            
+
             icon.gameObject.SetActive(data.icon);
             icon.sprite = data.icon;
             text.text = data.text;
-                
+
             background.color = _defaultColor;
 
             // We need to refresh the layout explicitly

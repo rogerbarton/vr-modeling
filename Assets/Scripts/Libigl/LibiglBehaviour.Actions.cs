@@ -90,11 +90,11 @@ namespace Libigl
                 // var doPivot = transformDelta.PivotMode != PivotMode.Mesh && 
                 //               ExecuteInput.Shared.ToolTransformMode != ToolTransformMode.TransformingLR;
                 var pivot = Vector3.zero;
-                
+
                 switch (transformDelta.PivotMode)
                 {
                     case PivotMode.Mesh:
-                        // Fall through, use hands as pivot
+                    // Fall through, use hands as pivot
                     case PivotMode.Hand:
                         pivot = transformDelta.Pivot;
                         break;
@@ -118,14 +118,14 @@ namespace Libigl
         {
             var mode = ExecuteInput.Shared.ActiveSelectionMode;
 
-            if(alternateSelectMode)
+            if (alternateSelectMode)
             {
                 if (mode == SelectionMode.Add)
                     mode = SelectionMode.Subtract;
                 else if (mode == SelectionMode.Subtract)
                     mode = SelectionMode.Add;
             }
-            
+
             if (doSelect)
                 Native.SelectSphere(State, brushPos, ExecuteInput.Shared.BrushRadius,
                     ExecuteInput.ActiveSelectionId, (uint) mode);
@@ -134,14 +134,14 @@ namespace Libigl
         private void ActionHarmonic()
         {
             if (!ExecuteInput.DoHarmonic) return;
-            
+
             Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
         }
-        
+
         private void ActionArap()
         {
             if (!ExecuteInput.DoArap) return;
-            
+
             Native.Arap(State, ExecuteInput.VisibleSelectionMask);
         }
 
@@ -149,8 +149,8 @@ namespace Libigl
         {
             if (ExecuteInput.DoClearSelection > 0)
                 Native.ClearSelectionMask(State, ExecuteInput.DoClearSelection);
-            
-            if(ExecuteInput.VisibleSelectionMaskChanged)
+
+            if (ExecuteInput.VisibleSelectionMaskChanged)
                 Native.SetColorByMask(State, ExecuteInput.VisibleSelectionMask);
 
             if (ExecuteInput.ResetV)

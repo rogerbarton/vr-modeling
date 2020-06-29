@@ -23,7 +23,7 @@ namespace UI.Components
 
         [SerializeField] private Sprite visibleSprite = null;
         [SerializeField] private Sprite visibleOffSprite = null;
-        
+
         [SerializeField] private Image editImage = null;
 
         [SerializeField] private Sprite editSprite = null;
@@ -52,10 +52,11 @@ namespace UI.Components
             visibleBtn.onClick.AddListener(ToggleVisible);
             editBtn.onClick.AddListener(SetAsActive);
             clearBtn.onClick.AddListener(Clear);
-            
+
             // Tooltips
             UiInputHints.AddTooltip(visibleBtn.gameObject, "Toggle visibility");
-            UiInputHints.AddTooltip(editBtn.gameObject, () => _selectionId == _behaviour.Input.ActiveSelectionId ? "Active selection" : "Edit selection");
+            UiInputHints.AddTooltip(editBtn.gameObject,
+                () => _selectionId == _behaviour.Input.ActiveSelectionId ? "Active selection" : "Edit selection");
             UiInputHints.AddTooltip(clearBtn.gameObject, "Clear selection, delete if empty & last selection");
 
             // Apply current values
@@ -64,7 +65,7 @@ namespace UI.Components
             if (_selections.Count > 0)
                 transform.SetSiblingIndex(_selections[_selections.Count - 1].transform.GetSiblingIndex() + 1);
             _selections.Add(this);
-            
+
             // Call once fully initialized
             SetAsActive();
         }
@@ -80,7 +81,7 @@ namespace UI.Components
             if (_behaviour.State->SSize[_selectionId] > 0)
                 _behaviour.Input.VisibleSelectionMaskChanged = true;
         }
-        
+
         private void SetAsActive()
         {
             if (_selectionId == _behaviour.Input.ActiveSelectionId) return;
@@ -101,14 +102,14 @@ namespace UI.Components
             {
                 if (_behaviour.Input.ActiveSelectionId == _selectionId)
                 {
-                    _behaviour.SetActiveSelection(_behaviour.Input.ActiveSelectionId -1);
+                    _behaviour.SetActiveSelection(_behaviour.Input.ActiveSelectionId - 1);
                     _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
                 }
 
                 _behaviour.Input.SCountUi--;
                 _behaviour.Input.VisibleSelectionMask |= (uint) 1 << _selectionId;
                 _behaviour.State->SSize[_selectionId] = 0;
-                
+
                 _selections.RemoveAt(_selectionId);
                 _uiCollapsible.Remove(gameObject);
                 Destroy(gameObject);

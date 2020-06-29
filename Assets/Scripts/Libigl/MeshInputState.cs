@@ -3,7 +3,7 @@ using XrInput;
 
 namespace Libigl
 {
-    
+
     /// <summary>
     /// Struct for storing the current input *for a mesh*. (This is a value type so assigning will copy).
     /// Anything that may change as we are executing should be in the InputState, as it is copied in PreExecute.
@@ -22,7 +22,7 @@ namespace Libigl
         public bool DoTransformLPrev;
         public bool DoTransformRPrev;
         public bool PrimaryTransformHand;
-        
+
         public TransformDelta TransformDeltaJoint;
         public TransformDelta TransformDeltaL;
         public TransformDelta TransformDeltaR;
@@ -42,10 +42,12 @@ namespace Libigl
         /// Inverts the selection mode between <see cref="SelectionMode.Add"/> and <see cref="SelectionMode.Subtract"/>
         /// </summary>
         public bool AlternateSelectModeL;
+
         public bool AlternateSelectModeR;
+
         // A Mask of the selections that should be cleared
         public uint DoClearSelection;
-        
+
         public Vector3 BrushPosL;
         public Vector3 BrushPosR;
 
@@ -63,7 +65,7 @@ namespace Libigl
         {
             return new MeshInputState
             {
-                VisibleSelectionMask = uint.MaxValue, 
+                VisibleSelectionMask = uint.MaxValue,
                 HarmonicShowDisplacement = true,
                 Shared = InputManager.State,
                 SharedPrev = InputManager.StatePrev,

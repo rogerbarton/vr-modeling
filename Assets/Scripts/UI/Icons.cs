@@ -16,7 +16,7 @@ namespace UI
 
         public Sprite brush;
         public Sprite edit;
-        
+
         // Selections
         public Sprite colorLens;
         public Sprite dynamicFeed;
@@ -48,7 +48,7 @@ namespace UI
         public Sprite notVisible;
         public Sprite locked;
         public Sprite unlocked;
-        
+
         public Sprite miscServices;
         public Sprite tune;
         public Sprite handyman;
@@ -57,7 +57,7 @@ namespace UI
         public Sprite warn;
         public Sprite info;
         public Sprite help;
-        
+
         private void Awake()
         {
             if (get)
@@ -66,6 +66,7 @@ namespace UI
                 enabled = false;
                 return;
             }
+
             get = this;
         }
     }

@@ -18,23 +18,27 @@ namespace XrInput
         public float GripL;
         public float TriggerL;
         public float GripR;
+
         public float TriggerR;
+
         // World Space Hand Position
         public Vector3 HandPosL;
+
         public Vector3 HandPosR;
+
         // World Space Hand Rotation
         public Quaternion HandRotL;
         public Quaternion HandRotR;
-        
+
         public bool PrimaryBtnL;
         public bool SecondaryBtnL;
         public Vector2 PrimaryAxisL;
         public bool PrimaryBtnR;
         public bool SecondaryBtnR;
         public Vector2 PrimaryAxisR;
-        
+
         public float BrushRadius;
-        
+
         // -- Transform
         /// <summary>
         /// The pivot mode for the <see cref="ActiveTool"/>
@@ -44,30 +48,33 @@ namespace XrInput
             get => ActiveTool == ToolType.Transform ? ActivePivotModeTransform : ActivePivotModeSelect;
             set
             {
-                if(ActivePivotMode == value) return;
-                
+                if (ActivePivotMode == value) return;
+
                 if (InputManager.State.ActiveTool == ToolType.Transform)
                     InputManager.State.ActivePivotModeTransform = value;
                 else
                     InputManager.State.ActivePivotModeSelect = value;
-                
+
                 UiManager.get.PivotMode.Repaint();
             }
         }
 
         public PivotMode ActivePivotModeTransform;
         public PivotMode ActivePivotModeSelect;
+
         /// <summary>
         /// Is rotation enabled for transformations.
         /// </summary>
         public bool TransformWithRotate;
-        
+
         // -- Selection
         public SelectionMode ActiveSelectionMode;
+
         /// <summary>
         /// Draw into a new selection with each stroke
         /// </summary>
         public bool NewSelectionOnDraw;
+
         /// <summary>
         /// Clear the selection when starting a stroke
         /// </summary>
@@ -78,9 +85,9 @@ namespace XrInput
         /// Should we show the bounding boxes of the editable meshes
         /// </summary>
         public bool BoundsVisible;
-        
+
         // -- Tools
-        
+
         /// <summary>
         /// The sub-state of the Transform tool
         /// </summary>
@@ -91,7 +98,7 @@ namespace XrInput
             {
                 if (_toolTransformMode == value) return;
                 _toolTransformMode = value;
-                
+
                 InputManager.get.RepaintInputHints();
             }
         }
@@ -108,10 +115,11 @@ namespace XrInput
             {
                 if (_toolSelectMode == value) return;
                 _toolSelectMode = value;
-                
-                InputManager.get.RepaintInputHints();        
+
+                InputManager.get.RepaintInputHints();
             }
         }
+
         private ToolSelectMode _toolSelectMode;
 
         /// <returns>An instance with the defaults set</returns>
@@ -119,7 +127,7 @@ namespace XrInput
         {
             return new InputState
             {
-                ActiveTool = ToolType.Select, 
+                ActiveTool = ToolType.Select,
                 BrushRadius = 0.1f,
                 ActivePivotModeTransform = PivotMode.Hand,
                 ActivePivotModeSelect = PivotMode.Hand,
@@ -134,7 +142,7 @@ namespace XrInput
         /// </summary>
         public void TogglePivotMode()
         {
-            ActivePivotMode = (PivotMode) ((ActivePivotMode.GetHashCode() + 1) % 
+            ActivePivotMode = (PivotMode) ((ActivePivotMode.GetHashCode() + 1) %
                                            (ActiveTool == ToolType.Transform ? 2 : 3));
         }
     }

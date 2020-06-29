@@ -7,6 +7,7 @@ namespace Testing
     {
         private Mesh _mesh;
         public VertexAttributeDescriptor[] layout;
+
         private void Start()
         {
             _mesh = GetComponent<MeshFilter>().mesh;
@@ -15,7 +16,7 @@ namespace Testing
             _mesh.MarkDynamic();
             layout = _mesh.GetVertexAttributes();
             var length = layout.Length;
-        
+
         }
     }
 }

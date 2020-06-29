@@ -24,7 +24,7 @@ namespace XrInput
 
         private readonly List<LibiglMesh> _currentLibiglMeshes = new List<LibiglMesh>();
         [NonSerialized] public bool InsideActiveMeshBounds;
-        
+
         public void SetRadius(float value)
         {
             transform.localScale = new Vector3(value, value, value);
@@ -112,10 +112,10 @@ namespace XrInput
             else
             {
                 libiglMesh.RepaintBounds(false, false);
-                if(_currentLibiglMeshes.Count > 0)
+                if (_currentLibiglMeshes.Count > 0)
                     _currentLibiglMeshes[0].RepaintBounds(!InsideActiveMeshBounds, true);
             }
-            
+
         }
 
         private void OnTriggerExit(Collider other)
@@ -142,7 +142,7 @@ namespace XrInput
             InsideActiveMeshBounds = _currentLibiglMeshes.Contains(MeshManager.ActiveMesh);
             RepaintBoundingBoxes();
         }
-        
+
         private void OnDisable()
         {
             while (_currentLibiglMeshes.Count > 0)

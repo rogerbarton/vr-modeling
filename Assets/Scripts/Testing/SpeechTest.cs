@@ -11,7 +11,7 @@ namespace Testing
     {
         private KeywordRecognizer _keywordRecognizer;
         private Dictionary<string, Action> _actions = new Dictionary<string, Action>();
-    
+
         public void Hello()
         {
             Debug.Log("Hello");

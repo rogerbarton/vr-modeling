@@ -35,7 +35,8 @@ namespace Libigl
             // new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4, 1),
             new VertexAttributeDescriptor(VertexAttribute.Color, VertexAttributeFormat.Float32, 3, 2),
             new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2, 3), // UV
-            new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.UInt32, 1, 2) // Selection coupled with Color
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.UInt32, 1,
+                2) // Selection coupled with Color
         };
 
 #if !UNITY_EDITOR
@@ -59,11 +60,14 @@ namespace Libigl
         /// <summary>
         /// Clean up native part if required, called just *before* unloading of the dll
         /// </summary>
-        public static void Destroy() { }
+        public static void Destroy()
+        {
+        }
 
         #region Native Function Redeclarations
+
         // This is where we redeclare the exported C++ functions. This needs to match the C++ exactly.
-        
+
         // Interface.cpp
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         private static extern void Initialize(NativeCallbacks.StringCallback debugCallback,
@@ -79,13 +83,13 @@ namespace Libigl
         // IO.cpp
         [DllImport(DllName)]
         public static extern unsafe void ApplyDirty(MeshState* state, UMeshDataNative data, uint visibleSelectionMask);
-        
+
         [DllImport(DllName, ExactSpelling = true, CharSet = CharSet.Ansi)]
         public static extern unsafe void ReadOFF(string path, bool setCenter, bool normalizeScale,
             float scale,
             out float* VPtr, out int VSize,
             out float* NPtr, out int NSize,
-            out uint* FPtr, out int FSize, 
+            out uint* FPtr, out int FSize,
             bool calculateNormalsIfEmpty);
 
 
@@ -102,10 +106,10 @@ namespace Libigl
 
         [DllImport(DllName)]
         public static extern unsafe void Harmonic(MeshState* state, uint boundaryMask, bool showDeformationField);
-        
+
         [DllImport(DllName)]
         public static extern unsafe void Arap(MeshState* state, uint boundaryMask);
-        
+
         [DllImport(DllName)]
         public static extern unsafe void ResetV(MeshState* state);
 
@@ -114,10 +118,10 @@ namespace Libigl
         [DllImport(DllName)]
         public static extern unsafe void SelectSphere(MeshState* state, Vector3 position, float radius,
             int selectionId, uint selectionMode);
-        
+
         [DllImport(DllName)]
         public static extern unsafe uint GetSelectionMaskSphere(MeshState* state, Vector3 position, float radius);
-        
+
         [DllImport(DllName)]
         public static extern unsafe Vector3 GetSelectionCenter(MeshState* state, uint maskId);
 

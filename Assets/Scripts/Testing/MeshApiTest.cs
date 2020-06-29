@@ -64,7 +64,8 @@ namespace Testing
             {
                 NativeArray<float> tmp;
                 fixed (Vector3* managedVPtr = _mesh.vertices)
-                    tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*) managedVPtr, 3 * VSize,
+                    tmp = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<float>((float*) managedVPtr,
+                        3 * VSize,
                         Allocator.Temp);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref tmp, AtomicSafetyHandle.Create());
@@ -133,7 +134,8 @@ namespace Testing
                 {
                     unsafe
                     {
-                        var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(V.GetUnsafePtr(), VSize,
+                        var V3 = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(V.GetUnsafePtr(),
+                            VSize,
                             Allocator.None);
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                         NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V3, AtomicSafetyHandle.Create());

@@ -40,6 +40,7 @@ namespace Libigl
         /// <see cref="VDirty"/> overrides this.
         /// </summary>
         public const uint VDirtyExclBoundary = 256;
+
         public const uint All = uint.MaxValue - DontComputeNormals - DontComputeBounds;
     }
 
@@ -56,7 +57,7 @@ namespace Libigl
         public uint DirtyState = DirtyFlag.None;
         public uint DirtySelections = 0;
         public uint DirtySelectionsResized = 0;
-        
+
         public NativeArray<Vector3> V;
         public NativeArray<Vector3> N;
         public NativeArray<Color> C;
@@ -81,14 +82,15 @@ namespace Libigl
             Allocate(mesh);
             CopyFrom(mesh);
         }
-        
+
         /// <summary>
         /// Initialize the UMeshData with shared data with the <paramref name="behaviour"/>.
         /// </summary>
         public unsafe void LinkBehaviourState(LibiglBehaviour behaviour)
         {
-            S = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(behaviour.State->S, VSize, Allocator.None);
-            
+            S = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(behaviour.State->S, VSize,
+                Allocator.None);
+
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref S, AtomicSafetyHandle.Create());
 #endif
@@ -101,13 +103,15 @@ namespace Libigl
         {
             Assert.IsTrue(VSize > 0 && FSize > 0);
             Assert.IsTrue(!V.IsCreated);
-            
+
             V = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             N = new NativeArray<Vector3>(VSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            C = new NativeArray<Color>(VSize, Allocator.Persistent, mesh.colors.Length == 0 ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
-            UV = new NativeArray<Vector2>(VSize, Allocator.Persistent, mesh.uv.Length == 0 ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
+            C = new NativeArray<Color>(VSize, Allocator.Persistent,
+                mesh.colors.Length == 0 ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
+            UV = new NativeArray<Vector2>(VSize, Allocator.Persistent,
+                mesh.uv.Length == 0 ? NativeArrayOptions.UninitializedMemory : NativeArrayOptions.ClearMemory);
             F = new NativeArray<int>(3 * FSize, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            
+
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
             // Before we can use this we need to add a safety handle (only in the editor)
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref V, AtomicSafetyHandle.Create());
@@ -116,7 +120,7 @@ namespace Libigl
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref UV, AtomicSafetyHandle.Create());
             NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref F, AtomicSafetyHandle.Create());
 #endif
-            
+
             // Store the native pointers int _native
             unsafe
             {
@@ -125,19 +129,19 @@ namespace Libigl
                     (float*) C.GetUnsafePtr(), (float*) UV.GetUnsafePtr(), (int*) F.GetUnsafePtr(), VSize, FSize);
             }
         }
-        
+
         /// <summary>
         /// Copies all data (e.g. V, F) from Unity mesh into the <b>already allocated</b> NativeArrays
         /// </summary>
         private void CopyFrom(Mesh mesh)
         {
             Assert.IsTrue(V.IsCreated);
-            
+
             V.CopyFrom(mesh.vertices);
             N.CopyFrom(mesh.normals);
-            if(mesh.colors.Length > 0)
+            if (mesh.colors.Length > 0)
                 C.CopyFrom(mesh.colors);
-            if(mesh.uv.Length > 0)
+            if (mesh.uv.Length > 0)
                 UV.CopyFrom(mesh.uv);
             F.CopyFrom(mesh.triangles);
         }
@@ -151,10 +155,10 @@ namespace Libigl
         public unsafe void ApplyDirty(MeshState* state, MeshInputState inputState)
         {
             Assert.IsTrue(VSize == state->VSize && FSize == state->FSize);
-            
+
             // Copy over and transpose data that has changed
             Native.ApplyDirty(state, _native, inputState.VisibleSelectionMask);
-            
+
             DirtyState |= state->DirtyState;
             DirtySelections |= state->DirtySelections;
             DirtySelectionsResized |= state->DirtySelectionsResized;
@@ -188,16 +192,16 @@ namespace Libigl
             if ((DirtyState & DirtyFlag.FDirty) > 0)
                 mesh.SetIndices(F, MeshTopology.Triangles, 0);
             // if (DirtySelections > 0)
-                // mesh.SetUVs(1, S);
+            // mesh.SetUVs(1, S);
             // BUG: mesh.SetUVs is from the older API and expects a Vector2[] (floats)
             // Unsupported conversion of vertex data (format 11 to 0, dimensions 1 to 1)
             // UnityEngine.Mesh:SetUVs(Int32, NativeArray`1)
-            
+
             DirtyState = DirtyFlag.None;
             DirtySelections = 0;
             DirtySelectionsResized = 0;
         }
-        
+
         /// <summary> 
         /// Note: Changes to the dirtyState are not applied to the MeshData instance (not a reference) and 
         /// needs to be set manually in a C# context.<br/>

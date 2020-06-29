@@ -41,8 +41,8 @@ namespace UI.Hints
             secondaryBtn.Initialize();
             primaryAxisX.Initialize();
             primaryAxisY.Initialize();
-            
-            _activeBehaviour = MeshManager.ActiveMesh.Behaviour; 
+
+            _activeBehaviour = MeshManager.ActiveMesh.Behaviour;
             _activeBehaviour.OnActiveSelectionChanged += RepaintTriggerColor;
             RepaintTriggerColor();
 
@@ -115,10 +115,11 @@ namespace UI.Hints
                             SetData(collection.selectTransformLr);
                             break;
                     }
+
                     break;
             }
         }
-        
+
         #region Custom Functionality
 
         #region - Tooltips
@@ -135,22 +136,22 @@ namespace UI.Hints
             var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             onHoverStart.callback.AddListener(_ =>
             {
-                if(InputManager.get.HandHintsL)
+                if (InputManager.get.HandHintsL)
                     InputManager.get.HandHintsL.SetTooltip(msg, true);
             });
-            
+
             var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
             onHoverEnd.callback.AddListener(_ =>
             {
-                if(InputManager.get.HandHintsL)
+                if (InputManager.get.HandHintsL)
                     InputManager.get.HandHintsL.ClearTooltip();
             });
-            
+
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
             trigger.triggers.Add(onHoverStart);
             trigger.triggers.Add(onHoverEnd);
         }
-        
+
         /// <summary>
         /// An overload where the message can be a lambda.
         /// </summary>
@@ -160,29 +161,31 @@ namespace UI.Hints
             var onHoverStart = new EventTrigger.Entry {eventID = EventTriggerType.PointerEnter};
             onHoverStart.callback.AddListener(_ =>
             {
-                if(InputManager.get.HandHintsL)
+                if (InputManager.get.HandHintsL)
                     InputManager.get.HandHintsL.SetTooltip(msg(), true);
             });
-            
+
             var onHoverEnd = new EventTrigger.Entry {eventID = EventTriggerType.PointerExit};
             onHoverEnd.callback.AddListener(_ =>
             {
-                if(InputManager.get.HandHintsL)
+                if (InputManager.get.HandHintsL)
                     InputManager.get.HandHintsL.ClearTooltip();
             });
-            
+
             var trigger = uiElement.gameObject.AddComponent<EventTrigger>();
             trigger.triggers.Add(onHoverStart);
             trigger.triggers.Add(onHoverEnd);
         }
-        
+
         /// <summary>
         /// Apply text to the help/tooltip. Used by the UI.
         /// </summary>
         private void SetTooltip(string data, bool overrideExisting = false)
         {
-            if(!_currentData.help.isActive || overrideExisting)
-                help.SetData(new UiInputLabelData{isOverride = true, isActive = true, text = data, icon = Icons.get.help}, false);
+            if (!_currentData.help.isActive || overrideExisting)
+                help.SetData(
+                    new UiInputLabelData {isOverride = true, isActive = true, text = data, icon = Icons.get.help},
+                    false);
         }
 
         private void ClearTooltip()
@@ -206,7 +209,7 @@ namespace UI.Hints
             var selectionId = MeshManager.ActiveMesh.Behaviour.Input.ActiveSelectionId;
             trigger.SetColor(Colors.Get(selectionId));
         }
-        
+
         private void OnActiveMeshChanged()
         {
             // Update the RepaintTriggerColor to only be called for the ActiveMesh
@@ -219,7 +222,7 @@ namespace UI.Hints
         #endregion
 
         #endregion
-        
+
         private void OnDestroy()
         {
             _activeBehaviour.OnActiveSelectionChanged -= RepaintTriggerColor;

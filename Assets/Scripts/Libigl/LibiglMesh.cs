@@ -25,6 +25,7 @@ namespace Libigl
         /// The Unity Mesh data in RowMajor easily accessible as NativeArrays
         /// </summary>
         public UMeshData DataRowMajor { get; private set; }
+
         /// <summary>
         /// The libigl behaviour instance that is executing on this mesh
         /// </summary>
@@ -34,11 +35,18 @@ namespace Libigl
         /// Expensive operations executed in <see cref="LibiglBehaviour.Execute"/> are done in this thread
         /// </summary>
         private Thread _workerThread;
+
         /// <returns>True if a job/worker thread is running on the MeshData</returns>
-        public bool IsJobRunning() { return _workerThread != null; }
+        public bool IsJobRunning()
+        {
+            return _workerThread != null;
+        }
 
         /// <returns>True if this is the active mesh set by the <see cref="MeshManager"/></returns>
-        public bool IsActiveMesh() { return MeshManager.ActiveMesh == this; }
+        public bool IsActiveMesh()
+        {
+            return MeshManager.ActiveMesh == this;
+        }
 
         [NonSerialized] public Transform BoundingBox;
         private MeshRenderer _boundingBoxRenderer;
@@ -54,7 +62,7 @@ namespace Libigl
             MeshRenderer = GetComponent<MeshRenderer>();
             Mesh.MarkDynamic();
             ResetTransformToSpawn();
-            
+
             // First copy the Mesh arrays into a RowMajor UMeshData instance
             DataRowMajor = new UMeshData(Mesh);
             // Then create the LibiglBehaviour instance which will create a ColMajor instance of the data in the State
@@ -62,13 +70,14 @@ namespace Libigl
 
             DataRowMajor.LinkBehaviourState(Behaviour);
 
-            BoundingBox = Instantiate(MeshManager.get.boundingBoxPrefab, Vector3.zero, Quaternion.identity, transform).transform;
+            BoundingBox = Instantiate(MeshManager.get.boundingBoxPrefab, Vector3.zero, Quaternion.identity, transform)
+                .transform;
             _boundingBoxRenderer = BoundingBox.GetComponent<MeshRenderer>();
             UpdateBoundingBoxSize();
             RepaintBounds();
 
             MeshManager.OnActiveMeshChanged += OnActiveMeshChanged;
-            
+
 #if UNITY_EDITOR
             DisposeBeforeUnload += Dispose;
 #endif
@@ -125,7 +134,7 @@ namespace Libigl
         private void OnDestroy()
         {
             Dispose();
-            
+
             MeshManager.OnActiveMeshChanged -= OnActiveMeshChanged;
         }
 
@@ -133,7 +142,7 @@ namespace Libigl
         {
             // Dispose all Native data (NativeArrays and anything created with 'new' in C++)
             // Note: may be called twice in the editor
-            if(_workerThread != null)
+            if (_workerThread != null)
             {
                 try
                 {
@@ -144,13 +153,15 @@ namespace Libigl
                 {
                     Debug.LogError(e.ToString());
                 }
+
                 _workerThread = null;
             }
+
             DataRowMajor?.Dispose();
             DataRowMajor = null;
             Behaviour?.Dispose();
             Behaviour = null;
-            
+
             MeshManager.get.UnregisterMesh(this);
 
 #if UNITY_EDITOR
@@ -216,12 +227,13 @@ namespace Libigl
         /// <param name="primary">If overriding visibility, should we highlight this as the primary bounding box</param>
         public void RepaintBounds(bool overrideVisible = false, bool primary = false)
         {
-            if(!enabled) return;
-            
+            if (!enabled) return;
+
             _boundingBoxRenderer.enabled = InputManager.State.BoundsVisible || overrideVisible;
-            _boundingBoxRenderer.sharedMaterial = 
-                IsActiveMesh() ? MeshManager.get.wireframeMaterialActive : 
-                overrideVisible && primary ? MeshManager.get.wireframeMaterialPrimary : MeshManager.get.wireframeMaterial;
+            _boundingBoxRenderer.sharedMaterial =
+                IsActiveMesh() ? MeshManager.get.wireframeMaterialActive :
+                overrideVisible && primary ? MeshManager.get.wireframeMaterialPrimary :
+                MeshManager.get.wireframeMaterial;
         }
     }
 }

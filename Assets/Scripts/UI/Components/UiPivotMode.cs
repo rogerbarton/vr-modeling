@@ -25,12 +25,12 @@ namespace UI.Components
             }
 
             Repaint();
-            
+
             // Tooltips
             UiInputHints.AddTooltip(icons[0].gameObject, "Pivot around mesh center");
             UiInputHints.AddTooltip(icons[1].gameObject, "Pivot around hand");
             UiInputHints.AddTooltip(icons[2].gameObject, "Pivot around active selection mean");
-            
+
             InputManager.OnActiveToolChanged += Repaint;
         }
 
@@ -45,10 +45,10 @@ namespace UI.Components
             for (var i = 0; i < icons.Length; i++)
             {
                 icons[i].color = _mode.GetHashCode() == i ? activeColor : Color.white;
-                
+
                 // Set mesh PivotMode.Selection interactability
                 if (i == PivotMode.Selection.GetHashCode())
-                    icons[i].GetComponent<Button>().interactable = InputManager.State.ActiveTool != ToolType.Transform; 
+                    icons[i].GetComponent<Button>().interactable = InputManager.State.ActiveTool != ToolType.Transform;
             }
         }
 

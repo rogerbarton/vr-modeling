@@ -11,7 +11,7 @@ namespace UI.Components
     {
         public TMP_Text title;
         public RectTransform checkmarkIcon;
-        
+
         private readonly List<GameObject> _items = new List<GameObject>();
         private bool _visible = true;
         private int _lastSiblingIndex;
@@ -30,7 +30,7 @@ namespace UI.Components
         {
             _items.Add(item);
             item.SetActive(_visible);
-            if(setAsLastSibling)
+            if (setAsLastSibling)
             {
                 item.transform.SetSiblingIndex(_lastSiblingIndex + 1);
                 _lastSiblingIndex = item.transform.GetSiblingIndex();
@@ -58,6 +58,7 @@ namespace UI.Components
                 if (checkmarkIcon)
                     checkmarkIcon.Rotate(new Vector3(0, 0, value ? -90 : 90));
             }
+
             _visible = value;
         }
 

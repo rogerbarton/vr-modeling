@@ -74,7 +74,7 @@ namespace XrInput
 
             // Changing Active Tool
             if (State.SecondaryBtnL && !StatePrev.SecondaryBtnL)
-                SetActiveTool((ToolType) 
+                SetActiveTool((ToolType)
                     ((State.ActiveTool.GetHashCode() + 1) % Enum.GetNames(typeof(ToolType)).Length));
 
             // Brush Resizing

@@ -31,9 +31,9 @@ namespace UI.Components
 
             newSelectionOnDrawBtn.onClick.AddListener(ToggleNewSelectionOnDraw);
             discardSelectionOnDrawBtn.onClick.AddListener(ToggleDiscardSelectionOnDraw);
-         
+
             Repaint();
-            
+
             // Tooltips
             UiInputHints.AddTooltip(icons[0].gameObject, "Add to selection");
             UiInputHints.AddTooltip(icons[1].gameObject, "Remove from selection");
@@ -99,7 +99,8 @@ namespace UI.Components
 
         private void RepaintDiscardSelectionOnDrawBtn()
         {
-            discardSelectionOnDrawBtn.image.color = InputManager.State.DiscardSelectionOnDraw ? activeColor : Color.white;
+            discardSelectionOnDrawBtn.image.color =
+                InputManager.State.DiscardSelectionOnDraw ? activeColor : Color.white;
         }
     }
 }

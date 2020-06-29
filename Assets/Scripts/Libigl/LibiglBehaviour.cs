@@ -25,6 +25,7 @@ namespace Libigl
         /// and is then immediately consumed by <see cref="ConsumeInput"/>.
         /// </summary>
         public MeshInputState Input;
+
         public MeshInputState ExecuteInput;
 
         /// <summary>
@@ -37,11 +38,11 @@ namespace Libigl
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             LibiglMesh = libiglMesh;
-            
+
             // Initialize C++ and create the State from the DataRowMajor
             State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
             Input = MeshInputState.GetInstance();
-            
+
             _uiDetails = UiManager.get.CreateDetailsPanel();
             _uiDetails.Initialize(this);
         }
@@ -56,11 +57,11 @@ namespace Libigl
         public void Update()
         {
             if (!LibiglMesh.IsActiveMesh()) return;
-            
+
             UpdateTransform();
             UpdateInput();
         }
-        
+
         /// <summary>
         /// Called just before a new thread is started in which <see cref="Execute"/> is called.
         /// Use this to update the input state, set flags and access any Unity API from the main thread.<br/>
@@ -71,10 +72,10 @@ namespace Libigl
             // Add logic here that uses the Unity API (e.g. Input)
             PreExecuteInput();
             PreExecuteTransform();
-            
+
             // Apply changes in UI to the state
             _uiDetails.UpdatePreExecute();
-            
+
             // Copy the Input to ExecuteInput so the thread has its own copy
             ExecuteInput = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
@@ -92,7 +93,7 @@ namespace Libigl
         public void Execute()
         {
             ActionUi();
-            if(LibiglMesh.IsActiveMesh())
+            if (LibiglMesh.IsActiveMesh())
             {
                 switch (ExecuteInput.Shared.ActiveTool)
                 {
@@ -107,7 +108,7 @@ namespace Libigl
                 ActionHarmonic();
                 ActionArap();
             }
-            
+
             // Apply changes back to the RowMajor so they can be applied to the mesh
             LibiglMesh.DataRowMajor.ApplyDirty(State, ExecuteInput);
         }
@@ -120,13 +121,13 @@ namespace Libigl
         public void PostExecute()
         {
             _uiDetails.UpdatePostExecute();
-            
+
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
             LibiglMesh.DataRowMajor.ApplyDirtyToMesh(LibiglMesh.Mesh);
-            
+
             if ((State->DirtyState & DirtyFlag.VDirty) > 0 && (State->DirtyState & DirtyFlag.DontComputeBounds) == 0)
                 LibiglMesh.UpdateBoundingBoxSize();
-            
+
             // Consume Dirty
             State->DirtyState = DirtyFlag.None;
             State->DirtySelections = 0;
@@ -136,9 +137,9 @@ namespace Libigl
         public void Dispose()
         {
             // Be sure to dispose of any NativeArrays that are not garbage collected
-            if(_uiDetails)
+            if (_uiDetails)
                 Object.Destroy(_uiDetails.gameObject);
-            
+
             // Delete the State fully inside C++
             Native.DisposeMesh(State);
             State = null;
