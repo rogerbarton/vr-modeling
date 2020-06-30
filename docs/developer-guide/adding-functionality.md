@@ -49,7 +49,7 @@ This is indeed quite a long list because of the following complications:
 
 ## Applying Mesh Data
 
-To apply changes to the vertex matix :math:`V`, or any of the other matrices in the :cpp:struct:`MeshState` you need to set the :cpp:member:`MeshState::DirtyState` with the appropriate :cpp:enum:`DirtyFlag`. This tells the system what has changed and the rest will be done automatically. For more control you might want to see `IO.cpp` :cpp:func:`ApplyDirty`. 
+To apply changes to the vertex matix :math:`V`, or any of the other matrices in the :cpp:struct:`MeshState` you need to set the :cpp:member:`MeshState::DirtyState` with the appropriate :cpp:class:`DirtyFlag`. This tells the system what has changed and the rest will be done automatically. For more control you might want to see `IO.cpp` :cpp:func:`ApplyDirty`. 
 
 This is only for data that has to be made available to Unity to render the mesh.
 

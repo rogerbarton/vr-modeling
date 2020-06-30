@@ -9,9 +9,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # See tutorial used: https://devblogs.microsoft.com/cppblog/clear-functional-c-documentation-with-sphinx-breathe-doxygen-cmake/
 
 find_package(Doxygen)
-find_package(Sphinx)
-if(NOT DOXYGEN_FOUND OR NOT SPHINX_FOUND)
-    message(STATUS "Skipping documentation generation, make sure your have installed doxygen and done 'pip install -r docs/requirements.txt'")
+if(NOT DOXYGEN_FOUND)
+    message(WARNING "Skipping documentation generation, make sure you have installed doxygen")
     return()
 endif()
 
@@ -56,11 +55,18 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
 # Implementation note: we cannot use add_custom_target directly but need to defer it to the
 #    DOXYGEN_INDEX_FILE, so that we dont always recompile
 add_custom_target(Doxygen DEPENDS ${DOXYGEN_INDEX_FILE})
+message(STATUS "Doxygen documentation target added, output at: ${DOXYGEN_OUTPUT_DIRECTORY}")
 
 
 # --- Sphinx
+find_package(Sphinx)
+if(NOT SPHINX_FOUND)
+    message(WARNING "Skipping sphinx documentation generation, make sure you have run the following command from the project root (restart may be required):\n'pip install -r docs/requirements.txt'")
+    return()
+endif()
+
 set(SPHINX_SOURCE ${UNITY_PROJECT_ROOT})
-set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
+set(SPHINX_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
 file(GLOB_RECURSE DOC_RST_FILES ${UNITY_PROJECT_ROOT}/*.rst)
 file(GLOB_RECURSE DOC_MD_FILES ${UNITY_PROJECT_ROOT}/*.md)
 file(GLOB_RECURSE STATIC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/_static/*)
@@ -77,8 +83,10 @@ add_custom_target(Sphinx
                     ${SPHINX_EXECUTABLE} -b html
                     # Tell breathe where to find the doxygen output
                     -Dbreathe_projects.vr-modeling="${DOXYGEN_OUTPUT_DIRECTORY}/xml"
-                    ${SPHINX_SOURCE} ${SPHINX_BUILD}
+                    ${SPHINX_SOURCE} ${SPHINX_OUTPUT_DIRECTORY}
                     
                   DEPENDS Doxygen "${SPHINX_SOURCE}/conf.py" ${DOC_RST_FILES} ${DOC_MD_FILES} ${STATIC_FILES}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                   COMMENT "Generating documentation with Sphinx")
+
+message(STATUS "Full sphinx documentation target added, output at: ${SPHINX_OUTPUT_DIRECTORY}")

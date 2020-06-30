@@ -31,6 +31,7 @@ UNITY_INTERFACE_EXPORT void DisposeMesh(MeshState* state);
 
 
 // --- Unity Callbacks from IUnityInterface.h
+#ifdef DOXYGEN
 /**
  * Called when the plugin is loaded, this can be after/before Initialize()<p>
  * Declared in IUnityInterface.h
@@ -43,7 +44,7 @@ UNITY_INTERFACE_EXPORT void UnityPluginLoad(IUnityInterfaces* unityInterfaces);
  * Declared in IUnityInterface.h
  */
 UNITY_INTERFACE_EXPORT void UnityPluginUnload();
-
+#endif
 
 // --- IO.cpp
 /**

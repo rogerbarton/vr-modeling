@@ -1,4 +1,4 @@
-# Unity Project
+# C#/Unity Reference
 
 This is aimed at people wanting to view or edit the Unity related code.
 
