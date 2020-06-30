@@ -19,6 +19,7 @@ namespace XrInput
         // min and max radius
         public static Vector2 RadiusRange = new Vector2(0.025f, 1f);
         public const float ResizeSpeed = 0.5f;
+        public const float ResizeDeadZone = 0.1f;
 
         private bool _isRight;
 

@@ -78,10 +78,10 @@ namespace XrInput
                     ((State.ActiveTool.GetHashCode() + 1) % Enum.GetNames(typeof(ToolType)).Length));
 
             // Brush Resizing
-            if (Mathf.Abs(State.PrimaryAxisR.y) > 0.01f)
+            if (Mathf.Abs(State.PrimaryAxisR.y) > XrBrush.ResizeDeadZone)
             {
                 State.BrushRadius = Mathf.Clamp(
-                    State.BrushRadius + XrBrush.ResizeSpeed * State.PrimaryAxisR.y * Time.deltaTime,
+                    State.BrushRadius + XrBrush.ResizeSpeed * Time.deltaTime * State.PrimaryAxisR.y,
                     XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
 
                 if (BrushL)
@@ -95,7 +95,6 @@ namespace XrInput
             {
                 BrushR.SetActiveMesh();
             }
-
         }
 
         /// <summary>

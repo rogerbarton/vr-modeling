@@ -76,8 +76,8 @@ namespace Libigl
                 InputManager.State.ToolSelectMode = ToolSelectMode.Idle;
 
             // Change the selection with the right hand primary2DAxis.x
-            if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.05f &&
-                Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.05f)
+            if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.4f &&
+                Mathf.Abs(InputManager.StatePrev.PrimaryAxisR.x) < 0.4f)
                 SetActiveSelectionIncrement((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
         }
 
@@ -85,6 +85,8 @@ namespace Libigl
         {
             Input.SharedPrev = Input.Shared;
             Input.Shared = InputManager.State;
+
+            Input.BrushRadiusLocal = InputManager.State.BrushRadius / LibiglMesh.transform.localScale.magnitude;
         }
 
         /// <summary>

@@ -127,7 +127,7 @@ namespace Libigl
             }
 
             if (doSelect)
-                Native.SelectSphere(State, brushPos, ExecuteInput.Shared.BrushRadius,
+                Native.SelectSphere(State, brushPos, ExecuteInput.BrushRadiusLocal,
                     ExecuteInput.ActiveSelectionId, (uint) mode);
         }
 

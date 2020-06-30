@@ -50,6 +50,7 @@ namespace Libigl
 
         public Vector3 BrushPosL;
         public Vector3 BrushPosR;
+        public float BrushRadiusLocal;
 
         // Deformations
         public bool DoHarmonic; // Trigger execution once
