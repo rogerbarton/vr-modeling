@@ -1,4 +1,4 @@
-.. include:: UnityNativeTool/index.rst
-.. include:: Unity/PluginAPI/index.rst
-.. include:: Unity/RenderAPI/index.rst
+.. mdinclude:: UnityNativeTool/index.md
+.. mdinclude:: Unity/PluginAPI/index.md
+.. mdinclude:: Unity/RenderAPI/index.md
 

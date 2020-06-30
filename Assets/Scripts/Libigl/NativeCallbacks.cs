@@ -17,7 +17,7 @@ namespace Libigl
         // The 'function pointer type' passed to C++
         public delegate void StringCallback(string message);
 
-        //The function that we point to in C++
+        // The function that we point to in C++
         [MonoPInvokeCallback(typeof(StringCallback))]
         public static void DebugLog(string message)
         {
