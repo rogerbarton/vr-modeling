@@ -1,71 +1,17 @@
 # C#/C++ Interface
 
+*This page is quite techical, in most scenarios you can just look at what already exists!*
+
 .. note:: 
 	Native = C++, Managed = C# (think of memory management)
 
-Code written in C++ has to be compiled to a shared library (`.dll` on windows) and placed in the `Assets/Plugins` folder. This is done by CMake when building. The native functions must be redeclared in C# as `extern` with the `DllImport` attribute and can then be called normally. All these declarations are in `Libigl/Native.cs`.
-
-You can pass pointers with the `unsafe` keyword. Be sure to pin *managed* data using `fixed` or `GcAlloc` with the pinned option to prevent the garbage collector from moving/deleting whilst the C++ is executing. This is only for classes (not structs). 
-
-Managed data structures can have a different layout than native ones. *'Marshalling'* converts between the two automatically, but can involve expensive copies.
-
-## Calling Native functions
-
-Marshalling allows us to pass managed data to a native context. Ensure that you use
-['blittable types'](https://docs.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types) as much as possible as these do not involve a copy. Generally:
-
-- blittable types: `int`, `float`, numbers, structs consisting of only these, 1-D arrays of these
-- non-blittable types: `string`, `bool`, **n-D arrays**
-
-To pass a struct add the `[StructLayout(Sequential)]` attribute to it in C# and redeclare it in C++ in `InterfaceTypes.h` with the *same variable ordering*. `in` and `out` parameter attributes allow the Marshalling to optimize more. It should match C++ references. For strings use `CharSet = Ansi` in `DllImport`
-
-### Do's and Don'ts
-
-**Do:**
-
-- Check that function **declarations match exactly** by copy-pasting for example
-	- Be careful with references
-- Label parameters with `in` and `out` to improve performance
-- Use `unsafe` to pass pointers along with `UnsafeUtility`
-- Use `NativeArray<T>` when possible along with `NativeArrayUnsafeUtility`
-- Keep C#/C++ interface calls to a minimum for a simple interface
-
-**Don't:**
-
-- Pass large non-blittable types, e.g. matrices,  use pointers instead
-- Have unhandled exceptions. Exceptions should be handled fully in C++ or fully in C#.
-- Call a C# delegate/function pointer from C++ without checking if it is valid/null.
-
-Lots of problems can arise if this is not the case.
-
-## Calling Managed functions from C++
-
-.. note::
-	In certain rare scenarios this may be desirable. Think first if this can be avoided. It is possible via function pointer callbacks. 
-
-**In C#**, a delegate (~function pointer type) must be declared and the function to be called. The function must be annotated with
-the `[MonoPInvokeCallback(typeof(MyDelegate))]` attribute. It must be a static method.   
-See `Scripts/Libigl/NativeCallbacks.cs` and add your callback there.
-
-**In C++**, declare a function pointer typedef like the delegate, see :cpp:type:`StringCallback`. The function pointer must use the :c:macro:`UNITY_INTERFACE_API` to ensure the `__stdcall` C# calling convention is used. Then you declare an instance of the function pointer as extern, see :cpp:member:`DebugLog`. Finally we must set the pointer when calling :cpp:func:`Initialize()` and reset to `nullptr` in :cpp:func:`UnityPluginUnload`. The extern variables need to be properly declared in `Interface.cpp`.  
-See `source/InterfaceTypes.h` and add your code there.
-
-.. warning::
-	Function pointers/callbacks may be invalid or null. Check before invoking them or a crash will occur.
-
-Further reading: [Debug.Log example](https://answers.unity.com/questions/30620/how-to-debug-c-dll-code.html)
-
-## Global Variables/Persistent Memory in C++
-
-Anything related to a specific mesh **must** be part of the :cpp:struct:`MeshState`. However, global variables can be used to store a state between function calls from C#.
-Declare these as extern in a header and define them once in a C++. They can be set in the :cpp:func:`Initialize()`.
-
-Memory allocated with `new` in C++ will persist as usual until it is deleted with `delete`. Notably, the :cpp:struct:`MeshState` is allocated in C++ when :cpp:func:`InitializeMesh` is called. C# can access (read/write but not delete) C++ owned memory.
-
-.. note::
-	When the dll is unloaded all memory it allocated must be deleted. This can be done in :cpp:func:`UnityPluginUnload` or triggered by a C# destructor, see `LibiglMesh.cs` and `LibiglBehaviour.cs`. Notably, when hot reloading this is also the case.
-
-*(advanced)* When *hot reloading* (pausing play mode, un/loading the dll) global variables are deleted. Pointers to data allocated with `new` are still valid, but the memory cannot be used as the owner dll has been destroyed (effectively a segmentation fault). You cannot simply keep the same data. As such, all persistent data must be serialized and then deserialized if you want the state to survive a hot reload. This has not yet been implemented but could be done with `igl::serialize`.
+Quick Facts:
+- Code written in C++ has to be compiled to a shared library (`.dll` on windows) and placed in the `Assets/Plugins` folder. This is done by CMake when building. 
+- The native functions must be redeclared in C# as `extern` with the `DllImport` attribute and can then be called normally. All these declarations are in `Libigl/Native.cs`.
+- You can use pointers with the `unsafe` keyword. 
+- Managed data structures can have a different layout than native ones. *'Marshalling'* converts between the two automatically, but can involve expensive copies.
+- Classes or structs can be shared between but must be declared in both languages.
+- Beware of the garbage collector. Pin *managed* data using `fixed`, or `GcAlloc` with the pinned option, to prevent the garbage collector from moving/deleting whilst the C++ is executing. This is only for classes (not structs/value types). 
 
 ## C++ Building The Library
 
@@ -99,10 +45,9 @@ and clean up the native library nicely. This relied on the mysteriously named `s
 - Use `[MockNativeDeclarations]` on a class or native function to enable this unloading
 - The shortcuts un/load *all* mocked libraries, if there are several
 
-### Debugging
+## Debugging
 
-**C++ or C#:** Open the solution in Visual Studio. `Debug > Attach To Process...` and select running Unity.exe
-Place breakpoints as usual. Ensure that you build before running so that the source code matches the executing code. For C# debuggin in VS also search online...
+**C++ or C#:** Open the solution in Visual Studio. `Debug > Attach To Process...` and select running `Unity.exe`. Place breakpoints as usual. Ensure that you build before running so that the source code matches the executing code. For C# debuggin in VS also search online...
 
 **Simultaneous C#/C++:** VS cannot debug both at the same time, two instances do not work.
 So current solution is to use Jetbrains Rider to debug the C# side and VS (or CLion) for C++.
@@ -111,6 +56,66 @@ So current solution is to use Jetbrains Rider to debug the C# side and VS (or CL
    The editor/application will crash if there is a segfault in C++, use Visual Studio to debug.
    Failed assertions will cause a pop up. When this happens you can attach the debugger and
    then press `Retry` to inspect properly.
+
+## Calling Native functions
+
+### Do's and Don'ts
+
+**Do:**
+
+- Check that function **declarations match exactly** by copy-pasting for example
+	- Be careful with references
+- Label parameters with `in` and `out` to improve performance
+- Use `unsafe` to pass pointers along with `UnsafeUtility`
+- Use `NativeArray<T>` when possible along with `NativeArrayUnsafeUtility`
+- Keep C#/C++ interface calls to a minimum for a simple interface
+
+**Don't:**
+
+- Pass large non-blittable types, e.g. matrices,  use pointers instead
+- Have unhandled exceptions. Exceptions should be handled fully in C++ or fully in C#.
+- Call a C# delegate/function pointer from C++ without checking if it is valid/null.
+
+Lots of problems can arise if this is not the case.
+
+## Global Variables/Persistent Memory in C++
+
+Anything related to a specific mesh **must** be part of the :cpp:struct:`MeshState`. However, global variables can be used to store a state between function calls from C#.
+Declare these as extern in a header and define them once in a C++. They can be set in the :cpp:func:`Initialize()`.
+
+Memory allocated with `new` in C++ will persist as usual until it is deleted with `delete`. Notably, the :cpp:struct:`MeshState` is allocated in C++ when :cpp:func:`InitializeMesh` is called. C# can access (read/write but not delete) C++ owned memory.
+
+.. note::
+	When the dll is unloaded all memory it allocated must be deleted. This can be done in :cpp:func:`UnityPluginUnload` or triggered by a C# destructor, see `LibiglMesh.cs` and `LibiglBehaviour.cs`. Notably, when hot reloading this is also the case.
+
+*(advanced)* When *hot reloading* (pausing play mode, un/loading the dll) global variables are deleted. Pointers to data allocated with `new` are still valid, but the memory cannot be used as the owner dll has been destroyed (effectively a segmentation fault). You cannot simply keep the same data. As such, all persistent data must be serialized and then deserialized if you want the state to survive a hot reload. This has not yet been implemented but could be done with `igl::serialize`.
+
+## Marshalling
+
+Marshalling allows us to pass managed data to a native context. Ensure that you use
+['blittable types'](https://docs.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types) as much as possible as these do not involve a copy. Generally:
+
+- blittable types: `int`, `float`, numbers, structs consisting of only these, 1-D arrays of these
+- non-blittable types: `string`, `bool`, **n-D arrays**
+
+To pass a struct add the `[StructLayout(Sequential)]` attribute to it in C# and redeclare it in C++ in `InterfaceTypes.h` with the *same variable ordering*. `in` and `out` parameter attributes allow the Marshalling to optimize more. It should match C++ references. For strings use `CharSet = Ansi` in `DllImport`
+
+## Calling Managed functions from C++
+
+.. note::
+	In certain rare scenarios this may be desirable. Think first if this can be avoided. It is possible via function pointer callbacks. 
+
+**In C#**, a delegate (~function pointer type) must be declared and the function to be called. The function must be annotated with
+the `[MonoPInvokeCallback(typeof(MyDelegate))]` attribute. It must be a static method.   
+See `Scripts/Libigl/NativeCallbacks.cs` and add your callback there.
+
+**In C++**, declare a function pointer typedef like the delegate, see :cpp:type:`StringCallback`. The function pointer must use the :c:macro:`UNITY_INTERFACE_API` to ensure the `__stdcall` C# calling convention is used. Then you declare an instance of the function pointer as extern, see :cpp:member:`DebugLog`. Finally we must set the pointer when calling :cpp:func:`Initialize()` and reset to `nullptr` in :cpp:func:`UnityPluginUnload`. The extern variables need to be properly declared in `Interface.cpp`.  
+See `source/InterfaceTypes.h` and add your code there.
+
+.. warning::
+	Function pointers/callbacks may be invalid or null. Check before invoking them or a crash will occur.
+
+Further reading: [Debug.Log example](https://answers.unity.com/questions/30620/how-to-debug-c-dll-code.html)
 
 ## Further Reading
 
