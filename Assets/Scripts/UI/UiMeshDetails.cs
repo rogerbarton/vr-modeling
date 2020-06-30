@@ -16,7 +16,14 @@ namespace UI
     /// </summary>
     public unsafe class UiMeshDetails : MonoBehaviour
     {
+        /// <summary>
+        /// Access to the behaviour that this UI panel belongs to
+        /// </summary>
         private LibiglBehaviour _behaviour;
+        
+        /// <summary>
+        /// The content of the scroll list view, add new components as a child of this transform.
+        /// </summary>
         private Transform _listParent;
 
         public UiProgressIcon progressIcon;
@@ -25,10 +32,11 @@ namespace UI
         [SerializeField] private Sprite editSprite = null;
         [SerializeField] private Sprite activeSprite = null;
         [SerializeField] private Image background = null;
-        public Color activeBackgroundColor;
+        [Tooltip("The background color of the UI Panel it is the ActiveMesh.")]
+        [SerializeField] private Color activeBackgroundColor;
         private Color _defaultBackgroundColor;
 
-        // UI Component Instances
+        // -- UI Component Instances
         private TMP_Text _vertexCount;
         private UiCollapsible _selectionGroup;
         private readonly List<UiSelection> _selections = new List<UiSelection>();

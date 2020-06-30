@@ -1392,7 +1392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df138f851050277489c57ef29bf103eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listCanvasPrefab: {fileID: 9078542444325511124, guid: 9ebac3d1c451a7444bbc2e36d9d946ec,
+  meshDetailsCanvasPrefab: {fileID: 9078542444325511124, guid: 9ebac3d1c451a7444bbc2e36d9d946ec,
     type: 3}
   headerPrefab: {fileID: 7891394014557223998, guid: a8591ce6d48820243ba6322501dc154c,
     type: 3}
@@ -1415,7 +1415,7 @@ MonoBehaviour:
   pivotModePrefab: {fileID: 4820344337120694933, guid: 24309523df093c246ba3492908fcaa03,
     type: 3}
   panelSpawnPoint: {fileID: 1144852320}
-  actionsListParent: {fileID: 788621609}
+  genericUiListParent: {fileID: 788621609}
   uvGridMaterial: {fileID: 2100000, guid: 2ceaa084356e7304cb03a7f3f2dccb27, type: 2}
   toggleUvGridRenderers:
   - {fileID: 1213095691}

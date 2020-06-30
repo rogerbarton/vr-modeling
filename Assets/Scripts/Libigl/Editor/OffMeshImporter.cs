@@ -1,4 +1,3 @@
-using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
@@ -8,8 +7,11 @@ using UnityEngine.Rendering;
 
 namespace Libigl.Editor
 {
+    /// <summary>
+    /// A custom importer for .off mesh files, which Unity does not recognize or know how to import by default.
+    /// </summary>
     [ScriptedImporter(1, "off")]
-    public class OffImporter : ScriptedImporter
+    public class OffMeshImporter : ScriptedImporter
     {
         [Tooltip("Make the center/origin of the mesh the mean vertex. y center will be center of bounding box.")]
         public bool centerToMean = true;
@@ -27,7 +29,7 @@ namespace Libigl.Editor
         // Use this material if a model specific material is not set (must be located in Models or Materials folder)
         private const string DefaultMaterialName = "EditableMesh";
         // Use this shader if we cant find the default material by name
-        private const string _DefaultMaterialNameFallbackShader = "Universal Render Pipeline/Lit";
+        private const string DefaultMaterialNameFallbackShader = "Universal Render Pipeline/Lit";
 
         /// <summary>
         /// Called whenever a .off file is imported by Unity
@@ -36,7 +38,7 @@ namespace Libigl.Editor
         /// <param name="ctx">Used to store imported output objects</param>
         public override void OnImportAsset(AssetImportContext ctx)
         {
-            //Note: any reference that is not the default for a component has to be added via ctx.AddObjectToAsset()
+            // Note: any reference that is not the default for a component has to be added via ctx.AddObjectToAsset()
 
             #region Create Imported GameObject
 
@@ -65,18 +67,18 @@ namespace Libigl.Editor
 
             #region Load Mesh with libigl
 
-            //readOFF and get result as a NativeArray
+            // readOFF and get result as a NativeArray
             NativeArray<Vector3> V;
             NativeArray<Vector3> N = default; //may be empty
             NativeArray<int> F;
             int VSize, NSize, FSize;
             unsafe
             {
-                //Load OFF into Eigen Matrices and get the pointers here
+                // Load OFF into Eigen Matrices and get the pointers here
                 Native.ReadOFF(ctx.assetPath, centerToMean, normalizeScale, scale, out var VPtr, out VSize, out var NPtr, out NSize,
                     out var FPtr, out FSize, false);
 
-                //Convert the pointers to NativeArrays which we can create a mesh with
+                // Convert the pointers to NativeArrays which we can create a mesh with
                 V = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Vector3>(VPtr, VSize, Allocator.Temp);
 
                 if (NSize > 0)
@@ -95,19 +97,19 @@ namespace Libigl.Editor
                 #endif
             }
 
-            //Setup the buffers, then fill the data later
+            // Setup the buffers, then fill the data later
             
-            //Note:sizeof one vertex is defined in the layout as 3*4B
-            //So buffer size is vertices * 3 * 4B
+            // Note:sizeof one vertex is defined in the layout as 3*4B
+            // So buffer size is vertices * 3 * 4B
             mesh.SetVertexBufferParams(VSize, Native.VertexBufferLayout);
-            //Note: Size of buffer is count * uint32 = 3 * faces*4B
+            // Note: Size of buffer is count * uint32 = 3 * faces*4B
             mesh.SetIndexBufferParams(3 * FSize, IndexFormat.UInt32);
 
-            //Fill the buffers with out data from libigl::readOFF
+            // Fill the buffers with out data from libigl::readOFF
             mesh.SetVertices(V);
             mesh.SetIndices(F, MeshTopology.Triangles, 0);
 
-            //Create a submesh that will be rendered
+            // Create a submesh that will be rendered
             // mesh.subMeshCount = 1;
             // mesh.SetSubMesh(0, new SubMeshDescriptor(0, 3 * FSize));
 
@@ -141,7 +143,7 @@ namespace Libigl.Editor
             }
             else
             {
-                _defaultMaterial = new Material(Shader.Find(_DefaultMaterialNameFallbackShader));
+                _defaultMaterial = new Material(Shader.Find(DefaultMaterialNameFallbackShader));
                 Debug.LogWarning($"Could not find material asset with DefaultMaterialName: {DefaultMaterialName}, using fallback shader.");
             }
 

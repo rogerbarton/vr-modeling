@@ -17,16 +17,60 @@ In order to keep the virtual reality experience responsive and at high framerate
 
 ## Data Storage
 
+<iframe frameborder="0" style="width:100%;height:340px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=DataOverview#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1WgcmChCoba3z2LXY2lMCZRULhv6i_afH%26export%3Ddownload"></iframe>
+
 There is a lot of data tied to the mesh and the user input. It is important to know where what is stored.
 
 Generally, data falls into one of the following categories:
 
 1. **Input data**
-   1. Data that is used as to parametrize and decide what is executed (usually from UI/Input), this belongs to the C# only `MeshInputState` or the `InputState` if it is shared between meshes.
+   1. Data that is used to parametrize and decide what is executed (usually from UI/Input), this belongs to the C# only `MeshInputState` or the `InputState` if it is shared between meshes. It is maybe passed to C++ via function arguments.
 1. **Mesh data**
    1. Vertex/Face data required for rendering the mesh, this is the most complicated. It must be part of the :cpp:struct:`MeshState` and shared between C# and C++. There is a lifecycle to this detailed in :ref:`Applying Mesh Data`.
    1. Data that is used only for computations, this belongs to the C++ only :cpp:struct:`MeshStateNative`.
-   1. (uncommon) data that must be shared between C++ and C#, such as results of a computation (e.g. selection size), this also belongs to the :cpp:struct:`MeshState` 
+   1. (uncommon) data that must be shared between C++ and C#, such as results of a computation (e.g. selection size). This also belongs to the :cpp:struct:`MeshState` 
+
+## Custom UI
+
+This is relatively easy. There are two categories:
+1. **Mesh specific UI**, see `UiMeshDetails`
+2. **Generic UI**, see `UiManager.InitializeStaticUi`
+
+In the `UiManager` instance there are several prefabs that can be used, e.g. `buttonPrefab`. These are built up from the Unity UI (*not the new UIElements*). These often have a custom script in `UI.Components` attached to the root transform for easy modification. There are lots of simple examples for this so just have a look at the code. The normal workflow is:
+1. Instantiate a prefab and get the gameObject or custom script (e.g. `UiSelectionMode`) for that prefab
+1. Add the gameObject to a group/collapsible/category
+1. Initialize the custom script or setup the OnClick callbacks directly
+
+Generic example:
+
+```c#
+var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
+_toolGroup.AddItem(selectionMode.gameObject);
+selectionMode.Initialize();
+```
+
+Mesh specific example without a custom component, note how we can access the `LibiglBehaviour _behaviour`:
+
+```c#
+var clearAllSelections = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+_selectionGroup.AddItem(clearAllSelections.gameObject);
+
+clearAllSelections.GetComponentInChildren<TMP_Text>().text = "Clear All";
+clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection = uint.MaxValue; });
+```
+
+.. warning::
+	Be careful not to add an *excessive* amount of UI as raycasting the UI is (surprisingly) one of the most performance intensive operations currently.
+
+## Importing Meshes/Files
+
+See `Libigl/Editor/`
+
+There are two cases:
+1. File extensions that Unity recognises and already imports. For these we just post-process the imported mesh. See `MeshImportPostprocessor`
+2. File extensions unknown to Unity, e.g. `.off` meshes. For these we write an (experimental) ScriptedImporter and import the mesh via libigl. See `OffMeshImporter`
+
+Note that in the end Unity still does the importing in both cases in the Editor. For non-mesh files, e.g. dense matrices, these can be loaded at runtime directly from the C++ with libigl. This Unity API is still experimental so there may be some errors.
 
 ## Custom Deformation
 

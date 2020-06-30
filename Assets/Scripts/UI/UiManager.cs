@@ -18,8 +18,10 @@ namespace UI
     {
         public static UiManager get;
 
-        // Prefabs for generating UI, e.g. Details panel
-        public GameObject listCanvasPrefab;
+        #region Prefabs for generating UI
+        
+        [Header("UI Component Prefabs")]
+        public GameObject meshDetailsCanvasPrefab;
         public GameObject headerPrefab;
         public GameObject groupPrefab;
         public GameObject textPrefab;
@@ -31,14 +33,13 @@ namespace UI
         public GameObject selectionModePrefab;
         public GameObject pivotModePrefab;
 
+        #endregion
+
+        [Header("Other")]
         public Transform panelSpawnPoint;
 
         [Tooltip("The Content of the Actions Canvas scroll list.")]
-        public Transform actionsListParent;
-
-        private UiCollapsible _toolGroup;
-        private UiCollapsible _meshGroup;
-        private UiCollapsible _debugGroup;
+        public Transform genericUiListParent;
 
         [Tooltip("Debug material placed on objects when enabled.")]
         public Material uvGridMaterial;
@@ -50,9 +51,12 @@ namespace UI
         private Material[] _uvGridInitialMaterials;
 
         [NonSerialized] public LayerMask UiLayerMask;
-        [NonSerialized] public int UiLayer = 5;
+        [NonSerialized] public const int UiLayer = 5;
 
-        // UI instances
+        // -- UI instances
+        private UiCollapsible _toolGroup;
+        private UiCollapsible _meshGroup;
+        private UiCollapsible _debugGroup;
         [NonSerialized] public UiPivotMode PivotMode;
 
         private void Awake()
@@ -69,8 +73,8 @@ namespace UI
 
         private void Start()
         {
-            InitializeStaticUi();
             UiLayerMask = LayerMask.GetMask("UI");
+            InitializeStaticUi();
         }
 
         /// <summary>
@@ -79,7 +83,7 @@ namespace UI
         /// <returns>The Vertical Scroll List parent to which items can be added as a child</returns>
         public UiMeshDetails CreateDetailsPanel()
         {
-            var go = Instantiate(listCanvasPrefab, panelSpawnPoint.position, panelSpawnPoint.rotation, transform);
+            var go = Instantiate(meshDetailsCanvasPrefab, panelSpawnPoint.position, panelSpawnPoint.rotation, transform);
             go.GetComponent<Canvas>().worldCamera = Camera.main;
 
             // Move the panel until it is not colliding
@@ -106,34 +110,34 @@ namespace UI
         /// </summary>
         private void InitializeStaticUi()
         {
-            // Tools
-            _toolGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            // -- Tools
+            _toolGroup = Instantiate(groupPrefab, genericUiListParent).GetComponent<UiCollapsible>();
             _toolGroup.title.text = "Tools & Actions";
             _toolGroup.SetVisibility(true);
 
-            var selectionMode = Instantiate(selectionModePrefab, actionsListParent).GetComponent<UiSelectionMode>();
+            var selectionMode = Instantiate(selectionModePrefab, genericUiListParent).GetComponent<UiSelectionMode>();
             _toolGroup.AddItem(selectionMode.gameObject);
             selectionMode.Initialize();
 
-            PivotMode = Instantiate(pivotModePrefab, actionsListParent).GetComponent<UiPivotMode>();
+            PivotMode = Instantiate(pivotModePrefab, genericUiListParent).GetComponent<UiPivotMode>();
             _toolGroup.AddItem(PivotMode.gameObject);
             PivotMode.Initialize();
 
 
-            // Meshes
-            _meshGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            // -- Meshes
+            _meshGroup = Instantiate(groupPrefab, genericUiListParent).GetComponent<UiCollapsible>();
             _meshGroup.title.text = "Load Mesh";
             _meshGroup.SetVisibility(true);
 
             foreach (var meshPrefab in MeshManager.get.meshPrefabs)
             {
                 // Create button to load each mesh
-                var iconAction = Instantiate(iconActionPrefab, actionsListParent).GetComponent<UiIconAction>();
+                var iconAction = Instantiate(iconActionPrefab, genericUiListParent).GetComponent<UiIconAction>();
                 _meshGroup.AddItem(iconAction.gameObject);
                 var textField = iconAction.actionBtn.GetComponentInChildren<TMP_Text>();
                 textField.text = meshPrefab.name;
 
-                // setup callbacks/events
+                // Setup callbacks/events
                 iconAction.actionBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab));
                 iconAction.iconBtn.onClick.AddListener(() => MeshManager.get.LoadMesh(meshPrefab, false));
 
@@ -143,12 +147,12 @@ namespace UI
             }
 
 
-            // Debug
-            _debugGroup = Instantiate(groupPrefab, actionsListParent).GetComponent<UiCollapsible>();
+            // -- Debug
+            _debugGroup = Instantiate(groupPrefab, genericUiListParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Debug";
             _debugGroup.SetVisibility(true);
 
-            var toggleBounds = Instantiate(UiManager.get.buttonPrefab, actionsListParent).GetComponent<Button>();
+            var toggleBounds = Instantiate(UiManager.get.buttonPrefab, genericUiListParent).GetComponent<Button>();
             _debugGroup.AddItem(toggleBounds.gameObject);
             toggleBounds.GetComponentInChildren<TMP_Text>().text = "Toggle Bounds";
             toggleBounds.onClick.AddListener(() =>
@@ -158,7 +162,7 @@ namespace UI
                     mesh.RepaintBounds();
             });
 
-            var toggleUvGridAction = Instantiate(buttonPrefab, actionsListParent).GetComponent<Button>();
+            var toggleUvGridAction = Instantiate(buttonPrefab, genericUiListParent).GetComponent<Button>();
             _debugGroup.AddItem(toggleUvGridAction.gameObject);
             toggleUvGridAction.GetComponentInChildren<TMP_Text>().text = "Toggle UV Grid";
 
@@ -185,7 +189,7 @@ namespace UI
             string[] speechKeywords = null)
         {
             // Parenting, layout, ui
-            var go = Instantiate(buttonPrefab, actionsListParent);
+            var go = Instantiate(buttonPrefab, genericUiListParent);
             if (collapsible != null)
                 collapsible.AddItem(go);
             else

@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace Libigl.Editor
 {
+    /// <summary>
+    /// Used for post-processing meshes after importing in the Editor. Only for file formats that Unity recognizes.
+    /// Simplified version of <see cref="OffMeshImporter"/>
+    /// </summary>
     public class MeshImportPostprocessor : AssetPostprocessor
     {
         /// <summary>

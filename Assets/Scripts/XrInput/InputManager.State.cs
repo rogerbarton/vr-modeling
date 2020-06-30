@@ -129,15 +129,15 @@ namespace XrInput
                 handInteractorL.enableUIInteraction =
                     allowUiInteraction &&
                     (!handInteractorL.selectTarget ||
-                     handInteractorL.selectTarget.gameObject.layer == UiManager.get.UiLayer) &&
-                    _hoverTargetsL.Exists(t => t.gameObject.layer == UiManager.get.UiLayer);
+                     handInteractorL.selectTarget.gameObject.layer == UiManager.UiLayer) &&
+                    _hoverTargetsL.Exists(t => t.gameObject.layer == UiManager.UiLayer);
 
                 if (handInteractorR)
                     handInteractorR.enableUIInteraction =
                         allowUiInteraction &&
                         (!handInteractorR.selectTarget ||
-                         handInteractorR.selectTarget.gameObject.layer == UiManager.get.UiLayer) &&
-                        _hoverTargetsR.Exists(t => t.gameObject.layer == UiManager.get.UiLayer);
+                         handInteractorR.selectTarget.gameObject.layer == UiManager.UiLayer) &&
+                        _hoverTargetsR.Exists(t => t.gameObject.layer == UiManager.UiLayer);
             }
         }
     }
