@@ -62,8 +62,9 @@ How to produce an executable:
 
 **IL2CPP**
 
-This project also works with IL2CPP, which converts C# to C++ upon compile for potential performance gains. These builds are slower.
+This project also works with IL2CPP, which converts C# to C++ upon compile for potential performance gains. These builds are slower. 
 
+1. Install the IL2CPP module from the Unity Hub.
 1. Go to the player settings (either from project settings or from the build window). Find the scripting backend and set it to IL2CPP from Mono
-2. Due to a Unity bug, delete the file `Packages/UnityNativeTool/stubLluiPlugin.c`
-3. Build as usual
+1. Due to a Unity bug, delete the file `Packages/UnityNativeTool/stubLluiPlugin.c` (else you will get a compile error)
+1. Build as usual

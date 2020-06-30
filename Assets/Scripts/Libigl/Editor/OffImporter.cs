@@ -25,7 +25,7 @@ namespace Libigl.Editor
         public Material material;
         private static Material _defaultMaterial;
         // Use this material if a model specific material is not set (must be located in Models or Materials folder)
-        private const string DefaultMaterialName = "OffDefault";
+        private const string DefaultMaterialName = "EditableMesh";
         // Use this shader if we cant find the default material by name
         private const string _DefaultMaterialNameFallbackShader = "Universal Render Pipeline/Lit";
 
