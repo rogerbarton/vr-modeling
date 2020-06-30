@@ -64,6 +64,8 @@ clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection
 
 ## Importing Meshes/Files
 
+<iframe frameborder="0" style="width:100%;height:360px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=MeshImporter#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1Q9HbqFhbKx8f4LG1OkDbDV-wnKlZriUB%26export%3Ddownload"></iframe>
+
 See `Libigl/Editor/`
 
 There are two cases:
@@ -74,8 +76,11 @@ Note that in the end Unity still does the importing in both cases in the Editor.
 
 ## Custom Deformation
 
-To add a new deformation there are several things that need to be done. The approach I often use is to start with the 
-complicated C++, then the C# interface and end with the UI/input:
+<iframe frameborder="0" style="width:100%;height:750px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=HarmonicSequence#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1cVw4HePZfZQozUEkX64bHxng26MeBY5i%26export%3Ddownload"></iframe>
+
+The above diagram indicates the important parts of implementing a deformation, with the example for the `igl::harmonic` Biharmonic 'smoothing' deformation.
+
+To add a new deformation there are several things that need to be done. The approach I often use is to start with the complicated C++, then the C# interface and end with the UI/input (roughly in reverse order to the execution):
 
 1. How the deformation is carried out in the C++, see `Deform.cpp`
     1. Be sure to set which data from the mesh you have changed with the `State->DirtyState` variable.
