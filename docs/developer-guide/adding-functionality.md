@@ -1,5 +1,22 @@
 # Adding Functionality
 
+## Threading PrePostExecute Cycle
+
+.. note::
+
+	The Unity API is not thread safe, only simple methods like Debug.Log can be used in a thread.
+
+<iframe frameborder="0" style="width:100%;height:200px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=PrePostExecute#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D13g6p1HSJ_EPnPZU7FR49HOlWYZDNAAtS%26export%3Ddownload"></iframe>
+
+In order to keep the virtual reality experience responsive and at high framerates, all the geometry and libigl calls are on a worker thread. Each mesh has its own thread. As the Unity API is not thread safe, it can only be accessed from the main thread. API calls must be made in PreExecute and their results copied to the thread via the `MeshInputState`. Because of this we have the cycle shown above.
+
+- `PreExecute` - this is where any preparation is done that needs to be on the main thread. The shared `InputState` is copied. The `MeshInputState Input` is copied to the thread version `ExecuteInput`
+- `Execute` - depending on the `LibiglBehaviour.ExecuteInput` when starting the thread we call different code, e.g. if `MeshInputState.DoSelect` is true we modify the selection
+- `PostExecute` - this is where changes are applied to the Unity mesh.
+- `Update` - this is the *separate* Unity callback called every frame, in this we update the `LibiglBehaviour.Input` state.
+
+## Data Storage
+
 There is a lot of data tied to the mesh and the user input. It is important to know where what is stored.
 
 Generally, data falls into one of the following categories:
@@ -42,11 +59,12 @@ This details how changes to the mesh are propagated to Unity and its renderer. T
 
 .. note::
 
-​	Unity stores its mesh data in **Row Major**, whereas libigl requires **Column Major**, a necessary conversion by transposing has to be made.
+	Unity stores its mesh data in **Row Major**, whereas libigl requires **Column Major**, a necessary conversion by transposing has to be made.
 
-<iframe frameborder="0" style="width:100%;height:200px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=ApplyMeshData#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1vsv6ZD3W_HRIGBaCqMOHjp-v1YPSuARU%26export%3Ddownload"></iframe>
 
-1. *(in Execute)* The developer modifes the V matrix and sets it as dirty: :cpp:expr`state->DirtyState |= DirtyFlag.VDirty`
+<iframe frameborder="0" style="width:100%;height:220px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=ApplyMeshData#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1vsv6ZD3W_HRIGBaCqMOHjp-v1YPSuARU%26export%3Ddownload"></iframe>
+
+1. *(in Execute)* The developer modifes the V matrix and sets it as dirty: :cpp:expr:`state->DirtyState |= DirtyFlag.VDirty`
 1. *(in PostExecute)* :cpp:func:`ApplyDirty` is called to apply the changes from the :cpp:struct:`MeshState` to the Unity row major copy pointed to in :cpp:struct:`UMeshDataNative`. Here we also filter out only things that have changed. This is called by `UMeshData.cs`.
 1. Once this transposing is done, we pass the data to Unity in `UMeshData::ApplyDirtyToMesh` in C#
 
