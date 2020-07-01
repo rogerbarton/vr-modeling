@@ -37,6 +37,11 @@ namespace XrInput
         public bool SecondaryBtnR;
         public Vector2 PrimaryAxisR;
 
+        /// <summary>
+        /// Are we pressing the teleport button? Used to disable other input.
+        /// </summary>
+        public bool IsTeleporting;
+
         public float BrushRadius;
 
         // -- Transform

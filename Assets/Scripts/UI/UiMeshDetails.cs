@@ -33,7 +33,7 @@ namespace UI
         [SerializeField] private Sprite activeSprite = null;
         [SerializeField] private Image background = null;
         [Tooltip("The background color of the UI Panel it is the ActiveMesh.")]
-        [SerializeField] private Color activeBackgroundColor;
+        [SerializeField] private Color activeBackgroundColor = Color.white;
         private Color _defaultBackgroundColor;
 
         // -- UI Component Instances

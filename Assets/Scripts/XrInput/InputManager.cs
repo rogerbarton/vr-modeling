@@ -56,6 +56,7 @@ namespace XrInput
         [NonSerialized] public InputDevice HandL;
         [NonSerialized] public UiInputHints HandHintsL;
         [NonSerialized] public XrBrush BrushL;
+        private readonly List<XRBaseInteractable> _rayHoverTargetsL = new List<XRBaseInteractable>();
 
         // -- Right Hand
         public InputDeviceCharacteristics handCharR =
@@ -66,6 +67,7 @@ namespace XrInput
         [NonSerialized] public InputDevice HandR;
         [NonSerialized] public UiInputHints HandHintsR;
         [NonSerialized] public XrBrush BrushR;
+        private readonly List<XRBaseInteractable> _rayHoverTargetsR = new List<XRBaseInteractable>();
 
         // -- Hand animation
         private Animator _handAnimatorL;
@@ -74,11 +76,10 @@ namespace XrInput
         private static readonly int GripAnimId = Animator.StringToHash("Grip");
 
         // -- Teleporting
+        /// <summary>
+        /// The ray interactor for teleporting
+        /// </summary>
         [SerializeField] private XRRayInteractor teleportRayL = default;
-        private LineRenderer _teleportLineRendererL;
-        private GameObject _teleportReticleL;
-        public Material filledLineMat;
-        public Material dottedLineMat;
 
         private void Awake()
         {
@@ -101,14 +102,47 @@ namespace XrInput
 
             // Setup rays/teleporting
             teleportRayL.gameObject.SetActive(false);
-            _teleportLineRendererL = teleportRayL.GetComponent<LineRenderer>();
-            _teleportLineRendererL.material = filledLineMat;
-            _teleportReticleL = teleportRayL.GetComponent<XRInteractorLineVisual>().reticle;
-            _teleportReticleL.SetActive(false);
 
             // Set active tool once everything required is initialized
             SetActiveTool(ToolType.Select);
         }
+
+        private bool _prevAxisClickPressedL;
+        private bool _prevAxisClickPressedR;
+
+        private void Update()
+        {
+            UpdateSharedState();
+
+            if (!HandL.isValid && !HandHintsL)
+                InitializeController(false, handCharL, out HandL, handPrefabL, handRigL, out _handAnimatorL,
+                    out HandHintsL, out BrushL);
+            else
+            {
+                // Toggling UI hints
+                handRigL.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
+                if (axisClickPressed && !_prevAxisClickPressedL)
+                    HandHintsL.gameObject.SetActive(!HandHintsL.gameObject.activeSelf);
+                _prevAxisClickPressedL = axisClickPressed;
+            }
+
+            if (!HandR.isValid && !HandHintsR)
+                InitializeController(true, handCharR, out HandR, handPrefabR, handRigR,
+                    out _handAnimatorR, out HandHintsR, out BrushR);
+            else
+            {
+                // Toggling UI hints
+                handRigR.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
+                if (axisClickPressed && !_prevAxisClickPressedR)
+                    HandHintsR.gameObject.SetActive(!HandHintsR.gameObject.activeSelf);
+                _prevAxisClickPressedR = axisClickPressed;
+            }
+
+            if (useHands)
+                UpdateHandAnimators();
+        }
+
+        #region Controllers
 
         /// <summary>
         /// Gets the XR InputDevice and sets the correct model to display.
@@ -163,43 +197,7 @@ namespace XrInput
             // Debug.LogWarning("No hand controller found with characteristic: " + c);
             return false;
         }
-
-
-        private bool _prevAxisClickPressedL;
-        private bool _prevAxisClickPressedR;
-
-        private void Update()
-        {
-            UpdateSharedState();
-
-            if (!HandL.isValid && !HandHintsL)
-                InitializeController(false, handCharL, out HandL, handPrefabL, handRigL, out _handAnimatorL,
-                    out HandHintsL, out BrushL);
-            else
-            {
-                // Toggling UI hints
-                handRigL.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
-                if (axisClickPressed && !_prevAxisClickPressedL)
-                    HandHintsL.gameObject.SetActive(!HandHintsL.gameObject.activeSelf);
-                _prevAxisClickPressedL = axisClickPressed;
-            }
-
-            if (!HandR.isValid && !HandHintsR)
-                InitializeController(true, handCharR, out HandR, handPrefabR, handRigR,
-                    out _handAnimatorR, out HandHintsR, out BrushR);
-            else
-            {
-                // Toggling UI hints
-                handRigR.inputDevice.IsPressed(InputHelpers.Button.Primary2DAxisClick, out var axisClickPressed, 0.2f);
-                if (axisClickPressed && !_prevAxisClickPressedR)
-                    HandHintsR.gameObject.SetActive(!HandHintsR.gameObject.activeSelf);
-                _prevAxisClickPressedR = axisClickPressed;
-            }
-
-            if (useHands)
-                UpdateHandAnimators();
-        }
-
+        
         private void UpdateHandAnimators()
         {
             if (_handAnimatorL)
@@ -218,6 +216,53 @@ namespace XrInput
                     _handAnimatorR.SetFloat(GripAnimId, gripRVal);
             }
         }
+        
+        
+        /// <summary>
+        /// Enables and disables certain rays and UI interaction for performance.
+        /// Raycasting the UI is one of the most expensive operations currently. See profile EventSystem
+        /// </summary>
+        private void UpdateRayInteractors()
+        {
+            if (!handInteractorL) return;
+
+            if (State.IsTeleporting && !StatePrev.IsTeleporting) // on pressed
+            {
+                teleportRayL.gameObject.SetActive(true);
+                handInteractorL.gameObject.SetActive(false);
+                if (handInteractorR)
+                    handInteractorR.gameObject.SetActive(false);
+            }
+            else if (!State.IsTeleporting && StatePrev.IsTeleporting) // on depressed
+            {
+                teleportRayL.gameObject.SetActive(false);
+                handInteractorL.gameObject.SetActive(true);
+                if (handInteractorR)
+                    handInteractorR.gameObject.SetActive(true);
+            }
+            else if (!State.IsTeleporting)
+            {
+                // Only allow UI interaction if we are idle, not grabbing anything and hovering over a UI object
+                var allowUiInteraction =
+                    (State.ActiveTool == ToolType.Transform && State.ToolTransformMode == ToolTransformMode.Idle
+                     || State.ActiveTool == ToolType.Select && State.ToolSelectMode == ToolSelectMode.Idle);
+
+                handInteractorL.enableUIInteraction =
+                    allowUiInteraction &&
+                    (!handInteractorL.selectTarget ||
+                     handInteractorL.selectTarget.gameObject.layer == UiManager.UiLayer) &&
+                    _rayHoverTargetsL.Exists(t => t.gameObject.layer == UiManager.UiLayer);
+
+                if (handInteractorR)
+                    handInteractorR.enableUIInteraction =
+                        allowUiInteraction &&
+                        (!handInteractorR.selectTarget ||
+                         handInteractorR.selectTarget.gameObject.layer == UiManager.UiLayer) &&
+                        _rayHoverTargetsR.Exists(t => t.gameObject.layer == UiManager.UiLayer);
+            }
+        }
+
+        #endregion
 
         #region Tools
 
@@ -245,6 +290,91 @@ namespace XrInput
                 HandHintsL.Repaint();
             if (right && HandHintsR)
                 HandHintsR.Repaint();
+        }
+
+        #endregion
+
+        #region Updating the InputState
+
+        /// <summary>
+        /// Updates the <see cref="InputState"/> <see cref="State"/>.
+        /// Implementation note: The hands may not be initialized/detected yet.
+        /// </summary>
+        private void UpdateSharedState()
+        {
+            StatePrev = State;
+
+            HandL.TryGetFeatureValue(CommonUsages.primaryButton, out State.PrimaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.secondaryButton, out State.SecondaryBtnL);
+            HandL.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.PrimaryAxisL);
+
+            HandR.TryGetFeatureValue(CommonUsages.primaryButton, out State.PrimaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.secondaryButton, out State.SecondaryBtnR);
+            HandR.TryGetFeatureValue(CommonUsages.primary2DAxis, out State.PrimaryAxisR);
+
+
+            // Read values and then convert to world space
+            HandL.TryGetFeatureValue(CommonUsages.grip, out State.GripL);
+            HandL.TryGetFeatureValue(CommonUsages.trigger, out State.TriggerL);
+            HandL.TryGetFeatureValue(CommonUsages.devicePosition, out State.HandPosL);
+            HandL.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotL);
+
+            HandR.TryGetFeatureValue(CommonUsages.grip, out State.GripR);
+            HandR.TryGetFeatureValue(CommonUsages.trigger, out State.TriggerR);
+            HandR.TryGetFeatureValue(CommonUsages.devicePosition, out State.HandPosR);
+            HandR.TryGetFeatureValue(CommonUsages.deviceRotation, out State.HandRotR);
+
+            // Convert to world space
+            var xrRigRotation = xrRig.rotation;
+            State.HandPosL = xrRig.TransformPoint(State.HandPosL);
+            State.HandRotL = xrRigRotation * State.HandRotL;
+            State.HandPosR = xrRig.TransformPoint(State.HandPosR);
+            State.HandRotR = xrRigRotation * State.HandRotR;
+            
+            // Update hover targets of rays
+            State.IsTeleporting = State.PrimaryAxisL.y > 0.1f; // Threshold should be lower than teleportRayL's
+            if (!State.IsTeleporting)
+            {
+                if (handInteractorL)
+                    handInteractorL.GetHoverTargets(_rayHoverTargetsL);
+                if (handInteractorR)
+                    handInteractorR.GetHoverTargets(_rayHoverTargetsR);
+            }
+
+            // Ray Interactor & Teleportation
+            UpdateRayInteractors();
+
+            // Input conflict with interactables
+            if (handInteractorL)
+                State.GripL *= handInteractorL.selectTarget ? 0f : 1f;
+            if (handInteractorR)
+                State.GripR *= handInteractorR.selectTarget ? 0f : 1f;
+            State.TriggerL *= !State.IsTeleporting && _rayHoverTargetsL.Count == 0 ? 1f : 0f;
+            State.TriggerR *= !State.IsTeleporting && _rayHoverTargetsR.Count == 0 ? 1f : 0f;
+
+            // Changing Active Tool
+            if (State.SecondaryBtnL && !StatePrev.SecondaryBtnL)
+                SetActiveTool((ToolType)
+                    ((State.ActiveTool.GetHashCode() + 1) % Enum.GetNames(typeof(ToolType)).Length));
+
+            // Brush Resizing
+            if (Mathf.Abs(State.PrimaryAxisR.y) > XrBrush.ResizeDeadZone)
+            {
+                State.BrushRadius = Mathf.Clamp(
+                    State.BrushRadius + XrBrush.ResizeSpeed * Time.deltaTime * State.PrimaryAxisR.y,
+                    XrBrush.RadiusRange.x, XrBrush.RadiusRange.y);
+
+                if (BrushL)
+                    BrushL.SetRadius(State.BrushRadius);
+                BrushR.SetRadius(State.BrushRadius);
+            }
+
+            // Changing the Active Mesh
+            if (State.ActiveTool == ToolType.Transform &&
+                State.TriggerR > 0.1f && StatePrev.TriggerR < 0.1f)
+            {
+                BrushR.SetActiveMesh();
+            }
         }
 
         #endregion

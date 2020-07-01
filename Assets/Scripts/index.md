@@ -15,12 +15,16 @@ In the `Scripts` folder, the subfolders correspond to the namespaces. Beware tha
 - **Testing** - Scripts here are not used but might be of interest to see how the Unity APIs work (particularly the mesh API).
   
 
-## Input
+## InputManager.cs
 
-The `InputManager` will detect and create the VR controllers. It handles getting of the current input state, i.e. which buttons are pressed, and saves this into the `InputState`. This is also a partial class so it is split between multiple files. The `InputManager` and the `InputState` will also handle shared functionality, e.g. which tool is active, what the brush size is.
+The `InputManager` will detect and create the VR controllers. It handles getting of the current input state, i.e. which buttons are pressed, and saves this into the `InputState`. The `InputManager` and the `InputState` will also handle shared functionality, e.g. which tool is active, what the brush size is.
 
 .. doxygenfile:: InputManager.cs
 
+## InputState.cs
+
 .. doxygenfile:: InputState.cs
+
+## XrBrush.cs
 
 .. doxygenfile:: XrBrush.cs

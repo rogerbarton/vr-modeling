@@ -102,3 +102,5 @@ _build/
 Doxyfile
 
 docs/external/.idea/
+
+.idea/.idea.vr-modeling/riderModule.iml
