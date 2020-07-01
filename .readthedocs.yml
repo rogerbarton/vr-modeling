@@ -1,7 +1,9 @@
 version: 2
 
 submodules:
-  exclude: all
+  include:
+    - docs/external/breathe
+    - docs/external/sphinx-csharp
 
 python:
    version: 3.7
