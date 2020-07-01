@@ -23,12 +23,16 @@ There is a lot of data tied to the mesh and the user input. It is important to k
 
 Generally, data falls into one of the following categories:
 
-1. **Input data**
-   1. Data that is used to parametrize and decide what is executed (usually from UI/Input), this belongs to the C# only `MeshInputState` or the `InputState` if it is shared between meshes. It is maybe passed to C++ via function arguments.
+1. **Input data**, Data that is used to parametrize and decide what is executed (usually from UI/Input). This belongs to the C#. Members are passes as arguments to native functions.
+   1.  `InputState` if shared between meshes
+   2.  `MeshInputState` if specific to a mesh
 1. **Mesh data**
    1. Vertex/Face data required for rendering the mesh, this is the most complicated. It must be part of the :cpp:struct:`MeshState` and shared between C# and C++. There is a lifecycle to this detailed in :ref:`Applying Mesh Data`.
    1. Data that is used only for computations, this belongs to the C++ only :cpp:struct:`MeshStateNative`.
    1. (uncommon) data that must be shared between C++ and C#, such as results of a computation (e.g. selection size). This also belongs to the :cpp:struct:`MeshState` 
+
+.. note::
+	Data shared between C#/C++ requires more effort to maintain as everything must be declared twice. For this reason all the input data is C# only.
 
 ## Custom UI
 
@@ -62,9 +66,20 @@ clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection
 .. warning::
 	Be careful not to add an *excessive* amount of UI as raycasting the UI is (surprisingly) one of the most performance intensive operations currently.
 
-## Importing Meshes/Files
+## Importing Meshes
+
+If you just want to add a new mesh, **add it into** `Assets/Models/EditableMeshes` and follow the warnings in the Unity console when running. The mesh will be checked for its validity. Note for `.off` files you need to have built the C++ library first.
+
+Then add it the `MeshManager` Mesh Prefabs list in the Main scene on the `Editable Meshes` GameObject.
+
+You might need to reimport it from the right-click menu if the C++ library has not been built.
+
+### Custom Mesh File Formats (advanced)
+
+This is about how the meshes are actually imported.
 
 <iframe frameborder="0" style="width:100%;height:360px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=MeshImporter#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1Q9HbqFhbKx8f4LG1OkDbDV-wnKlZriUB%26export%3Ddownload"></iframe>
+
 
 See `Libigl/Editor/`
 

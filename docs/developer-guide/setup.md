@@ -61,9 +61,10 @@ Important folders:
 - `Assets` - Unity related files
 
    - `Scripts` - C# code for things like: UI, Input, Unity mesh interface, Threading, Importing models
-   - `Prefabs` - Pre-made UI components
-   - `Models/EditableMeshes` - The meshes that can be used in VR
+   - `Prefabs` - Pre-made components, mostly UI
+   - `Models/EditableMeshes` - The meshes that can be modified with libigl
    - `Materials` - Textures, icons and shaders
 - `Interface` - C++ project that interfaces with libigl: deformations, modifying meshes via eigen matrices
-
-   - `source` - the C++ source code which calls libigl
+- `source` - the C++ source code which calls libigl
+   - `external` - the C++ libraries
+- `Packages` - Local Unity packages
