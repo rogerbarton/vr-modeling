@@ -17,3 +17,18 @@ In the `Scripts` folder, the subfolders correspond to the namespaces. Beware tha
 .. warning::
    **The C# code documentation is *experimental*.** There is lots of duplication and some parts are hidden. If something is displayed completely incorrectly, please create an issue so it can be fixed. However, this is hopefully still useful.
    You can always see the **doxygen** documentation locally or **view the code comments** themselves in the IDE.
+
+## Libigl Overview
+
+.. doxygennamespace:: Libigl
+   :no-link:
+
+## XrInput Overview
+
+.. doxygennamespace:: XrInput
+   :no-link:
+
+## UI Overview
+
+.. doxygennamespace:: UI
+   :no-link:

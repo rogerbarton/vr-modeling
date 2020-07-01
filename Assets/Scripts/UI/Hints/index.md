@@ -1,7 +1,5 @@
 # C# UI.Hints
 
-.. doxygennamespace:: UI
-
 ## UiInputHints.cs
 
 .. doxygenfile:: UiInputHints.cs
