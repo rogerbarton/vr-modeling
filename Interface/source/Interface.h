@@ -103,7 +103,7 @@ TransformSelection(MeshState* state, Vector3 translation, float scale, Quaternio
 
 /**
  * Run the igl::harmonic biharmonic deformation on the mesh with provided fixed boundary conditions.
- * From libigl Tutorial 401, https://libigl.github.io/tutorial/#biharmonic-deformation
+ * @remarks From libigl Tutorial 401, https://libigl.github.io/tutorial/#biharmonic-deformation
  * @param boundaryMask Which selections to use as the boundary
  * @param showDeformationField Whether to show the deformation field, see libigl tutorial
  */
@@ -112,6 +112,7 @@ Harmonic(MeshState* state, unsigned int boundaryMask = -1, bool showDeformationF
 
 /**
  * Run the igl::arap As-Rigid-As-Possible deformation on the mesh with the provided fixed boundary conditions.
+ * @remarks From libigl Tutorial 405, https://libigl.github.io/tutorial/#as-rigid-as-possible
  * @param boundaryMask Which selections to use as the boundary
  */
 UNITY_INTERFACE_EXPORT void Arap(MeshState* state, unsigned int boundaryMask = -1);

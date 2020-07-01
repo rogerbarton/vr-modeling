@@ -39,6 +39,9 @@ struct MeshStateNative
 	/** Initial V, before deformations. Used for deformations and resetting V */
 	Eigen::MatrixXf* V0;
 
+	/**	The harmonic deformation field value at the last recalculation */
+	bool harmonicShowDeformationField{false};
+
 	/** Pre-computations for Arap */
 	igl::ARAPData<float>* ArapData{nullptr};
 

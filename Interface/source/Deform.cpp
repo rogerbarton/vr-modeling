@@ -32,12 +32,15 @@ bool UpdateBoundaryConditions(MeshState* state)
 
 void Harmonic(MeshState* state, unsigned int boundaryMask, bool showDeformationField)
 {
-
 	// Create boundary conditions
 	bool boundaryChanged = UpdateBoundary(state, boundaryMask);
 	bool solveHarmonic = UpdateBoundaryConditions(state) || boundaryChanged;
 
-	if (!solveHarmonic) return;
+	// Detect changes to the parameters as well
+	bool showDeformationFieldChanged = showDeformationField != state->Native->harmonicShowDeformationField;
+	state->Native->harmonicShowDeformationField = showDeformationField;
+
+	if (!solveHarmonic && !showDeformationFieldChanged) return;
 
 	// Do Harmonic and apply it
 	if (showDeformationField)
