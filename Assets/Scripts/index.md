@@ -18,3 +18,9 @@ In the `Scripts` folder, the subfolders correspond to the namespaces. Beware tha
 ## Input
 
 The `InputManager` will detect and create the VR controllers. It handles getting of the current input state, i.e. which buttons are pressed, and saves this into the `InputState`. This is also a partial class so it is split between multiple files. The `InputManager` and the `InputState` will also handle shared functionality, e.g. which tool is active, what the brush size is.
+
+.. doxygenfile:: InputManager.cs
+
+.. doxygenfile:: InputState.cs
+
+.. doxygenfile:: XrBrush.cs

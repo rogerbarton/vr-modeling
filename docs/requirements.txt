@@ -1,5 +1,9 @@
-breathe>=4.19.2
 Sphinx>=3.1.1
 sphinx-rtd-theme>=0.5.0
 wheel
 git+https://github.com/CrossNox/m2r.git@dev
+./docs/external/sphinx-csharp
+./docs/external/breathe
+# git+https://github.com/rogerbarton/sphinx-csharp.git@dev
+# git+https://github.com/rogerbarton/breathe.git@dev
+# breathe>=4.19.2
