@@ -1,4 +1,6 @@
-breathe>=4.19.2
+git+https://github.com/rogerbarton/sphinx-csharp.git
+# breathe>=4.19.2
+git+https://github.com/rogerbarton/breathe.git
 Sphinx>=3.1.1
 sphinx-rtd-theme>=0.5.0
 wheel
