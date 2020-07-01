@@ -1,4 +1,4 @@
-﻿# Libigl Interface
+﻿# Scripts - Libigl Interface
 
 ## MeshManager.cs
 

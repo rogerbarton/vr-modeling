@@ -52,7 +52,7 @@ This (the .cpp) is a good place to start for how to implement your own deformati
 .. doxygenfile:: Deform.h
 
 MeshState.h
-^^^^^^^
+^^^^^^^^^^^
 
 This is the shared state between C++/C# and changes in one **must** be applied to the other.
 If the two structs do not match *exactly* problems arise with reading/writing to the wrong memory.
