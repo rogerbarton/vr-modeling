@@ -1,4 +1,4 @@
-# Scripts
+# C# Scripts Overview
 
 The important overall picture is covered here, for more detailed notes about the implementation see the code itself, `Crl` + `Q` with Rider or generate the doxygen documentation locally with CMake.
 
@@ -13,18 +13,7 @@ In the `Scripts` folder, the subfolders correspond to the namespaces. Beware tha
     Uses *ScriptableObjects* so that we can enter the data in the Unity Editor.
 - **Util** - Some helper scripts 
 - **Testing** - Scripts here are not used but might be of interest to see how the Unity APIs work (particularly the mesh API).
-  
 
-## InputManager.cs
-
-The `InputManager` will detect and create the VR controllers. It handles getting of the current input state, i.e. which buttons are pressed, and saves this into the `InputState`. The `InputManager` and the `InputState` will also handle shared functionality, e.g. which tool is active, what the brush size is.
-
-.. doxygenfile:: InputManager.cs
-
-## InputState.cs
-
-.. doxygenfile:: InputState.cs
-
-## XrBrush.cs
-
-.. doxygenfile:: XrBrush.cs
+.. warning::
+   **The C# code documentation is *experimental*.** There is lots of duplication and some parts are hidden. If something is displayed completely incorrectly, please create an issue so it can be fixed. However, this is hopefully still useful.
+   You can always see the **doxygen** documentation locally or **view the code comments** themselves in the IDE.

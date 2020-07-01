@@ -1,9 +1,9 @@
-﻿# Scripts - UI
-
+# C# UI
 
 ## UiManager.cs
 
+.. doxygenfile:: UiManager.cs
 
-## UiDetails.cs
+## UiMeshDetails.cs
 
-
+.. doxygenfile:: UiMeshDetails.cs

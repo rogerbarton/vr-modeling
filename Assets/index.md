@@ -11,10 +11,19 @@ Generated/unimportant folders:
 - `Settings`
 - `Materials/TextMesh Pro`
 
+.. note::
+   This part assumes a reasonable understanding of Unity.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   scene
+   Prefabs/index
    Scripts/index
-   Scripts/UI/index
    Scripts/Libigl/index
+   Scripts/Libigl/Editor/index
+   Scripts/XrInput/index
+   Scripts/UI/index
+   Scripts/UI/Components/index
+   Scripts/UI/Hints/index

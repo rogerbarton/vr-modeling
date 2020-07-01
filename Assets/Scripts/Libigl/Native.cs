@@ -74,7 +74,7 @@ namespace Libigl
             NativeCallbacks.StringCallback debugWarningCallback, NativeCallbacks.StringCallback debugErrorCallback);
 
         [DllImport(DllName)]
-        public static extern unsafe MeshState* InitializeMesh([In, Out] UMeshDataNative data, string name);
+        public static extern unsafe MeshState* InitializeMesh(UMeshDataNative data, string name);
 
         [DllImport(DllName)]
         public static extern unsafe void DisposeMesh(MeshState* data);
