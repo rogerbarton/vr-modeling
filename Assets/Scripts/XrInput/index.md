@@ -4,7 +4,11 @@
 
 The `InputManager` will detect and create the VR controllers. It handles getting of the current input state, i.e. which buttons are pressed, and saves this into the `InputState`. The `InputManager` and the `InputState` will also handle shared functionality, e.g. which tool is active, what the brush size is.
 
-.. doxygenfile:: InputManager.cs
+.. doxygenclass:: XrInput::InputManager
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## InputState.cs
 

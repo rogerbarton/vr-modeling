@@ -18,19 +18,11 @@
 
 ## LibiglBehaviour.cs
 
-.. doxygenfile:: LibiglBehaviour.cs
-
-### LibiglBehaviour.Input.cs
-
-.. doxygenfile:: LibiglBehaviour.Input.cs
-
-### LibiglBehaviour.Actions.cs
-
-.. doxygenfile:: LibiglBehaviour.Actions.cs
-
-### LibiglBehaviour.Transform.cs
-
-.. doxygenfile:: LibiglBehaviour.Transform.cs
+.. doxygenclass:: Libigl::LibiglBehaviour
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## MeshInputState.cs
 
