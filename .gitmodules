@@ -4,9 +4,9 @@
 [submodule "Packages/UnityNativeTool"]
 	path = Packages/UnityNativeTool
 	url = https://github.com/rogerbarton/UnityNativeTool.git
-[submodule "docs/breathe"]
+[submodule "docs/external/breathe"]
 	path = docs/external/breathe
 	url = https://github.com/rogerbarton/breathe.git
-[submodule "docs/sphinx-csharp"]
+[submodule "docs/external/sphinx-csharp"]
 	path = docs/external/sphinx-csharp
 	url = https://github.com/rogerbarton/sphinx-csharp.git
