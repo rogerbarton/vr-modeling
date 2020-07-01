@@ -15,6 +15,10 @@
 
 - See whole :ref:`genindex`
 
+.. image:: https://readthedocs.org/projects/vr-modeling/badge/?version=latest
+   :target: https://vr-modeling.readthedocs.io/?badge=latest
+   :alt: Documentation Status
+
 ## Features
 
 .. TODO: Add gifs
