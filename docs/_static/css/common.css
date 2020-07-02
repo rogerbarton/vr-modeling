@@ -3,8 +3,15 @@ code.sig-name.descname {
     white-space: pre-wrap;
 }
 
+/* Prevent overflow */
 a.reference.external {
   overflow-wrap: break-word;
+}
+
+/* Add extra padding to parameters */
+a.reference {
+  padding-left: 1px;
+  padding-right: 3px;
 }
 
 .rst-content code.literal {

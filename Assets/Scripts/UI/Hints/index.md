@@ -36,7 +36,7 @@
 
 ### UiInputLabelData.cs
 
-.. doxygenclass:: UI::Hints::UiInputLabel
+.. doxygenstruct:: UI::Hints::UiInputLabelData
    :members:
    :protected-members:
    :private-members:

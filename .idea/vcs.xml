@@ -5,5 +5,7 @@
     <mapping directory="$PROJECT_DIR$/Interface/external/libigl" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Interface/external/libigl/external/eigen" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Packages/UnityNativeTool" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/docs/external/breathe" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/docs/external/sphinx-csharp" vcs="Git" />
   </component>
 </project>
