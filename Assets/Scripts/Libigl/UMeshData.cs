@@ -7,11 +7,11 @@ using UnityEngine.Assertions;
 namespace Libigl
 {
     /// <summary>
-    /// Marks which data has changed in <c>UMeshData</c> as a bitmask and needs to be applied to the mesh.<br/>
+    /// Marks which data has changed in <see cref="UMeshData"/> as a bitmask and needs to be applied to the mesh.<br/>
     /// This is used to selectively update the Unity mesh and is only for data that Unity requires.
     /// Use these constants along with the bitwise operators.
     /// </summary>
-    public class DirtyFlag
+    public static class DirtyFlag
     {
         public const uint None = 0;
         public const uint VDirty = 1;

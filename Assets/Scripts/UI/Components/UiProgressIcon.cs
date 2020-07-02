@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.Components
 {
     /// <summary>
     /// Handles showing the progress icon and animating it based on the PreExecute and PostExecute.

@@ -2,28 +2,56 @@
 
 ## UiCollapsible.cs
 
-.. doxygenfile:: UiCollapsible.cs
+.. doxygenclass:: UI::Components::UiCollapsible
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiIconAction.cs
 
-.. doxygenfile:: UiIconAction.cs
+.. doxygenclass:: UI::Components::UiIconAction
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiToggleAction.cs
 
-.. doxygenfile:: UiToggleAction.cs
+.. doxygenclass:: UI::Components::UiToggleAction
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiSelection.cs
 
-.. doxygenfile:: UiSelection.cs
+.. doxygenclass:: UI::Components::UiSelection
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiSelectionMode.cs
 
-.. doxygenfile:: UiSelectionMode.cs
+.. doxygenclass:: UI::Components::UiSelectionMode
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiPivotMode.cs
 
-.. doxygenfile:: UiPivotMode.cs
+.. doxygenclass:: UI::Components::UiPivotMode
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiProgressIcon.cs
 
-.. doxygenfile:: UiProgressIcon.cs
+.. doxygenclass:: UI::Components::UiProgressIcon
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:

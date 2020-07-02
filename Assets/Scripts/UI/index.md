@@ -2,8 +2,16 @@
 
 ## UiManager.cs
 
-.. doxygenfile:: UiManager.cs
+.. doxygenclass:: UI::UiManager
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiMeshDetails.cs
 
-.. doxygenfile:: UiMeshDetails.cs
+.. doxygenclass:: UI::UiMeshDetails
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:

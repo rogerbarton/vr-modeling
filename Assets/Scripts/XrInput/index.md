@@ -14,8 +14,28 @@ The `InputManager` will detect and create the VR controllers. It handles getting
 
 This is the 'shared' input state. It is also where you can access the filtered controller input.
 
-.. doxygenfile:: InputState.cs
+.. doxygenstruct:: XrInput::InputState
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
+
+### Enums
+
+.. doxygenenum:: XrInput::ToolType
+
+.. doxygenenum:: XrInput::ToolSelectMode
+
+.. doxygenenum:: XrInput::ToolTransformMode
+
+.. doxygenenum:: XrInput::SelectionMode
+
+.. doxygenenum:: XrInput::PivotMode
 
 ## XrBrush.cs
 
-.. doxygenfile:: XrBrush.cs
+.. doxygenclass:: XrInput::XrBrush
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:

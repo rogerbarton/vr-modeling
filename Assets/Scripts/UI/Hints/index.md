@@ -2,22 +2,42 @@
 
 ## UiInputHints.cs
 
-.. doxygenfile:: UiInputHints.cs
+.. doxygenclass:: UI::Hints::UiInputHints
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## UiInputLabel.cs
 
-.. doxygenfile:: UiInputLabel.cs
+.. doxygenclass:: UI::Hints::UiInputLabel
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ## Data
 
 ### UiInputHintsDataCollection.cs
 
-.. doxygenfile:: UiInputHintsDataCollection.cs
+.. doxygenclass:: UI::Hints::UiInputHintsDataCollection
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ### UiInputHintsData.cs
 
-.. doxygenfile:: UiInputHintsData.cs
+.. doxygenclass:: UI::Hints::UiInputHintsData
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
 
 ### UiInputLabelData.cs
 
-.. doxygenfile:: UiInputLabel.cs
+.. doxygenclass:: UI::Hints::UiInputLabel
+   :members:
+   :protected-members:
+   :private-members:
+   :undoc-members:
