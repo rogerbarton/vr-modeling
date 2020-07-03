@@ -8,10 +8,10 @@ a.reference.external {
   overflow-wrap: break-word;
 }
 
-/* Add extra padding to parameters */
-a.reference {
-/*  padding-left: 1px;*/
-  padding-right: 3px;
+/* Add extra padding to parameters inside cs code */
+dl.cs a.reference, dl.cpp a.reference {
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 .rst-content code.literal {

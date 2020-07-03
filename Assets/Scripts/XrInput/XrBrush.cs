@@ -138,6 +138,9 @@ namespace XrInput
                 _currentLibiglMeshes[i].RepaintBounds(!InsideActiveMeshBounds, i == 0);
         }
 
+        /// <summary>
+        /// Called by the event <see cref="MeshManager.OnActiveMeshChanged"/>
+        /// </summary>
         private void OnActiveMeshChanged()
         {
             InsideActiveMeshBounds = _currentLibiglMeshes.Contains(MeshManager.ActiveMesh);

@@ -61,6 +61,7 @@ extensions = [  'sphinx.ext.mathjax',
                 'm2r']
 
 breathe_default_project = 'vr-modeling'
+breathe_debug_trace_directives = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['docs/_templates']
@@ -117,7 +118,7 @@ html_theme = 'sphinx_rtd_theme'
 
 html_theme_options = {
     'canonical_url': 'https://vr-modeling.readthedocs.io/en/latest/',
-    'analytics_id': 'UA-130427376-2',  # Provided by Google in your dashboard
+    'analytics_id': '',  # Provided by Google in your dashboard
     'style_external_links': True,      # Show icon on external links
     'prev_next_buttons_location': 'both',
 
