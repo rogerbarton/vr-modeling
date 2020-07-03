@@ -9,9 +9,13 @@ a.reference.external {
 }
 
 /* Add extra padding to parameters inside cs code */
-dl.cs a.reference, dl.cpp a.reference {
+dl.cpp a.reference {
   margin-left: 3px;
   margin-right: 3px;
+}
+
+dl.cs em.property, dl.cpp em.property {
+  color: royalblue;
 }
 
 .rst-content code.literal {
