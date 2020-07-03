@@ -48,6 +48,18 @@ if read_the_docs_build:
 
 # -- General configuration ------------------------------------------------
 
+# Open external links in new tab: https://stackoverflow.com/a/61058326/9295437
+from sphinx.writers.html import HTMLTranslator
+class CustomHTMLTranslator(HTMLTranslator):
+    # Open external links in new tab
+    def visit_reference(self, node):
+        if node.get('newtab') or not (node.get('target') or node.get('internal') or 'refuri' not in node):
+            node['target'] = '_blank'
+            super().visit_reference(node)
+
+def setup(app):
+    app.set_translator('html', CustomHTMLTranslator)
+
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'

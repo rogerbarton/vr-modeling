@@ -20,15 +20,15 @@ In the `Scripts` folder, the subfolders correspond to the namespaces. Beware tha
 
 ## Libigl Overview
 
-.. .. doxygennamespace:: Libigl
+.. doxygennamespace:: Libigl
    :no-link:
 
 ## XrInput Overview
 
-.. .. doxygennamespace:: XrInput
+.. doxygennamespace:: XrInput
    :no-link:
 
 ## UI Overview
 
-.. .. doxygennamespace:: UI
+.. doxygennamespace:: UI
    :no-link:

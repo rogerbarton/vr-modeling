@@ -22,6 +22,12 @@ dl.cs em.property, dl.cpp em.property {
   color: #a1655e;
 }
 
+dl.namespace>dt>code.sig-name.descname {
+  color: darkgreen;
+}
+
+/* End of customisations Roger Barton */
+
 /* Center aligned text */
 .center {
   text-align: center;
