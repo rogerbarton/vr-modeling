@@ -4,7 +4,7 @@ code.sig-name.descname {
 }
 
 /* Prevent overflow */
-a.reference.external {
+a.reference {
   overflow-wrap: break-word;
 }
 
@@ -14,17 +14,26 @@ dl.cpp a.reference {
   margin-right: 3px;
 }
 
+/* Namespace colors */
+dl.namespace>dt>code.descname/*, dl.namespace>dt>em.property*/ {
+  color: darkgreen;
+}
+
+/* Keyword/modifiers colors*/
 dl.cs em.property, dl.cpp em.property {
   color: royalblue;
 }
 
+/* Code color */
 .rst-content code.literal {
   color: #a1655e;
 }
 
-dl.namespace>dt>code.sig-name.descname {
-  color: darkgreen;
+/* Change the background of a namespace field
+dl.namespace>dt {
+   background: darksalmon !important;
 }
+*/
 
 /* End of customisations Roger Barton */
 
