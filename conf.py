@@ -101,8 +101,54 @@ extensions = [  'sphinx.ext.mathjax',
                 'breathe',
                 'm2r']
 
+# Breathe
 breathe_default_project = 'vr-modeling'
 breathe_debug_trace_directives = False
+
+# --- C# domain configuration ---
+sphinx_csharp_test_links = True
+
+sphinx_csharp_ignore_xref = [
+    'Vector2',
+    'Vector3',
+]
+
+sphinx_csharp_ext_search_pages = {
+    'upm.xrtk': ('https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/api/%s.html',
+                 'https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/?%s'),
+    'upm.tmp': ('https://docs.unity3d.com/Packages/com.unity.textmeshpro@1.2/api/%s.html',
+                'https://docs.unity3d.com/Packages/com.unity.textmeshpro@1.2/?%s'),
+    'upm.ugui': ('https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/script-%s.html',
+                 'https://docs.unity3d.com/Packages/com.unity.ugui@1.0/manual/index.html?%s')
+}
+
+sphinx_csharp_ext_type_map = {
+    'unity': {
+        'XR': ['InputDeviceCharacteristics'],
+        'Experimental.AssetImporters': ['AssetImportContext', 'MeshImportPostprocessor', 'ScriptedImporter'],
+    },
+    'upm.xrtk': {'UnityEngine.XR.Interaction.Toolkit': ['XRRayInteractor', 'XRBaseInteractable', 'XRController']},
+    'upm.tmp': {'TMPro': ['TMP_Text']},
+    'upm.ugui': {'': ['Image', 'Button', 'Toggle']},
+}
+
+sphinx_csharp_external_type_rename = {
+    'NativeArray': 'NativeArray_1',
+}
+
+# Debug options
+sphinx_csharp_debug = False
+sphinx_csharp_debug_parse = False
+sphinx_csharp_debug_parse_func = False
+sphinx_csharp_debug_parse_var = False
+sphinx_csharp_debug_parse_prop = False
+sphinx_csharp_debug_parse_attr = False
+sphinx_csharp_debug_parse_idxr = False
+sphinx_csharp_debug_parse_type = False
+sphinx_csharp_debug_xref = False
+sphinx_csharp_debug_ext_links = False
+
+# --- End of C# Domain ----
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['docs/_templates']
