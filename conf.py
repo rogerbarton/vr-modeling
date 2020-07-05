@@ -23,6 +23,9 @@
 import subprocess, os
 
 # --- Manual Configuration for ReadTheDocs server
+import sys
+
+
 def configureDoxyfile(input_dir, output_dir):
     with open('docs/Doxyfile.in', 'r') as file :
         filedata = file.read()
@@ -48,47 +51,6 @@ if read_the_docs_build:
 
 # -- General configuration ------------------------------------------------
 
-# Open external links in new tab: https://stackoverflow.com/a/61058326/9295437
-from sphinx.writers.html import HTMLTranslator
-from docutils import nodes
-from docutils.nodes import Element
-
-class PatchedHTMLTranslator(HTMLTranslator):
-
-    def visit_reference(self, node: Element) -> None:
-        atts = {'class': 'reference'}
-        if node.get('internal') or 'refuri' not in node:
-            atts['class'] += ' internal'
-        else:
-            atts['class'] += ' external'
-            # Customize behavior (open in new tab, secure linking site)
-            atts['target'] = '_blank'
-            atts['rel'] = 'noopener noreferrer'
-        if 'refuri' in node:
-            atts['href'] = node['refuri'] or '#'
-            if self.settings.cloak_email_addresses and atts['href'].startswith('mailto:'):
-                atts['href'] = self.cloak_mailto(atts['href'])
-                self.in_mailto = True
-        else:
-            assert 'refid' in node, \
-                'References must have "refuri" or "refid" attribute.'
-            atts['href'] = '#' + node['refid']
-        if not isinstance(node.parent, nodes.TextElement):
-            assert len(node) == 1 and isinstance(node[0], nodes.image)
-            atts['class'] += ' image-reference'
-        if 'reftitle' in node:
-            atts['title'] = node['reftitle']
-        if 'target' in node:
-            atts['target'] = node['target']
-        self.body.append(self.starttag(node, 'a', '', **atts))
-
-        if node.get('secnumber'):
-            self.body.append(('%s' + self.secnumber_suffix) %
-                             '.'.join(map(str, node['secnumber'])))
-
-def setup(app):
-    app.set_translator('html', PatchedHTMLTranslator)
-
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
@@ -96,10 +58,15 @@ def setup(app):
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
+# Also look for extensions here
+sys.path.append(os.path.abspath('docs/sphinx-extensions'))
+
 extensions = [  'sphinx.ext.mathjax',
                 'sphinx_csharp',
                 'breathe',
-                'm2r']
+                'm2r',
+                'open_in_newtab']
 
 # Breathe
 breathe_default_project = 'vr-modeling'
