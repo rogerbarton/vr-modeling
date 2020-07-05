@@ -104,3 +104,5 @@ Doxyfile
 docs/external/.idea/
 
 .idea/.idea.vr-modeling/riderModule.iml
+
+__pycache__/

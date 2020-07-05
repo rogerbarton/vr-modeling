@@ -27,7 +27,7 @@ Generally, data falls into one of the following categories:
    1.  `InputState` if shared between meshes
    2.  `MeshInputState` if specific to a mesh
 1. **Mesh data**
-   1. Vertex/Face data required for rendering the mesh, this is the most complicated. It must be part of the :cpp:struct:`MeshState` and shared between C# and C++. There is a lifecycle to this detailed in :ref:`Applying Mesh Data`.
+   1. Vertex/Face data required for rendering the mesh, this is the most complicated. It must be part of the :cpp:struct:`MeshState` and shared between C# and C++. There is a lifecycle to this detailed in `Applying Mesh Data`_.
    1. Data that is used only for computations, this belongs to the C++ only :cpp:struct:`MeshStateNative`.
    1. (uncommon) data that must be shared between C++ and C#, such as results of a computation (e.g. selection size). This also belongs to the :cpp:struct:`MeshState` 
 
