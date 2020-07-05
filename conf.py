@@ -47,6 +47,7 @@ if read_the_docs_build:
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen docs/Doxyfile', shell=True)
     breathe_projects['vr-modeling'] = output_dir + '/xml'
+    print("---- Doxygen Done ----")
 # --- End of manual configuration for ReadTheDocs server
 
 # -- General configuration ------------------------------------------------
@@ -60,13 +61,14 @@ if read_the_docs_build:
 # ones.
 
 # Also look for extensions here
-sys.path.append(os.path.abspath('docs/sphinx-extensions'))
+sys.path.append(os.path.abspath('docs/external'))
 
-extensions = [  'sphinx.ext.mathjax',
-                'sphinx_csharp',
-                'breathe',
-                'm2r',
-                'open_in_newtab']
+extensions = [ 'sphinx.ext.mathjax',
+               'sphinx_csharp',
+               'breathe',
+               'm2r',
+               # 'open_in_newtab',
+               ]
 
 # Breathe
 breathe_default_project = 'vr-modeling'
@@ -193,7 +195,9 @@ html_static_path = ['docs/_static']
 html_css_files = [
     'css/common.css'
 ]
-
+html_js_files = [
+    'js/custom.js'
+]
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #
