@@ -2,7 +2,7 @@
 This is a small local sphinx extension.
 Opens external links in new tab: https://stackoverflow.com/a/61058326/9295437
 """
-
+from sphinx.util import logging
 from sphinx.writers.html import HTMLTranslator
 from docutils import nodes
 from docutils.nodes import Element
@@ -41,4 +41,6 @@ class PatchedHTMLTranslator(HTMLTranslator):
                              '.'.join(map(str, node['secnumber'])))
 
 def setup(app):
+    logger = logging.getLogger(__name__)
+    logger.info("external links will be opened in a new tab.")
     app.set_translator('html', PatchedHTMLTranslator)
