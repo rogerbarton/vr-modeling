@@ -1,4 +1,4 @@
-# Welcome to vr-modeling's documentation!
+# Welcome to vr-modeling's documentation! <a href='https://vr-modeling.readthedocs.io/?badge=latest'><img src='https://readthedocs.org/projects/vr-modeling/badge/?version=latest' alt='Documentation Status' /></a>
 
 *Deform meshes in Virtual Reality with libigl using Unity.*
 
@@ -14,10 +14,6 @@
    Interface/index
 
 - See whole :ref:`genindex`
-
-.. image:: https://readthedocs.org/projects/vr-modeling/badge/?version=latest
-   :target: https://vr-modeling.readthedocs.io/?badge=latest
-   :alt: Documentation Status
 
 ## Features
 
