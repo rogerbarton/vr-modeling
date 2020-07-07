@@ -15,7 +15,7 @@ namespace Libigl
         public Quaternion Rotate;
         public float Scale;
 
-        public PivotMode PivotMode;
+        public PivotMode Mode;
         public Vector3 Pivot;
         
         public static TransformDelta Identity()
@@ -24,7 +24,7 @@ namespace Libigl
             {
                 Rotate = Quaternion.identity,
                 Scale = 1f,
-                PivotMode = InputManager.State.ActivePivotMode
+                Mode = InputManager.State.ActivePivotMode
             };
         }
 
@@ -157,11 +157,11 @@ namespace Libigl
             if (!_doTransformL && !_doTransformR) return;
 
             var transformDelta = TransformDelta.Identity();
-            if (transformDelta.PivotMode == PivotMode.Selection)
+            if (transformDelta.Mode == PivotMode.Selection)
             {
                 Debug.LogWarning(
                     "Invalid pivot mode PivotMode.Selection for transforming the mesh, using PivotMode.Hand.");
-                transformDelta.PivotMode = PivotMode.Hand;
+                transformDelta.Mode = PivotMode.Hand;
             }
 
             // Get & Consume the transformation
@@ -169,18 +169,18 @@ namespace Libigl
                 _isTwoHandedTransformation, _firstTransformHand);
 
             // Apply it to the mesh
-            var uTransform = LibiglMesh.transform;
+            var uTransform = Mesh.transform;
             uTransform.Translate(transformDelta.Translate, Space.World);
             uTransform.localScale *= transformDelta.Scale;
 
             var pivotLocal = uTransform.localScale.CwiseMul(uTransform.InverseTransformPoint(transformDelta.Pivot));
-            if (transformDelta.PivotMode != PivotMode.Mesh &&
+            if (transformDelta.Mode != PivotMode.Mesh &&
                 InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLr)
                 uTransform.position += uTransform.rotation * pivotLocal;
 
             uTransform.rotation = transformDelta.Rotate * uTransform.rotation;
 
-            if (transformDelta.PivotMode != PivotMode.Mesh &&
+            if (transformDelta.Mode != PivotMode.Mesh &&
                 InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLr)
                 uTransform.position -= uTransform.rotation * pivotLocal;
 
@@ -263,12 +263,12 @@ namespace Libigl
             if (InputManager.State.ActivePivotMode == PivotMode.Hand)
                 transformDelta.Pivot = primaryHand ? InputManager.State.HandPosR : InputManager.State.HandPosL;
             else
-                transformDelta.Pivot = LibiglMesh.transform.position;
+                transformDelta.Pivot = Mesh.transform.position;
 
             if (space == Space.Self)
             {
                 // Conversions to local space
-                var uTransform = LibiglMesh.transform;
+                var uTransform = Mesh.transform;
                 transformDelta.Translate = uTransform.InverseTransformVector(transformDelta.Translate);
                 transformDelta.Pivot = uTransform.InverseTransformPoint(transformDelta.Pivot);
                 transformDelta.Rotate =

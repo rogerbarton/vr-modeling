@@ -60,7 +60,7 @@ namespace XrInput
                 else
                     InputManager.State.ActivePivotModeSelect = value;
 
-                UiManager.get.PivotMode.Repaint();
+                UiManager.get.CurrentPivotMode.Repaint();
             }
         }
 

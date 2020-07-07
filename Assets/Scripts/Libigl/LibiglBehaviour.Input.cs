@@ -22,9 +22,9 @@ namespace Libigl
             }
 
             if (InputManager.get.BrushL)
-                Input.BrushPosL = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushL.center.position);
+                Input.BrushPosL = Mesh.transform.InverseTransformPoint(InputManager.get.BrushL.center.position);
             if (InputManager.get.BrushR)
-                Input.BrushPosR = LibiglMesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
+                Input.BrushPosR = Mesh.transform.InverseTransformPoint(InputManager.get.BrushR.center.position);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Libigl
             Input.SharedPrev = Input.Shared;
             Input.Shared = InputManager.State;
 
-            Input.BrushRadiusLocal = InputManager.State.BrushRadius / LibiglMesh.transform.localScale.magnitude;
+            Input.BrushRadiusLocal = InputManager.State.BrushRadius / Mesh.transform.localScale.magnitude;
         }
 
         /// <summary>

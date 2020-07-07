@@ -44,22 +44,25 @@ namespace Libigl
         private MeshInputState _executeInput;
 
         /// <summary>
-        /// Reference to the <see cref="Libigl.LibiglMesh"/> used to apply changes to the <see cref="Libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="Mesh"/>
+        /// Reference to the <see cref="Libigl.LibiglMesh"/> used to apply changes to the <see cref="Libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="UnityEngine.Mesh"/>
         /// </summary>
-        public readonly LibiglMesh LibiglMesh;
+        public readonly LibiglMesh Mesh;
 
+        /// <summary>
+        /// The corresponding UI panel. It is initialized from here.
+        /// </summary>
         private readonly UiMeshDetails _uiDetails;
 
         /// <summary>
-        /// Create a behaviour for the <see cref="LibiglMesh"/> <see cref="MonoBehaviour"/> component.
-        /// Every LibiglMesh has one behaviour.
+        /// Create a behaviour for the <see cref="Mesh"/> <see cref="MonoBehaviour"/> component.
+        /// Every Mesh has one behaviour.
         /// </summary>
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
-            LibiglMesh = libiglMesh;
+            Mesh = libiglMesh;
 
             // Initialize C++ and create the State from the DataRowMajor
-            State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), LibiglMesh.name);
+            State = Native.InitializeMesh(libiglMesh.DataRowMajor.GetNative(), Mesh.name);
             Input = MeshInputState.GetInstance();
 
             _uiDetails = UiManager.get.CreateDetailsPanel();
@@ -75,7 +78,7 @@ namespace Libigl
         /// </summary>
         public void Update()
         {
-            if (!LibiglMesh.IsActiveMesh()) return;
+            if (!Mesh.IsActiveMesh()) return;
 
             UpdateTransform();
             UpdateInput();
@@ -111,7 +114,7 @@ namespace Libigl
         public void Execute()
         {
             ActionUi();
-            if (LibiglMesh.IsActiveMesh())
+            if (Mesh.IsActiveMesh())
             {
                 switch (_executeInput.Shared.ActiveTool)
                 {
@@ -128,23 +131,23 @@ namespace Libigl
             }
 
             // Apply changes back to the RowMajor so they can be applied to the mesh
-            LibiglMesh.DataRowMajor.ApplyDirty(State, _executeInput);
+            Mesh.DataRowMajor.ApplyDirty(State, _executeInput);
         }
 
         /// <summary>
         /// Called after <see cref="Execute"/> to apply changes to the mesh.<p/>
         /// Called on the main thread.
-        /// <remarks>Use <c>LibiglMesh.DataRowMajor.ApplyDirtyToMesh</c> to apply changes</remarks>
+        /// <remarks>Use <c>Mesh.DataRowMajor.ApplyDirtyToMesh</c> to apply changes</remarks>
         /// </summary>
         public void PostExecute()
         {
             _uiDetails.UpdatePostExecute();
 
             // Apply RowMajor changes to the Unity mesh, this must be done with RowMajor data
-            LibiglMesh.DataRowMajor.ApplyDirtyToMesh(LibiglMesh.Mesh);
+            Mesh.DataRowMajor.ApplyDirtyToMesh(Mesh.Mesh);
 
             if ((State->DirtyState & DirtyFlag.VDirty) > 0 && (State->DirtyState & DirtyFlag.DontComputeBounds) == 0)
-                LibiglMesh.UpdateBoundingBoxSize();
+                Mesh.UpdateBoundingBoxSize();
 
             // Consume Dirty
             State->DirtyState = DirtyFlag.None;

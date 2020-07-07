@@ -59,11 +59,11 @@ namespace UI
             _behaviour = behaviour;
             MeshManager.OnActiveMeshChanged += RepaintActiveMesh;
 
-            activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.LibiglMesh); });
-            var isActive = _behaviour.LibiglMesh.IsActiveMesh();
+            activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.Mesh); });
+            var isActive = _behaviour.Mesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
             UiInputHints.AddTooltip(activeBtn.gameObject,
-                () => _behaviour.LibiglMesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
+                () => _behaviour.Mesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
 
             _defaultBackgroundColor = background.color;
 
@@ -71,7 +71,7 @@ namespace UI
 
             // -- Start UI Generation
             var meshName = Instantiate(UiManager.get.headerPrefab, _listParent).GetComponent<TMP_Text>();
-            meshName.text = _behaviour.LibiglMesh.name;
+            meshName.text = _behaviour.Mesh.name;
 
             _vertexCount = Instantiate(UiManager.get.textPrefab, _listParent).GetComponent<TMP_Text>();
             UpdateVertexCountText();
@@ -157,7 +157,7 @@ namespace UI
             var resetTransformBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             operationsGroup.AddItem(resetTransformBtn.gameObject);
             resetTransformBtn.GetComponentInChildren<TMP_Text>().text = "Reset Transform";
-            resetTransformBtn.onClick.AddListener(() => { behaviour.LibiglMesh.ResetTransformToSpawn(); });
+            resetTransformBtn.onClick.AddListener(() => { behaviour.Mesh.ResetTransformToSpawn(); });
 
 
             // -- Shaders
@@ -168,7 +168,7 @@ namespace UI
             var toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             shaderGroup.AddItem(toggleWireframe.gameObject);
             toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
-            toggleWireframe.onClick.AddListener(() => { _behaviour.LibiglMesh.ToggleWireframe(); });
+            toggleWireframe.onClick.AddListener(() => { _behaviour.Mesh.ToggleWireframe(); });
 
             // -- Misc
             var objectGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
@@ -177,7 +177,7 @@ namespace UI
             var deleteBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             objectGroup.AddItem(deleteBtn.gameObject);
             deleteBtn.GetComponentInChildren<TMP_Text>().text = "Delete Mesh";
-            deleteBtn.onClick.AddListener(() => { MeshManager.get.DestroyMesh(behaviour.LibiglMesh); });
+            deleteBtn.onClick.AddListener(() => { MeshManager.get.DestroyMesh(behaviour.Mesh); });
 
 
             // -- Debug
@@ -256,7 +256,7 @@ namespace UI
         /// <remarks>Also called when the object is created as this happens just after a mesh was set</remarks>
         private void RepaintActiveMesh()
         {
-            var isActive = _behaviour.LibiglMesh.IsActiveMesh();
+            var isActive = _behaviour.Mesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
             background.color = isActive ? activeBackgroundColor : _defaultBackgroundColor;
         }

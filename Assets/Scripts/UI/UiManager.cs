@@ -57,7 +57,7 @@ namespace UI
         private UiCollapsible _toolGroup;
         private UiCollapsible _meshGroup;
         private UiCollapsible _debugGroup;
-        [NonSerialized] public UiPivotMode PivotMode;
+        [NonSerialized] public UiPivotMode CurrentPivotMode;
 
         private void Awake()
         {
@@ -119,9 +119,9 @@ namespace UI
             _toolGroup.AddItem(selectionMode.gameObject);
             selectionMode.Initialize();
 
-            PivotMode = Instantiate(pivotModePrefab, genericUiListParent).GetComponent<UiPivotMode>();
-            _toolGroup.AddItem(PivotMode.gameObject);
-            PivotMode.Initialize();
+            CurrentPivotMode = Instantiate(pivotModePrefab, genericUiListParent).GetComponent<UiPivotMode>();
+            _toolGroup.AddItem(CurrentPivotMode.gameObject);
+            CurrentPivotMode.Initialize();
 
 
             // -- Meshes

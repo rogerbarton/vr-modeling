@@ -101,11 +101,11 @@ namespace Libigl
             {
                 // Do full transformation
                 // Ignore pivot mode and use hands as pivot
-                // var doPivot = transformDelta.PivotMode != PivotMode.Mesh && 
+                // var doPivot = transformDelta.Mode != Mode.Mesh && 
                 //               ExecuteInput.Shared.ToolTransformMode != ToolTransformMode.TransformingLR;
                 var pivot = Vector3.zero;
 
-                switch (transformDelta.PivotMode)
+                switch (transformDelta.Mode)
                 {
                     case PivotMode.Mesh:
                     // Fall through, use hands as pivot
