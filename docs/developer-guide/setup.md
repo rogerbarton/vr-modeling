@@ -35,7 +35,6 @@ This project also works with IL2CPP, which converts C# to C++ upon compile for p
 
 1. Install the IL2CPP module from the Unity Hub (for this version of Unity).
 1. Go to the player settings (either from project settings or from the build window). Find the 'Scripting Backend' and set it to IL2CPP from Mono
-1. Due to a Unity bug, delete the file `Packages/UnityNativeTool/stubLluiPlugin.c` (else you will get a compile error)
 1. Build as usual
 
 ## Generating Documentation
