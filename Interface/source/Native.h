@@ -6,7 +6,7 @@
 
 extern "C"
 {
-// --- Interface.cpp
+// --- Native.cpp
 /**
  * Called just before the first function is called from this library.
  * Use this to pass initial data from C#

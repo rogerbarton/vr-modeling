@@ -1,7 +1,7 @@
 C++ API Reference
 =================
 
-Interface.h
+Native.h
 ^^^^^^^^^^^
 
 This is the central file with all exported functions that are callable from C#. These are the 'entry points'.
@@ -10,7 +10,7 @@ Unity also triggers the functions :cpp:func:`UnityPluginLoad()` and :cpp:func:`U
 These are called first and last, notably :cpp:func:`Initialize` is called after :cpp:func:`UnityPluginLoad()`.
 
 The two important functions for the lifecycle of a mesh are :cpp:func:`InitializeMesh` and :cpp:func:`DisposeMesh`.
-These are called whenever a :cpp:class:`LibiglMesh` is instaniated or destroyed in Unity. This is where the C++ owned
+These are called whenever a :cs:class:`LibiglMesh` is instaniated or destroyed in Unity. This is where the C++ owned
 memory is allocated and deleted.
 
 To make these functions callable from C# we must put the declarations inside an ``extern "C"`` scope,
@@ -22,7 +22,7 @@ this for us if we use this macro.*
 Note that the implementations of the defined functions are split across several cpp files, as indicated in the code.
 This is done so we have one central place where we have all the exported functions that are callable from C#.
 
-.. doxygenfile:: Interface.h
+.. doxygenfile:: Native.h
 
 InterfaceTypes.h
 ^^^^^^^^^^^^^^^^

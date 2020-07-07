@@ -1,5 +1,5 @@
 #pragma once
-#include "Interface.h"
+#include "Native.h"
 
 /**
  * Recalculates the boundary <code>state->Native->Boundary</code> {@link MeshStateNative.Boundary} if the relevant selections have changed

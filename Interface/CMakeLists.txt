@@ -19,8 +19,8 @@ endif()
 
 
 # Find project files
-file(GLOB SRCFILES "${SOURCE_DIR}/Interface.cpp" "${SOURCE_DIR}/*.cpp")
-file(GLOB HFILES   "${SOURCE_DIR}/Interface.h"   "${SOURCE_DIR}/*.h")
+file(GLOB SRCFILES "${SOURCE_DIR}/Native.cpp" "${SOURCE_DIR}/*.cpp")
+file(GLOB HFILES   "${SOURCE_DIR}/Native.h"   "${SOURCE_DIR}/*.h")
 
 # Add the dll projects
 add_subdirectory("source")

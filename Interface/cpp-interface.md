@@ -109,7 +109,7 @@ To pass a struct add the `[StructLayout(Sequential)]` attribute to it in C# and 
 the `[MonoPInvokeCallback(typeof(MyDelegate))]` attribute. It must be a static method.   
 See `Scripts/Libigl/NativeCallbacks.cs` and add your callback there.
 
-**In C++**, declare a function pointer typedef like the delegate, see :cpp:type:`StringCallback`. The function pointer must use the :c:macro:`UNITY_INTERFACE_API` to ensure the `__stdcall` C# calling convention is used. Then you declare an instance of the function pointer as extern, see :cpp:member:`DebugLog`. Finally we must set the pointer when calling :cpp:func:`Initialize()` and reset to `nullptr` in :cpp:func:`UnityPluginUnload`. The extern variables need to be properly declared in `Interface.cpp`.  
+**In C++**, declare a function pointer typedef like the delegate, see :cpp:type:`StringCallback`. The function pointer must use the :c:macro:`UNITY_INTERFACE_API` to ensure the `__stdcall` C# calling convention is used. Then you declare an instance of the function pointer as extern, see :cpp:member:`DebugLog`. Finally we must set the pointer when calling :cpp:func:`Initialize()` and reset to `nullptr` in :cpp:func:`UnityPluginUnload`. The extern variables need to be properly declared in `Native.cpp`.  
 See `source/InterfaceTypes.h` and add your code there.
 
 .. warning::

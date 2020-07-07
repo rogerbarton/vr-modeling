@@ -1,4 +1,4 @@
-#include "Interface.h"
+#include "Native.h"
 #include "Util.h"
 
 void SelectSphere(MeshState* state, Vector3 position, float radius, int selectionId, unsigned int selectionMode)

@@ -100,7 +100,7 @@ To add a new deformation there are several things that need to be done. The appr
 1. How the deformation is carried out in the C++, see `Deform.cpp`
     1. Be sure to set which data from the mesh you have changed with the `State->DirtyState` variable.
 1. Storing your data in the right place, see `MeshState*.h`
-1. Making this callable from C#: declare in `Interface.h` and redeclare in `Native.cs`
+1. Making this callable from C#: declare in `Native.h` and redeclare in `Native.cs`
 1. Integrating with the Pre/Post/Execute threading loop, see `LibiglBehaviour*.cs` and `MeshInput.cs`
     1. How this deformation is executed from C#, see `Libigl/LibiglBehaviour.Actions.cs`
     1. Handling of the controller input to determine when to execute the deformation, see `LibiglBehaviour.Input.cs`
