@@ -10,19 +10,19 @@ void ApplyDirty(MeshState* state, const UMeshDataNative data, const unsigned int
 	if (state->DirtySelections > 0)
 	{
 		// Update selection sizes
-		state->SSizeAll = state->S->unaryExpr([&](int a) -> int { return a > 0; }).sum();
+		state->SSizesAll = state->S->unaryExpr([&](int a) -> int { return a > 0; }).sum();
 
-		for (unsigned int selectionId = 0; selectionId < state->SCount; ++selectionId)
+		for (unsigned int selectionId = 0; selectionId < state->SSize; ++selectionId)
 		{
 			const unsigned int maskId = 1u << selectionId;
 			if ((maskId & state->DirtySelections) == 0)
 				continue;
 
-			auto before = state->SSize[selectionId];
-			state->SSize[selectionId] = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).sum();
+			auto before = state->SSizes[selectionId];
+			state->SSizes[selectionId] = state->S->unaryExpr([&](int a) -> int { return (a & maskId) > 0; }).sum();
 
 			// Set flag if size has changed
-			if (before != state->SSize[selectionId])
+			if (before != state->SSizes[selectionId])
 				state->DirtySelectionsResized |= 1 << selectionId;
 		}
 		state->Native->DirtySelectionsForBoundary |= state->DirtySelectionsResized;

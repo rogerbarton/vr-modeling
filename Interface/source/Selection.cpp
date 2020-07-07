@@ -95,7 +95,7 @@ void SetColorByMask(MeshState* state, unsigned int maskId)
 {
 	state->C->setZero();
 
-	for (unsigned int selectionId = 0; selectionId < state->SCount; ++selectionId)
+	for (unsigned int selectionId = 0; selectionId < state->SSize; ++selectionId)
 	{
 		const unsigned int m = 1u << selectionId;
 		if ((m & maskId) == 0) // Skip selections that are not visible

@@ -211,7 +211,7 @@ namespace UI
                 if (InputManager.State.NewSelectionOnDraw) // Active selection not empty
                 {
                     // Increment or add until we get an empty selection
-                    while (_behaviour.State->SSize[_behaviour.Input.ActiveSelectionId] > 0)
+                    while (_behaviour.State->SSizes[_behaviour.Input.ActiveSelectionId] > 0)
                     {
                         if (_behaviour.Input.ActiveSelectionId < _behaviour.Input.SCountUi - 1)
                             _behaviour.SetActiveSelectionIncrement(1);
@@ -228,7 +228,7 @@ namespace UI
             }
 
             // Copy UI selection count to the state (as it is shared with C++)
-            _behaviour.State->SCount = _behaviour.Input.SCountUi;
+            _behaviour.State->SSize = _behaviour.Input.SCountUi;
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace UI
         private void UpdateVertexCountText()
         {
             _vertexCount.text =
-                $"<b>V</b>: {_behaviour.State->SSizeAll}/{_behaviour.State->VSize} <b>F</b>: {_behaviour.State->FSize}";
+                $"<b>V</b>: {_behaviour.State->SSizesAll}/{_behaviour.State->VSize} <b>F</b>: {_behaviour.State->FSize}";
         }
 
         #endregion

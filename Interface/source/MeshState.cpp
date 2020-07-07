@@ -26,8 +26,8 @@ MeshState::MeshState(const UMeshDataNative udata)
 	DirtySelections = (unsigned int) -1;
 	DirtySelectionsResized = (unsigned int) -1;
 
-	SSize = new unsigned int[32];
-	std::fill(SSize, SSize + 32, 0);
+	SSizes = new unsigned int[32];
+	std::fill(SSizes, SSizes + 32, 0);
 
 	Native = new MeshStateNative(V);
 }
@@ -40,6 +40,6 @@ MeshState::~MeshState()
 	delete UV;
 	delete F;
 	delete S;
-	delete[] SSize;
+	delete[] SSizes;
 	delete Native;
 }

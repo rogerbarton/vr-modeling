@@ -78,7 +78,7 @@ namespace UI.Components
             ToggleVisibleSprite((_behaviour.Input.VisibleSelectionMask & 1u << _selectionId) > 0);
 
             // Repaint colors if 
-            if (_behaviour.State->SSize[_selectionId] > 0)
+            if (_behaviour.State->SSizes[_selectionId] > 0)
                 _behaviour.Input.VisibleSelectionMaskChanged = true;
         }
 
@@ -96,7 +96,7 @@ namespace UI.Components
         public unsafe void Clear()
         {
             // Either clear the selection or delete it in the UI if it is the last one and is empty
-            if (_behaviour.State->SSize[_selectionId] > 0)
+            if (_behaviour.State->SSizes[_selectionId] > 0)
                 _behaviour.Input.DoClearSelection |= 1u << _selectionId;
             else if (_selectionId == _selections.Count - 1 && _selections.Count > 1)
             {
@@ -108,7 +108,7 @@ namespace UI.Components
 
                 _behaviour.Input.SCountUi--;
                 _behaviour.Input.VisibleSelectionMask |= (uint) 1 << _selectionId;
-                _behaviour.State->SSize[_selectionId] = 0;
+                _behaviour.State->SSizes[_selectionId] = 0;
 
                 _selections.RemoveAt(_selectionId);
                 _uiCollapsible.Remove(gameObject);
@@ -120,7 +120,7 @@ namespace UI.Components
 
         public unsafe void UpdateText()
         {
-            text.text = $"<b>{_selectionId}</b>: {_behaviour.State->SSize[_selectionId]} vertices";
+            text.text = $"<b>{_selectionId}</b>: {_behaviour.State->SSizes[_selectionId]} vertices";
         }
 
         private void ToggleVisibleSprite(bool isVisible)

@@ -88,7 +88,7 @@ namespace Libigl
         /// </summary>
         public unsafe void LinkBehaviourState(LibiglBehaviour behaviour)
         {
-            S = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(behaviour.State->S, VSize,
+            S = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<uint>(behaviour.State->SPtr, VSize,
                 Allocator.None);
 
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
@@ -192,7 +192,7 @@ namespace Libigl
             if ((DirtyState & DirtyFlag.FDirty) > 0)
                 mesh.SetIndices(F, MeshTopology.Triangles, 0);
             // if (DirtySelections > 0)
-            // mesh.SetUVs(1, S);
+            // mesh.SetUVs(1, SPtr);
             // BUG: mesh.SetUVs is from the older API and expects a Vector2[] (floats)
             // Unsupported conversion of vertex data (format 11 to 0, dimensions 1 to 1)
             // UnityEngine.Mesh:SetUVs(Int32, NativeArray`1)
