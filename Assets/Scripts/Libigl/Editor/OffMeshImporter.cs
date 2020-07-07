@@ -9,6 +9,7 @@ namespace Libigl.Editor
 {
     /// <summary>
     /// A custom importer for .off mesh files, which Unity does not recognize or know how to import by default.
+    /// See tooltips.
     /// </summary>
     [ScriptedImporter(1, "off")]
     public class OffMeshImporter : ScriptedImporter

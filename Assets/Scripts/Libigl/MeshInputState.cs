@@ -33,7 +33,11 @@ namespace Libigl
         public int ActiveSelectionId;
         public uint VisibleSelectionMask;
         public bool VisibleSelectionMaskChanged;
-        public uint SCountUi; // For UI, will be copied to the state in PreExecute
+        /// <summary>
+        /// For UI, will be copied to the state in PreExecute.
+        /// This is used when we create a selection in the UI on the main thread.
+        /// </summary>
+        public uint SCountUi;
 
         public bool DoSelectL;
         public bool DoSelectLPrev;
@@ -47,7 +51,9 @@ namespace Libigl
 
         public bool AlternateSelectModeR;
 
-        // A Mask of the selections that should be cleared
+        /// <summary>
+        /// A Mask of the selections that should be cleared
+        /// </summary>
         public uint DoClearSelection;
 
         public Vector3 BrushPosL;
@@ -55,8 +61,14 @@ namespace Libigl
         public float BrushRadiusLocal;
 
         // Deformations
-        public bool DoHarmonic; // Trigger execution once
-        public bool DoHarmonicRepeat; // Trigger execution every frame
+        /// <summary>
+        /// Trigger execution once
+        /// </summary>
+        public bool DoHarmonic;
+        /// <summary>
+        /// Trigger execution every frame
+        /// </summary>
+        public bool DoHarmonicRepeat;
         public bool HarmonicShowDisplacement;
         public bool DoArap;
         public bool DoArapRepeat;

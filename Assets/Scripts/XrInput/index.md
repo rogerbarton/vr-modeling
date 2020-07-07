@@ -12,8 +12,6 @@ The :cs:class:`InputManager` will detect and create the VR controllers. It handl
 
 ## InputState.cs
 
-This is the 'shared' input state. It is also where you can access the filtered controller input.
-
 .. doxygenstruct:: XrInput::InputState
    :members:
    :protected-members:

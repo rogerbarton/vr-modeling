@@ -4,6 +4,7 @@ using UnityEngine;
 namespace XrInput
 {
     /// <summary>
+    /// This is the 'shared' input state. It is also where you can access the filtered controller input.
     /// Stores input that is shared between meshes as well as the raw input that has not been mapped to actions.
     /// Raw input has been filtered to prevent conflicts with UI and grabbables.
     /// </summary>

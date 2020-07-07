@@ -18,6 +18,9 @@ namespace Libigl
     public class LibiglMesh : MonoBehaviour
     {
         private MeshFilter _meshFilter;
+        /// <summary>
+        /// The Unity mesh.
+        /// </summary>
         public Mesh Mesh { get; private set; }
         public MeshRenderer MeshRenderer { get; private set; }
 
