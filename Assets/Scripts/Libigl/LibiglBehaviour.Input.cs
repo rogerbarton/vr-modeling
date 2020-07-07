@@ -53,19 +53,19 @@ namespace Libigl
                     _doTransformR ? ToolSelectMode.TransformingLr : ToolSelectMode.TransformingL;
             else if (_doTransformR)
                 InputManager.State.ToolSelectMode = ToolSelectMode.TransformingR;
-            else if (InputManager.State.TriggerL > PressThres || InputManager.State.TriggerR > PressThres)
+            else if (InputManager.State.TriggerL > GrabPressThreshold || InputManager.State.TriggerR > GrabPressThreshold)
             {
                 InputManager.State.ToolSelectMode = ToolSelectMode.Selecting;
 
-                if (InputManager.State.TriggerL > PressThres &&
+                if (InputManager.State.TriggerL > GrabPressThreshold &&
                     (InputManager.State.ActiveSelectionMode != SelectionMode.Invert ||
-                     InputManager.StatePrev.TriggerL < PressThres)
+                     InputManager.StatePrev.TriggerL < GrabPressThreshold)
                     && InputManager.get.BrushL.InsideActiveMeshBounds)
                     Input.DoSelectL = true;
 
-                if (InputManager.State.TriggerR > PressThres &&
+                if (InputManager.State.TriggerR > GrabPressThreshold &&
                     (InputManager.State.ActiveSelectionMode != SelectionMode.Invert ||
-                     InputManager.StatePrev.TriggerR < PressThres)
+                     InputManager.StatePrev.TriggerR < GrabPressThreshold)
                     && InputManager.get.BrushR.InsideActiveMeshBounds)
                     Input.DoSelectR = true;
 
@@ -87,25 +87,6 @@ namespace Libigl
             Input.Shared = InputManager.State;
 
             Input.BrushRadiusLocal = InputManager.State.BrushRadius / LibiglMesh.transform.localScale.magnitude;
-        }
-
-        /// <summary>
-        /// Consumes and resets flags raised. Should be called in PreExecute after copying to the State.
-        /// </summary>
-        private void ConsumeInput()
-        {
-            // Consume inputs here
-            Input.DoSelectLPrev = Input.DoSelectL;
-            Input.DoSelectL = false;
-            Input.DoSelectRPrev = Input.DoSelectR;
-            Input.DoSelectR = false;
-            Input.DoClearSelection = 0;
-            Input.VisibleSelectionMaskChanged = false;
-            if (!Input.DoHarmonicRepeat)
-                Input.DoHarmonic = false;
-            if (!Input.DoArapRepeat)
-                Input.DoArap = false;
-            Input.ResetV = false;
         }
 
         /// <summary>

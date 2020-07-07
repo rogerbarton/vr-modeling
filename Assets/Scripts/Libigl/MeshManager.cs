@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Libigl
 {
     /// <summary>
-    /// Handles loading EditableMeshes and stores references, notably the <see cref="ActiveMesh"/>
+    /// Handles loading EditableMeshes and stores references, notably to the <see cref="ActiveMesh"/>.
     /// </summary>
     public class MeshManager : MonoBehaviour
     {
@@ -25,7 +25,7 @@ namespace Libigl
 
         /// <summary>
         /// Invoked when the <see cref="ActiveMesh"/> is changed.
-        /// Called after initialization if the mesh is newly instantiated.
+        /// Called after initialization, if the mesh is newly instantiated.
         /// </summary>
         public static event Action OnActiveMeshChanged = delegate { };
 
@@ -37,6 +37,7 @@ namespace Libigl
         public Material wireframeMaterial;
         public Material wireframeMaterialPrimary;
         public Material wireframeMaterialActive;
+        
         private static int _defaultLayer;
         private static int _holographicLayer;
 
@@ -83,7 +84,7 @@ namespace Libigl
             if (performValidityChecks && !CheckPrefabValidity(prefab)) return null;
 
             if (unloadActiveMesh)
-                UnloadActiveMesh();
+                DestroyActiveMesh();
 
             var go = Instantiate(prefab, transform);
             go.transform.parent = transform;
@@ -143,7 +144,7 @@ namespace Libigl
             return true;
         }
 
-        private void UnloadActiveMesh()
+        private static void DestroyActiveMesh()
         {
             if (!ActiveMesh) return;
 

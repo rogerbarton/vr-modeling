@@ -73,5 +73,45 @@ namespace Libigl
                 TransformDeltaJoint = TransformDelta.Identity()
             };
         }
+        
+        
+        /// <summary>
+        /// Consumes and resets flags raised. Should be called in PreExecute after copying to the State.
+        /// </summary>
+        public void Consume()
+        {
+            DoSelectLPrev = DoSelectL;
+            DoSelectL = false;
+            DoSelectRPrev = DoSelectR;
+            DoSelectR = false;
+            DoClearSelection = 0;
+            VisibleSelectionMaskChanged = false;
+            if (!DoHarmonicRepeat)
+                DoHarmonic = false;
+            if (!DoArapRepeat)
+                DoArap = false;
+            ResetV = false;
+            
+            ConsumeTransform();
+        }
+        
+        /// <summary>
+        /// Consumes the state for the transformations
+        /// </summary>
+        private void ConsumeTransform()
+        {
+            // Consume transform if we are in the Select tool
+            if (InputManager.State.ActiveTool == ToolType.Select)
+            {
+                TransformDeltaJoint = TransformDelta.Identity();
+                TransformDeltaL = TransformDelta.Identity();
+                TransformDeltaR = TransformDelta.Identity();
+            }
+
+            DoTransformLPrev = DoTransformL;
+            DoTransformL = false;
+            DoTransformRPrev = DoTransformR;
+            DoTransformR = false;
+        }
     }
 }

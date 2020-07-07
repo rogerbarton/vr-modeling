@@ -6,6 +6,9 @@ using XrInput;
 
 namespace Libigl
 {
+    /// <summary>
+    /// Stores information about a single transformation.
+    /// </summary>
     public struct TransformDelta
     {
         public Vector3 Translate;
@@ -14,7 +17,7 @@ namespace Libigl
 
         public PivotMode PivotMode;
         public Vector3 Pivot;
-
+        
         public static TransformDelta Identity()
         {
             return new TransformDelta
@@ -25,6 +28,9 @@ namespace Libigl
             };
         }
 
+        /// <summary>
+        /// (experimental) Combines two transformations, does not consider the pivot. 
+        /// </summary>
         public void Add(TransformDelta other)
         {
             Translate += other.Translate;
@@ -35,33 +41,53 @@ namespace Libigl
 
     public partial class LibiglBehaviour
     {
-        private bool _primaryTransformHand; // True=R
-        private bool _isTwoHanded;
-        private bool _isTwoHandedPrev;
+        /// <summary>
+        /// The first hand to start a transformation.
+        /// True = Right
+        /// </summary>
+        private bool _firstTransformHand;
+        /// <summary>
+        /// Are we using both hands in the transformation
+        /// </summary>
+        private bool _isTwoHandedTransformation;
+        private bool _isTwoHandedTransformationPrev;
 
         private bool _doTransformL;
         private bool _doTransformPrevL;
         private bool _doTransformR;
         private bool _doTransformPrevR;
 
+        /// <summary>
+        /// Where the hand was when the <see cref="TransformDelta"/> was started.
+        /// Or the hand position at the last time the transformation was consumed.
+        /// </summary>
         private Vector3 _transformStartHandPosL;
         private Vector3 _transformStartHandPosR;
         private Quaternion _transformStartHandRotL;
         private Quaternion _transformStartHandRotR;
 
-        private const float PressThres = 0.1f;
+        /// <summary>
+        /// At which point do we consider the button as pressed
+        /// </summary>
+        private const float GrabPressThreshold = 0.1f;
 
-        // Call this in Update() every frame
+        /// <summary>
+        /// Updates the current transformation state from the input, regardless of what the worker thread is doing.
+        /// Decides when a transformation is started/stopped (changes in the finite state machine FSM).
+        /// Applies the transformation immediately if we are transforming the mesh (as this is done by Unity).
+        /// Call this in Update() every frame.
+        /// </summary>
         private void UpdateTransform()
         {
             // Map inputs to actions
             _doTransformPrevL = _doTransformL;
-            _doTransformL = InputManager.State.GripL > PressThres;
+            _doTransformL = InputManager.State.GripL > GrabPressThreshold;
             _doTransformPrevR = _doTransformR;
-            _doTransformR = InputManager.State.GripR > PressThres;
-            _isTwoHanded = _doTransformL && _doTransformR;
-            _isTwoHandedPrev = _doTransformPrevL && _doTransformPrevR;
+            _doTransformR = InputManager.State.GripR > GrabPressThreshold;
+            _isTwoHandedTransformation = _doTransformL && _doTransformR;
+            _isTwoHandedTransformationPrev = _doTransformPrevL && _doTransformPrevR;
 
+            // - Left
             // on pressed
             if (_doTransformL && !_doTransformPrevL)
             {
@@ -70,7 +96,7 @@ namespace Libigl
                 _transformStartHandRotL = InputManager.State.HandRotL;
 
                 if (!_doTransformR)
-                    _primaryTransformHand = false;
+                    _firstTransformHand = false;
             }
 
             // on depressed
@@ -80,7 +106,7 @@ namespace Libigl
                 if (InputManager.State.ActiveTool == ToolType.Select)
                     ApplyTransformToSelection();
 
-                _primaryTransformHand = true;
+                _firstTransformHand = true;
             }
 
             // - Right
@@ -92,7 +118,7 @@ namespace Libigl
                 _transformStartHandRotR = InputManager.State.HandRotR;
 
                 if (!_doTransformL)
-                    _primaryTransformHand = true;
+                    _firstTransformHand = true;
             }
 
             // on depressed
@@ -102,12 +128,14 @@ namespace Libigl
                 if (InputManager.State.ActiveTool == ToolType.Select)
                     ApplyTransformToSelection();
 
-                _primaryTransformHand = false;
+                _firstTransformHand = false;
             }
 
+            // Immediately apply if we are moving the mesh
             if (InputManager.State.ActiveTool == ToolType.Transform)
                 ApplyTransformToMesh();
 
+            // Additional functionality of the FSM
             if (_doTransformL || _doTransformR)
             {
                 if (InputManager.State.PrimaryBtnR && !InputManager.StatePrev.PrimaryBtnR)
@@ -118,13 +146,12 @@ namespace Libigl
             }
         }
 
-
-
-
-
-
+        
         #region --- Applying TransformDelta
 
+        /// <summary>
+        /// Gets and consumes the transformation, applying it to the LibiglMesh <see cref="Transform"/>.
+        /// </summary>
         private void ApplyTransformToMesh()
         {
             if (!_doTransformL && !_doTransformR) return;
@@ -139,7 +166,7 @@ namespace Libigl
 
             // Get & Consume the transformation
             GetTransformDelta(true, ref transformDelta, Space.World, InputManager.State.TransformWithRotate,
-                _isTwoHanded, _primaryTransformHand);
+                _isTwoHandedTransformation, _firstTransformHand);
 
             // Apply it to the mesh
             var uTransform = LibiglMesh.transform;
@@ -157,20 +184,25 @@ namespace Libigl
                 InputManager.State.ToolTransformMode != ToolTransformMode.TransformingLr)
                 uTransform.position -= uTransform.rotation * pivotLocal;
 
+            // This should draw a line from the mesh center to the pivot
             // Debug.DrawRay(transformDelta.Pivot, uTransform.rotation * -pivotLocal, Color.magenta);
         }
 
+        /// <summary>
+        /// Save and consume the transformation, which will later be applied to the selection on the worker thread.
+        /// </summary>
         private void ApplyTransformToSelection()
         {
             if (!_doTransformL && !_doTransformR) return;
 
             Input.DoTransformL |= _doTransformL;
             Input.DoTransformR |= _doTransformR;
-            Input.PrimaryTransformHand = _primaryTransformHand;
+            Input.PrimaryTransformHand = _firstTransformHand;
 
-            // Also calculate the individual transforms
-            // Implementation note: were accessing _currentTranslateMaskL from both threads (!)
+            // Calculate the individual transforms as well as the two handed transformation,
+            // as we will decide later which one is used
             if (Input.DoTransformL && Input.DoTransformR)
+                // Implementation note: were accessing _currentTranslateMaskL from both threads (!)
                 // if we newly started two handed mode or the masks are different. Disable this efficiency gain for now for reliability
                 // &&(!Input.DoTransformLPrev || !Input.DoTransformLPrev ||
                 // _currentTranslateMaskL != _currentTranslateMaskR))
@@ -183,34 +215,20 @@ namespace Libigl
                     true);
             }
 
-            // Consume on last get
+            // Consume on last
             GetTransformDelta(true, ref Input.TransformDeltaJoint, Space.Self, InputManager.State.TransformWithRotate,
-                _isTwoHanded,
-                _primaryTransformHand);
+                _isTwoHandedTransformation,
+                _firstTransformHand);
         }
 
         private void PreExecuteTransform()
         {
+            // Consume the transformation
+            // If we have already done this this should just add the identity
             if (InputManager.State.ActiveTool == ToolType.Select)
             {
                 ApplyTransformToSelection();
             }
-        }
-
-        private void ConsumeTransform()
-        {
-            // Consume transform if we are in the Select tool
-            if (InputManager.State.ActiveTool == ToolType.Select)
-            {
-                Input.TransformDeltaJoint = TransformDelta.Identity();
-                Input.TransformDeltaL = TransformDelta.Identity();
-                Input.TransformDeltaR = TransformDelta.Identity();
-            }
-
-            Input.DoTransformLPrev = Input.DoTransformL;
-            Input.DoTransformL = false;
-            Input.DoTransformRPrev = Input.DoTransformR;
-            Input.DoTransformR = false;
         }
 
         private void ResetTransformStartPositions()
@@ -222,21 +240,24 @@ namespace Libigl
         }
 
         #endregion
-
-
-
-
+        
 
         #region --- Calculating TransformDelta
 
-        // Only for selections, transforming the mesh is done directly
+        /// <summary>
+        /// Find out the <see cref="TransformDelta"/> that should be done.
+        /// Independent of what we are transforming, mesh or selection.
+        /// </summary>
+        /// <param name="consumeInput">Should we reset the starting positions/rotations of the hands.
+        /// This is unrelated to the <see cref="MeshInputState.Consume"/> function which is for the worker thread</param>
+        /// <param name="transformDelta">Where we should add our transformation to.</param>
         private void GetTransformDelta(bool consumeInput, ref TransformDelta transformDelta, Space space,
             bool withRotate, bool isTwoHanded, bool primaryHand)
         {
             if (isTwoHanded)
-                GetRotateScaleJoint(ref transformDelta, withRotate);
+                GetTransformTwoHanded(ref transformDelta, withRotate);
             else if (primaryHand ? _doTransformR : _doTransformL)
-                GetTranslate(primaryHand, ref transformDelta, withRotate);
+                GetTransformOneHanded(primaryHand, ref transformDelta, withRotate);
 
             // Update pivot to latest (overwrites for now)
             if (InputManager.State.ActivePivotMode == PivotMode.Hand)
@@ -258,8 +279,10 @@ namespace Libigl
                 ResetTransformStartPositions();
         }
 
-
-        private void GetTranslate(bool isRight, ref TransformDelta transformDelta, bool withRotate = true)
+        /// <summary>
+        /// Finds out the transformation when using one hand
+        /// </summary>
+        private void GetTransformOneHanded(bool isRight, ref TransformDelta transformDelta, bool withRotate = true)
         {
             Vector3 translate;
             if (isRight)
@@ -282,11 +305,14 @@ namespace Libigl
             transformDelta.Rotate = Quaternion.Lerp(Quaternion.identity, rotate, softFactor) * transformDelta.Rotate;
         }
 
-        private void GetRotateScaleJoint(ref TransformDelta transformDelta, bool withRotate = true)
+        /// <summary>
+        /// Finds out the transformation when using both hands
+        /// </summary>
+        private void GetTransformTwoHanded(ref TransformDelta transformDelta, bool withRotate = true)
         {
             // Soft editing
-            var softFactor = _primaryTransformHand ? InputManager.State.GripR : InputManager.State.GripL;
-            var softFactorSecondary = !_primaryTransformHand ? InputManager.State.GripR : InputManager.State.GripL;
+            var softFactor = _firstTransformHand ? InputManager.State.GripR : InputManager.State.GripL;
+            var softFactorSecondary = !_firstTransformHand ? InputManager.State.GripR : InputManager.State.GripL;
 
             // Scale
             var scale = (InputManager.State.HandPosL - InputManager.State.HandPosR).magnitude /
@@ -302,7 +328,7 @@ namespace Libigl
             if (!withRotate) return;
 
             Vector3 v0, v1;
-            if (_primaryTransformHand)
+            if (_firstTransformHand)
             {
                 v0 = _transformStartHandPosR - _transformStartHandPosL;
                 v1 = InputManager.State.HandPosR - InputManager.State.HandPosL;

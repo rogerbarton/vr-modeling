@@ -79,8 +79,7 @@ namespace Libigl
             // Copy the Input to ExecuteInput so the thread has its own copy
             ExecuteInput = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
-            ConsumeInput();
-            ConsumeTransform();
+            Input.Consume();
         }
 
         /// <summary>
