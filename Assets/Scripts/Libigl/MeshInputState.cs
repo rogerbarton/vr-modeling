@@ -9,6 +9,8 @@ namespace Libigl
     /// Anything that may change as we are executing should be in the InputState, as it is copied in PreExecute.
     /// Anything that is the same between all meshes may be put into the <see cref="InputState"/>.
     /// Anything related to what should be executed on the worker thread should be put here (e.g. DoSelect).
+    /// <p/>
+    /// Variables that correspond to triggering Actions start with <c>Do</c> e.g. <c>DoSelect</c>
     /// </summary>
     public struct MeshInputState
     {

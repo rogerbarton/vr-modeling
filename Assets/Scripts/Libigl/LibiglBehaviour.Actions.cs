@@ -6,9 +6,17 @@ namespace Libigl
 {
     public unsafe partial class LibiglBehaviour
     {
+        /// <summary>
+        /// The selections which are currently being translated by the left hand.
+        /// This is set by the worker thread.
+        /// </summary>
         private uint _currentTranslateMaskL;
         private uint _currentTranslateMaskR;
 
+        /// <summary>
+        /// Transforms the selections based on the <see cref="TransformDelta"/>s given in the <see cref="MeshInputState"/>
+        /// It also decides which selections should be translated, storing this in <see cref="_currentTranslateMaskL"/>
+        /// </summary>
         private void ActionTransformSelection()
         {
             if (ExecuteInput.Shared.ActiveTool != ToolType.Select ||
@@ -66,6 +74,9 @@ namespace Libigl
             }
         }
 
+        /// <summary>
+        /// Finds which selections are inside the brush and updates the <see cref="maskId"/>
+        /// </summary>
         private void FindBrushSelectionMask(ref uint maskId, Vector3 brushPos)
         {
             // If selection inside brush is not zero then use that as the mask
@@ -75,7 +86,10 @@ namespace Libigl
             if (brushMask > 0)
                 maskId = brushMask;
         }
-
+        
+        /// <summary>
+        /// Does the actual translation, but is independent of the hands (L or R)
+        /// </summary>
         private void ActionTransformSelectionGeneric(ref TransformDelta transformDelta, uint maskId)
         {
             if (transformDelta.Rotate == Quaternion.identity && transformDelta.Scale == 1f)
@@ -108,12 +122,18 @@ namespace Libigl
             }
         }
 
+        /// <summary>
+        /// Selects what is inside the brushes of the hands.
+        /// </summary>
         private void ActionSelect()
         {
             ActionSelectGeneric(ExecuteInput.DoSelectL, ExecuteInput.BrushPosL, ExecuteInput.AlternateSelectModeL);
             ActionSelectGeneric(ExecuteInput.DoSelectR, ExecuteInput.BrushPosR, ExecuteInput.AlternateSelectModeR);
         }
 
+        /// <summary>
+        /// Does the actual selection, but is independent of the hands (L or R)
+        /// </summary>
         private void ActionSelectGeneric(bool doSelect, Vector3 brushPos, bool alternateSelectMode)
         {
             var mode = ExecuteInput.Shared.ActiveSelectionMode;
@@ -131,6 +151,9 @@ namespace Libigl
                     ExecuteInput.ActiveSelectionId, (uint) mode);
         }
 
+        /// <summary>
+        /// Runs the <c>igl::harmonic</c> Biharmonic Deformation 
+        /// </summary>
         private void ActionHarmonic()
         {
             if (!ExecuteInput.DoHarmonic) return;
@@ -138,6 +161,9 @@ namespace Libigl
             Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
         }
 
+        /// <summary>
+        /// Runs the <c>igl::arap</c> As-Rigid-As-Possible Deformation
+        /// </summary>
         private void ActionArap()
         {
             if (!ExecuteInput.DoArap) return;
@@ -145,6 +171,9 @@ namespace Libigl
             Native.Arap(State, ExecuteInput.VisibleSelectionMask);
         }
 
+        /// <summary>
+        /// Applies various actions triggered from the UI or other input
+        /// </summary>
         private void ActionUi()
         {
             if (ExecuteInput.DoClearSelection > 0)

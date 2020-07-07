@@ -10,7 +10,7 @@ using XrInput;
 namespace Libigl
 {
     /// <summary>
-    /// This component needs to be attached to any GameObject that you want to modify with libigl.<br/>
+    /// This component needs to be attached to any GameObject that you want to modify with libigl.<p/>
     /// Any libigl related code is defined in the <see cref="LibiglBehaviour"/> class.
     /// This class only handles the threading and connection with the Unity Mesh components.
     /// </summary>

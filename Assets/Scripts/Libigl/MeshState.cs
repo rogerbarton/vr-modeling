@@ -8,8 +8,8 @@ namespace Libigl
     /// It stores only pointers to the Eigen data so this can be shared between C++ and C#.
     /// The mesh data is allocated in C++ during the <see cref="Native.InitializeMesh"/> function
     /// using <see cref="UMeshDataNative"/>.
-    /// <br/>
-    /// The <see cref="DirtyState"/> indicates what has been changed and needs to be applied to the Unity mesh.<br/>
+    /// <p/>
+    /// The <see cref="DirtyState"/> indicates what has been changed and needs to be applied to the Unity mesh.<p/>
     /// As this struct is shared between a managed (C#) and native (C++) context,
     /// you must consider Marshalling when adding new variables.
     /// <remarks><c>void*</c> usually represents an Eigen matrix, but can be anything.</remarks>

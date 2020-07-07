@@ -23,6 +23,14 @@ Bitmasks are used often in this project for compact/efficient boolean storage. A
 
 Note that `1 << i` can also be a mask of several bits or a predefined constant.
 
+
+
+## Hands
+
+- Anything that is related to the controllers always has a left L and right R. This means lots of parameters are essentially duplicated.
+- Functions that are independent of these variables are often made and named `*Generic()`
+- For booleans:  `Left = false`, `Right = true`
+
 ## Advanced
 
 1. Be aware of the 'Enter Play Mode Settings' in `Project Settings > Editor`

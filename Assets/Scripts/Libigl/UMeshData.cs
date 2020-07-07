@@ -7,7 +7,7 @@ using UnityEngine.Assertions;
 namespace Libigl
 {
     /// <summary>
-    /// Marks which data has changed in <see cref="UMeshData"/> as a bitmask and needs to be applied to the mesh.<br/>
+    /// Marks which data has changed in <see cref="UMeshData"/> as a bitmask and needs to be applied to the mesh.<p/>
     /// This is used to selectively update the Unity mesh and is only for data that Unity requires.
     /// Use these constants along with the bitwise operators.
     /// </summary>
@@ -147,8 +147,8 @@ namespace Libigl
         }
 
         /// <summary>
-        /// Applies changes to the C++ State to this instance. Use this to copy changes from Col to RowMajor.<br/>
-        /// Can and should be called from a worker thread. Behind the scenes this tranposes and copies the matrices.<br/>
+        /// Applies changes to the C++ State to this instance. Use this to copy changes from Col to RowMajor.<p/>
+        /// Can and should be called from a worker thread. Behind the scenes this tranposes and copies the matrices.<p/>
         /// The DirtyState is propagated so <see cref="ApplyDirtyToMesh"/> (called on the main thread) will apply the changes.
         /// <seealso cref="Native.ApplyDirty"/>
         /// </summary>
@@ -166,7 +166,7 @@ namespace Libigl
 
         /// <summary>
         /// Apply MeshData changes to the Unity Mesh to see changes when rendered.
-        /// Uses the <see cref="DirtyState"/> to detect what needs to be applied.<br/>
+        /// Uses the <see cref="DirtyState"/> to detect what needs to be applied.<p/>
         /// Must be called on the main thread as it accesses the Unity API.
         /// <remarks>Assert: <see cref="IsRowMajor"/> is true.</remarks>
         /// </summary>
@@ -204,7 +204,7 @@ namespace Libigl
 
         /// <summary> 
         /// Note: Changes to the dirtyState are not applied to the MeshData instance (not a reference) and 
-        /// needs to be set manually in a C# context.<br/>
+        /// needs to be set manually in a C# context.<p/>
         /// Important: The struct itself should be treated as <c>const</c> as changes have no effect (it's a copy).
         /// </summary> 
         /// <returns>A MeshDataNative instance than can be passed to C++ containing all pointers</returns> 

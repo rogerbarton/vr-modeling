@@ -6,9 +6,9 @@ namespace Libigl
 {
     public partial class LibiglBehaviour
     {
-        // C# only input variables
-        private Vector2 _lastPrimaryAxisValueL;
-
+        /// <summary>
+        /// Updates the <see cref="Input"/> every frame, from Update().
+        /// </summary>
         private void UpdateInput()
         {
             switch (InputManager.State.ActiveTool)
@@ -81,6 +81,10 @@ namespace Libigl
                 SetActiveSelectionIncrement((int) Mathf.Sign(InputManager.State.PrimaryAxisR.x));
         }
 
+        /// <summary>
+        /// Updates the <see cref="Input"/> just before the worker thread is started.
+        /// This copies the shared <see cref="InputManager.State"/> to the <see cref="Input"/>
+        /// </summary>
         private void PreExecuteInput()
         {
             Input.SharedPrev = Input.Shared;
@@ -90,10 +94,13 @@ namespace Libigl
         }
 
         /// <summary>
-        /// Invoked when the active selection of the mesh has changed
+        /// Invoked when the active selection of the mesh has changed.
         /// </summary>
         public event Action OnActiveSelectionChanged = delegate { };
 
+        /// <summary>
+        /// Changes the active selection and triggers <see cref="OnActiveSelectionChanged"/>.
+        /// </summary>
         public void SetActiveSelection(int value)
         {
             if (Input.ActiveSelectionId == value) return;
@@ -103,7 +110,7 @@ namespace Libigl
         }
 
         /// <summary>
-        /// Increment the active selection and safely loops
+        /// Increments the active selection and safely loops.
         /// </summary>
         public void SetActiveSelectionIncrement(int increment)
         {

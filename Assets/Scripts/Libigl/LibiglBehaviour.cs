@@ -9,6 +9,17 @@ namespace Libigl
     /// <summary>
     /// This is where the behaviour that interfaces with libigl is. It follows a Pre/Post/Execute threading pattern.
     /// This is a <c>partial</c> class, meaning it is split between several files.
+    /// <p/>
+    /// <b>Input:</b> This handles collecting data from the main thread for the worker thread. It sets up the <see cref="MeshInputState"/> for the Actions.
+    /// This is where we decide <i>what</i> to execute on the worker thread.
+    /// <p/>
+    /// <b>Actions:</b> This handles executing things on the worker thread. <b>Actions</b>, in this context, are things
+    /// that can be executed on the worker thread. They are the entry points to the C++ code (mostly). These actions
+    /// correspond to the Do* variables in the <see cref="MeshInputState"/>
+    /// <p/>
+    /// <b>Transform:</b> This handles anything related to transformations of the mesh or selections. This is only
+    /// used for calculating which transformation to do for the selections. The code for applying the transformation to selections is in <i>Actions</i>
+    /// 
     /// </summary>
     /// <remarks>See also <see cref="Libigl.LibiglMesh"/> which handles the threading and calls the Pre/Post/Execute callbacks.</remarks>
     public unsafe partial class LibiglBehaviour : IDisposable
@@ -35,6 +46,10 @@ namespace Libigl
 
         private readonly UiMeshDetails _uiDetails;
 
+        /// <summary>
+        /// Create a behaviour for the <see cref="LibiglMesh"/> <see cref="MonoBehaviour"/> component.
+        /// Every LibiglMesh has one behaviour.
+        /// </summary>
         public LibiglBehaviour(LibiglMesh libiglMesh)
         {
             LibiglMesh = libiglMesh;
@@ -49,7 +64,7 @@ namespace Libigl
 
         /// <summary>
         /// Called every frame, the normal Unity Update. Use this to update UI, input responsively.
-        /// Do not call any expensive libigl methods here, use Execute instead<br/>
+        /// Do not call any expensive libigl methods here, use Execute instead<p/>
         /// Be careful not to modify the shared state if there is a job running <see cref="Libigl.LibiglMesh.IsJobRunning"/>.
         /// Consider making a copy of certain data, using <see cref="PreExecute"/> or using atomics/Interlocked.
         /// Update is called just before <see cref="PreExecute"/>.
@@ -64,7 +79,7 @@ namespace Libigl
 
         /// <summary>
         /// Called just before a new thread is started in which <see cref="Execute"/> is called.
-        /// Use this to update the input state, set flags and access any Unity API from the main thread.<br/>
+        /// Use this to update the input state, set flags and access any Unity API from the main thread.<p/>
         /// Called on the main thread.
         /// </summary>
         public void PreExecute()
@@ -83,12 +98,12 @@ namespace Libigl
         }
 
         /// <summary>
-        /// Perform expensive computations here. This is called similarly to Update.<br/>
+        /// Perform expensive computations here. This is called similarly to Update.
         /// Called on a worker thread from which any Unity API function, with a few exceptions such as <c>Debug.Log</c>, cannot be called.
-        /// <remarks>There is one worker thread per <see cref="Libigl.LibiglMesh"/>.<br/>
+        /// </summary>
+        /// <remarks>There is one worker thread per <see cref="Libigl.LibiglMesh"/>.
         /// You should call <c>_libiglMesh.DataRowMajor.ApplyDirty(_state)</c> here to apply changes to the
         /// RowMajor <see cref="UMeshData"/> outside the main thread.</remarks>
-        /// </summary>
         public void Execute()
         {
             ActionUi();
@@ -113,7 +128,7 @@ namespace Libigl
         }
 
         /// <summary>
-        /// Called after <see cref="Execute"/> to apply changes to the mesh.<br/>
+        /// Called after <see cref="Execute"/> to apply changes to the mesh.<p/>
         /// Called on the main thread.
         /// <remarks>Use <c>LibiglMesh.DataRowMajor.ApplyDirtyToMesh</c> to apply changes</remarks>
         /// </summary>
@@ -133,6 +148,9 @@ namespace Libigl
             State->DirtySelectionsResized = 0;
         }
 
+        /// <summary>
+        /// This is the destructor. Ensure all C++ owned data is deleted. Calls <see cref="Native.DisposeMesh"/>
+        /// </summary>
         public void Dispose()
         {
             // Be sure to dispose of any NativeArrays that are not garbage collected

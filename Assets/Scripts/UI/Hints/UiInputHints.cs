@@ -9,7 +9,7 @@ namespace UI.Hints
 {
     /// <summary>
     /// Defines the behaviour of the input hints of one hand.
-    /// Important functions are: <see cref="AddTooltip(GameObject, string)"/>, <see cref="SetData"/> and <see cref="Repaint"/>.<br/>
+    /// Important functions are: <see cref="AddTooltip(GameObject, string)"/>, <see cref="SetData"/> and <see cref="Repaint"/>.<p/>
     /// In short, tooltips can be added so when we hover over a UI element it displays some text.
     /// Repaint is called with the collection to set out the default hints for a particular state.
     /// This can then be overriden by scripting, e.g. see <see cref="RepaintTriggerColor"/> where we set the
