@@ -12,6 +12,7 @@ typedef void(UNITY_INTERFACE_API* StringCallback)(const char* message);
  * Print to the Unity Debug.Log. Check that the function pointer is not null before using
  * <example><code>if (DebugLog) DebugLog("Hello");</code></example>
  * This is what the LOG macro does, use that instead.
+ * @see Callbacks like this are set in Initialize and reset to <c>nullptr</c> in UnityPluginUnload
  */
 extern StringCallback DebugLog;
 extern StringCallback DebugLogWarning;
