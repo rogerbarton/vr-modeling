@@ -19,34 +19,34 @@ namespace Libigl
         /// </summary>
         private void ActionTransformSelection()
         {
-            if (ExecuteInput.Shared.ActiveTool != ToolType.Select ||
-                !ExecuteInput.DoTransformL && !ExecuteInput.DoTransformR) return;
+            if (_executeInput.Shared.ActiveTool != ToolType.Select ||
+                !_executeInput.DoTransformL && !_executeInput.DoTransformR) return;
 
             // Find out which selections we should transform (via a local function)
             void CheckL()
             {
-                if (!ExecuteInput.DoTransformL || ExecuteInput.DoTransformLPrev) return;
+                if (!_executeInput.DoTransformL || _executeInput.DoTransformLPrev) return;
 
                 // Set the mask as the active selection or the other hand's mask,
                 // depending on if this hand is the primary one (beware of !)
-                _currentTranslateMaskL = !ExecuteInput.PrimaryTransformHand
-                    ? 1U << ExecuteInput.ActiveSelectionId
+                _currentTranslateMaskL = !_executeInput.PrimaryTransformHand
+                    ? 1U << _executeInput.ActiveSelectionId
                     : _currentTranslateMaskR;
-                FindBrushSelectionMask(ref _currentTranslateMaskL, ExecuteInput.BrushPosL);
+                FindBrushSelectionMask(ref _currentTranslateMaskL, _executeInput.BrushPosL);
             }
 
             void CheckR()
             {
-                if (!ExecuteInput.DoTransformR || ExecuteInput.DoTransformRPrev) return;
+                if (!_executeInput.DoTransformR || _executeInput.DoTransformRPrev) return;
 
-                _currentTranslateMaskR = ExecuteInput.PrimaryTransformHand
-                    ? 1U << ExecuteInput.ActiveSelectionId
+                _currentTranslateMaskR = _executeInput.PrimaryTransformHand
+                    ? 1U << _executeInput.ActiveSelectionId
                     : _currentTranslateMaskL;
-                FindBrushSelectionMask(ref _currentTranslateMaskR, ExecuteInput.BrushPosR);
+                FindBrushSelectionMask(ref _currentTranslateMaskR, _executeInput.BrushPosR);
             }
 
             // Special case: when both LR pressed simultaneously => Check primary hand first
-            if (ExecuteInput.PrimaryTransformHand)
+            if (_executeInput.PrimaryTransformHand)
             {
                 CheckR();
                 CheckL();
@@ -58,19 +58,19 @@ namespace Libigl
             }
 
             // Carry out the operation, if the masks are the same then do the joint operation
-            if (ExecuteInput.DoTransformL && !ExecuteInput.DoTransformR ||
-                !ExecuteInput.DoTransformL && ExecuteInput.DoTransformR ||
+            if (_executeInput.DoTransformL && !_executeInput.DoTransformR ||
+                !_executeInput.DoTransformL && _executeInput.DoTransformR ||
                 _currentTranslateMaskL == _currentTranslateMaskR)
             {
-                ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaJoint,
-                    ExecuteInput.PrimaryTransformHand ? _currentTranslateMaskR : _currentTranslateMaskL);
+                ActionTransformSelectionGeneric(ref _executeInput.TransformDeltaJoint,
+                    _executeInput.PrimaryTransformHand ? _currentTranslateMaskR : _currentTranslateMaskL);
             }
             else
             {
-                if (ExecuteInput.DoTransformL)
-                    ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaL, _currentTranslateMaskL);
-                if (ExecuteInput.DoTransformR)
-                    ActionTransformSelectionGeneric(ref ExecuteInput.TransformDeltaR, _currentTranslateMaskR);
+                if (_executeInput.DoTransformL)
+                    ActionTransformSelectionGeneric(ref _executeInput.TransformDeltaL, _currentTranslateMaskL);
+                if (_executeInput.DoTransformR)
+                    ActionTransformSelectionGeneric(ref _executeInput.TransformDeltaR, _currentTranslateMaskR);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Libigl
         private void FindBrushSelectionMask(ref uint maskId, Vector3 brushPos)
         {
             // If selection inside brush is not zero then use that as the mask
-            var brushMask = Native.GetSelectionMaskSphere(State, brushPos, ExecuteInput.Shared.BrushRadius);
+            var brushMask = Native.GetSelectionMaskSphere(State, brushPos, _executeInput.Shared.BrushRadius);
 
             brushMask &= Input.VisibleSelectionMask;
             if (brushMask > 0)
@@ -127,8 +127,8 @@ namespace Libigl
         /// </summary>
         private void ActionSelect()
         {
-            ActionSelectGeneric(ExecuteInput.DoSelectL, ExecuteInput.BrushPosL, ExecuteInput.AlternateSelectModeL);
-            ActionSelectGeneric(ExecuteInput.DoSelectR, ExecuteInput.BrushPosR, ExecuteInput.AlternateSelectModeR);
+            ActionSelectGeneric(_executeInput.DoSelectL, _executeInput.BrushPosL, _executeInput.AlternateSelectModeL);
+            ActionSelectGeneric(_executeInput.DoSelectR, _executeInput.BrushPosR, _executeInput.AlternateSelectModeR);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Libigl
         /// </summary>
         private void ActionSelectGeneric(bool doSelect, Vector3 brushPos, bool alternateSelectMode)
         {
-            var mode = ExecuteInput.Shared.ActiveSelectionMode;
+            var mode = _executeInput.Shared.ActiveSelectionMode;
 
             if (alternateSelectMode)
             {
@@ -147,8 +147,8 @@ namespace Libigl
             }
 
             if (doSelect)
-                Native.SelectSphere(State, brushPos, ExecuteInput.BrushRadiusLocal,
-                    ExecuteInput.ActiveSelectionId, (uint) mode);
+                Native.SelectSphere(State, brushPos, _executeInput.BrushRadiusLocal,
+                    _executeInput.ActiveSelectionId, (uint) mode);
         }
 
         /// <summary>
@@ -156,9 +156,9 @@ namespace Libigl
         /// </summary>
         private void ActionHarmonic()
         {
-            if (!ExecuteInput.DoHarmonic) return;
+            if (!_executeInput.DoHarmonic) return;
 
-            Native.Harmonic(State, ExecuteInput.VisibleSelectionMask, ExecuteInput.HarmonicShowDisplacement);
+            Native.Harmonic(State, _executeInput.VisibleSelectionMask, _executeInput.HarmonicShowDisplacement);
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ namespace Libigl
         /// </summary>
         private void ActionArap()
         {
-            if (!ExecuteInput.DoArap) return;
+            if (!_executeInput.DoArap) return;
 
-            Native.Arap(State, ExecuteInput.VisibleSelectionMask);
+            Native.Arap(State, _executeInput.VisibleSelectionMask);
         }
 
         /// <summary>
@@ -176,13 +176,13 @@ namespace Libigl
         /// </summary>
         private void ActionUi()
         {
-            if (ExecuteInput.DoClearSelection > 0)
-                Native.ClearSelectionMask(State, ExecuteInput.DoClearSelection);
+            if (_executeInput.DoClearSelection > 0)
+                Native.ClearSelectionMask(State, _executeInput.DoClearSelection);
 
-            if (ExecuteInput.VisibleSelectionMaskChanged)
-                Native.SetColorByMask(State, ExecuteInput.VisibleSelectionMask);
+            if (_executeInput.VisibleSelectionMaskChanged)
+                Native.SetColorByMask(State, _executeInput.VisibleSelectionMask);
 
-            if (ExecuteInput.ResetV)
+            if (_executeInput.ResetV)
                 Native.ResetV(State);
         }
     }

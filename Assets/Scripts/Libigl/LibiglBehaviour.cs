@@ -33,11 +33,15 @@ namespace Libigl
 
         /// <summary>
         /// The input state on the main thread. This is copied to the thread input state <c>State.Input</c> at the end of PreExecute
-        /// and is then immediately consumed by <see cref="ConsumeInput"/>.
+        /// and is then immediately consumed by <see cref="MeshInputState.Consume"/>.
         /// </summary>
         public MeshInputState Input;
 
-        public MeshInputState ExecuteInput;
+        /// <summary>
+        /// The input state on the worker thread. When inside an Actions or anywhere on the worker thread you should
+        /// exclusively access this input state.
+        /// </summary>
+        private MeshInputState _executeInput;
 
         /// <summary>
         /// Reference to the <see cref="Libigl.LibiglMesh"/> used to apply changes to the <see cref="Libigl.LibiglMesh.DataRowMajor"/> and the Unity <see cref="Mesh"/>
@@ -92,7 +96,7 @@ namespace Libigl
             _uiDetails.UpdatePreExecute();
 
             // Copy the Input to ExecuteInput so the thread has its own copy
-            ExecuteInput = Input;
+            _executeInput = Input;
             // Immediately consume the input on the main thread copy so we can detect new changes whilst we are in Execute
             Input.Consume();
         }
@@ -109,7 +113,7 @@ namespace Libigl
             ActionUi();
             if (LibiglMesh.IsActiveMesh())
             {
-                switch (ExecuteInput.Shared.ActiveTool)
+                switch (_executeInput.Shared.ActiveTool)
                 {
                     case ToolType.Transform:
                         break;
@@ -124,7 +128,7 @@ namespace Libigl
             }
 
             // Apply changes back to the RowMajor so they can be applied to the mesh
-            LibiglMesh.DataRowMajor.ApplyDirty(State, ExecuteInput);
+            LibiglMesh.DataRowMajor.ApplyDirty(State, _executeInput);
         }
 
         /// <summary>
