@@ -4,6 +4,12 @@
 #include <string>
 #include "MeshState.h"
 
+// A global variable should be extern, so it can be seen in several cpp's.
+// It is then defined in a single .cpp file.
+
+/** Access to the Unity interfaces, currently not used. */
+extern IUnityInterfaces* s_IUnityInterfaces;
+
 extern "C"
 {
 // --- Native.cpp

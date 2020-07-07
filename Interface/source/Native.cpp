@@ -2,11 +2,7 @@
 #include <igl/readOBJ.h>
 #include <igl/jet.h>
 
-// Declare variables made extern in InterfaceTypes.h
-StringCallback DebugLog = nullptr;
-StringCallback DebugLogWarning = nullptr;
-StringCallback DebugLogError = nullptr;
-
+// Declare variables made extern here
 IUnityInterfaces* s_IUnityInterfaces = nullptr;
 
 void Initialize(const StringCallback debugCallback, StringCallback debugWarningCallback,

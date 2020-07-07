@@ -42,6 +42,10 @@ The :cpp:class:`MeshState` is also an interface type but has its own file.
 
 .. doxygenfile:: InterfaceTypes.h
 
+NativeCallbacks.h
+^^^^^^^^^^^^^^^^^
+
+.. doxygenfile:: NativeCallbacks.h
 
 Deform.h
 ^^^^^^^^
