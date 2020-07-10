@@ -51,7 +51,7 @@ namespace UI.Components
             // Behaviour when clicking buttons
             visibleBtn.onClick.AddListener(ToggleVisible);
             editBtn.onClick.AddListener(SetAsActive);
-            clearBtn.onClick.AddListener(Clear);
+            clearBtn.onClick.AddListener(() => Clear());
 
             // Tooltips
             UiInputHints.AddTooltip(visibleBtn.gameObject, "Toggle visibility");
@@ -93,17 +93,19 @@ namespace UI.Components
         /// <summary>
         /// Clears the selection and deletes it if it is already empty and the last one
         /// </summary>
-        public unsafe void Clear()
+        /// <param name="forceDelete">Delete this even if the selection is not empty.
+        /// Still needs to be the last selection</param>
+        public unsafe void Clear(bool forceDelete = false)
         {
             // Either clear the selection or delete it in the UI if it is the last one and is empty
-            if (_behaviour.State->SSizes[_selectionId] > 0)
+            if (_behaviour.State->SSizes[_selectionId] > 0 && !forceDelete)
                 _behaviour.Input.DoClearSelection |= 1u << _selectionId;
-            else if (_selectionId == _selections.Count - 1 && _selections.Count > 1)
+            else if (_selectionId == _selections.Count - 1 && (_selections.Count > 1 || forceDelete))
             {
                 if (_behaviour.Input.ActiveSelectionId == _selectionId)
                 {
-                    _behaviour.SetActiveSelection(_behaviour.Input.ActiveSelectionId - 1);
-                    _selections[_behaviour.Input.ActiveSelectionId].ToggleEditSprite(true);
+                    _behaviour.SetActiveSelection(_selectionId - 1);
+                    _selections[_selectionId].ToggleEditSprite(true);
                 }
 
                 _behaviour.Input.SCountUi--;

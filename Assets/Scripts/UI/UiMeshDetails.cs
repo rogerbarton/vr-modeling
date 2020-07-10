@@ -94,7 +94,14 @@ namespace UI
             var clearAllSelections = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
             _selectionGroup.AddItem(clearAllSelections.gameObject);
             clearAllSelections.GetComponentInChildren<TMP_Text>().text = "Clear All";
-            clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection = uint.MaxValue; });
+            clearAllSelections.onClick.AddListener(() =>
+            {
+                // Clear and remove all but the first selection
+                _behaviour.SetActiveSelection(0);
+                _behaviour.Input.DoClearSelection = uint.MaxValue;
+                for (var i = _selections.Count -1; i > 0; i--)
+                    _selections[i].Clear(true);
+            });
 
 
             // -- Operations
