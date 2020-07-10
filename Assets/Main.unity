@@ -1344,8 +1344,6 @@ MonoBehaviour:
   handRigR: {fileID: 506401552}
   handInteractorR: {fileID: 506401551}
   teleportRayL: {fileID: 1580775515}
-  filledLineMat: {fileID: 2100000, guid: ba67c6d3d291b894ca28cbcda37fecf0, type: 2}
-  dottedLineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &708273530
 GameObject:
   m_ObjectHideFlags: 0
