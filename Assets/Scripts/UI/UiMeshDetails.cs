@@ -28,6 +28,7 @@ namespace UI
 
         public UiProgressIcon progressIcon;
         public Button activeBtn;
+        public Button deleteBtn;
         [SerializeField] private Image activeImage = null;
         [SerializeField] private Sprite editSprite = null;
         [SerializeField] private Sprite activeSprite = null;
@@ -58,14 +59,16 @@ namespace UI
         {
             _behaviour = behaviour;
             MeshManager.OnActiveMeshChanged += RepaintActiveMesh;
+            _defaultBackgroundColor = background.color;
 
+            // -- Existing UI in Prefab
             activeBtn.onClick.AddListener(() => { MeshManager.SetActiveMesh(_behaviour.Mesh); });
             var isActive = _behaviour.Mesh.IsActiveMesh();
             activeImage.sprite = isActive ? activeSprite : editSprite;
             UiInputHints.AddTooltip(activeBtn.gameObject,
                 () => _behaviour.Mesh.IsActiveMesh() ? "This is the active mesh" : "Make this mesh active");
 
-            _defaultBackgroundColor = background.color;
+            deleteBtn.onClick.AddListener(() => { MeshManager.get.DestroyMesh(behaviour.Mesh); });
 
             _listParent = GetComponentInChildren<VerticalLayoutGroup>().transform;
 
@@ -176,15 +179,6 @@ namespace UI
             shaderGroup.AddItem(toggleWireframe.gameObject);
             toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
             toggleWireframe.onClick.AddListener(() => { _behaviour.Mesh.ToggleWireframe(); });
-
-            // -- Misc
-            var objectGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
-            objectGroup.title.text = "Object";
-
-            var deleteBtn = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
-            objectGroup.AddItem(deleteBtn.gameObject);
-            deleteBtn.GetComponentInChildren<TMP_Text>().text = "Delete Mesh";
-            deleteBtn.onClick.AddListener(() => { MeshManager.get.DestroyMesh(behaviour.Mesh); });
 
 
             // -- Debug
