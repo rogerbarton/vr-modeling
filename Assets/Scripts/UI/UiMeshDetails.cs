@@ -175,12 +175,13 @@ namespace UI
             shaderGroup.title.text = "Selections";
             shaderGroup.SetVisibility(true);
 
-            var toggleWireframe = Instantiate(UiManager.get.buttonPrefab, _listParent).GetComponent<Button>();
+            var toggleWireframe = Instantiate(UiManager.get.togglePrefab, _listParent).GetComponent<Toggle>();
             shaderGroup.AddItem(toggleWireframe.gameObject);
-            toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Toggle Wireframe";
-            toggleWireframe.onClick.AddListener(() => { _behaviour.Mesh.ToggleWireframe(); });
+            toggleWireframe.GetComponentInChildren<TMP_Text>().text = "Wireframe";
+            toggleWireframe.onValueChanged.AddListener(value => _behaviour.Mesh.SetWireframe(value));
+            toggleWireframe.isOn = false;
 
-
+            
             // -- Debug
             _debugGroup = Instantiate(UiManager.get.groupPrefab, _listParent).GetComponent<UiCollapsible>();
             _debugGroup.title.text = "Show Debug";

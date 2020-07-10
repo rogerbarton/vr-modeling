@@ -203,13 +203,15 @@ namespace Libigl
         /// <summary>
         /// Toggles the wireframe shader for the mesh (not the bounding box).
         /// </summary>
-        public void ToggleWireframe()
+        public void SetWireframe(bool value)
         {
             IEnumerable<Material> materials = MeshRenderer.sharedMaterials;
-            if (materials.Contains(MeshManager.get.wireframeMaterial))
-                materials = materials.Except(new[] {MeshManager.get.wireframeMaterial});
-            else
+            if(value == materials.Contains(MeshManager.get.wireframeMaterial)) return;
+            
+            if (value)
                 materials = materials.Append(MeshManager.get.wireframeMaterial);
+            else
+                materials = materials.Except(new[] {MeshManager.get.wireframeMaterial});
 
             MeshRenderer.sharedMaterials = materials.ToArray();
         }
