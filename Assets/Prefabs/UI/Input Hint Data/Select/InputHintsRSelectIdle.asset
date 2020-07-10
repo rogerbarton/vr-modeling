@@ -38,10 +38,10 @@ MonoBehaviour:
     icon: {fileID: 0}
     text: 
   secondaryBtn:
-    isOverride: 0
-    isActive: 0
+    isOverride: 1
+    isActive: 1
     icon: {fileID: 0}
-    text: 
+    text: + Add Selection
   primaryAxisX:
     isOverride: 0
     isActive: 0

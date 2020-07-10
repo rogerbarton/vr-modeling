@@ -73,7 +73,12 @@ namespace Libigl
                 Input.AlternateSelectModeR = InputManager.State.PrimaryBtnR;
             }
             else
+            {
                 InputManager.State.ToolSelectMode = ToolSelectMode.Idle;
+
+                if (InputManager.State.SecondaryBtnR && !InputManager.StatePrev.SecondaryBtnR)
+                    _uiDetails.AddSelection();
+            }
 
             // Change the selection with the right hand primary2DAxis.x
             if (Mathf.Abs(InputManager.State.PrimaryAxisR.x) > 0.4f &&
