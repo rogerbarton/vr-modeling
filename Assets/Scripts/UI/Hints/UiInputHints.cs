@@ -31,6 +31,8 @@ namespace UI.Hints
 
         private LibiglBehaviour _activeBehaviour;
 
+        private const float DefaultTooltipTimeout = 60f;
+        
         public void Initialize()
         {
             title.Initialize();
@@ -118,6 +120,8 @@ namespace UI.Hints
 
                     break;
             }
+
+            ClearTooltip();
         }
 
         #region Custom Functionality
@@ -190,7 +194,10 @@ namespace UI.Hints
 
         private void ClearTooltip()
         {
-            help.ResetToData();
+            if(Time.time > DefaultTooltipTimeout)
+                help.SetData(new UiInputLabelData{isOverride = true, isActive = false});
+            else
+                help.ResetToData();
         }
 
         #endregion
