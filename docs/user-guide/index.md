@@ -22,4 +22,6 @@ From the UI panel you can see information about the mesh as well as performing m
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   
+   gallery
 

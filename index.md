@@ -17,10 +17,9 @@
 
 ## Features
 
-.. TODO: Add gifs
+**See the** [Gallery](docs/user-guide/gallery.html) **for visual examples.**
 
-1. Run As-Rigid-As-Possible `igl::arap` or a biharmonic defomation `igl::harmonic` on a mesh and manipulate it
-   in real-time
+1. Run As-Rigid-As-Possible `igl::arap` or a biharmonic defomation `igl::harmonic` on a mesh and manipulate it in real-time
 1. Select vertices and transform them using VR controllers
 1. Threaded geometry code, can handle armadillo with responsive VR
 1. Multi-mesh editing possible

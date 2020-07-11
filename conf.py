@@ -198,6 +198,18 @@ html_css_files = [
 html_js_files = [
     'js/custom.js'
 ]
+
+# Prioritise gif's over png's in html
+# Use myimage.* so the gif is shown in html but the png in the pdf
+# See https://stackoverflow.com/questions/45969711/sphinx-doc-how-do-i-render-an-animated-gif-when-building-for-html-but-a-png-wh
+from sphinx.builders.html import StandaloneHTMLBuilder
+StandaloneHTMLBuilder.supported_image_types = [
+    'image/svg+xml',
+    'image/gif',
+    'image/png',
+    'image/jpeg'
+]
+
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #
