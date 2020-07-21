@@ -11,7 +11,7 @@ Checkout submodules: `git submodule update --init`
 Setup the C++ interface to libigl with CMake:
 
 1. Run CMake in the root folder, open the solution in **Visual Studio** and build the target `__libigl-interface`
-2. Or setup the CMake project in **CLion** and build, (ensure that the architecture is correct, e.g. `x64`, in the Toolchain settings or you may have errors that the dll was not found).
+2. Or setup the CMake project in **CLion** and build, (ensure that the architecture is correct, e.g. `x64` or `amd64`, in the Toolchain settings or you may have errors that the dll was not found).
 
 Open the project in Unity.
 

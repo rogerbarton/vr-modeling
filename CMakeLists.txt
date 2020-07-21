@@ -14,6 +14,7 @@ set(UNITY_DLL_OUTPUT_DIRECTORY_ABS "${UNITY_PROJECT_ROOT}/${UNITY_DLL_OUTPUT_DIR
 
 # Add the dll projects
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Interface/source")
+set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Interface/external")
 add_subdirectory("Interface")
 
 # Documentation

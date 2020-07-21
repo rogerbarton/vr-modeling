@@ -141,9 +141,3 @@ Links:
 - [Simple OpenCV Example](https://forum.unity.com/threads/tutorial-using-c-opencv-within-unity.459434/)
 - [x86 Calling Conventions](https://en.wikipedia.org/wiki/X86_calling_conventions#stdcall) for `__stdcall`
 - [Unity Macros](https://bitbucket.org/Unity-Technologies/graphicsdemos/src/buffer-ptr/NativeRenderingPlugin/PluginSource/source/Unity/IUnityInterface.h) only the first 20 lines
-
-## Known Issues
-
-1. Using both debug and release CMake profiles in CLion does not work. Profiles are loaded in parallel which causes issues with cloning Eigen.
-   Use only one profile at a time.
-   [CLion Issue](https://youtrack.jetbrains.com/issue/CPP-20496?_ga=2.34925026.276428072.1590419347-85201278.1567248252&_gac=1.250350196.1587037749.CjwKCAjwhOD0BRAQEiwAK7JHmGREcAuH_f0dFLzdf_CEwVvREfHYy-2HZWvdkxfXeSXVuiuojkqZ1RoCimEQAvD_BwE)

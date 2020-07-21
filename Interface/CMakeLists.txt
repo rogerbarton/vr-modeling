@@ -7,12 +7,12 @@ option(CMAKE_VERBOSE "Print extra information" OFF)
 #       this cmake file is tailored to a Visual Studio solution.
 
 # Add Unity header files
-include_directories(${PROJECT_NAME} "external" "external/Unity")
-file(GLOB UNITY_PLUGIN_API_FILES "external/Unity/PluginAPI/*.c*" "external/Unity/PluginAPI/*.h*")
-file(GLOB EIGEN_DEBUG_FILES "external/eigen-debug/msvc/*")
+include_directories(${PROJECT_NAME} "${EXTERNAL_DIR}" "${EXTERNAL_DIR}/Unity")
+file(GLOB UNITY_PLUGIN_API_FILES "${EXTERNAL_DIR}/Unity/PluginAPI/*.c*" "${EXTERNAL_DIR}/Unity/PluginAPI/*.h*")
+file(GLOB EIGEN_DEBUG_FILES "${EXTERNAL_DIR}/eigen-debug/msvc/*")
 option(UNITY_INCLUDE_RENDER_API "Include the Unity Render API Files in the project")
 if(UNITY_INCLUDE_RENDER_API)
-	file(GLOB UNITY_RENDER_API_FILES "external/Unity/RenderAPI/*.c*" "external/Unity/RenderAPI/*.h*" "external/Unity/RenderAPI/gl3w/*.c*" "external/Unity/RenderAPI/gl3w/*.h*")
+	file(GLOB UNITY_RENDER_API_FILES "${EXTERNAL_DIR}/Unity/RenderAPI/*.c*" "${EXTERNAL_DIR}/Unity/RenderAPI/*.h*" "${EXTERNAL_DIR}/Unity/RenderAPI/gl3w/*.c*" "${EXTERNAL_DIR}/Unity/RenderAPI/gl3w/*.h*")
 else()
 	set(UNITY_RENDER_API_FILES "")
 endif()
@@ -34,5 +34,5 @@ option(UNITY_BUILD_STUB_PLUGIN "Create a target for building the stubLluiPlugin 
 	This has to be built once, in release mode, to allow for UnityPluginLoad and
 	UnityPluginUnload to be called when mocking with UnityNativeTool in the Editor" ON)
 if(${UNITY_BUILD_STUB_PLUGIN})
-	add_subdirectory("external/UnityNativeTool") # stub plugin for ensuring UniyLoadPlugin is called when mocking
+	add_subdirectory("${EXTERNAL_DIR}/UnityNativeTool") # stub plugin for ensuring UniyLoadPlugin is called when mocking
 endif()
