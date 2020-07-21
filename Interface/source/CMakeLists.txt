@@ -18,9 +18,31 @@ if(CMAKE_VERBOSE)
 endif()
 
 
+# -- Setup SWIG
+message(STATUS "SWIG setup, swig hint: ${EXTERNAL_DIR}/swigwin-4.0.2/swig.exe")
+cmake_policy(SET CMP0078 NEW)
+cmake_policy(SET CMP0086 NEW)
+set(SWIG_EXECUTABLE "${EXTERNAL_DIR}/swigwin-4.0.2/swig.exe")
+find_package(SWIG REQUIRED)
+include(${SWIG_USE_FILE})
+
+set(CMAKE_SWIG_FLAGS "")
+
+set_source_files_properties(Native.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(Native.i PROPERTIES SWIG_FLAGS "-includeall")
+swig_add_library(${PROJECT_NAME}
+		TYPE SHARED
+		LANGUAGE csharp
+		OUTPUT_DIR "${UNITY_DLL_OUTPUT_DIRECTORY_ABS}/swig"
+		OUTFILE_DIR "${UNITY_DLL_OUTPUT_DIRECTORY_ABS}"
+		SOURCES Native.i ${SRCFILES} ${HFILES}
+			${UNITY_PLUGIN_API_FILES} ${UNITY_RENDER_API_FILES} ${EIGEN_DEBUG_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE .)
+
+
 # -- Create out DLL output file and link libigl to it
-add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES}
-		${UNITY_PLUGIN_API_FILES} ${UNITY_RENDER_API_FILES} ${EIGEN_DEBUG_FILES})
+#add_library(${PROJECT_NAME} SHARED ${SRCFILES} ${HFILES}
+#		${UNITY_PLUGIN_API_FILES} ${UNITY_RENDER_API_FILES} ${EIGEN_DEBUG_FILES})
 
 # Ensure the output dll is placed automatically into the Assets/Plugins folder (same path for release and debug)
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -33,7 +55,7 @@ message(STATUS "Saving ${PROJECT_NAME}.dll to: ${UNITY_DLL_OUTPUT_DIRECTORY_ABS}
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
 	message(STATUS "Eigen parallel enabled with OpenMP.")
-	target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+	swig_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
 else()
 	message(STATUS "Eigen parallel disabled, requires with OpenMP.")
 endif()
@@ -52,6 +74,5 @@ option(LIBIGL_WITH_OPENGL      "Use OpenGL" OFF)
 option(LIBIGL_WITH_OPENGL_GLFW "Use GLFW"   OFF)
 
 find_package(LIBIGL REQUIRED QUIET)
-target_link_libraries(${PROJECT_NAME} igl::core)
-target_include_directories(${PROJECT_NAME} PRIVATE .)
+swig_link_libraries(${PROJECT_NAME} igl::core)
 message(STATUS "Using libigl at: ${LIBIGL_INCLUDE_DIR}")

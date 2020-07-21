@@ -106,3 +106,8 @@ docs/external/.idea/
 .idea/.idea.vr-modeling/riderModule.iml
 
 __pycache__/
+
+# SWIG Generated
+Assets/Plugins/swig/
+Assets/Plugins/swig.meta
+*CSHARP_wrap.cxx*

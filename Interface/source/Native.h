@@ -1,8 +1,10 @@
 #pragma once
 #include <PluginAPI/IUnityInterface.h>
+#ifndef SWIG
 #include <RenderAPI/RenderAPI.h>
 #include <string>
 #include "MeshState.h"
+#endif
 
 // A global variable should be extern, so it can be seen in several cpp's.
 // It is then defined in a single .cpp file.
