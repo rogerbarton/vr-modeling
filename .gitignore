@@ -107,7 +107,8 @@ docs/external/.idea/
 
 __pycache__/
 
-# SWIG Generated
+# SWIG
+Interface/external/swig/
 Assets/Plugins/swig/
 Assets/Plugins/swig.meta
 *CSHARP_wrap.cxx*

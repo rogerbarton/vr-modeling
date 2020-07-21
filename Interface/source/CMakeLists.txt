@@ -19,10 +19,11 @@ endif()
 
 
 # -- Setup SWIG
-message(STATUS "SWIG setup, swig hint: ${EXTERNAL_DIR}/swigwin-4.0.2/swig.exe")
-cmake_policy(SET CMP0078 NEW)
+message(STATUS "Looking for SWIG in: ${EXTERNAL_DIR}/swig/swig.exe")
+set(SWIG_EXECUTABLE "${EXTERNAL_DIR}/swig/swig.exe")
+
 cmake_policy(SET CMP0086 NEW)
-set(SWIG_EXECUTABLE "${EXTERNAL_DIR}/swigwin-4.0.2/swig.exe")
+cmake_policy(SET CMP0078 NEW)
 find_package(SWIG REQUIRED)
 include(${SWIG_USE_FILE})
 
