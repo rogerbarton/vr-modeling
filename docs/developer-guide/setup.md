@@ -17,15 +17,27 @@ Open the project in Unity.
 
 1. Open the `Main` scene from the *Project* window.
 2. *Reimport* the `Assets/Models/EditableMeshes` folder using the Right-Click menu.
+   1. You may also have to reimport the `Main` scene, if you are getting errors.
 3. (Optional) Go to the lighting window `Window` > `Rendering` > `Lighting Setting` and press `Generate Lighting` at the bottom.
 
 Press play in Unity and it should work.
 
 ## Building
 
-How to produce an executable:
+### CMake Targets:
 
-1. Compile the C++ dll in *release* mode.
+1. `__libigl-interface` - this is the main C++ dll
+1. `stubLluiPlugin` - a tiny C++ dll used by the UnityNativeTool (you can leave this alone)
+1. `Doxygen` *optional* - builds doxygen html and xml output into `<cmake-build-dir>/docs/doxygen`
+1. `Sphinx` *optional* - builds entire documentation (incl. doxygen)
+1. `ZERO_CHECK` *Visual Studio only* - re-runs CMake
+1. `ALL_BUILD` *Visual Studio only* - builds all targets
+
+
+
+### Producing an Executable
+
+1. Compile the C++ `__libigl-interface` dll in *release* mode.
 2. `Crl` + `Shift` + `B` in Unity to open the build settings.
 3. Ensure you are on the platform you want (Windows standalone 64-bit) and set Development mode accordingly, press build.
 
@@ -58,12 +70,14 @@ To regenerate this documentation as well as the Doxygen documentation follow the
 Important folders:
 
 - `Assets` - Unity related files
-
-   - `Scripts` - C# code for things like: UI, Input, Unity mesh interface, Threading, Importing models
+- `Scripts` - C# code for things like: UI, Input, Unity mesh interface, Threading, Importing models
    - `Prefabs` - Pre-made components, mostly UI
    - `Models/EditableMeshes` - The meshes that can be modified with libigl
    - `Materials` - Textures, icons and shaders
-- `Interface` - C++ project that interfaces with libigl: deformations, modifying meshes via eigen matrices
-- `source` - the C++ source code which calls libigl
+- `Interface` - C++ project that interfaces with libigl: deformations, modifying meshes via Eigen matrices
+   - `source` - the C++ source code which calls libigl
    - `external` - the C++ libraries
 - `Packages` - Local Unity packages
+- `docs` - non-inline documentation and generation
+
+Generated Folders: `Library` `Temp` by Unity, `obj` by VS
