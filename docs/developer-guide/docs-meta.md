@@ -6,7 +6,7 @@ Code is documented with xml-doc in C# and javadoc in C++ currently. Using `Crl` 
 
 .. note::
 
-   The markdown files are meant to give an overview, but most documentation should be in the code itself. The recommended cross-platform md/rst editor that I use is [Typora](https://typora.io/).
+   The markdown files are meant to give an overview, but most documentation should be in the code itself. The recommended cross-platform md/rst editor that I use is Typora, see https://typora.io
 
 ## Modifying the Documentation
 

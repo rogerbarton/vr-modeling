@@ -10,8 +10,7 @@
    :caption: Contents:
 
    setup
-   vr
-   unity-mesh-api
    general-advice
+   unity-mesh-api
    adding-functionality
    docs-meta
