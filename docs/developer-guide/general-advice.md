@@ -13,6 +13,12 @@
 1. In C++ use the :c:macro:`LOG` macros
 1. Have a look at the existing functionality and use it as an example
 
+## C# Features
+
+- Use LINQ for manipulating arrays and lists
+- Follow some of the advice from the [Refactoring Guru](https://refactoring.guru/)
+  - Mainly, keep files small and separate independent features.
+
 ## Use of Bitmasks
 
 Bitmasks are used often in this project for compact/efficient boolean storage. A common example is the selection vector. We have one 32-bit integer for each vertex, equivalent to 32 booleans per vertex. Each bit represents if the vertex is in that selection or not. There are some common operations with bitwise operators you may want to do. Please consider operator precedence.
