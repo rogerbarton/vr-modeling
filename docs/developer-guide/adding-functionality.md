@@ -66,6 +66,8 @@ clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection
 .. warning::
 	Be careful not to add an *excessive* amount of UI as raycasting the UI is (surprisingly) one of the most performance intensive operations currently.
 
+To *add your own UI component* create a prefab in the `Assets/Prefabs/UI/Components` folder, then add a reference to it in the :cs:class:`UiManager` so you can access it from C#. It is common to add a :cs:class:`MonoBehaviour` to the root of the prefab, which you can then use to initialize it. See the scripts in `UI/Components`.
+
 ## Importing Meshes
 
 If you just want to add a new mesh, **add it into** `Assets/Models/EditableMeshes` and follow the warnings in the Unity console when running. The mesh will be checked for its validity. Note for `.off` files you need to have built the C++ library first.
