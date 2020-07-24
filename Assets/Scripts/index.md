@@ -15,7 +15,7 @@ In the `Scripts` folder, the subfolders correspond to the namespaces. Beware tha
 - **Testing** - Scripts here are not used but might be of interest to see how the Unity APIs work (particularly the mesh API).
 
 .. warning::
-   **The C# code documentation is *experimental*.** There is lots of duplication and some parts are hidden. If something is displayed completely incorrectly, please create an issue so it can be fixed. However, this is hopefully still useful.
+   The C# code documentation is *'custom'* made. If something is displayed completely incorrectly, please create an issue so it can be fixed. 
    You can always see the **doxygen** documentation locally or **view the code comments** themselves in the IDE.
 
 ## Libigl Overview

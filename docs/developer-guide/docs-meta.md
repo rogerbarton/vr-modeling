@@ -13,5 +13,6 @@ Code is documented with xml-doc in C# and javadoc in C++ currently. Using `Crl` 
 - Annotate your code (e.g. functions, vars) with either xml-doc or javadoc
 - You can add a new md file but it must be referenced in a `toctree` directive (usually found in `index.*`). CMake must re-run when doing this.
 - Ideally have a markdown file per source directory
+- Inline diagrams/flowcharts are made with [diagrams.net](https://diagrams.net) (previously draw.io) and inserted as an iframe
 
 After making changes fast forward the `read-the-docs` branch to the latest commit on the master branch. This will trigger read the docs to rebuild and update the online documentation.

@@ -24,7 +24,7 @@ Press play in Unity and it should work.
 
 ## Building
 
-### CMake Targets:
+### CMake Targets
 
 1. `__libigl-interface` - this is the main C++ dll
 1. `stubLluiPlugin` - a tiny C++ dll used by the UnityNativeTool (you can leave this alone)
