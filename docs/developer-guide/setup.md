@@ -17,7 +17,7 @@ Open the project in Unity.
 
 1. Open the `Main` scene from the *Project* window.
 2. *Reimport* the `Assets/Models/EditableMeshes` folder using the Right-Click menu.
-   1. You may also have to reimport the `Main` scene, if you are getting errors.
+   1. You may also have to reimport the `Main` scene and `Models/Environment Variant` prefab, if you are getting errors.
 3. (Optional) Go to the lighting window `Window` > `Rendering` > `Lighting Setting` and press `Generate Lighting` at the bottom.
 
 Press play in Unity and it should work.

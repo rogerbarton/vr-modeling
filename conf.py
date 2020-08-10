@@ -26,8 +26,8 @@ import subprocess, os
 import sys
 
 
-def configureDoxyfile(input_dir, output_dir):
-    with open('docs/Doxyfile.in', 'r') as file :
+def configure_doxyfile(input_dir, output_dir):
+    with open('docs/Doxyfile.in', 'r') as file:
         filedata = file.read()
 
     filedata = filedata.replace('@DOXYGEN_INPUT_DIRECTORY@', input_dir)
@@ -35,6 +35,7 @@ def configureDoxyfile(input_dir, output_dir):
 
     with open('docs/Doxyfile', 'w') as file:
         file.write(filedata)
+
 
 # Check if we're running on Read the Docs' servers
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
@@ -44,7 +45,7 @@ breathe_projects = {}
 if read_the_docs_build:
     input_dir = 'Interface/source \ Assets/Scripts \ Interface/external/Unity \ Interface/external/UnityNativeTool'
     output_dir = 'docs/doxygen'
-    configureDoxyfile(input_dir, output_dir)
+    configure_doxyfile(input_dir, output_dir)
     subprocess.call('doxygen docs/Doxyfile', shell=True)
     breathe_projects['vr-modeling'] = output_dir + '/xml'
     print("---- Doxygen Done ----")
@@ -75,7 +76,7 @@ breathe_default_project = 'vr-modeling'
 breathe_debug_trace_directives = False
 
 # --- C# domain configuration ---
-sphinx_csharp_test_links = True
+sphinx_csharp_test_links = read_the_docs_build
 
 sphinx_csharp_ignore_xref = [
     'Vector2',

@@ -106,3 +106,5 @@ docs/external/.idea/
 .idea/.idea.vr-modeling/riderModule.iml
 
 __pycache__/
+
+*.tex
