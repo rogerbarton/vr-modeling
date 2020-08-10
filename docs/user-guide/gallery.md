@@ -19,3 +19,7 @@
    Support for **multiple meshes**. Context sensitive **input hints** can also be seen on the controller.
 
 .. 
+
+.. TODO::
+
+   Armadillo gif to show performance

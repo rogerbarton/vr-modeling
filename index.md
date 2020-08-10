@@ -12,6 +12,7 @@
    docs/developer-guide/index
    Assets/index
    Interface/index
+   docs/report/index
 
 - See whole :ref:`genindex`
 

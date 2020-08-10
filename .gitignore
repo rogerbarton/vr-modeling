@@ -107,4 +107,8 @@ docs/external/.idea/
 
 __pycache__/
 
+docs/report/Report-Todo.md
+
 *.tex
+
+Tutorials.md
