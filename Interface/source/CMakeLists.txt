@@ -35,7 +35,7 @@ if(OpenMP_CXX_FOUND)
 	message(STATUS "Eigen parallel enabled with OpenMP.")
 	target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
 else()
-	message(STATUS "Eigen parallel disabled, requires with OpenMP.")
+	message(STATUS "Eigen parallel disabled, requires OpenMP.")
 endif()
 
 
