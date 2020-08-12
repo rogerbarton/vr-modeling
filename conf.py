@@ -186,6 +186,7 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+html_logo = 'docs/_static/images/arap-usage.png'
 github_url = 'https://github.com/rogerbarton/vr-modeling'
 gitlab_url = 'https://gilab.ethz.ch/rbarton/vr-modeling'
 
