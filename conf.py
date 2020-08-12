@@ -77,6 +77,7 @@ breathe_debug_trace_directives = False
 
 # --- C# domain configuration ---
 sphinx_csharp_test_links = read_the_docs_build
+sphinx_csharp_multi_language = True
 
 sphinx_csharp_ignore_xref = [
     'Vector2',
@@ -84,7 +85,7 @@ sphinx_csharp_ignore_xref = [
 ]
 
 sphinx_csharp_ext_search_pages = {
-    'upm.xrtk': ('https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/api/%s.html',
+    'upm.xrit': ('https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/api/%s.html',
                  'https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/?%s'),
     'upm.tmp': ('https://docs.unity3d.com/Packages/com.unity.textmeshpro@1.2/api/%s.html',
                 'https://docs.unity3d.com/Packages/com.unity.textmeshpro@1.2/?%s'),
@@ -94,10 +95,13 @@ sphinx_csharp_ext_search_pages = {
 
 sphinx_csharp_ext_type_map = {
     'unity': {
-        'XR': ['InputDeviceCharacteristics'],
+        'XR': ['InputDevice', 'InputDeviceCharacteristics'],
+        'Unity.Collections': ['NativeArray'],
         'Experimental.AssetImporters': ['AssetImportContext', 'MeshImportPostprocessor', 'ScriptedImporter'],
+        'Rendering': ['VertexAttributeDescriptor'],
+        'Events': ['UnityAction'],
     },
-    'upm.xrtk': {'UnityEngine.XR.Interaction.Toolkit': ['XRRayInteractor', 'XRBaseInteractable', 'XRController']},
+    'upm.xrit': {'UnityEngine.XR.Interaction.Toolkit': ['XRRayInteractor', 'XRBaseInteractable', 'XRController']},
     'upm.tmp': {'TMPro': ['TMP_Text']},
     'upm.ugui': {'': ['Image', 'Button', 'Toggle']},
 }
