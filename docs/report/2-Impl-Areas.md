@@ -95,7 +95,7 @@ CMake is used to compile the C++ library as well as the documentation in a cross
 
 ### Unity Plugin Reloading
 
-Unity presents a complication that it does not unload libraries once they are loaded, which happens when it is first used. This means that we cannot recompile the C++ library without restarting Unity. This creates a larger iteration time. In order to counter this, the UnityNativeTool open source project is used. This effectively wraps native functions and un/loads the library itself. It is an editor-only tool. A few modifications were made to this in several pull requests, see #14, #15, #18, #19, #20, #21, #28 on GitHub. 
+Unity presents a complication that it does not unload libraries once they are loaded, which happens when it is first used. This means that we cannot recompile the C++ library without restarting Unity. This creates a larger iteration time. In order to counter this, the UnityNativeTool open source project is used. This effectively wraps native functions and un/loads the library itself. It is an editor-only tool. A few modifications were made to this in several pull requests, see [#14](https://github.com/mcpiroman/UnityNativeTool/pull/14), [#15](https://github.com/mcpiroman/UnityNativeTool/pull/15), [#18](https://github.com/mcpiroman/UnityNativeTool/pull/18), [#19](https://github.com/mcpiroman/UnityNativeTool/pull/19), [#20](https://github.com/mcpiroman/UnityNativeTool/pull/20), [#21](https://github.com/mcpiroman/UnityNativeTool/pull/21), [#28](https://github.com/mcpiroman/UnityNativeTool/pull/28) on GitHub. 
 
 ### Future Work
 
@@ -167,7 +167,7 @@ Additional markdown files are there to add an overview of the files and provide 
 
 To condense all this information, Doxygen and Sphinx are used. Doxygen is used to extract the documentation from the code. This information in xml format is then used by Breathe (a Sphinx extension) to render it with Sphinx, which then combines it with the markdown files. Breathe and the language domains ensure cross-referencing of items. 
 
-For this to work with C#, the *sphinx-csharp* and *breathe* projects where modified, see #8 and #550 respectively on GitHub.
+For this to work with C#, the *sphinx-csharp* and *breathe* projects where modified, see [#8](https://github.com/djungelorm/sphinx-csharp/pull/8) and [#550](https://github.com/michaeljones/breathe/pull/550) respectively on GitHub.
 
 ReadTheDocs is used to host and compile the website output of Sphinx. This has continuous integration. Whenever a commit is pushed to the `read-the-docs` branch, the website is recompiled.
 

@@ -1,5 +1,13 @@
 # General Advice
 
+## Further Reading
+
+You should make yourself familiar with the Unity engine and some of its packages as well as libigl.
+
+- [Valem VR YouTube Tutorials](https://youtu.be/gGYtahQjmWQ)
+- [XR Interaction Toolkit Documentation](https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html)
+- [libigl Tutorial](https://libigl.github.io/tutorial/)
+
 ## How to start developing
 
 1. Find a good IDE and learn how to do basic things such as:
@@ -28,8 +36,6 @@ Bitmasks are used often in this project for compact/efficient boolean storage. A
 1. Unset i-th bit `flags &= ~(1 << i);`
 
 Note that `1 << i` can also be a mask of several bits or a predefined constant.
-
-
 
 ## VR Hands
 
