@@ -31,7 +31,7 @@ Note that `1 << i` can also be a mask of several bits or a predefined constant.
 
 
 
-## Hands
+## VR Hands
 
 - Anything that is related to the controllers always has a left L and right R. This means lots of parameters are essentially duplicated.
 - Functions that are independent of these variables are often made and named `*Generic()`

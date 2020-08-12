@@ -1,6 +1,6 @@
 # Results & Future Work
 
-Extension with [Discrete orthogonal geodesic nets (DOG)](https://github.com/MichaelRabinovich/DOG-editor/), another use case. This was briefly explored. However, the interface is as simple as with libigl and is currently not compatible with windows. 
+Extension with [Discrete orthogonal geodesic nets (DOG)](https://github.com/MichaelRabinovich/DOG-editor/) is another use case. This was briefly explored. However, the interface is more complicated and the project is currently not compatible with windows. 
 
 A problem is that Unity is a game engine not a mesh editing software. A promising alternative to the Unity game engine as a base is Blender. There are several interesting aspects to this: 
 
