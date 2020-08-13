@@ -8,7 +8,7 @@ Since Unity 2019.3 there have been some updates to the mesh API. However, there 
 
 Indeed there are **4 copies of the mesh** currently. Potentially, the 'CPU Unity internal' copy does not exist, but this is unclear. Libigl currently only reliably supports column-major, but Unity requires row-major data. A necessary transpose is required. In this case it is most efficient to have two copies.
 
-Note that updates to the mesh only occur when a :cs:class:`DirtyFlag` is set in the :cs:var:`MeshState.DirtyState`. :cs:class:`DirtyFlags` are propagated and cleared when processed. The native :cpp:func:`ApplyDirty` is called by the managed :cs:func:`ApplyDirty` in :cs:class:`UMeshData`.
+Note that updates to the mesh only occur when a :cs:class:`DirtyFlag` is set in the :cs:var:`MeshState.DirtyState`. :cs:class:`DirtyFlag` are propagated and cleared when processed. The native :cpp:func:`ApplyDirty` is called by the managed :cs:func:`ApplyDirty` in :cs:class:`UMeshData`.
 
 It is also important to note that the transposing in :cpp:func:`ApplyDirty` is done on the worker thread. `mesh.SetVertices()` must be called on the main thread (as it is a Unity API). It is called by the managed :cs:func:`ApplyDirtyToMesh` function in :cs:class:`UMeshData`.
 
