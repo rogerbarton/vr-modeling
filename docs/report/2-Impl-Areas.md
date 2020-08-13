@@ -1,4 +1,4 @@
-# Implementation
+# Implementation Areas
 
 The implementation has following categories:
 
@@ -10,7 +10,7 @@ The implementation has following categories:
 1. Mesh interface between libigl and Unity
 1. Documentation process
 
-## VR Interface
+## VR Interface*
 
 There are two parts to consider when adding VR functionality. The input and the output (rendering). The input part varies greatly between different VR devices and platforms, even with newer devices like the Oculus Quest having hand tracking in contrast to controllers. Initially, this project was aimed purely at the Oculus Rift S. Oculus provides an Oculus Integration on the Unity Asset Store to provide this functionality. However, since around Unity 2019.3 there has been a Unity VR Plugin system to simplify the interface with each of the SDKs of the VR platforms. Additionally, there is a Unity XR Interaction Toolkit package with provides cross-platform input as well as common VR functionality such as locomotion and interaction with UI. This package is the preferred option over the Oculus Integration.
 
@@ -18,7 +18,7 @@ There are two parts to consider when adding VR functionality. The input and the 
 
 This involves moving the user in the virtual world. The common approach here is to use teleportation with a curved ray to translate the user and snap rotation to adjust the rotation of the user. Using a curved ray for indicating where to translate to has the benefit that there is an approximately linear mapping between the angle of the controller and the distance. This makes is easy to precisely indicate a teleportation position far away from the user.
 
-## User Interface
+## User Interface*
 
 Despite this being a VR application 2D User Interface (UI) is still necessary. It allows for displaying information as well as providing access to infrequently used actions. Frequently used actions should ideally be mapped to contextual controller input. However, if all degrees of freedom in the controller input are already used, then the 2D UI will be the fallback option.
 
@@ -53,7 +53,7 @@ As the number of UI elements increases in the future, there will most likely nee
 
 To make the application more intuitive and easy to use, we need a way of providing the user with relevant help information when required. Tooltips are provided to display a short text when hovering over a UI element. Input hints tell the user what each button/axis does when pressed. Input hints are displayed directly on the controller. These can be disabled if desired, with the joystick click.
 
-## Input
+## Input*
 
 The Unity XR Interaction Toolkit is used for this for cross-platform input.
 
@@ -68,9 +68,16 @@ Context can be inferred from the state of the application and from the input its
 
 For example, when the user is grabbing a selection we want to provide relevant input to that context such as being able to change the pivot mode or whether rotation is enabled.
 
-## Threading
+### Controllers vs Hand Tracking
 
-In order to have a high framerate, the expensive computations done by libigl must be done on a worker thread. The Unity API, such as getting the transform position, is not thread-safe and thus use from a worker thread is forbidden. This has several implications, with the main one being that all access to the Unity API must be done before starting the thread and the results should be copied. This is what :cs:func:`PreExecute` and the :cs:class:`MeshState` are for. If the thread wants to make changes to the Unity state, e.g. moving an object, then this must be deferred to the main thread. Here this is done once the thread has finished in :cs:func:`PostExecute`, however, a concurrent queue of actions could also be used.
+- Controllers allow more precise and predefined input
+- Hand tracking is different for everyone and relies on less robust gesture recognition
+- Controllers have predefined degrees of freedom, hands could be more contextual
+- Hand input defined in terms of bone transforms
+
+## Threading*
+
+In order to have a high framerate, the expensive computations done by libigl must be done on a worker thread. The Unity API, such as getting the transform position, is not thread-safe and thus use from a worker thread is forbidden. This has several implications, with the main one being that all access to the Unity API must be done before starting the thread and the results should be copied. This is what :cs:func:`PreExecute` and the :cs:struct:`MeshState` are for. If the thread wants to make changes to the Unity state, e.g. moving an object, then this must be deferred to the main thread. Here this is done once the thread has finished in :cs:func:`PostExecute`, however, a concurrent queue of actions could also be used.
 
 As we want to execute certain operations every frame and apply their changes, we have a loop of `PreExecute`, `Execute` and `PostExecute`. Where `PreExecute` and `PostExecute` are performed on the main thread. Notably, in `PostExecute` we apply changes to the mesh done by libigl.
 
@@ -78,15 +85,23 @@ C# threads are used.
 
 Initially a model based on a concurrent queue of actions was implemented. The main thread would push an action to the queue to be performed by the worker thread. This was however not flexible enough.
 
-## C#/C++ Interface and Data Layout
+## C#/C++ Language Interface
 
-To call libigl functions a necessary C#/C++ language interface is required. This adds an extra layer of complexity. We must consider in which language functionality and data resides and what is shared. An important note is that the Unity API is only accessible within C#.
+To call libigl functions a necessary C#/C++ language interface is required. This adds an extra layer of complexity. We must consider in which language functionality and data resides and what is shared. An important note is that the Unity API is only accessible within C#. Using the libigl python bindings would also require a language interface.
 
-It is important to have a clear distinction of what is done where. All expensive mathematical operations are generally done in C++. The number of interface functions is kept minimal. All input is done in C# and passed as arguments.
+### Functionality
 
-In data we also have a distinction. Shared datatypes must be declared in both languages, including Unity types such as :cs:class:`Vector3`. The C# garbage collector also needs to be considered. Within a function this is not a problem. Data is `fixed` within the scope of a function. However, is a C# pointer is passed to C++ and this pointer is used after the function scope, then the memory may have moved and the pointer is no longer valid. This data should be pinned with :cs:func:`GcHandle.Alloc`. To avoid this scenario persistent data is allocated, and thus deleted, in C++, for example the :cpp:class:`MeshState`.
+It is important to have a clear distinction of what is done where. All expensive mathematical operations are generally done in C++. The number of interface functions is kept minimal. All input collection and high-level actions are done in C#.
 
-It is possible to use a C++ array in C# with the `NativeArray.ConvertExisting(ptr, Alloc.None)` and vice verse if the array is pinned and blittable (i.e. 1D)
+Development of a C++ library inside Unity is particularly challenging as an unhandled exception or runtime error will crash the Unity editor. This can be mitigated be placing assertions, which pause the execution and allow for attachment of a debugger.
+
+### Data
+
+In data we also have a distinction. Shared datatypes are possible but must be declared in both languages, including Unity types such as :cs:class:`Vector3`. By convention, each mesh has a state shared between the languages. This will point also to any other native-only data. By doing this, we can easily handle multiple meshes and in future serialization.
+
+When the pointers are used the C# garbage collector needs to be considered. Within a function this is not a problem as data is `fixed` throughout a native function call. However, if a C# data is passed to C++ and its pointer is used after the function scope, then the memory may have moved and the pointer is no longer valid. This data should be pinned with :cs:func:`GcHandle.Alloc`. To avoid this scenario persistent data is allocated, and thus deleted, in C++, notably the :cpp:struct:`MeshState`.
+
+Marshalling of managed types are an additional consideration. Passing large non-blittable types to a native function can result in expensive memory operations, in particular 2D C# arrays which have a different layout in each language. 
 
 ### Compiling and CMake
 
@@ -95,27 +110,31 @@ CMake is used to compile the C++ library as well as the documentation in a cross
 
 ### Unity Plugin Reloading
 
-Unity presents a complication that it does not unload libraries once they are loaded, which happens when it is first used. This means that we cannot recompile the C++ library without restarting Unity. This creates a larger iteration time. In order to counter this, the UnityNativeTool open source project is used. This effectively wraps native functions and un/loads the library itself. It is an editor-only tool. A few modifications were made to this in several pull requests, see [#14](https://github.com/mcpiroman/UnityNativeTool/pull/14), [#15](https://github.com/mcpiroman/UnityNativeTool/pull/15), [#18](https://github.com/mcpiroman/UnityNativeTool/pull/18), [#19](https://github.com/mcpiroman/UnityNativeTool/pull/19), [#20](https://github.com/mcpiroman/UnityNativeTool/pull/20), [#21](https://github.com/mcpiroman/UnityNativeTool/pull/21), [#28](https://github.com/mcpiroman/UnityNativeTool/pull/28) on GitHub. 
+Unity presents a complication that it does not unload libraries once they are loaded, which happens when it is first used. This means that we cannot recompile the C++ library without restarting Unity. This creates a larger iteration time. In order to counter this, the [UnityNativeTool](TODO) open source project is used. This effectively wraps native functions and un/loads the library itself. It is an editor-only tool. A few modifications were made to this in several pull requests, see [#14](https://github.com/mcpiroman/UnityNativeTool/pull/14), [#15](https://github.com/mcpiroman/UnityNativeTool/pull/15), [#18](https://github.com/mcpiroman/UnityNativeTool/pull/18), [#19](https://github.com/mcpiroman/UnityNativeTool/pull/19), [#20](https://github.com/mcpiroman/UnityNativeTool/pull/20), [#21](https://github.com/mcpiroman/UnityNativeTool/pull/21), [#28](https://github.com/mcpiroman/UnityNativeTool/pull/28) on GitHub. 
 
 ### Future Work
 
-The C++ interface could be simplified by using a tool such as SWIG. This integrates with CMake and automatically generates the C# declarations as well as having more advanced features such as exception handling between languages. However, this simply shifts the development complexity, but it does make the language interface more robust to bugs.
+The C++ interface could be simplified by using a tool such as SWIG. This integrates with CMake and automatically generates the C# declarations as well as having more advanced features such as exception handling between languages. Primarily, it removes redundant code and documentation. However, this simply shifts the development complexity, but it does make the language interface more robust to bugs.
 
 Of course, alternatives to Unity such as Blender or Unreal Engine do not have this interface. In contrast, the difficult parts with the language interface have been done and development should be easier from hereon.
 
 ## Mesh Interface
 
-Once we have modified the mesh data that is used by the renderer, such as the vertex positions, we need to apply these changes similar to `viewer.data().set_vertices(V)` in the 2D viewer. This requires access to the Unity API so must be done on the main thread. This is done in `PostExecute`. A bitmask :cs:class:`DirtyState` is used to indicate which parts have been modified and need to be updated.
+Once we have modified the mesh data used by the renderer, such as the vertex positions, we need to apply these changes. This is the equivalent of `viewer.data().set_vertices(V)` in the 2D viewer. This requires access to the Unity API, so must be done on the main thread. It is done in :cs:func:`PostExecute`. A bitmask :cs:var:`DirtyState` is used to indicate which parts have been modified and need to be updated. This is done in a coarse-grained fashion. For example, if a single vertex is moved the entire position matrix is updated. This sparse editing of the mesh occurs frequently, for example when an operation is performed on a selection. This could be a potential area of improvement, which could be fixed by accessing the GPU buffer directly, see `More on Performance`_.
 
-An extra complication to this is that Unity used row-major and libigl expects column-major. Because of this we have two copies of the data, one in column-major and one in row-major. This creates a necessary transpose each time we apply changes, which is done in C++ on the worker thread.
+An extra complication to this is that Unity used row-major and libigl expects column-major. Because of this we have two copies of the data, one in column-major and one in row-major. This creates a necessary transpose each time we apply changes. This is done in C++ on the worker thread for better performance. For larger meshes the effect of this transpose on runtime as well as memory performance will be more noticeable. For the meshes tested, this was not an issue with operations on the armadillo still being responsive. 
 
-### Performance
+Ideally libigl would work equally well in row-major preventing a transpose and reducing the number of copies of the mesh in memory. Although Eigen supports row-major well, libigl templates do not always consider this causing a compiler error.
 
-The performance of the current method seems to be good enough. Unity provides the GPU pointer to the mesh buffer. Thus a way of applying the mesh data directly to the GPU was briefly explored.
+In this part of the development process the engine source code would have most likely helped. 
 
-Ideally libigl would work equally well in row-major preventing a transpose and reducing the number of copies of the mesh in memory. Although Eigen supports row-major well, libigl templates do not always consider this.
+### More on Performance
 
-## High Level Actions
+Unity provides the GPU pointer to the mesh buffer. Thus a way of applying the mesh data directly to the GPU was briefly explored with help of the [Rendering Samples](TODO).
+
+Another performance consideration is that vertex attributes are interleaved by default on the GPU in the vertex buffer. This means that updating the position of all vertices results in a non-blittable transfer. This could result in a performance loss. Unity exposes some control over the vertex buffer layout allowing separation of vertex attributes into separate 'streams'. This could be explored further if this process appears to be a performance bottleneck.
+
+## High Level Actions*
 
 ### Vertex Selection
 
@@ -147,7 +166,7 @@ As we have two controllers, we have more freedom with how to calculate a transfo
 
 ### Deformations
 
-The libigl biharmonic deformation `igl::harmonic` can be toggled. If enabled it will be run whenever the input arguments have been changed. In this case, when the boundary conditions have changed. This can be detected quite easily by checking the :cpp:class:`DirtyFlags` of the mesh data have been modified when applying the mesh in :cpp:func:`ApplyDirty`.
+The libigl biharmonic deformation `igl::harmonic` can be toggled. If enabled it will be run whenever the input arguments have been changed. In this case, when the boundary conditions have changed. This can be detected quite easily by checking the :cpp:struct:`DirtyFlag` of the mesh data have been modified when applying the mesh in :cpp:func:`ApplyDirty`.
 
 The As-Rigid-As-Possible `igl::arap` deformation works very similarly, except that we need to check when the precomputation needs to be done.
 
@@ -163,15 +182,15 @@ An important part is also that the documentation should be inlined as much as po
 
 Most functions and types have an annotated docstring, in C# a xml-doc and javadoc in C++ so that the IDEs can display this nicely. This provides information on how to *use* the function/type. In the implementation, there are comments as required for how to *modify* the function/type. As in C# everything resides inside a class/struct/interface the docstring of the class is intended to give an overview of everything inside and its intention.
 
-Additional markdown files are there to add an overview of the files and provide general information not specific to a file or piece of code. These files are placed 'inline' next to the `.cs` or `.cpp` files. 
+Additional markdown files are there to add an overview of the files and provide general information not specific to a file or piece of code. These files are placed 'inline' next to the `.cs` or `.cpp` files. For flowcharts diagrams.net is used.
 
 To condense all this information, Doxygen and Sphinx are used. Doxygen is used to extract the documentation from the code. This information in xml format is then used by Breathe (a Sphinx extension) to render it with Sphinx, which then combines it with the markdown files. Breathe and the language domains ensure cross-referencing of items. 
 
 For this to work with C#, the *sphinx-csharp* and *breathe* projects where modified, see [#8](https://github.com/djungelorm/sphinx-csharp/pull/8) and [#550](https://github.com/michaeljones/breathe/pull/550) respectively on GitHub.
 
-ReadTheDocs is used to host and compile the website output of Sphinx. This has continuous integration. Whenever a commit is pushed to the `read-the-docs` branch, the website is recompiled.
+ReadTheDocs is used to host and compile the website output of Sphinx. This has continuous integration. Whenever a commit is pushed to the `read-the-docs` branch, the website is recompiled. 
 
-## Miscellaneous Features
+## Miscellaneous Features*
 
 1. Importing of meshes into Unity, adjusting vertex buffer layout and materials, scaling
    1. Recognized file types use an asset post-processor
@@ -181,4 +200,3 @@ ReadTheDocs is used to host and compile the website output of Sphinx. This has c
 1. Dither shader on active mesh and controllers when occluded using URP custom render passes
 1. Environment modelled in Blender, ocean shader done in Shader Graph
 1. Speech recognition for specific actions (disabled by default)
-1. 

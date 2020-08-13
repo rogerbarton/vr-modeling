@@ -6,29 +6,28 @@
 
 ## Purpose
 
-The purpose of this thesis is to produce an extensible virtual reality (VR) viewer and editor for use with the libigl library. Potential use cases include visualizations of 3D models and operations on them, such as those provided by libigl. 
+The purpose of this thesis is to produce an extensible virtual reality (VR) viewer and editor for use with the libigl library. In effect converting the current 2D user interface to the VR setting. Potential use cases include visualizations of 3D models and operations on them, such as those provided by libigl. 
 
 .. :: The thesis also explores new ways of interacting in VR.
 
 ## Motivation
 
-VR provides an alternative input and output in comparison to a 2D Screen with a keyboard and mouse.
+VR provides an alternative input and output format in comparison to a conventional 2D Screen with a keyboard and mouse. It allows for accurate representation of 3D scenes, notably in terms of depth and scale, due to its stereoscopic rendering.
 
-It allows for accurate representation of 3D scenes, notably in terms of depth and scale. 
+In terms of input, VR controllers can give precise 3D positional and rotational input for each hand in comparison to 2D positional input from a mouse. This is also superior to 3D mice, which only offer relative 3D positional and rotational input. VR is useful in our scenario as it allows for easier and more intuitive interaction with a mesh. 
 
-VR is useful in this scenario as it allows for easier interaction with the mesh, as we have completely different input methods, with two controllers instead of a conventional keyboard and mouse. Notably these controllers can give precise 3D positional and rotational input for each hand in comparison to 2D positional input from a mouse. This is also superior to 3D mice, which only offer relative 3D positional and rotational input.
-
-For not all but certain applications VR will provide significant benefits. 3D modeling presents itself as one of these applications.
+.. :: For certain applications VR will provide significant benefits. 3D modeling presents itself as one of these applications.
 
 ## Development Approach
 
 The Oculus Rift S headset was used as the primary target device. 
 
-For implementing this the Unity engine was chosen. This provides many features as well as a good cross-platform VR integration. It has an easy way of adding functionality via C# scripts and newly visual scripting with Bolt. This, however, creates a necessary language interface to C++ such that libigl can be used. Using the libigl python bindings is not a viable option with Unity and would also require a language interface. It also offers advanced VR features such as [single-pass stereo rendering](https://docs.unity3d.com/Manual/SinglePassStereoRendering.html), which offers great performance benefits.
+For implementing this the Unity game engine was chosen, partly due to the experience with the engine. This provides many standard features as well as a cross-platform VR integration. It offers advanced VR features such as [single-pass stereo rendering](https://docs.unity3d.com/Manual/SinglePassStereoRendering.html), which provides great performance benefits. It has an easy way of adding functionality via C# scripts. This, however, creates a necessary language interface to C++ such that libigl can be used. 
 
 Using the Oculus SDK directly requires too much development overhead and will have less features as a result. It will also be significantly harder to maintain. Using a game engine which already provides a plethora of features is the best option.
 
-For example use cases of libigl two mesh deformations where chosen, a biharmonic deformation and an As-Rigid-As-Possible deformation. These each require selection of parts of the mesh as well as ways of transforming these, such that we can provide boundary conditions for the libigl algorithms. The deformations have been chosen from the libigl tutorial. The intent is that further libigl functionality, of any kind, can also be added. 
+For example, use cases of libigl two mesh deformations where chosen, a biharmonic deformation and an As-Rigid-As-Possible deformation. These each require selection of parts of the mesh as well as ways of transforming these, such that we can provide boundary conditions for the libigl algorithms. The deformations have been chosen from the libigl tutorial. The intent is that further libigl functionality, of any kind, can also be added. 
 
-It is important to note that libigl will be a library used by the VR editor and not the other way around.
+Ideally, existing libigl applications would be able to simply switch which viewer is being used, between the 2D GLFW viewer and the VR viewer. This is not possible with this development approach. This is because libigl will be a library used by the VR editor and not the converse, due to how Unity executables are built. As a result, the interface to the VR viewer cannot be the same as the 2D GLFW viewer.
 
+A workaround to this would be to implement inter-process communication between a libigl executable and a Unity built executable. This is however more involved and outside of the scope of this thesis. It is also unclear whether this approach will yield performant and maintainable results. 
