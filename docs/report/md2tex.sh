@@ -32,6 +32,7 @@ for md in "$@"; do
   sed -i -e 's/\\subsection/\\section/' $tex
   # remove :cs:func: or similar
   sed -i -r -e 's/:c\w\w?:\w+?://g' $tex
+  sed -i -r -e 's/:cite:\\texttt/\\cite/g' $tex
 
   # remove rst comments or notes
   sed -i -r -e 's/^\.\.\ \w*::.*//g' $tex

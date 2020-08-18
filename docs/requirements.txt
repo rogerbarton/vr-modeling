@@ -1,5 +1,6 @@
 Sphinx>=3.1.1
 sphinx-rtd-theme>=0.5.0
+sphinxcontrib-bibtex>=1.0.0
 wheel
 git+https://github.com/CrossNox/m2r.git@dev
 ./docs/external/sphinx-csharp

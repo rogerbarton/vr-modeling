@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The purpose of this thesis is to produce an extensible virtual reality (VR) viewer and editor for use with the libigl library. In effect converting the current 2D user interface to the VR setting. Potential use cases include visualizations of 3D models and operations on them, such as those provided by libigl. 
+The purpose of this thesis is to produce an extensible virtual reality (VR) viewer and editor for use with the libigl library :cite:`libigl`. In effect converting the current 2D user interface to the VR setting. Potential use cases include visualizations of 3D models and operations on them, such as those provided by libigl. 
 
 .. :: The thesis also explores new ways of interacting in VR.
 

@@ -69,6 +69,7 @@ extensions = [ 'sphinx.ext.mathjax',
                'sphinx_csharp',
                'breathe',
                'm2r',
+               'sphinxcontrib.bibtex',
                # 'open_in_newtab',
                ]
 
