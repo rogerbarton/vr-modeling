@@ -2,7 +2,7 @@
 
 .. note::
 
-	This report will focus on the development approach as well as evaluating the project and suggesting future improvements. *For implementation details and how to use this project see the documentation.*
+   This report will focus on the development approach as well as evaluating the project and suggesting future improvements. *For implementation details and how to use this project see the online documentation at https://vr-modeling.readthedocs.io/.*
 
 ## Purpose
 
@@ -10,19 +10,23 @@ The purpose of this thesis is to produce an extensible virtual reality (VR) view
 
 .. :: The thesis also explores new ways of interacting in VR.
 
-## Motivation
-
 VR provides an alternative input and output format in comparison to a conventional 2D Screen with a keyboard and mouse. It allows for accurate representation of 3D scenes, notably in terms of depth and scale, due to its stereoscopic rendering.
 
 In terms of input, VR controllers can give precise 3D positional and rotational input for each hand in comparison to 2D positional input from a mouse. This is also superior to 3D mice, which only offer relative 3D positional and rotational input. VR is useful in our scenario as it allows for easier and more intuitive interaction with a mesh. 
 
 .. :: For certain applications VR will provide significant benefits. 3D modeling presents itself as one of these applications.
 
+## Related Work
+
+Several 3D modeling applications already exist on the Oculus Store such as [Google Blocks](https://arvr.google.com/blocks/), [Facebook's Quill](https://quill.fb.com/). These offer construction of 3D scenes from primitives and brush strokes. Quill also offers being able to animate these. [Oculus Medium](https://www.oculus.com/medium/) provides more advanced functionality with sculpting. [Blender](https://www.blender.org/) has recently added a [VR scene inspection](https://docs.blender.org/manual/en/dev/addons/3d_view/vr_scene_inspection.html) ([release notes](https://wiki.blender.org/wiki/Reference/Release_Notes/2.83/Virtual_Reality)) add-on. This enables the user to view a scene in VR. [Unreal Engine](https://www.unrealengine.com/) has also developed a [VR mode](https://docs.unrealengine.com/en-US/Engine/Editor/VR/index.html) which can be used for level design. 
+
+In summary, there already exist several VR editors for 3D modeling and animation. However, this is still a developing field with little standardization. The deformation of meshes in VR has not yet been explored, particularly with libigl, which is what this thesis focuses on.
+
 ## Development Approach
 
 The Oculus Rift S headset was used as the primary target device. 
 
-For implementing this the Unity game engine was chosen, partly due to the experience with the engine. This provides many standard features as well as a cross-platform VR integration. It offers advanced VR features such as [single-pass stereo rendering](https://docs.unity3d.com/Manual/SinglePassStereoRendering.html), which provides great performance benefits. It has an easy way of adding functionality via C# scripts. This, however, creates a necessary language interface to C++ such that libigl can be used. 
+For implementing this the [Unity](https://unity.com/) game engine was chosen, partly due to the experience with the engine. This provides many standard features as well as a cross-platform VR integration. It offers advanced VR features such as [single-pass stereo rendering](https://docs.unity3d.com/Manual/SinglePassStereoRendering.html), which provides great performance benefits. It has an easy way of adding functionality via C# scripts. This, however, creates a necessary language interface to C++ such that libigl can be used. 
 
 Using the Oculus SDK directly requires too much development overhead and will have less features as a result. It will also be significantly harder to maintain. Using a game engine which already provides a plethora of features is the best option.
 
