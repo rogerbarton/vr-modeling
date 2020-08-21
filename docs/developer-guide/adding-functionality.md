@@ -72,6 +72,20 @@ clearAllSelections.onClick.AddListener(() => { _behaviour.Input.DoClearSelection
 
 To *add your own UI component* create a prefab in the `Assets/Prefabs/UI/Components` folder, then add a reference to it in the :cs:class:`UiManager` so you can access it from C#. It is common to add a :cs:class:`MonoBehaviour` to the root of the prefab, which you can then use to initialize it. See the scripts in `UI/Components`.
 
+## Customizing Input
+
+To make the input adapt to what the user is doing we define the mapping of raw input to actions based on a context or state. How this state is determined is detailed below. It is based on a tree structure. See :cs:prop:`ToolTransformMode`, :cs:prop:`ToolSelectMode` and :cs:func:`UpdateInputTransform`, :cs:func:`UpdateInputSelect` respectively.
+
+<iframe frameborder="0" style="width:100%;height:300px;" src="https://viewer.diagrams.net/?highlight=0000ff&layers=1&nav=1&title=state-tree.drawio#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1GrbdbhofS648kDA4P6qf7UcV5M0aLjAD%26export%3Ddownload"></iframe>
+
+### Input Hints
+
+To make it easy for the user to see what each button will do UI is displayed over the controller, called input hints in this project. To update the UI the same state is used. This means if you change what the input does you also need to update the input hints.
+
+However, to make it easy for the developer to specify these hints (icon+text) :cs:class:`ScriptableObject` s are used: :cs:class:`UiInputHintsDataCollection`, :cs:class:`UiInputHintsData`, :cs:class:`UiInputHintsData`. These allow for data to be entered inside the Editor, not in C#. 
+
+This means common hints are inherited based on the same tree that is used to determine the state. The :cs:func:`UiInputHints.Repaint` function will most likely give the best insight to how this works. 
+
 ## Importing Meshes
 
 If you just want to add a new mesh, **add it into** `Assets/Models/EditableMeshes` and follow the warnings in the Unity console when running. The mesh will be checked for its validity. Note for `.off` files you need to have built the C++ library first.

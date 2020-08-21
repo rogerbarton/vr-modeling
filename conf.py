@@ -97,6 +97,7 @@ sphinx_csharp_ext_search_pages = {
 
 sphinx_csharp_ext_type_map = {
     'unity': {
+        '': ['ScriptableObject'],
         'XR': ['InputDevice', 'InputDeviceCharacteristics'],
         'Unity.Collections': ['NativeArray'],
         'Experimental.AssetImporters': ['AssetImportContext', 'MeshImportPostprocessor', 'ScriptedImporter'],

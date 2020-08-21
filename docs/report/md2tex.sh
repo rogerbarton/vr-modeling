@@ -16,8 +16,13 @@ for file in "$@"; do
   cp $file $md
 
   sed -i -r -e 's/^\.\.\s+\w*::.*//g' $md    # remove rst comments or notes
-  sed -i -r -e 's/:c\w\w?:\w+?://g' $md       # remove :cs:func: or similar
+  sed -i -r -e 's/:c\w\w?:\w+?://g' $md      # remove :cs:func: or similar
   sed -i -r -e 's/`([^`]+)`_/\1/g' $md       # remove rst references
+#  perl -i -p0e 's/\.\.\s+bibliography::.*\r?\n(?:^\s\s\s.*\r?\n)*//g' $md
+  sed -i '$d' $md     # remove bibliography, bit of a hack but couldn't get multi-line regex to work with sed
+  sed -i '$d' $md
+  sed -i '$d' $md
+  sed -i '$d' $md
 
   pandoc -s $md -o $tex
   rm $md

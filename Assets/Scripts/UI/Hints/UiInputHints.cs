@@ -69,7 +69,7 @@ namespace UI.Hints
         }
 
         /// <summary>
-        /// Refreshes the Input hints based on the <see cref="ActiveTool"/> and the sub state like <see cref="ToolTransformMode"/>
+        /// Refreshes the Input hints based on the <see cref="InputState.ActiveTool"/> and the sub state like <see cref="ToolTransformMode"/>
         /// </summary>
         public void Repaint()
         {
