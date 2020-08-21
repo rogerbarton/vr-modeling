@@ -7,13 +7,21 @@ out=out.tex
 rm $out
 
 i=0
-for md in "$@"; do
-  tex=${md%.md}.tex
-  echo "$md -> $tex"
+for file in "$@"; do
+  tex=${file%.md}.tex
+  echo "$file -> $tex"
+  
+  # Preprocess md before converting
+  md=${file%.md}.tmp.md
+  cp $file $md
+
+  sed -i -r -e 's/^\.\.\s+\w*::.*//g' $md    # remove rst comments or notes
+  sed -i -r -e 's/:c\w\w?:\w+?://g' $md       # remove :cs:func: or similar
 
   pandoc -s $md -o $tex
-
-  # 'trim' output tex file by lines
+  rm $md
+  
+  # 'trim' output tex file by lines, so we only get the content
   startln=$(grep -n "begin{document}" $tex | cut -f1 -d:)
 #  echo "startln: ${startln}"
   let 'startln++'
@@ -30,12 +38,7 @@ for md in "$@"; do
   let 'i++'
 
   sed -i -e 's/\\subsection/\\section/' $tex
-  # remove :cs:func: or similar
-  sed -i -r -e 's/:c\w\w?:\w+?://g' $tex
   sed -i -r -e 's/:cite:\\texttt/\\cite/g' $tex
-
-  # remove rst comments or notes
-  sed -i -r -e 's/^\.\.\ \w*::.*//g' $tex
 
   # filter out other unwanted parts
   sed -i -r -e 's/\\tightlist//g' $tex
