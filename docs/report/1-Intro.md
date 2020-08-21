@@ -35,3 +35,7 @@ For example, use cases of libigl two mesh deformations where chosen, a biharmoni
 Ideally, existing libigl applications would be able to simply switch which viewer is being used, between the 2D GLFW viewer and the VR viewer. This is not possible with this development approach. This is because libigl will be a library used by the VR editor and not the converse, due to how Unity executables are built. As a result, the interface to the VR viewer cannot be the same as the 2D GLFW viewer.
 
 A workaround to this would be to implement inter-process communication between a libigl executable and a Unity built executable. This is however more involved and outside of the scope of this thesis. It is also unclear whether this approach will yield performant and maintainable results. 
+
+.. bibliography:: references.bib
+   :filter: docname in docnames
+   :style: unsrt

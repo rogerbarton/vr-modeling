@@ -182,3 +182,8 @@ For this to work with C#, the [sphinx-csharp](https://github.com/djungelorm/sphi
 1. Dither shader on active mesh and controllers when occluded using a Universal Render Pipeline custom render pass
 1. Environment modelled in Blender, ocean shader done in Shader Graph
 1. Speech recognition for specific actions (disabled by default)
+
+
+.. bibliography:: references.bib
+   :filter: docname in docnames
+   :style: unsrt

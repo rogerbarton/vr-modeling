@@ -27,3 +27,8 @@ Depending on the task it may be easier to perform it in a 2D or VR scenario. Ide
 VR editors can be powerful for viewing and manipulating 3D meshes. However, a VR editor should work in tandem with a 2D editor. The current application appears to be more suitable for demos. 
 
 Using Unity as a basis is not optimal but has several advantages. The discussed alternatives should be considered first before continuing this project.
+
+
+.. bibliography:: references.bib
+   :filter: docname in docnames
+   :style: unsrt
