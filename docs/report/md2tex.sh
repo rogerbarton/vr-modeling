@@ -17,6 +17,7 @@ for file in "$@"; do
 
   sed -i -r -e 's/^\.\.\s+\w*::.*//g' $md    # remove rst comments or notes
   sed -i -r -e 's/:c\w\w?:\w+?://g' $md       # remove :cs:func: or similar
+  sed -i -r -e 's/`([^`]+)`_/\1/g' $md       # remove rst referencesxz
 
   pandoc -s $md -o $tex
   rm $md
