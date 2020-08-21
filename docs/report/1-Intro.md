@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The purpose of this thesis is to produce an extensible virtual reality (VR) viewer and editor for use with the libigl library :cite:`libigl`. In effect converting the current 2D user interface to the VR setting. Potential use cases include visualizations of 3D models and operations on them, such as those provided by libigl. 
+The purpose of this thesis is to produce an extensible virtual reality (VR) viewer and editor for use with the [libigl library](https://libigl.github.io/) :cite:`libigl`. In effect converting the current 2D user interface to the VR setting. Potential use cases include visualizations of 3D models and operations on them, such as those provided by libigl. 
 
 .. :: The thesis also explores new ways of interacting in VR.
 
@@ -18,7 +18,7 @@ In terms of input, VR controllers can give precise 3D positional and rotational 
 
 ## Related Work
 
-Several 3D modeling applications already exist on the Oculus Store such as [Google Blocks](https://arvr.google.com/blocks/), [Facebook's Quill](https://quill.fb.com/). These offer construction of 3D scenes from primitives and brush strokes. Quill also offers being able to animate these. [Oculus Medium](https://www.oculus.com/medium/) provides more advanced functionality with sculpting. [Blender](https://www.blender.org/) has recently added a [VR scene inspection](https://docs.blender.org/manual/en/dev/addons/3d_view/vr_scene_inspection.html) ([release notes](https://wiki.blender.org/wiki/Reference/Release_Notes/2.83/Virtual_Reality)) add-on. This enables the user to view a scene in VR. [Unreal Engine](https://www.unrealengine.com/) has also developed a [VR mode](https://docs.unrealengine.com/en-US/Engine/Editor/VR/index.html) which can be used for level design. 
+Several 3D modeling applications already exist on the Oculus Store such as [Google Blocks](https://arvr.google.com/blocks/) :cite:`google-blocks`, [Facebook's Quill](https://quill.fb.com/) :cite:`quill`. These offer construction of 3D scenes from primitives and brush strokes. Quill also offers being able to animate these. [Oculus Medium](https://www.oculus.com/medium/) :cite:`oculus-medium` provides more advanced functionality with sculpting. [Blender](https://www.blender.org/) :cite:`blender` has recently added a [VR scene inspection](https://docs.blender.org/manual/en/dev/addons/3d_view/vr_scene_inspection.html) ([release notes](https://wiki.blender.org/wiki/Reference/Release_Notes/2.83/Virtual_Reality)) add-on. This enables the user to view a scene in VR. [Unreal Engine](https://www.unrealengine.com/) :cite:`unreal-engine` has also developed a [VR mode](https://docs.unrealengine.com/en-US/Engine/Editor/VR/index.html) which can be used for level design. 
 
 In summary, there already exist several VR editors for 3D modeling and animation. However, this is still a developing field with little standardization. The deformation of meshes in VR has not yet been explored, particularly with libigl, which is what this thesis focuses on.
 
@@ -26,7 +26,7 @@ In summary, there already exist several VR editors for 3D modeling and animation
 
 The Oculus Rift S headset was used as the primary target device. 
 
-For implementing this the [Unity](https://unity.com/) game engine was chosen, partly due to the experience with the engine. This provides many standard features as well as a cross-platform VR integration. It offers advanced VR features such as [single-pass stereo rendering](https://docs.unity3d.com/Manual/SinglePassStereoRendering.html), which provides great performance benefits. It has an easy way of adding functionality via C# scripts. This, however, creates a necessary language interface to C++ such that libigl can be used. 
+For implementing this the [Unity](https://unity.com/) :cite:`unity` game engine was chosen, partly due to the experience with the engine. This provides many standard features as well as a cross-platform VR integration. It offers advanced VR features such as [single-pass stereo rendering](https://docs.unity3d.com/Manual/SinglePassStereoRendering.html), which provides great performance benefits. It has an easy way of adding functionality via C# scripts. This, however, creates a necessary language interface to C++ such that libigl can be used. 
 
 Using the Oculus SDK directly requires too much development overhead and will have less features as a result. It will also be significantly harder to maintain. Using a game engine which already provides a plethora of features is the best option.
 

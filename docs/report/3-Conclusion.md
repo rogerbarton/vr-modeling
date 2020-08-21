@@ -2,7 +2,7 @@
 
 ## Future Work
 
-[Discrete orthogonal geodesic nets (DOG)](https://github.com/MichaelRabinovich/DOG-editor/) as another use case were briefly explored. However, the interface is more complicated and the project is currently not compatible with windows without modifications to the code. 
+[Discrete orthogonal geodesic nets (DOG)](https://github.com/MichaelRabinovich/DOG-editor/) :cite:`dog-editor` as another use case were briefly explored. However, the interface is more complicated and the project is currently not compatible with windows without modifications to the code. 
 
 ### Alternatives to Unity
 

@@ -11,7 +11,7 @@ The implementation has following categories:
 
 ## VR Interface
 
-Oculus provides an [Oculus Integration](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022) on the Unity Asset Store to provide common functionality. However, since around Unity 2019.3 there has been a Unity VR Plugin system to simplify the interface with each of the SDKs of the VR platforms. Additionally, there is a Unity XR Interaction Toolkit package with provides cross-platform input as well as common VR functionality such as locomotion and interaction with UI. These packages are the preferred option over the Oculus Integration.
+Oculus provides an [Oculus Integration](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022) :cite:`oculus-integration` on the Unity Asset Store to provide common functionality. However, since around Unity 2019.3 there has been a Unity VR Plugin system to simplify the interface with each of the SDKs of the VR platforms. Additionally, there is a Unity XR Interaction Toolkit package with provides cross-platform input as well as common VR functionality such as locomotion and interaction with UI. These packages are the preferred option over the Oculus Integration.
 
 ### Locomotion
 
@@ -94,7 +94,7 @@ CMake is used to compile the C++ library as well as the documentation in a cross
 
 ### Unity Plugin Reloading
 
-Unity presents a complication that it does not unload libraries once they are loaded, which happens when it is first used. This means that we cannot recompile the C++ library without restarting Unity. This creates a larger iteration time. In order to counter this, the [UnityNativeTool](https://github.com/mcpiroman/UnityNativeTool) open source project is used. This effectively wraps native functions and un/loads the library itself. It is an editor-only tool. A few modifications were made to this in several pull requests, see [#14](https://github.com/mcpiroman/UnityNativeTool/pull/14), [#15](https://github.com/mcpiroman/UnityNativeTool/pull/15), [#18](https://github.com/mcpiroman/UnityNativeTool/pull/18), [#19](https://github.com/mcpiroman/UnityNativeTool/pull/19), [#20](https://github.com/mcpiroman/UnityNativeTool/pull/20), [#21](https://github.com/mcpiroman/UnityNativeTool/pull/21), [#28](https://github.com/mcpiroman/UnityNativeTool/pull/28) on GitHub. 
+Unity presents a complication that it does not unload libraries once they are loaded, which happens when it is first used. This means that we cannot recompile the C++ library without restarting Unity. This creates a larger iteration time. In order to counter this, the [UnityNativeTool](https://github.com/mcpiroman/UnityNativeTool) :cite:`unity-native-tool` open source project is used. This effectively wraps native functions and un/loads the library itself. It is an editor-only tool. A few modifications were made to this in several pull requests, see [#14](https://github.com/mcpiroman/UnityNativeTool/pull/14), [#15](https://github.com/mcpiroman/UnityNativeTool/pull/15), [#18](https://github.com/mcpiroman/UnityNativeTool/pull/18), [#19](https://github.com/mcpiroman/UnityNativeTool/pull/19), [#20](https://github.com/mcpiroman/UnityNativeTool/pull/20), [#21](https://github.com/mcpiroman/UnityNativeTool/pull/21), [#28](https://github.com/mcpiroman/UnityNativeTool/pull/28) on GitHub. 
 
 ### Future Work
 
@@ -114,7 +114,7 @@ In this part of the development process the engine source code would have most l
 
 ### More on Performance
 
-Unity provides the GPU pointer to the mesh buffer. Thus a way of applying the mesh data directly to the GPU was briefly explored with help of the [Graphics Demos](https://bitbucket.org/Unity-Technologies/graphicsdemos).
+Unity provides the GPU pointer to the mesh buffer. Thus a way of applying the mesh data directly to the GPU was briefly explored with help of the [NativeRenderingPlugin](https://bitbucket.org/Unity-Technologies/graphicsdemos) :cite:`unity-native-rendering-plugin` example.
 
 Another performance consideration is that vertex attributes are interleaved by default on the GPU in the vertex buffer. This means that updating the position of all vertices results in a non-blittable transfer. This could result in a performance loss. Unity exposes some control over the vertex buffer layout allowing separation of vertex attributes into separate 'streams'. This could be explored further if this process appears to be a performance bottleneck.
 
@@ -126,7 +126,7 @@ Vertex selections are used for affecting only parts of the mesh or as an input t
 
 An additional benefit of using bitmasks is that we can provide a mask of selections with one integer. For example, we can choose which selections are visible or will be translated with an integer. If we want to affect all selections we simply use the maximum integer value, where all bits are one. Functions that act on a selection have been modified, if possible, to act on a mask of selections.
 
-When implementing this with Eigen, I noticed that it did not support bitwise operations directly. As a result, unary functions were used. These might not be as well optimized, however, the operations where fast enough on the [armadillo](http://graphics.stanford.edu/data/3Dscanrep/) mesh to provide responsive user interaction.
+When implementing this with Eigen, I noticed that it did not support bitwise operations directly. As a result, unary functions were used. These might not be as well optimized, however, the operations where fast enough on the [armadillo](http://graphics.stanford.edu/data/3Dscanrep/) :cite:`standford-3d-models` mesh to provide responsive user interaction.
 
 Face or edge selection was not implemented as this is more involved and does not necessarily add more features for the intended use case.
 
@@ -134,7 +134,7 @@ Face or edge selection was not implemented as this is more involved and does not
 
 In order to transform a mesh or part of the mesh there are two stages. First, finding which transformation should be done and then applying it. For determining an affine transformation - translation, rotation, scaling - we are much more flexible in VR, as we have two controllers. 
 
-Once the transformation is known we can either apply it to the mesh directly, which is done in C# with the Unity API. Or we can apply it to a vertex selection mask, which is done in C++ and modifies the vertex data. This implementation is a bit more involved as transforming a selection mask needs to be done on the worker thread. It uses the [Eigen geometry module](https://eigen.tuxfamily.org/dox/group__Geometry__Module.html).
+Once the transformation is known we can either apply it to the mesh directly, which is done in C# with the Unity API. Or we can apply it to a vertex selection mask, which is done in C++ and modifies the vertex data. This implementation is a bit more involved as transforming a selection mask needs to be done on the worker thread. It uses the [Eigen geometry module](https://eigen.tuxfamily.org/dox/group__Geometry__Module.html) :cite:`eigen`.
 
 When working with multiple meshes or multiple selections we need to determine what to transform, a mask of meshes or selections. For this the sphere brush is used. If a mesh or selection is inside it is affected. If there is nothing inside then the active mesh or selection is affected. This provides lots of control but also gives an intuitive experience. If both hands act on the same mask then we perform two handed transformations, such as scaling.
 
@@ -164,11 +164,11 @@ Most functions and types have an annotated docstring, in C# a xml-doc and javado
 
 Additional markdown files are there to add an overview of the files and provide general information not specific to a file or piece of code. These files are placed 'inline' next to the `.cs` or `.cpp` files. For flowcharts diagrams.net is used.
 
-To condense all this information, [Doxygen](https://www.doxygen.nl) and [Sphinx](https://www.sphinx-doc.org) are used. Doxygen is used to extract the documentation from the code. This information in xml format is then used by Breathe (a Sphinx extension) to render it with Sphinx, which then combines it with the markdown files. [Breathe](https://github.com/michaeljones/breathe) and the language domains ensure cross-referencing of items. 
+To condense all this information, [Doxygen](https://www.doxygen.nl) :cite:`doxygen` and [Sphinx](https://www.sphinx-doc.org) :cite:`sphinx` are used. Doxygen is used to extract the documentation from the code. This information in xml format is then used by Breathe (a Sphinx extension) to render it with Sphinx, which then combines it with the markdown files. [Breathe](https://github.com/michaeljones/breathe) :cite:`breathe` and the language domains ensure cross-referencing of items. 
 
-For this to work with C#, the [sphinx-csharp](https://github.com/djungelorm/sphinx-csharp) and breathe projects where modified, see [#8](https://github.com/djungelorm/sphinx-csharp/pull/8) and [#550](https://github.com/michaeljones/breathe/pull/550) respectively on GitHub.
+For this to work with C#, the [sphinx-csharp](https://github.com/djungelorm/sphinx-csharp) :cite:`sphinx-csharp` and breathe projects where modified, see [#8](https://github.com/djungelorm/sphinx-csharp/pull/8) and [#550](https://github.com/michaeljones/breathe/pull/550) respectively on GitHub.
 
-[ReadTheDocs](https://readthedocs.org) is used to host and compile the website output of Sphinx. This has continuous integration. Whenever a commit is pushed to the `read-the-docs` branch, the website is recompiled. 
+[ReadTheDocs](https://readthedocs.org) :cite:`read-the-docs` is used to host and compile the website output of Sphinx. This has continuous integration. Whenever a commit is pushed to the `read-the-docs` branch, the website is recompiled. 
 
 .. :: Started off with the same docs as libigl. Could be applied to libigl
 
