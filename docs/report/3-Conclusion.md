@@ -32,3 +32,4 @@ Using Unity as a basis is not optimal but has several advantages. The discussed 
 .. bibliography:: references.bib
    :filter: docname in docnames
    :style: unsrt
+   :labelprefix: 3.

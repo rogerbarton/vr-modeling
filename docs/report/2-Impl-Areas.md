@@ -187,3 +187,4 @@ For this to work with C#, the [sphinx-csharp](https://github.com/djungelorm/sphi
 .. bibliography:: references.bib
    :filter: docname in docnames
    :style: unsrt
+   :labelprefix: 2.

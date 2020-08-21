@@ -39,3 +39,4 @@ A workaround to this would be to implement inter-process communication between a
 .. bibliography:: references.bib
    :filter: docname in docnames
    :style: unsrt
+   :labelprefix: 1.
