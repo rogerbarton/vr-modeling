@@ -103,6 +103,7 @@ sphinx_csharp_ext_type_map = {
         'Experimental.AssetImporters': ['AssetImportContext', 'MeshImportPostprocessor', 'ScriptedImporter'],
         'Rendering': ['VertexAttributeDescriptor'],
         'Events': ['UnityAction'],
+        'Windows.Speech': ['KeywordRecognizer'],
     },
     'upm.xrit': {'UnityEngine.XR.Interaction.Toolkit': ['XRRayInteractor', 'XRBaseInteractable', 'XRController']},
     'upm.tmp': {'TMPro': ['TMP_Text']},

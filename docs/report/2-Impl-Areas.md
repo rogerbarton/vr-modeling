@@ -12,7 +12,7 @@ The implementation has following categories:
 
 ## VR Interface
 
-Oculus provides an [Oculus Integration](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022) :cite:`oculus-integration` on the Unity Asset Store to provide common functionality. However, since around Unity 2019.3 there has been a Unity VR Plugin system to simplify the interface with each of the SDKs of the VR platforms. Additionally, there is a Unity XR Interaction Toolkit package with provides cross-platform input as well as common VR functionality such as locomotion and interaction with UI. These packages are the preferred option over the Oculus Integration and will ensure that the application can be used on most VR devices.
+Oculus provides an [Oculus Integration](https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022) :cite:`oculus-integration` on the Unity Asset Store to provide common functionality. However, since Unity 2019.3 there has been a [Unity XR Plug-in Framework](https://docs.unity3d.com/Manual/XRPluginArchitecture.html) :cite:`xr-plugin-framework` package to simplify the interface with each of the SDKs of the VR platforms. Additionally, there is a [Unity XR Interaction Toolkit](https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html) :cite:`xr-interaction-toolkit` package with provides cross-platform input as well as common VR functionality such as locomotion and interaction with UI. These packages are the preferred option over the Oculus Integration and will ensure that the application can be used on most VR devices.
 
 ### Locomotion
 
@@ -20,7 +20,7 @@ This involves moving the user in the virtual world. The common approach is to us
 
 ## Input
 
-The Unity XR Interaction Toolkit is used for this for getting cross-platform input. It is also used for detecting the controllers. 
+The [Unity XR Interaction Toolkit](https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html) :cite:`xr-interaction-toolkit` is used for this for getting cross-platform input. It is also used for detecting the controllers. 
 
 .. :: Mapping from input to actions
 
@@ -46,13 +46,13 @@ The UI is implemented as a world-space canvas. Using a traditional screen space 
 
 In order to be able to add new functionality easily, generating UI via C# scripting is done. The goal is to be able to easily add new UI elements and configure them, in particular setting their on click behavior. Inspired by the 2D libigl UI, we simply have a scrollable vertical layout group, so any child is then automatically formatted. 
 
-For this the base UI elements are created in the editor and saved as prefabs. If advanced functionality is required a `MonoBehaviour` component is added. Once this preparation is done for several UI elements, one can instantiate these via script and access their components to customize them. This method has proven to be effective in terms of easy expansibility. 
+For this the base UI elements are created in the editor and saved as prefabs. If advanced functionality is required a :cs:class:`MonoBehaviour` component is added. Once this preparation is done for several UI elements, one can instantiate these via script and access their components to customize them. This method has proven to be effective in terms of easy expansibility. 
 
 ### Performance
 
 After initial performance profiling, a significant amount (>50%) of the frame time was spent raycasting the UI elements. This affected frame rates significantly leading to jitter. To reduce this a straight ray is used for the UI, as curved rays are implemented by using several straight raycasts. Additionally when the UI canvas is not being hovered over by the ray, the UI graphics raycaster is disabled. This works by the assumption that all interactable UI elements are contained inside the canvas, which is not a strict requirement with a Unity world-space canvas.
 
-As the number of UI elements increases in the future, there will most likely need to be further UI performance optimizations. For example, occlusion culling for raycasting not just rendering. It is unclear whether this is done by default.
+As the number of UI elements increases in the future, there will most likely need to be further UI performance optimizations. For example, occlusion culling for raycasting not just rendering. It is unclear whether this is done by default. The newer xml/css based [Unity UI Toolkit](https://docs.unity3d.com/2020.1/Documentation/Manual/UIElements.html) :cite:`ui-toolkit` will likely solve many of these issues once it becomes a verified package with runtime support.
 
 ### Tooltips and Input Hints
 
@@ -62,7 +62,7 @@ Input hints tell the user what each button/axis does and are displayed over the 
 
 ### Alternatives
 
-In order to rely less on UI, other input methods are also possible. Speech recognition is an example which was attempted with the `Windows.Speech` library. This is however still too unreliable and unresponsive, often with a delay of more than one second. However if improved, speech could be used effectively for certain actions. 
+In order to rely less on UI, other input methods are also possible. Speech recognition is an example which was attempted with the :cs:class:`KeywordRecognizer` :cite:`speech-keyword-recognizer`. This is however still too unreliable and unresponsive, often with a delay of more than one second. However if improved, speech could be used effectively for certain actions. 
 
 Controller gestures and pie menus also present potentially fast methods of interacting by making use of the positional input. Using pie menus for numerical input with the joysticks may also be worth exploring in the future. 
 
@@ -105,7 +105,7 @@ Unity presents a complication by never unloading libraries once they are loaded,
 
 ### Future Work
 
-The C++ interface could be simplified by using a tool such as SWIG. This integrates with CMake and automatically generates the C# declarations as well as having more advanced features such as exception handling between languages. Primarily, it removes redundant code and documentation. However, this simply shifts the development complexity, but it does make the language interface more robust to bugs.
+The C++ interface could be simplified by using a tool such as [SWIG](http://www.swig.org/) :cite:`swig`. This integrates with CMake and automatically generates the C# declarations as well as having more advanced features such as exception handling between languages. Primarily, it removes redundant code and documentation. However, this simply shifts the development complexity, but it does make the language interface more robust to bugs.
 
 Of course, alternatives to Unity such as Blender or Unreal Engine do not have this interface. In contrast, the difficult parts with the language interface have been done and development should be easier from hereon.
 
@@ -115,7 +115,7 @@ Once we have modified the mesh data used by the renderer, such as the vertex pos
 
 An extra complication to this is that Unity uses row-major and libigl expects column-major matrices. Because of this we have two copies of the data, one in column-major and one in row-major. This creates a necessary transpose each time we apply changes. To mitigate performance losses, this is done in C++ on the worker thread. For larger meshes the effect of this transpose on runtime as well as memory performance will be more noticeable. For the meshes tested, this was not an issue with operations on the [armadillo mesh](http://graphics.stanford.edu/data/3Dscanrep/) :cite:`standford-3d-models` still being responsive. 
 
-Ideally libigl would work equally well in row-major preventing a transpose and reducing the number of copies of the mesh in memory. Although Eigen supports row-major well, libigl templates do not always consider this causing compiler errors.
+Ideally libigl would work equally well in row-major preventing a transpose and reducing the number of copies of the mesh in memory. Although Eigen :cite:`eigen` supports row-major well, libigl templates do not always consider this causing compiler errors.
 
 In this part of the development process, the engine source code would have been beneficial. 
 
@@ -133,7 +133,7 @@ Vertex selections are used for affecting only parts of the mesh or as an input t
 
 An additional benefit of using bitmasks is that we can provide a mask of selections with one integer. For example, we can choose which selections are visible or will be translated with an integer. If we want to affect all selections we simply use the maximum integer value, where all bits are one. Functions that act on a selection have been modified, if possible, to act on a mask of selections.
 
-As Eigen :cite:`Eigen` does not currently have cwise bitwise operations, unary functions were used. These might not be as well optimized. However, when testing on the [armadillo mesh](http://graphics.stanford.edu/data/3Dscanrep/) :cite:`standford-3d-models` the interactions was still responsive enough.
+As Eigen does not currently have cwise bitwise operations, unary functions were used. These might not be as well optimized. However, when testing on the [armadillo mesh](http://graphics.stanford.edu/data/3Dscanrep/) :cite:`standford-3d-models` the interactions was still responsive enough.
 
 Face or edge selection was not implemented as this is more involved and does not necessarily add more features for the current use case.
 
@@ -141,7 +141,7 @@ Face or edge selection was not implemented as this is more involved and does not
 
 In order to transform a mesh or part of the mesh there are two stages: finding which transformation should be done and how to apply it. For determining an affine transformation - translation, rotation, scaling - we are much more flexible in VR, as we have two controllers. 
 
-Once the transformation is known we can either apply it to the mesh directly, which is done in C# with the Unity API. Or we can apply it to a vertex selection mask, which is done in C++ and modifies the vertex data. This implementation is more involved as transforming a selection mask needs to be done on the worker thread. It uses the [Eigen geometry module](https://eigen.tuxfamily.org/dox/group__Geometry__Module.html) :cite:`eigen`.
+Once the transformation is known we can either apply it to the mesh directly, which is done in C# with the Unity API. Or we can apply it to a vertex selection mask, which is done in C++ and modifies the vertex data. This implementation is more involved as transforming a selection mask needs to be done on the worker thread. It uses the [Eigen geometry module](https://eigen.tuxfamily.org/dox/group__Geometry__Module.html) :cite:`eigen-geometry`.
 
 When working with multiple meshes or multiple selections, we need to determine what to transform – a mask of meshes or selections. For this the sphere brush is used. If a mesh or selection is inside, it is affected. If there is nothing inside then the active mesh or selection is affected. This provides lots of control but also gives an intuitive experience. If both hands act on the same mask then we perform two handed transformations, such as scaling. This method provides and simple way for operating on multiple selections.
 
@@ -151,7 +151,7 @@ Different pivot modes where tested: mesh center, selection center and hand cente
 
 ### Deformations
 
-The libigl biharmonic deformation `igl::harmonic` can be toggled on. If enabled it will be run whenever the input arguments have been changed. In this case, when the boundary conditions have changed. This can be detected quite easily by checking the :cpp:struct:`DirtyFlag` of the mesh data have been modified when applying the mesh data in :cpp:func:`ApplyDirty`.
+The libigl biharmonic deformation `igl::harmonic` can be toggled on. If enabled it will be run whenever the input arguments have been changed. In this case, when the boundary conditions have changed. This can be detected quite easily by checking the :cs:var:`DirtyState` of the mesh data have been modified when applying the mesh data in :cpp:func:`ApplyDirty`.
 
 The As-Rigid-As-Possible `igl::arap` deformation works very similarly, except that we need to check when the precomputation needs to be done.
 
