@@ -219,6 +219,7 @@ StandaloneHTMLBuilder.supported_image_types = [
     'image/png',
     'image/jpeg'
 ]
+numfig = True
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
