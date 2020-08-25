@@ -35,6 +35,12 @@
   note = {https://www.unrealengine.com/}
 }
 
+@misc{unreal-engine-vr-mode,
+  title = {Unreal Engine VR Mode Documentation},
+  author = {{Epic Games}},
+  note = {https://docs.unrealengine.com/en-US/Engine/Editor/VR/index.html}
+}
+
 @misc{unity,
   title = {Unity},
   author = {{Unity Technologies}},
@@ -59,6 +65,12 @@
   note = {https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html}
 }
 
+@misc{docs-customizing-input,
+  title = {3D Modeling in VR Documentation: Customizing Input},
+  author = {Roger Barton},
+  note = {https://vr-modeling.readthedocs.io/docs/developer-guide/adding-functionality.html#customizing-input}
+}
+
 @misc{ui-toolkit,
   title = {{UI} Toolkit (Unity Package)},
   author = {{Unity Technologies}},
@@ -81,6 +93,27 @@
   title = {{SWIG}: Simplified Wrapper and Interface Generator},
   author = {{The University of Utah}, {the Regents of the University of California} and contributors},
   note = {http://www.swig.org/, https://github.com/swig/swig}
+}
+
+@article{swig-paper,
+  author = {Beazley, David},
+  year = {2003},
+  month = {07},
+  pages = {599-609},
+  title = {Automated scientific software scripting with SWIG},
+  volume = {19},
+  journal = {Future Generation Comp. Syst.},
+  doi = {10.1016/S0167-739X(02)00171-1}
+}
+
+@inproceedings{swig-paper-old,
+  author = {Beazley, David},
+  year = {1996},
+  month = {01},
+  pages = {},
+  title = {SWIG: An Easy to Use Tool for Integrating Scripting Languages with C and C++},
+  volume = {4},
+  journal = {Proceedings of the 4th conference on USENIX Tcl/Tk Workshop, 1996-Volume 4, USENIX Association}
 }
 
 @misc{unity-native-rendering-plugin,
@@ -144,3 +177,57 @@
   howpublished = {https://github.com/MichaelRabinovich/DOG-editor/},
 }
 
+@inproceedings{vr-tunneling-paper,
+  author={A. S. {Fernandes} and S. K. {Feiner}},
+  booktitle={2016 IEEE Symposium on 3D User Interfaces (3DUI)}, 
+  title={Combating VR sickness through subtle dynamic field-of-view modification}, 
+  year={2016},
+  volume={},
+  number={},
+  pages={201-210},
+  note={https://ieeexplore.ieee.org/document/7460053/}
+}
+
+@misc{vr-tunneling-pro-asset,
+  title = {VR Tunnelling Pro (Unity Asset)},
+  author = {Sigtrap Games},
+  howpublished = {https://assetstore.unity.com/packages/tools/camera/vr-tunnelling-pro-106782},
+}
+
+@inproceedings{arap-paper,
+author = {Sorkine, Olga and Alexa, Marc},
+title = {As-Rigid-as-Possible Surface Modeling},
+year = {2007},
+isbn = {9783905673463},
+publisher = {Eurographics Association},
+address = {Goslar, DEU},
+abstract = {Modeling tasks, such as surface deformation and editing, can be analyzed by observing the local behavior of the surface. We argue that defining a modeling operation by asking for rigidity of the local transformations is useful in various settings. Such formulation leads to a non-linear, yet conceptually simple energy formulation, which is to be minimized by the deformed surface under particular modeling constraints. We devise a simple iterative mesh editing scheme based on this principle, that leads to detail-preserving and intuitive deformations. Our algorithm is effective and notably easy to implement, making it attractive for practical modeling applications.},
+booktitle = {Proceedings of the Fifth Eurographics Symposium on Geometry Processing},
+pages = {109–116},
+numpages = {8},
+location = {Barcelona, Spain},
+series = {SGP '07}
+}
+
+@inproceedings{harmonic-paper,
+  author = {Sorkine, O. and Cohen-Or, D. and Lipman, Y. and Alexa, M. and R\"{o}ssl, C. and Seidel, H.-P.},
+  title = {Laplacian Surface Editing},
+  year = {2004},
+  isbn = {3905673134},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/1057432.1057456},
+  doi = {10.1145/1057432.1057456},
+  abstract = {Surface editing operations commonly require geometric details of the surface to be preserved as much as possible. We argue that geometric detail is an intrinsic property of a surface and that, consequently, surface editing is best performed by operating over an intrinsic surface representation. We provide such a representation of a surface, based on the Laplacian of the mesh, by encoding each vertex relative to its neighborhood. The Laplacian of the mesh is enhanced to be invariant to locally linearized rigid transformations and scaling. Based on this Laplacian representation, we develop useful editing operations: interactive free-form deformation in a region of interest based on the transformation of a handle, transfer and mixing of geometric details between two surfaces, and transplanting of a partial surface mesh onto another surface. The main computation involved in all operations is the solution of a sparse linear system, which can be done at interactive rates. We demonstrate the effectiveness of our approach in several examples, showing that the editing operations change the shape while respecting the structural geometric detail.},
+  booktitle = {Proceedings of the 2004 Eurographics/ACM SIGGRAPH Symposium on Geometry Processing},
+  pages = {175–184},
+  numpages = {10},
+  location = {Nice, France},
+  series = {SGP '04}
+}
+
+@misc{oculus-medium-dev-blog,
+  title = {Medium Under The Hood: Part 1 - Developing the Move Tool (Oculus Developer Blog)},
+  author = {David Farrell},
+  howpublished = {https://developer.oculus.com/blog/medium-under-the-hood-part-1-developing-the-move-tool}
+}

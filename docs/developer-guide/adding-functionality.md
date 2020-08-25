@@ -16,6 +16,8 @@ In order to keep the virtual reality experience responsive and at high framerate
 
 Note that only operations done in :cs:func:`Execute` do not affect the framerate.
 
+See also [Unity Execution Order of Events](https://docs.unity3d.com/Manual/ExecutionOrder.html).
+
 ## Data Storage
 
 <iframe frameborder="0" style="width:100%;height:340px;" src="https://app.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&title=DataOverview#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1WgcmChCoba3z2LXY2lMCZRULhv6i_afH%26export%3Ddownload"></iframe>
