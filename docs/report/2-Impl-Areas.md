@@ -190,11 +190,12 @@ To compile all this information, [Doxygen](https://www.doxygen.nl) :cite:`doxyge
    1. Custom file types, e.g. `.off`, are imported via libigl within a scripted importer
    1. Meshes are validation before instantiation
 1. UI to indicate when a thread is inside `Execute` for a longer time
-1. Dither shader on active mesh and controllers when occluded using a custom render pass
 1. Rendering with the Universal Render Pipeline (URP)
 1. Environment modelled in Blender, ocean shader created using Shader Graph
 1. Speech recognition for specific actions (disabled by default)
 1. Cross-platform controller models
+1. Different modes for editing selections: add, remove, invert, new/clear selection per stroke
+1. Conversion of selection mask to vertex color
 
 For more features see the documentation and repository.
 
