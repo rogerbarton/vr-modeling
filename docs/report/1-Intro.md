@@ -2,7 +2,7 @@
 
 .. note::
 
-   This report will focus on the development approach as well as evaluating the project and suggesting future improvements. *For implementation details and how to use this project see the online documentation at https://vr-modeling.readthedocs.io/, where a gallery can also be found.*
+   This report will focus on the development approach as well as evaluating the project and suggesting future improvements. *For implementation details and how to use this project see the online documentation, where the gallery can also be found* :cite:`docs`.
 
 ## Purpose
 

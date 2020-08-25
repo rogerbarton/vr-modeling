@@ -124,7 +124,7 @@ As the number of UI elements increases in the future, there will most likely nee
 
 To make the application more intuitive and user friendly, we need a way of providing the user with relevant help information when required. The intent being that a user learns how to use a feature when they need it, colloquially just-in-time learning. This requires inferring of the context, similarly to the input context. To solve this tooltips are provided to display a short text when hovering over a UI element. 
 
-Input hints tell the user what each button/axis does and are displayed over the controller based on the input context. 
+Input hints tell the user what each button/axis does and are displayed over the controller based on the input context, see gallery.
 
 #### Alternatives
 
@@ -154,7 +154,7 @@ When working with multiple meshes or multiple selections, we need to determine w
 
 To provide more fine grained control, the amount by which the grip buttons are pressed is used as a smoothing factor. This works well, although it can be hard to control this smoothing factor precisely. It may make sense to apply a log or square root to the smoothing factor to counteract this. 
 
-Different pivot modes where tested: mesh center, selection center and hand center. Using the hand as the center appeared the most natural. For transforming selections, using the mesh as the center usually gave unintuitive results, particularly for smaller selections.
+Different pivot modes where tested: mesh center, selection center and hand center. Using the hand as the center appeared the most natural. For transforming selections, using the mesh as the center usually gave unintuitive results, particularly for smaller selections, see gallery.
 
 #### Deformations
 
