@@ -33,7 +33,7 @@ Generally, data falls into one of the following categories:
    1.  :cs:struct:`InputState` if shared between meshes, this contains the raw controller input
    2.  :cs:struct:`MeshInputState` if specific to a mesh
 1. **Mesh data**
-   1. Vertex/Face data required for rendering the mesh, this is the most complicated. It must be part of the :cpp:struct:`MeshState` and shared between C# and C++. There is a lifecycle to this detailed in `Applying Mesh Data`_.
+   1. Vertex/Face data required for rendering the mesh, this is the most complicated. It must be part of the :cpp:struct:`MeshState` and shared between C# and C++. There is a lifecycle to this detailed in `Applying Mesh Data To Be Rendered`_.
    1. Data that is used only for computations, this belongs to the C++ only :cpp:struct:`MeshStateNative`.
    1. (uncommon) data that must be shared between C++ and C#, such as results of a computation (e.g. selection size). This also belongs to the :cpp:struct:`MeshState`. 
 
@@ -141,7 +141,7 @@ The above diagram indicates the important parts of implementing a deformation, w
 To add a new deformation there are several things that need to be done. The approach I often use is to start with the complicated C++, then the C# interface and end with the UI/input (roughly in reverse order to the execution):
 
 1. How the deformation is carried out in the C++, see `Deform.cpp`
-    1. Be sure to set which data from the mesh you have changed with the `State->DirtyState` variable, see `Applying Mesh Data`_
+    1. Be sure to set which data from the mesh you have changed with the `State->DirtyState` variable, see `Applying Mesh Data To Be Rendered`_
 1. Storing your data in the right place, see `MeshState*.h` and `Data Storage`_
 1. Making this callable from C#: declare in `Native.h` and redeclare in `Native.cs`
 1. Integrating with the Pre/Post/Execute threading loop, see `LibiglBehaviour*.cs` and `MeshInput.cs` as well as `Threading PrePostExecute Cycle`_

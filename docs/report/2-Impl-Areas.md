@@ -56,7 +56,7 @@ The C++ interface could be simplified by using a tool such as [SWIG](http://www.
 
 Of course, alternatives to Unity such as Blender or Unreal Engine do not have this interface. In contrast, the difficult parts with the language interface have been done and development should be easier from hereon.
 
-Additionally, implementing serialization of the entire C++ state with the help of libigl `igl::serialize` would be beneficial. This state would only involve all :cpp:struct:`MeshState` s. It would enable faster testing as well as enabling the use hot-reloading of the C++ library while paused, decreasing the iteration time. Hot-reloading was attempted by simply not deleting the allocated :cpp:struct:`MeshState` memory and retaining the pointers in C#. However as the library is fully unloaded, its entire memory is deallocated and the C# pointers are invalidated.
+Additionally, implementing serialization of the entire C++ state with the help of `igl::serialize` would be beneficial. This state would only involve all :cpp:struct:`MeshState` instances. It would enable faster testing as well as enabling the use hot-reloading of the C++ library while paused, decreasing the iteration time. Hot-reloading was attempted by simply not deleting the allocated :cpp:struct:`MeshState` memory and retaining the pointers in C#. However as the library is fully unloaded, its entire memory is deallocated and the C# pointers are invalidated.
 
 ### Mesh Interface
 
@@ -158,11 +158,7 @@ Different pivot modes where tested: mesh center, selection center and hand cente
 
 #### Deformations
 
-The libigl biharmonic deformation `igl::harmonic` can be toggled on. If enabled it will be run whenever the input arguments have been changed. In this case, when the boundary conditions have changed. This can be detected quite easily by checking the :cs:var:`DirtyState` of the mesh data have been modified when applying the mesh data in :cpp:func:`ApplyDirty`.
-
-The As-Rigid-As-Possible `igl::arap` deformation works very similarly, except that we need to check when the precomputation needs to be done.
-
-.. :: From an implementation perspective, integrating the deformations was significantly easier than the previously mentioned parts.
+The libigl biharmonic deformation `igl::harmonic` can be toggled on. If enabled it will be run whenever the input arguments have been changed. In this case, when the boundary conditions have changed. This can be detected quite easily by checking the :cs:var:`DirtyState` of the mesh data have been modified when applying the mesh data in :cpp:func:`ApplyDirty`. The As-Rigid-As-Possible `igl::arap` deformation works very similarly, except that we need to check when the precomputation needs to be done. For details as well as diagrams see the [documentation](https://vr-modeling.readthedocs.io/docs/developer-guide/adding-functionality.html#custom-deformation) :cite:`docs-custom-deformation`.
 
 ## Documentation Process
 
