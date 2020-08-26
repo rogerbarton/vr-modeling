@@ -1,4 +1,4 @@
-# Report (draft)
+# Report
 
 .. note::
    This report can be `read as a pdf <https://github.com/rogerbarton/vr-modeling/releases/download/v1.0-report/3D_Modeling_in_VR.pdf>`_ from the GitHub `release <https://github.com/rogerbarton/vr-modeling/releases/tag/v1.0-report>`_.

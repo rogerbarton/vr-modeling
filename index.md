@@ -2,6 +2,8 @@
 
 *Deform meshes in Virtual Reality with libigl using Unity - A VR editor for libigl*
 
+**See the** [Gallery & Showcase](docs/user-guide/gallery.html) **for visual summary.**
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
