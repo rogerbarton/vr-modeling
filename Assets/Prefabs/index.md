@@ -19,11 +19,11 @@ This contains mostly instances of the UI components used when generating the UI 
 
 ## UI Generator Components
 
-These are items that can be added to the **VerticalScrollList**, in the **XrCanvas**, from C#. These are all referenced by the instance of the `UiManager` in the scene (found on the UI gameObject) under the `UI Component Prefabs` header.
+These are items that can be added to the **VerticalScrollList**, in the **XrCanvas**, from C#. These are all referenced by the instance of the :cs:class:`UiManager` in the scene (found on the UI gameObject) under the `UI Component Prefabs` header.
 
 ## UI Input Hint Data
 
-These aren't technically prefabs but [ScriptableObjects](https://docs.unity3d.com/Manual/class-ScriptableObject.html) which is a simple data storage (compared to a database). This is where we store what the input hints will display. It is done in a hierarchical fashion with one instance per state and sub-state. This is used by `UiInputHints.Repaint()`. See also `UiInputLabel.SetData()`
+These aren't technically prefabs but :cs:class:`ScriptableObject` s, which is a simple data storage (compared to a database). This is where we store what the input hints will display. It is done in a hierarchical fashion with one instance per state and sub-state. This is used by :cs:func:`UiInputHints.Repaint`. See also :cs:func:`UiInputLabel.SetData`
 
 ## VR Controllers
 
