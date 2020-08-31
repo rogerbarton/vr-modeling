@@ -14,6 +14,11 @@ This is a bachelor thesis trying to create a VR editor for libigl with Unity. It
 
    **As-Rigid-As-Possible** deform example. Performs slower than the harmonic, however, causes less distortions and retains more surface details. We can see that the geometry operations are **on a separate thread**.
 
+.. 	![arap-sheet](../_static/images/arap-sheet.gif)
+.. figure:: /docs/_static/images/arap-sheet.*
+
+   As-Rigid-As-Possible of a **flat sheet**. 
+
 .. ![multi-object](../_static/images/multi-object-usage.gif)
 .. figure:: /docs/_static/images/multi-object-usage.*
 

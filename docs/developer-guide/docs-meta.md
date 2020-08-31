@@ -15,5 +15,6 @@ Code is documented with xml-doc in C# and javadoc in C++ currently. Using `Crl` 
 - Ideally have a markdown file per source directory
 - Inline diagrams/flowcharts are made with [diagrams.net](https://diagrams.net) (previously draw.io) and inserted as an iframe
   - These are stored on [Google Drive](https://drive.google.com/drive/folders/1lwwUkIiIJvbDz0_dtgBPaxPXdL4pakT1?usp=sharing)
+- Gifs in the gallery are created with [ScreenToGif](https://www.screentogif.com/)
 
 After making changes fast forward the `read-the-docs` branch to the latest commit on the master branch. This will trigger read the docs to rebuild and update the online documentation.
